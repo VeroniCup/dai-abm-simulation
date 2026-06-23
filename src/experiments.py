@@ -119,7 +119,7 @@ def create_scenario_configs() -> dict:
                 liquidation_penalty=0.13,
                 gas_cost=100.0,
                 risk_cost_rate=0.00,
-                max_close_factor=1.0,
+                max_close_factor=0.5,
                 max_liquidations_per_step=20,
             ),
             "confidence_config": base_confidence,
@@ -128,9 +128,9 @@ def create_scenario_configs() -> dict:
         "medium_gas": {
             "liquidation_config": LiquidationConfig(
                 liquidation_penalty=0.13,
-                gas_cost=400.0,
+                gas_cost=250.0,
                 risk_cost_rate=0.00,
-                max_close_factor=1.0,
+                max_close_factor=0.5,
                 max_liquidations_per_step=10,
             ),
             "confidence_config": base_confidence,
@@ -139,9 +139,9 @@ def create_scenario_configs() -> dict:
         "high_gas": {
             "liquidation_config": LiquidationConfig(
                 liquidation_penalty=0.13,
-                gas_cost=700.0,
+                gas_cost=400.0,
                 risk_cost_rate=0.00,
-                max_close_factor=1.0,
+                max_close_factor=0.5,
                 max_liquidations_per_step=5,
             ),
             "confidence_config": base_confidence,
@@ -152,7 +152,7 @@ def create_scenario_configs() -> dict:
                 liquidation_penalty=0.13,
                 gas_cost=700.0,
                 risk_cost_rate=0.02,
-                max_close_factor=1.0,
+                max_close_factor=0.3,
                 max_liquidations_per_step=2,
             ),
             "confidence_config": ConfidenceConfig(

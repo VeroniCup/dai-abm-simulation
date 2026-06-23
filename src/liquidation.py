@@ -158,12 +158,16 @@ def execute_keeper_liquidation(
             "vault_id": vault.vault_id,
             "attempted": False,
             "liquidated": False,
+            "fully_liquidated": False,
             "reason": "not_liquidatable",
             "expected_profit": expected_profit,
             "realised_keeper_profit": 0.0,
             "bad_debt": vault.bad_debt(eth_price),
             "debt_repaid": 0.0,
             "collateral_value": vault.collateral_value(eth_price),
+            "collateral_value_before": vault.collateral_value(eth_price),
+            "remaining_debt": vault.debt_dai,
+            "remaining_collateral_eth": vault.collateral_eth,
         }
 
     if expected_profit <= 0:
@@ -171,30 +175,41 @@ def execute_keeper_liquidation(
             "vault_id": vault.vault_id,
             "attempted": True,
             "liquidated": False,
+            "fully_liquidated": False,
             "reason": "unprofitable",
             "expected_profit": expected_profit,
             "realised_keeper_profit": 0.0,
             "bad_debt": vault.bad_debt(eth_price),
             "debt_repaid": 0.0,
             "collateral_value": vault.collateral_value(eth_price),
+            "collateral_value_before": vault.collateral_value(eth_price),
+            "remaining_debt": vault.debt_dai,
+            "remaining_collateral_eth": vault.collateral_eth,
         }
 
     debt_repaid = vault.debt_dai * config.max_close_factor
-    collateral_value = vault.collateral_value(eth_price)
+    collateral_value_before = vault.collateral_value(eth_price)
     bad_debt_before = vault.bad_debt(eth_price)
 
-    liquidation_summary = vault.liquidate(eth_price)
+    liquidation_summary = vault.partial_liquidate(
+        eth_price=eth_price,
+        debt_repaid=debt_repaid,
+    )
 
     return {
         "vault_id": vault.vault_id,
         "attempted": True,
         "liquidated": liquidation_summary["liquidated"],
+        "fully_liquidated": liquidation_summary["fully_liquidated"],
         "reason": "profitable",
         "expected_profit": expected_profit,
         "realised_keeper_profit": expected_profit,
         "bad_debt": bad_debt_before,
-        "debt_repaid": debt_repaid,
-        "collateral_value": collateral_value,
+        "debt_repaid": liquidation_summary["debt_repaid"],
+        "collateral_value": liquidation_summary["collateral_value_removed"],
+        "collateral_value_before": collateral_value_before,
+        "remaining_debt": liquidation_summary["remaining_debt"],
+        "remaining_collateral_eth": liquidation_summary["remaining_collateral_eth"],
     }
 
 
@@ -270,47 +285,64 @@ def liquidate_vaults(
         vault_id = row["vault_id"]
 
         if vault_id in executable_vault_ids:
+            # This uses execute_keeper_liquidation(), which now calls
+            # vault.partial_liquidate().
             record = execute_keeper_liquidation(
                 vault=vault,
                 eth_price=eth_price,
                 config=config,
             )
+
         else:
             if not vault.is_liquidatable(eth_price):
                 record = {
                     "vault_id": vault.vault_id,
                     "attempted": False,
                     "liquidated": False,
+                    "fully_liquidated": False,
                     "reason": "not_liquidatable",
                     "expected_profit": row["expected_profit"],
                     "realised_keeper_profit": 0.0,
                     "bad_debt": vault.bad_debt(eth_price),
                     "debt_repaid": 0.0,
                     "collateral_value": vault.collateral_value(eth_price),
+                    "collateral_value_before": vault.collateral_value(eth_price),
+                    "remaining_debt": vault.debt_dai,
+                    "remaining_collateral_eth": vault.collateral_eth,
                 }
+
             elif row["expected_profit"] <= 0:
                 record = {
                     "vault_id": vault.vault_id,
                     "attempted": True,
                     "liquidated": False,
+                    "fully_liquidated": False,
                     "reason": "unprofitable",
                     "expected_profit": row["expected_profit"],
                     "realised_keeper_profit": 0.0,
                     "bad_debt": vault.bad_debt(eth_price),
                     "debt_repaid": 0.0,
                     "collateral_value": vault.collateral_value(eth_price),
+                    "collateral_value_before": vault.collateral_value(eth_price),
+                    "remaining_debt": vault.debt_dai,
+                    "remaining_collateral_eth": vault.collateral_eth,
                 }
+
             else:
                 record = {
                     "vault_id": vault.vault_id,
                     "attempted": True,
                     "liquidated": False,
+                    "fully_liquidated": False,
                     "reason": "capacity_limited",
                     "expected_profit": row["expected_profit"],
                     "realised_keeper_profit": 0.0,
                     "bad_debt": vault.bad_debt(eth_price),
                     "debt_repaid": 0.0,
                     "collateral_value": vault.collateral_value(eth_price),
+                    "collateral_value_before": vault.collateral_value(eth_price),
+                    "remaining_debt": vault.debt_dai,
+                    "remaining_collateral_eth": vault.collateral_eth,
                 }
 
         final_records.append(record)
@@ -321,6 +353,12 @@ def liquidate_vaults(
 def summarise_liquidations(liquidation_df: pd.DataFrame) -> dict:
     """
     Summarise liquidation attempt records.
+
+    Important distinction:
+    - n_liquidated counts vaults that received a liquidation action.
+      With partial liquidation, these vaults may still remain active.
+    - n_fully_liquidated counts vaults whose debt was fully closed.
+      These vaults become inactive.
 
     Parameters
     ----------
@@ -336,6 +374,7 @@ def summarise_liquidations(liquidation_df: pd.DataFrame) -> dict:
         return {
             "n_attempted": 0,
             "n_liquidated": 0,
+            "n_fully_liquidated": 0,
             "n_unprofitable": 0,
             "n_capacity_limited": 0,
             "keeper_profit": 0.0,
@@ -345,13 +384,27 @@ def summarise_liquidations(liquidation_df: pd.DataFrame) -> dict:
         }
 
     n_attempted = int(liquidation_df["attempted"].sum())
+
+    # A successful liquidation action happened.
+    # Under partial liquidation, this does not necessarily mean the vault is closed.
     n_liquidated = int(liquidation_df["liquidated"].sum())
+
+    # A vault was completely closed.
+    # This only happens when the liquidation repays all remaining debt.
+    n_fully_liquidated = int(liquidation_df["fully_liquidated"].sum())
+
+    # Liquidation was possible but not economically attractive.
     n_unprofitable = int((liquidation_df["reason"] == "unprofitable").sum())
-    n_capacity_limited = int((liquidation_df["reason"] == "capacity_limited").sum())
+
+    # Liquidation was profitable but not executed because keeper capacity was exhausted.
+    n_capacity_limited = int(
+        (liquidation_df["reason"] == "capacity_limited").sum()
+    )
 
     return {
         "n_attempted": n_attempted,
         "n_liquidated": n_liquidated,
+        "n_fully_liquidated": n_fully_liquidated,
         "n_unprofitable": n_unprofitable,
         "n_capacity_limited": n_capacity_limited,
         "keeper_profit": liquidation_df["realised_keeper_profit"].sum(),
@@ -385,7 +438,7 @@ if __name__ == "__main__":
         liquidation_penalty=0.13,
         gas_cost=100.0,
         risk_cost_rate=0.00,
-        max_close_factor=1.0,
+        max_close_factor=0.5,
         max_liquidations_per_step=3,
     )
 
@@ -416,8 +469,11 @@ if __name__ == "__main__":
                 "vault_id",
                 "attempted",
                 "liquidated",
+                "fully_liquidated",
                 "reason",
                 "expected_profit",
+                "debt_repaid",
+                "remaining_debt",
                 "bad_debt",
             ]
         ]

@@ -333,6 +333,7 @@ def run_simulation_with_price_path(
         liquidation_summary = {
             "n_attempted": 0,
             "n_liquidated": 0,
+            "n_fully_liquidated": 0,
             "n_unprofitable": 0,
             "n_capacity_limited": 0,
             "keeper_profit": 0.0,
@@ -404,8 +405,11 @@ def run_simulation_with_price_path(
             "n_liquidatable_before_liquidation": pre_summary["n_liquidatable"],
             "n_attempted_liquidations": int(liquidation_summary["n_attempted"]),
             "n_successful_liquidations": int(liquidation_summary["n_liquidated"]),
+            "n_fully_liquidated": int(liquidation_summary["n_fully_liquidated"]),
             "n_unprofitable_liquidations": int(liquidation_summary["n_unprofitable"]),
-            "n_capacity_limited_liquidations": int(liquidation_summary["n_capacity_limited"]),
+            "n_capacity_limited_liquidations": int(
+                liquidation_summary["n_capacity_limited"]
+            ),
             "keeper_profit_step": float(liquidation_summary["keeper_profit"]),
             "debt_repaid_step": float(liquidation_summary["debt_repaid"]),
             "collateral_liquidated_step": float(
@@ -581,9 +585,9 @@ if __name__ == "__main__":
 
     high_gas_config = LiquidationConfig(
         liquidation_penalty=0.13,
-        gas_cost=700.0,
+        gas_cost=400.0,
         risk_cost_rate=0.00,
-        max_close_factor=1.0,
+        max_close_factor=0.5,
         max_liquidations_per_step=5,
     )
 
@@ -631,8 +635,10 @@ if __name__ == "__main__":
         "n_vaults_active",
         "n_liquidatable_before_liquidation",
         "n_successful_liquidations",
+        "n_fully_liquidated",
         "n_unprofitable_liquidations",
         "n_capacity_limited_liquidations",
+        "n_liquidatable",
         "total_bad_debt_active",
         "dai_net_pressure",
         "keeper_profit_cumulative",
