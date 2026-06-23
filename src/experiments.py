@@ -120,6 +120,7 @@ def create_scenario_configs() -> dict:
                 gas_cost=100.0,
                 risk_cost_rate=0.00,
                 max_close_factor=1.0,
+                max_liquidations_per_step=20,
             ),
             "confidence_config": base_confidence,
             "dai_market_config": base_market,
@@ -130,6 +131,7 @@ def create_scenario_configs() -> dict:
                 gas_cost=400.0,
                 risk_cost_rate=0.00,
                 max_close_factor=1.0,
+                max_liquidations_per_step=10,
             ),
             "confidence_config": base_confidence,
             "dai_market_config": base_market,
@@ -140,6 +142,7 @@ def create_scenario_configs() -> dict:
                 gas_cost=700.0,
                 risk_cost_rate=0.00,
                 max_close_factor=1.0,
+                max_liquidations_per_step=5,
             ),
             "confidence_config": base_confidence,
             "dai_market_config": base_market,
@@ -150,6 +153,7 @@ def create_scenario_configs() -> dict:
                 gas_cost=700.0,
                 risk_cost_rate=0.02,
                 max_close_factor=1.0,
+                max_liquidations_per_step=2,
             ),
             "confidence_config": ConfidenceConfig(
                 normal_lower_price=0.99,
@@ -232,7 +236,7 @@ def compute_summary_metrics(
             final["bad_debt_realised_cumulative"]
         ),
         "cumulative_debt_repaid": float(final["debt_repaid_cumulative"]),
-        "cumulative_unprofitable_liquidations": int(
+        "cumulative_unprofitable_attempts": int(
             final["unprofitable_liquidations_cumulative"]
         ),
     }
