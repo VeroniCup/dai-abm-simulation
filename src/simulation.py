@@ -278,6 +278,7 @@ def run_simulation_with_price_path(
     cumulative_collateral_liquidated = 0.0
     cumulative_bad_debt_realised = 0.0
     cumulative_unprofitable_attempts = 0
+    cumulative_capacity_limited_attempts = 0
 
     for _, row in price_path.iterrows():
         step = int(row["step"])
@@ -333,6 +334,7 @@ def run_simulation_with_price_path(
             "n_attempted": 0,
             "n_liquidated": 0,
             "n_unprofitable": 0,
+            "n_capacity_limited": 0,
             "keeper_profit": 0.0,
             "bad_debt_realised": 0.0,
             "debt_repaid": 0.0,
@@ -357,6 +359,9 @@ def run_simulation_with_price_path(
             )
             cumulative_unprofitable_attempts += int(
                 liquidation_summary["n_unprofitable"]
+            )
+            cumulative_capacity_limited_attempts += int(
+                liquidation_summary["n_capacity_limited"]
             )
 
         # State after keeper action
@@ -400,6 +405,7 @@ def run_simulation_with_price_path(
             "n_attempted_liquidations": int(liquidation_summary["n_attempted"]),
             "n_successful_liquidations": int(liquidation_summary["n_liquidated"]),
             "n_unprofitable_liquidations": int(liquidation_summary["n_unprofitable"]),
+            "n_capacity_limited_liquidations": int(liquidation_summary["n_capacity_limited"]),
             "keeper_profit_step": float(liquidation_summary["keeper_profit"]),
             "debt_repaid_step": float(liquidation_summary["debt_repaid"]),
             "collateral_liquidated_step": float(
@@ -411,6 +417,7 @@ def run_simulation_with_price_path(
             "collateral_liquidated_cumulative": cumulative_collateral_liquidated,
             "bad_debt_realised_cumulative": cumulative_bad_debt_realised,
             "unprofitable_liquidations_cumulative": cumulative_unprofitable_attempts,
+            "capacity_limited_liquidations_cumulative": cumulative_capacity_limited_attempts,
             "bad_debt_ratio": bad_debt_ratio,
             "systemic_stress_pressure": systemic_stress_pressure,
             "combined_panic_pressure": combined_panic_pressure,
@@ -432,7 +439,24 @@ def run_constant_price_simulation(
     """
     Run simulation with constant ETH price.
 
-    Useful for debugging.
+    Parameters
+    ----------
+    config:
+        SimulationConfig object.
+    liquidation_config:
+        LiquidationConfig object.
+    confidence_config:
+        Optional ConfidenceConfig object. If None, default config is used.
+    dai_market_config:
+        Optional DAIMarketConfig object. If None, default config is used.
+    initial_dai_price:
+        Initial DAI market price.
+    execute_liquidations:
+        Whether to execute profitable keeper liquidations.
+    Returns
+    -------
+    pd.DataFrame
+        System-level simulation results.
     """
     price_config = PriceProcessConfig(
         n_steps=config.n_steps,
@@ -560,6 +584,7 @@ if __name__ == "__main__":
         gas_cost=700.0,
         risk_cost_rate=0.00,
         max_close_factor=1.0,
+        max_liquidations_per_step=5,
     )
 
     confidence_config = ConfidenceConfig(
@@ -607,6 +632,7 @@ if __name__ == "__main__":
         "n_liquidatable_before_liquidation",
         "n_successful_liquidations",
         "n_unprofitable_liquidations",
+        "n_capacity_limited_liquidations",
         "total_bad_debt_active",
         "dai_net_pressure",
         "keeper_profit_cumulative",
