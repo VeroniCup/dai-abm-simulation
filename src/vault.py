@@ -255,33 +255,20 @@ class Vault:
         }
 
     def partial_liquidate(
-        self,
-        eth_price: float,
-        debt_repaid: float,
+            self,
+            eth_price: float,
+            debt_repaid: float,
+            liquidation_penalty: float = 0.13,
     ) -> dict:
         """
         Partially liquidate the vault.
 
-        This simplified partial liquidation repays part of the vault's debt and
-        removes a proportional amount of collateral.
+        The keeper repays part of the vault's DAI debt and receives collateral
+        worth debt_repaid * (1 + liquidation_penalty), if enough collateral exists.
 
-        The collateral removed is based on the share of debt being repaid:
-
-            collateral_removed = collateral_eth * (debt_repaid / original_debt)
-
-        If the full debt is repaid, the vault is closed.
-
-        Parameters
-        ----------
-        eth_price:
-            ETH price in USD.
-        debt_repaid:
-            Amount of DAI debt repaid through liquidation.
-
-        Returns
-        -------
-        dict
-            Partial liquidation summary.
+        If partial liquidation would worsen bad debt, the vault is treated as
+        terminally liquidated. This prevents the model from leaving a worse
+        undercollateralised active vault after liquidation.
         """
         if not self.is_active:
             return {
@@ -297,22 +284,43 @@ class Vault:
                 "bad_debt": 0.0,
             }
 
+        if eth_price <= 0:
+            raise ValueError("eth_price must be positive.")
         if debt_repaid <= 0:
             raise ValueError("debt_repaid must be positive.")
+        if liquidation_penalty < 0:
+            raise ValueError("liquidation_penalty cannot be negative.")
+
+        bad_debt_before = self.bad_debt(eth_price)
 
         original_debt = self.debt_dai
         original_collateral_eth = self.collateral_eth
+        original_collateral_value = original_collateral_eth * eth_price
 
         actual_debt_repaid = min(debt_repaid, original_debt)
-        repayment_share = actual_debt_repaid / original_debt
 
-        collateral_eth_removed = original_collateral_eth * repayment_share
-        collateral_value_removed = collateral_eth_removed * eth_price
+        target_collateral_value_removed = actual_debt_repaid * (
+                1.0 + liquidation_penalty
+        )
+
+        collateral_value_removed = min(
+            target_collateral_value_removed,
+            original_collateral_value,
+        )
+        collateral_eth_removed = collateral_value_removed / eth_price
 
         self.debt_dai -= actual_debt_repaid
         self.collateral_eth -= collateral_eth_removed
 
-        fully_liquidated = self.debt_dai <= 1e-9
+        bad_debt_after = self.bad_debt(eth_price)
+
+        fully_liquidated = (
+                self.debt_dai <= 1e-9
+                or self.collateral_eth <= 1e-9
+                or bad_debt_after > bad_debt_before
+        )
+
+        bad_debt_realised = bad_debt_after if fully_liquidated else bad_debt_after
 
         if fully_liquidated:
             self.debt_dai = 0.0
@@ -330,7 +338,7 @@ class Vault:
             "debt_repaid": actual_debt_repaid,
             "remaining_debt": self.debt_dai,
             "remaining_collateral_eth": self.collateral_eth,
-            "bad_debt": self.bad_debt(eth_price),
+            "bad_debt": bad_debt_realised,
         }
 
 def create_vault_from_target_cr(

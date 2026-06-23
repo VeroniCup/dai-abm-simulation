@@ -585,7 +585,7 @@ if __name__ == "__main__":
 
     high_gas_config = LiquidationConfig(
         liquidation_penalty=0.13,
-        gas_cost=400.0,
+        gas_cost=250.0,
         risk_cost_rate=0.00,
         max_close_factor=0.5,
         max_liquidations_per_step=5,

@@ -194,6 +194,7 @@ def execute_keeper_liquidation(
     liquidation_summary = vault.partial_liquidate(
         eth_price=eth_price,
         debt_repaid=debt_repaid,
+        liquidation_penalty=config.liquidation_penalty,
     )
 
     return {
@@ -204,7 +205,7 @@ def execute_keeper_liquidation(
         "reason": "profitable",
         "expected_profit": expected_profit,
         "realised_keeper_profit": expected_profit,
-        "bad_debt": bad_debt_before,
+        "bad_debt": liquidation_summary["bad_debt"],
         "debt_repaid": liquidation_summary["debt_repaid"],
         "collateral_value": liquidation_summary["collateral_value_removed"],
         "collateral_value_before": collateral_value_before,

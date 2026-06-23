@@ -117,7 +117,7 @@ def create_scenario_configs() -> dict:
         "low_gas": {
             "liquidation_config": LiquidationConfig(
                 liquidation_penalty=0.13,
-                gas_cost=100.0,
+                gas_cost=50.0,
                 risk_cost_rate=0.00,
                 max_close_factor=0.5,
                 max_liquidations_per_step=20,
@@ -128,7 +128,7 @@ def create_scenario_configs() -> dict:
         "medium_gas": {
             "liquidation_config": LiquidationConfig(
                 liquidation_penalty=0.13,
-                gas_cost=250.0,
+                gas_cost=150.0,
                 risk_cost_rate=0.00,
                 max_close_factor=0.5,
                 max_liquidations_per_step=10,
@@ -139,7 +139,7 @@ def create_scenario_configs() -> dict:
         "high_gas": {
             "liquidation_config": LiquidationConfig(
                 liquidation_penalty=0.13,
-                gas_cost=400.0,
+                gas_cost=250.0,
                 risk_cost_rate=0.00,
                 max_close_factor=0.5,
                 max_liquidations_per_step=5,
