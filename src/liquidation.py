@@ -47,6 +47,7 @@ class LiquidationConfig:
     gas_cost: float = 100.0
     risk_cost_rate: float = 0.00
     max_close_factor: float = 1.0
+    max_liquidations_per_step: int | None = None
 
     def validate(self) -> None:
         """Validate liquidation configuration."""
@@ -58,6 +59,9 @@ class LiquidationConfig:
             raise ValueError("risk_cost_rate cannot be negative.")
         if not 0 < self.max_close_factor <= 1:
             raise ValueError("max_close_factor must be in (0, 1].")
+        if self.max_liquidations_per_step is not None:
+            if self.max_liquidations_per_step <= 0:
+                raise ValueError("max_liquidations_per_step must be positive or None.")
 
 
 def expected_liquidation_profit(
@@ -202,6 +206,10 @@ def liquidate_vaults(
     """
     Apply keeper liquidation decision to all vaults.
 
+    Profitable liquidation opportunities are ranked by expected profit.
+    If max_liquidations_per_step is set, only the most profitable opportunities
+    are executed in the current step.
+
     Parameters
     ----------
     vaults:
@@ -216,12 +224,98 @@ def liquidate_vaults(
     pd.DataFrame
         Liquidation attempt records for all vaults.
     """
-    records = [
-        execute_keeper_liquidation(vault=vault, eth_price=eth_price, config=config)
-        for vault in vaults
-    ]
+    config.validate()
 
-    return pd.DataFrame(records)
+    preliminary_records = []
+
+    for vault in vaults:
+        expected_profit = expected_liquidation_profit(
+            vault=vault,
+            eth_price=eth_price,
+            config=config,
+        )
+
+        preliminary_records.append(
+            {
+                "vault": vault,
+                "vault_id": vault.vault_id,
+                "is_liquidatable": vault.is_liquidatable(eth_price),
+                "expected_profit": expected_profit,
+                "is_profitable": expected_profit > 0,
+            }
+        )
+
+    preliminary_df = pd.DataFrame(preliminary_records)
+
+    profitable_df = preliminary_df[
+        preliminary_df["is_liquidatable"] & preliminary_df["is_profitable"]
+    ].copy()
+
+    profitable_df = profitable_df.sort_values(
+        "expected_profit",
+        ascending=False,
+    )
+
+    if config.max_liquidations_per_step is not None:
+        executable_vault_ids = set(
+            profitable_df.head(config.max_liquidations_per_step)["vault_id"]
+        )
+    else:
+        executable_vault_ids = set(profitable_df["vault_id"])
+
+    final_records = []
+
+    for row in preliminary_records:
+        vault = row["vault"]
+        vault_id = row["vault_id"]
+
+        if vault_id in executable_vault_ids:
+            record = execute_keeper_liquidation(
+                vault=vault,
+                eth_price=eth_price,
+                config=config,
+            )
+        else:
+            if not vault.is_liquidatable(eth_price):
+                record = {
+                    "vault_id": vault.vault_id,
+                    "attempted": False,
+                    "liquidated": False,
+                    "reason": "not_liquidatable",
+                    "expected_profit": row["expected_profit"],
+                    "realised_keeper_profit": 0.0,
+                    "bad_debt": vault.bad_debt(eth_price),
+                    "debt_repaid": 0.0,
+                    "collateral_value": vault.collateral_value(eth_price),
+                }
+            elif row["expected_profit"] <= 0:
+                record = {
+                    "vault_id": vault.vault_id,
+                    "attempted": True,
+                    "liquidated": False,
+                    "reason": "unprofitable",
+                    "expected_profit": row["expected_profit"],
+                    "realised_keeper_profit": 0.0,
+                    "bad_debt": vault.bad_debt(eth_price),
+                    "debt_repaid": 0.0,
+                    "collateral_value": vault.collateral_value(eth_price),
+                }
+            else:
+                record = {
+                    "vault_id": vault.vault_id,
+                    "attempted": True,
+                    "liquidated": False,
+                    "reason": "capacity_limited",
+                    "expected_profit": row["expected_profit"],
+                    "realised_keeper_profit": 0.0,
+                    "bad_debt": vault.bad_debt(eth_price),
+                    "debt_repaid": 0.0,
+                    "collateral_value": vault.collateral_value(eth_price),
+                }
+
+        final_records.append(record)
+
+    return pd.DataFrame(final_records)
 
 
 def summarise_liquidations(liquidation_df: pd.DataFrame) -> dict:
@@ -243,6 +337,7 @@ def summarise_liquidations(liquidation_df: pd.DataFrame) -> dict:
             "n_attempted": 0,
             "n_liquidated": 0,
             "n_unprofitable": 0,
+            "n_capacity_limited": 0,
             "keeper_profit": 0.0,
             "bad_debt_realised": 0.0,
             "debt_repaid": 0.0,
@@ -252,11 +347,13 @@ def summarise_liquidations(liquidation_df: pd.DataFrame) -> dict:
     n_attempted = int(liquidation_df["attempted"].sum())
     n_liquidated = int(liquidation_df["liquidated"].sum())
     n_unprofitable = int((liquidation_df["reason"] == "unprofitable").sum())
+    n_capacity_limited = int((liquidation_df["reason"] == "capacity_limited").sum())
 
     return {
         "n_attempted": n_attempted,
         "n_liquidated": n_liquidated,
         "n_unprofitable": n_unprofitable,
+        "n_capacity_limited": n_capacity_limited,
         "keeper_profit": liquidation_df["realised_keeper_profit"].sum(),
         "bad_debt_realised": liquidation_df.loc[
             liquidation_df["liquidated"], "bad_debt"
@@ -286,9 +383,10 @@ if __name__ == "__main__":
 
     liq_config = LiquidationConfig(
         liquidation_penalty=0.13,
-        gas_cost=700.0,
+        gas_cost=100.0,
         risk_cost_rate=0.00,
         max_close_factor=1.0,
+        max_liquidations_per_step=3,
     )
 
     before = vaults_to_dataframe(vaults, eth_price=shocked_eth_price)
