@@ -103,13 +103,10 @@ def compute_clean_scenario_metrics(
         "final_liquidatable_vaults": int(final["n_liquidatable"]),
         "final_active_bad_debt": float(final["total_bad_debt_active"]),
         "cumulative_keeper_profit": float(final["keeper_profit_cumulative"]),
-        "cumulative_bad_debt_realised": float(
-            final["bad_debt_realised_cumulative"]
-        ),
+        "cumulative_bad_debt_realised": float(final["bad_debt_realised_cumulative"]),
         "cumulative_debt_repaid": float(final["debt_repaid_cumulative"]),
-        "cumulative_unprofitable_attempts": int(
-            final["unprofitable_liquidations_cumulative"]
-        ),
+        "cumulative_unprofitable_attempts": int(final["unprofitable_liquidations_cumulative"]),
+        "cumulative_capacity_limited_attempts": int(final["capacity_limited_liquidations_cumulative"]),
     }
 
 
