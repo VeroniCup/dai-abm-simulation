@@ -267,6 +267,54 @@ def add_shock_to_existing_path(
     return shocked
 
 
+def add_oracle_price(
+    price_path: pd.DataFrame,
+    delay_steps: int = 0,
+    price_col: str = "eth_price",
+    oracle_col: str = "oracle_eth_price",
+) -> pd.DataFrame:
+    """
+    Add a delayed oracle ETH price column to a price path.
+
+    The market price represents the true ETH market price.
+    The oracle price represents the price used by the simulated protocol
+    for collateral ratio checks and liquidation triggers.
+
+    If delay_steps = 0, oracle price equals market price.
+    If delay_steps = 3, oracle price at step t equals market price from step t-3.
+
+    Parameters
+    ----------
+    price_path:
+        DataFrame containing an ETH market price column.
+    delay_steps:
+        Number of time steps by which the oracle price lags.
+    price_col:
+        Name of the market ETH price column.
+    oracle_col:
+        Name of the delayed oracle price column.
+
+    Returns
+    -------
+    pd.DataFrame
+        Price path with oracle price column added.
+    """
+    if delay_steps < 0:
+        raise ValueError("delay_steps cannot be negative.")
+    if price_col not in price_path.columns:
+        raise ValueError(f"{price_col} not found in price_path.")
+
+    delayed = price_path.copy()
+
+    if delay_steps == 0:
+        delayed[oracle_col] = delayed[price_col]
+    else:
+        delayed[oracle_col] = delayed[price_col].shift(delay_steps)
+        delayed[oracle_col] = delayed[oracle_col].fillna(delayed[price_col].iloc[0])
+
+    return delayed
+
+
 if __name__ == "__main__":
     # Quick smoke test. Run:
     # python src/price_process.py

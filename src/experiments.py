@@ -35,7 +35,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RESULTS_DIR = PROJECT_ROOT / "outputs" / "results"
 
 
-def create_base_simulation_config() -> SimulationConfig:
+def create_base_simulation_config(
+    oracle_delay_steps: int = 0,
+) -> SimulationConfig:
     """
     Create the baseline simulation configuration.
 
@@ -49,6 +51,7 @@ def create_base_simulation_config() -> SimulationConfig:
         n_vaults=100,
         initial_eth_price=2_000.0,
         liquidation_ratio=1.5,
+        oracle_delay_steps=oracle_delay_steps,
         debt_mean=5_000.0,
         debt_std=1_000.0,
         collateral_ratio_mean=2.0,
@@ -266,7 +269,9 @@ def run_all_scenarios(
     """
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
-    sim_config = create_base_simulation_config()
+    sim_config = create_base_simulation_config(
+        oracle_delay_steps=0,
+    )
     scenarios = create_scenario_configs()
 
     all_results = []
@@ -311,6 +316,100 @@ def run_all_scenarios(
     return combined_results, summary_df
 
 
+def run_oracle_delay_experiment(
+    delay_values: list[int] | None = None,
+    shock_time: int = 30,
+    shock_size: float = -0.43,
+    initial_dai_price: float = 1.0,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Run oracle-delay sensitivity experiment.
+
+    This experiment keeps liquidation and market parameters fixed, but varies
+    the number of steps by which the oracle ETH price lags the market ETH price.
+
+    Parameters
+    ----------
+    delay_values:
+        Oracle delay values to test.
+    shock_time:
+        ETH shock time.
+    shock_size:
+        ETH shock size.
+    initial_dai_price:
+        Initial DAI price.
+
+    Returns
+    -------
+    tuple[pd.DataFrame, pd.DataFrame]
+        Combined oracle-delay results and summary table.
+    """
+    if delay_values is None:
+        delay_values = [0, 1, 3, 5, 10]
+
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    base_confidence = create_base_confidence_config()
+    base_market = create_base_dai_market_config()
+
+    # Use a medium/high friction setting so oracle delay has visible effects.
+    liquidation_config = LiquidationConfig(
+        liquidation_penalty=0.13,
+        gas_cost=250.0,
+        risk_cost_rate=0.00,
+        max_close_factor=0.5,
+        max_liquidations_per_step=5,
+    )
+
+    all_results = []
+    summary_records = []
+
+    for delay in delay_values:
+        scenario_name = f"oracle_delay_{delay}"
+
+        print(f"Running oracle delay scenario: {scenario_name}")
+
+        sim_config = create_base_simulation_config(
+            oracle_delay_steps=delay,
+        )
+
+        results = run_shock_simulation(
+            config=sim_config,
+            liquidation_config=liquidation_config,
+            confidence_config=base_confidence,
+            dai_market_config=base_market,
+            shock_time=shock_time,
+            shock_size=shock_size,
+            initial_dai_price=initial_dai_price,
+            execute_liquidations=True,
+        )
+
+        results.insert(0, "scenario", scenario_name)
+        results.insert(1, "oracle_delay_steps_experiment", delay)
+
+        scenario_path = RESULTS_DIR / f"{scenario_name}_results.csv"
+        results.to_csv(scenario_path, index=False)
+
+        all_results.append(results)
+        summary_records.append(
+            compute_summary_metrics(
+                scenario_name=scenario_name,
+                results=results,
+            )
+        )
+
+    combined_results = pd.concat(all_results, ignore_index=True)
+    summary_df = pd.DataFrame(summary_records)
+
+    combined_path = RESULTS_DIR / "oracle_delay_combined_results.csv"
+    summary_path = RESULTS_DIR / "oracle_delay_summary.csv"
+
+    combined_results.to_csv(combined_path, index=False)
+    summary_df.to_csv(summary_path, index=False)
+
+    return combined_results, summary_df
+
+
 if __name__ == "__main__":
     # Run:
     # python src/experiments.py
@@ -326,3 +425,13 @@ if __name__ == "__main__":
 
     print("\nSaved results to:")
     print(RESULTS_DIR)
+
+    oracle_results, oracle_summary = run_oracle_delay_experiment(
+        delay_values=[0, 1, 3, 5, 10],
+        shock_time=30,
+        shock_size=-0.43,
+        initial_dai_price=1.0,
+    )
+
+    print("\nOracle delay summary:")
+    print(oracle_summary)

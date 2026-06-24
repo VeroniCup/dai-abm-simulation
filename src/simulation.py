@@ -42,6 +42,7 @@ from price_process import (
     generate_constant_price_path,
     generate_shock_price_path,
     generate_gbm_price_path,
+    add_oracle_price,
 )
 
 from vault import (
@@ -88,6 +89,7 @@ class SimulationConfig:
     n_vaults: int = 100
     initial_eth_price: float = 2_000.0
     liquidation_ratio: float = 1.5
+    oracle_delay_steps: int = 0
 
     debt_mean: float = 5_000.0
     debt_std: float = 1_000.0
@@ -116,6 +118,8 @@ class SimulationConfig:
             )
         if self.collateral_ratio_std < 0:
             raise ValueError("collateral_ratio_std cannot be negative.")
+        if self.oracle_delay_steps < 0:
+            raise ValueError("oracle_delay_steps cannot be negative.")
 
 
 def create_initial_vaults(config: SimulationConfig) -> list[Vault]:
@@ -265,6 +269,13 @@ def run_simulation_with_price_path(
     if missing_cols:
         raise ValueError(f"price_path is missing columns: {missing_cols}")
 
+    price_path = add_oracle_price(
+        price_path=price_path,
+        delay_steps=config.oracle_delay_steps,
+        price_col="eth_price",
+        oracle_col="oracle_eth_price",
+    )
+
     rng = np.random.default_rng(config.random_seed)
 
     vaults = create_initial_vaults(config)
@@ -283,11 +294,12 @@ def run_simulation_with_price_path(
     for _, row in price_path.iterrows():
         step = int(row["step"])
         eth_price = float(row["eth_price"])
+        oracle_eth_price = float(row["oracle_eth_price"])
 
         # State before keeper action and before DAI price update
         pre_summary = summarise_vault_system(
             vaults=vaults,
-            eth_price=eth_price,
+            eth_price=oracle_eth_price,
             step=step,
         )
 
@@ -345,7 +357,7 @@ def run_simulation_with_price_path(
         if execute_liquidations and pre_summary["n_liquidatable"] > 0:
             liquidation_df = liquidate_vaults(
                 vaults=vaults,
-                eth_price=eth_price,
+                eth_price=oracle_eth_price,
                 config=liquidation_config,
             )
             liquidation_summary = summarise_liquidations(liquidation_df)
@@ -368,7 +380,7 @@ def run_simulation_with_price_path(
         # State after keeper action
         post_summary = summarise_vault_system(
             vaults=vaults,
-            eth_price=eth_price,
+            eth_price=oracle_eth_price,
             step=step,
         )
 
@@ -381,6 +393,9 @@ def run_simulation_with_price_path(
 
         record = {
             **post_summary,
+            "market_eth_price": eth_price,
+            "oracle_eth_price": oracle_eth_price,
+            "oracle_delay_steps": config.oracle_delay_steps,
             "dai_price_before": dai_price_before,
             "dai_price": dai_price,
             "dai_price_change": dai_price - dai_price_before,
@@ -580,6 +595,7 @@ if __name__ == "__main__":
         n_vaults=100,
         initial_eth_price=2_000.0,
         liquidation_ratio=1.5,
+        oracle_delay_steps=3,
         random_seed=42,
     )
 
@@ -628,7 +644,8 @@ if __name__ == "__main__":
 
     columns_to_show = [
         "step",
-        "eth_price",
+        "market_eth_price",
+        "oracle_eth_price",
         "dai_price",
         "regime_before",
         "regime_after",
