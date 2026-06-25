@@ -296,33 +296,42 @@ def run_simulation_with_price_path(
         eth_price = float(row["eth_price"])
         oracle_eth_price = float(row["oracle_eth_price"])
 
-        # State before keeper action and before DAI price update
+        # State before keeper action using oracle price.
+        # This is what the protocol sees.
         pre_summary = summarise_vault_system(
             vaults=vaults,
             eth_price=oracle_eth_price,
             step=step,
         )
 
+        # State before keeper action using true market price.
+        # This captures hidden economic stress when the oracle is delayed.
+        market_pre_summary = summarise_vault_system(
+            vaults=vaults,
+            eth_price=eth_price,
+            step=step,
+        )
+
         confidence_state_before = get_confidence_state(
             dai_price=dai_price,
-            share_liquidatable=pre_summary["share_liquidatable"],
-            active_bad_debt=pre_summary["total_bad_debt_active"],
+            share_liquidatable=market_pre_summary["share_liquidatable"],
+            active_bad_debt=market_pre_summary["total_bad_debt_active"],
             config=confidence_config,
         )
 
         # Update DAI market price using confidence state
         # Additional system-level selling pressure from liquidation stress.
         # This links vault-system stress directly to DAI market confidence.
-        if pre_summary["total_debt_active"] > 0:
+        if market_pre_summary["total_debt_active"] > 0:
             bad_debt_ratio = (
-                    pre_summary["total_bad_debt_active"] / pre_summary["total_debt_active"]
+                    market_pre_summary["total_bad_debt_active"]
+                    / market_pre_summary["total_debt_active"]
             )
         else:
             bad_debt_ratio = 0.0
 
         systemic_stress_pressure = (
-                # was 0.02 * share_liquidatable + 2.0 * bad_debt_ratio but final DAI price depegged too much
-                0.005 * pre_summary["share_liquidatable"]
+                0.005 * market_pre_summary["share_liquidatable"]
                 + 0.5 * bad_debt_ratio
         )
 
@@ -377,17 +386,24 @@ def run_simulation_with_price_path(
                 liquidation_summary["n_capacity_limited"]
             )
 
-        # State after keeper action
+        # State after keeper action using oracle price.
         post_summary = summarise_vault_system(
             vaults=vaults,
             eth_price=oracle_eth_price,
             step=step,
         )
 
+        # State after keeper action using true market price.
+        market_post_summary = summarise_vault_system(
+            vaults=vaults,
+            eth_price=eth_price,
+            step=step,
+        )
+
         confidence_state_after = get_confidence_state(
             dai_price=dai_price,
-            share_liquidatable=post_summary["share_liquidatable"],
-            active_bad_debt=post_summary["total_bad_debt_active"],
+            share_liquidatable=market_post_summary["share_liquidatable"],
+            active_bad_debt=market_post_summary["total_bad_debt_active"],
             config=confidence_config,
         )
 
@@ -396,6 +412,17 @@ def run_simulation_with_price_path(
             "market_eth_price": eth_price,
             "oracle_eth_price": oracle_eth_price,
             "oracle_delay_steps": config.oracle_delay_steps,
+            "oracle_system_collateral_ratio": post_summary["system_collateral_ratio"],
+            "market_system_collateral_ratio": market_post_summary["system_collateral_ratio"],
+            "oracle_total_bad_debt_active": post_summary["total_bad_debt_active"],
+            "market_total_bad_debt_active": market_post_summary["total_bad_debt_active"],
+            "oracle_share_liquidatable": post_summary["share_liquidatable"],
+            "market_share_liquidatable": market_post_summary["share_liquidatable"],
+            "hidden_bad_debt": max(
+                market_post_summary["total_bad_debt_active"]
+                - post_summary["total_bad_debt_active"],
+                0.0,
+            ),
             "dai_price_before": dai_price_before,
             "dai_price": dai_price,
             "dai_price_change": dai_price - dai_price_before,
@@ -656,7 +683,9 @@ if __name__ == "__main__":
         "n_unprofitable_liquidations",
         "n_capacity_limited_liquidations",
         "n_liquidatable",
-        "total_bad_debt_active",
+        "oracle_total_bad_debt_active",
+        "market_total_bad_debt_active",
+        "hidden_bad_debt",
         "dai_net_pressure",
         "keeper_profit_cumulative",
         "bad_debt_realised_cumulative",

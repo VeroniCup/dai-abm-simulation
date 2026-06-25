@@ -102,6 +102,15 @@ def compute_clean_scenario_metrics(
         "final_active_vaults": int(final["n_vaults_active"]),
         "final_liquidatable_vaults": int(final["n_liquidatable"]),
         "final_active_bad_debt": float(final["total_bad_debt_active"]),
+        "max_hidden_bad_debt": float(results["hidden_bad_debt"].max())
+            if "hidden_bad_debt" in results.columns
+            else 0.0,
+        "final_hidden_bad_debt": float(final["hidden_bad_debt"])
+             if "hidden_bad_debt" in results.columns
+            else 0.0,
+        "max_market_bad_debt_active": float(results["market_total_bad_debt_active"].max())
+            if "market_total_bad_debt_active" in results.columns
+            else float(results["total_bad_debt_active"].max()),
         "cumulative_keeper_profit": float(final["keeper_profit_cumulative"]),
         "cumulative_bad_debt_realised": float(final["bad_debt_realised_cumulative"]),
         "cumulative_debt_repaid": float(final["debt_repaid_cumulative"]),

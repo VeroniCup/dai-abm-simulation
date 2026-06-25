@@ -282,6 +282,195 @@ def create_all_figures(
     return figure_paths
 
 
+def load_oracle_delay_results(
+    path: Path | None = None,
+) -> pd.DataFrame:
+    """
+    Load combined oracle-delay experiment results.
+
+    Parameters
+    ----------
+    path:
+        Optional path to oracle_delay_combined_results.csv.
+
+    Returns
+    -------
+    pd.DataFrame
+        Oracle-delay combined results.
+    """
+    if path is None:
+        path = RESULTS_DIR / "oracle_delay_combined_results.csv"
+
+    if not path.exists():
+        raise FileNotFoundError(f"Could not find oracle-delay results file: {path}")
+
+    return pd.read_csv(path)
+
+
+def load_oracle_delay_summary(
+    path: Path | None = None,
+) -> pd.DataFrame:
+    """
+    Load oracle-delay summary results.
+
+    Parameters
+    ----------
+    path:
+        Optional path to oracle_delay_summary.csv.
+
+    Returns
+    -------
+    pd.DataFrame
+        Oracle-delay summary table.
+    """
+    if path is None:
+        path = RESULTS_DIR / "oracle_delay_summary.csv"
+
+    if not path.exists():
+        raise FileNotFoundError(f"Could not find oracle-delay summary file: {path}")
+
+    return pd.read_csv(path)
+
+
+def plot_hidden_bad_debt_by_oracle_delay(
+    results: pd.DataFrame,
+    shock_time: int = 30,
+    save_path: Path | None = None,
+) -> Path:
+    """
+    Plot hidden bad debt over time by oracle-delay scenario.
+    """
+    if save_path is None:
+        save_path = FIGURES_DIR / "hidden_bad_debt_by_oracle_delay.png"
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    scenario_order = (
+        results[["scenario", "oracle_delay_steps_experiment"]]
+        .drop_duplicates()
+        .sort_values("oracle_delay_steps_experiment")
+    )
+
+    for _, row in scenario_order.iterrows():
+        scenario_name = row["scenario"]
+        delay = int(row["oracle_delay_steps_experiment"])
+
+        scenario_df = results[results["scenario"] == scenario_name].sort_values("step")
+
+        ax.plot(
+            scenario_df["step"],
+            scenario_df["hidden_bad_debt"],
+            label=f"delay = {delay}",
+        )
+
+    ax.axvline(shock_time, linestyle=":", linewidth=1, label="ETH shock")
+
+    ax.set_title("Hidden Bad Debt under Oracle Delay")
+    ax.set_xlabel("Simulation step")
+    ax.set_ylabel("Hidden bad debt")
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+
+    fig.tight_layout()
+    fig.savefig(save_path, dpi=300)
+    plt.close(fig)
+
+    return save_path
+
+
+def plot_final_dai_price_by_oracle_delay(
+    summary: pd.DataFrame,
+    save_path: Path | None = None,
+) -> Path:
+    """
+    Plot final DAI price by oracle delay.
+    """
+    if save_path is None:
+        save_path = FIGURES_DIR / "final_dai_price_by_oracle_delay.png"
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+
+    summary = summary.sort_values("oracle_delay_steps")
+
+    ax.plot(
+        summary["oracle_delay_steps"],
+        summary["final_dai_price"],
+        marker="o",
+    )
+
+    ax.axhline(1.0, linestyle="--", linewidth=1, label="DAI peg")
+
+    ax.set_title("Final DAI Price by Oracle Delay")
+    ax.set_xlabel("Oracle delay steps")
+    ax.set_ylabel("Final DAI price")
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+
+    fig.tight_layout()
+    fig.savefig(save_path, dpi=300)
+    plt.close(fig)
+
+    return save_path
+
+
+def plot_hidden_bad_debt_duration_by_oracle_delay(
+    summary: pd.DataFrame,
+    save_path: Path | None = None,
+) -> Path:
+    """
+    Plot hidden bad debt duration by oracle delay.
+    """
+    if save_path is None:
+        save_path = FIGURES_DIR / "hidden_bad_debt_duration_by_oracle_delay.png"
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+
+    summary = summary.sort_values("oracle_delay_steps")
+
+    ax.bar(
+        summary["oracle_delay_steps"].astype(str),
+        summary["hidden_bad_debt_duration"],
+    )
+
+    ax.set_title("Hidden Bad Debt Duration by Oracle Delay")
+    ax.set_xlabel("Oracle delay steps")
+    ax.set_ylabel("Duration with hidden bad debt")
+
+    ax.grid(True, axis="y", alpha=0.3)
+
+    fig.tight_layout()
+    fig.savefig(save_path, dpi=300)
+    plt.close(fig)
+
+    return save_path
+
+
+def create_oracle_delay_figures(
+    oracle_results: pd.DataFrame,
+    oracle_summary: pd.DataFrame,
+    shock_time: int = 30,
+) -> list[Path]:
+    """
+    Create all oracle-delay result figures.
+    """
+    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+
+    figure_paths = [
+        plot_hidden_bad_debt_by_oracle_delay(
+            oracle_results,
+            shock_time=shock_time,
+        ),
+        plot_final_dai_price_by_oracle_delay(
+            oracle_summary,
+        ),
+        plot_hidden_bad_debt_duration_by_oracle_delay(
+            oracle_summary,
+        ),
+    ]
+
+    return figure_paths
+
+
 if __name__ == "__main__":
     # Run:
     # python src/plot_results.py
@@ -289,6 +478,14 @@ if __name__ == "__main__":
     combined_results = load_combined_results()
     paths = create_all_figures(combined_results, shock_time=30)
 
+    oracle_results = load_oracle_delay_results()
+    oracle_summary = load_oracle_delay_summary()
+    oracle_paths = create_oracle_delay_figures(
+        oracle_results=oracle_results,
+        oracle_summary=oracle_summary,
+        shock_time=30,
+    )
+
     print("Saved figures:")
-    for path in paths:
+    for path in paths + oracle_paths:
         print(path)

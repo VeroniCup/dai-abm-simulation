@@ -392,7 +392,7 @@ def run_oracle_delay_experiment(
 
         all_results.append(results)
         summary_records.append(
-            compute_summary_metrics(
+            compute_oracle_delay_metrics(
                 scenario_name=scenario_name,
                 results=results,
             )
@@ -408,6 +408,66 @@ def run_oracle_delay_experiment(
     summary_df.to_csv(summary_path, index=False)
 
     return combined_results, summary_df
+
+
+def compute_oracle_delay_metrics(
+    scenario_name: str,
+    results: pd.DataFrame,
+) -> dict:
+    """
+    Compute summary metrics for oracle-delay experiments.
+
+    These metrics focus on hidden risk created when the oracle price lags
+    behind the market price.
+    """
+    final = results.iloc[-1]
+
+    hidden_bad_debt = results["hidden_bad_debt"]
+    hidden_positive = hidden_bad_debt > 0
+
+    if hidden_positive.any():
+        first_hidden_step = int(results.loc[hidden_positive, "step"].iloc[0])
+        last_hidden_step = int(results.loc[hidden_positive, "step"].iloc[-1])
+        hidden_duration = int(hidden_positive.sum())
+    else:
+        first_hidden_step = None
+        last_hidden_step = None
+        hidden_duration = 0
+
+    peg_deviation = (results["dai_price"] - 1.0).abs()
+
+    return {
+        "scenario": scenario_name,
+        "oracle_delay_steps": int(final["oracle_delay_steps"]),
+        "final_dai_price": float(final["dai_price"]),
+        "min_dai_price": float(results["dai_price"].min()),
+        "max_abs_peg_deviation": float(peg_deviation.max()),
+        "max_hidden_bad_debt": float(results["hidden_bad_debt"].max()),
+        "final_hidden_bad_debt": float(final["hidden_bad_debt"]),
+        "hidden_bad_debt_duration": hidden_duration,
+        "first_hidden_bad_debt_step": first_hidden_step,
+        "last_hidden_bad_debt_step": last_hidden_step,
+        "max_market_bad_debt_active": float(
+            results["market_total_bad_debt_active"].max()
+        ),
+        "max_oracle_bad_debt_active": float(
+            results["oracle_total_bad_debt_active"].max()
+        ),
+        "final_market_bad_debt_active": float(
+            final["market_total_bad_debt_active"]
+        ),
+        "final_oracle_bad_debt_active": float(
+            final["oracle_total_bad_debt_active"]
+        ),
+        "cumulative_keeper_profit": float(final["keeper_profit_cumulative"]),
+        "cumulative_debt_repaid": float(final["debt_repaid_cumulative"]),
+        "cumulative_bad_debt_realised": float(
+            final["bad_debt_realised_cumulative"]
+        ),
+        "cumulative_unprofitable_attempts": int(
+            final["unprofitable_liquidations_cumulative"]
+        ),
+    }
 
 
 if __name__ == "__main__":
