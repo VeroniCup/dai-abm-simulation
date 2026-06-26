@@ -471,21 +471,238 @@ def create_oracle_delay_figures(
     return figure_paths
 
 
+def load_shock_severity_results(
+    path: Path | None = None,
+) -> pd.DataFrame:
+    """
+    Load combined shock-severity experiment results.
+    """
+    if path is None:
+        path = RESULTS_DIR / "shock_severity_combined_results.csv"
+
+    if not path.exists():
+        raise FileNotFoundError(f"Could not find shock-severity results file: {path}")
+
+    return pd.read_csv(path)
+
+
+def load_shock_severity_summary(
+    path: Path | None = None,
+) -> pd.DataFrame:
+    """
+    Load shock-severity summary results.
+    """
+    if path is None:
+        path = RESULTS_DIR / "shock_severity_summary.csv"
+
+    if not path.exists():
+        raise FileNotFoundError(f"Could not find shock-severity summary file: {path}")
+
+    return pd.read_csv(path)
+
+
+def plot_dai_price_by_shock_severity(
+    results: pd.DataFrame,
+    shock_time: int = 30,
+    save_path: Path | None = None,
+) -> Path:
+    """
+    Plot DAI price over time for different ETH shock severities.
+    """
+    if save_path is None:
+        save_path = FIGURES_DIR / "dai_price_by_shock_severity.png"
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    scenario_order = (
+        results[["scenario", "shock_size_experiment"]]
+        .drop_duplicates()
+        .sort_values("shock_size_experiment", ascending=False)
+    )
+
+    for _, row in scenario_order.iterrows():
+        scenario_name = row["scenario"]
+        shock_size = row["shock_size_experiment"]
+
+        scenario_df = results[results["scenario"] == scenario_name].sort_values("step")
+
+        ax.plot(
+            scenario_df["step"],
+            scenario_df["dai_price"],
+            label=f"{abs(shock_size):.0%} shock",
+        )
+
+    ax.axhline(1.0, linestyle="--", linewidth=1, label="DAI peg")
+    ax.axvline(shock_time, linestyle=":", linewidth=1, label="ETH shock")
+
+    ax.set_title("DAI Price under Different ETH Shock Severities")
+    ax.set_xlabel("Simulation step")
+    ax.set_ylabel("DAI price")
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+
+    fig.tight_layout()
+    fig.savefig(save_path, dpi=300)
+    plt.close(fig)
+
+    return save_path
+
+
+def plot_final_dai_price_by_shock_severity(
+    summary: pd.DataFrame,
+    save_path: Path | None = None,
+) -> Path:
+    """
+    Plot final DAI price by ETH shock severity.
+    """
+    if save_path is None:
+        save_path = FIGURES_DIR / "final_dai_price_by_shock_severity.png"
+
+    summary = summary.sort_values("shock_size", ascending=False)
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+
+    ax.plot(
+        summary["shock_size"].abs() * 100,
+        summary["final_dai_price"],
+        marker="o",
+    )
+
+    ax.axhline(1.0, linestyle="--", linewidth=1, label="DAI peg")
+
+    ax.set_title("Final DAI Price by ETH Shock Severity")
+    ax.set_xlabel("ETH shock size (%)")
+    ax.set_ylabel("Final DAI price")
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+
+    fig.tight_layout()
+    fig.savefig(save_path, dpi=300)
+    plt.close(fig)
+
+    return save_path
+
+
+def plot_max_bad_debt_by_shock_severity(
+    summary: pd.DataFrame,
+    save_path: Path | None = None,
+) -> Path:
+    """
+    Plot maximum active bad debt by ETH shock severity.
+    """
+    if save_path is None:
+        save_path = FIGURES_DIR / "max_bad_debt_by_shock_severity.png"
+
+    summary = summary.sort_values("shock_size", ascending=False)
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+
+    ax.bar(
+        summary["shock_size"].abs().mul(100).astype(int).astype(str),
+        summary["max_market_bad_debt_active"],
+    )
+
+    ax.set_title("Maximum Active Bad Debt by ETH Shock Severity")
+    ax.set_xlabel("ETH shock size (%)")
+    ax.set_ylabel("Maximum active bad debt")
+    ax.grid(True, axis="y", alpha=0.3)
+
+    fig.tight_layout()
+    fig.savefig(save_path, dpi=300)
+    plt.close(fig)
+
+    return save_path
+
+
+def plot_realised_bad_debt_by_shock_severity(
+    summary: pd.DataFrame,
+    save_path: Path | None = None,
+) -> Path:
+    """
+    Plot cumulative realised bad debt by ETH shock severity.
+    """
+    if save_path is None:
+        save_path = FIGURES_DIR / "realised_bad_debt_by_shock_severity.png"
+
+    summary = summary.sort_values("shock_size", ascending=False)
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+
+    ax.bar(
+        summary["shock_size"].abs().mul(100).astype(int).astype(str),
+        summary["cumulative_bad_debt_realised"],
+    )
+
+    ax.set_title("Cumulative Realised Bad Debt by ETH Shock Severity")
+    ax.set_xlabel("ETH shock size (%)")
+    ax.set_ylabel("Cumulative realised bad debt")
+    ax.grid(True, axis="y", alpha=0.3)
+
+    fig.tight_layout()
+    fig.savefig(save_path, dpi=300)
+    plt.close(fig)
+
+    return save_path
+
+
+def create_shock_severity_figures(
+    shock_results: pd.DataFrame,
+    shock_summary: pd.DataFrame,
+    shock_time: int = 30,
+) -> list[Path]:
+    """
+    Create all shock-severity result figures.
+    """
+    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+
+    figure_paths = [
+        plot_dai_price_by_shock_severity(
+            shock_results,
+            shock_time=shock_time,
+        ),
+        plot_final_dai_price_by_shock_severity(
+            shock_summary,
+        ),
+        plot_max_bad_debt_by_shock_severity(
+            shock_summary,
+        ),
+        plot_realised_bad_debt_by_shock_severity(
+            shock_summary,
+        ),
+    ]
+
+    return figure_paths
+
+
 if __name__ == "__main__":
     # Run:
     # python src/plot_results.py
 
+    paths = []
+
     combined_results = load_combined_results()
-    paths = create_all_figures(combined_results, shock_time=30)
+    paths.extend(create_all_figures(combined_results, shock_time=30))
 
     oracle_results = load_oracle_delay_results()
     oracle_summary = load_oracle_delay_summary()
-    oracle_paths = create_oracle_delay_figures(
-        oracle_results=oracle_results,
-        oracle_summary=oracle_summary,
-        shock_time=30,
+    paths.extend(
+        create_oracle_delay_figures(
+            oracle_results=oracle_results,
+            oracle_summary=oracle_summary,
+            shock_time=30,
+        )
+    )
+
+    shock_results = load_shock_severity_results()
+    shock_summary = load_shock_severity_summary()
+    paths.extend(
+        create_shock_severity_figures(
+            shock_results=shock_results,
+            shock_summary=shock_summary,
+            shock_time=30,
+        )
     )
 
     print("Saved figures:")
-    for path in paths + oracle_paths:
+    for path in paths:
         print(path)

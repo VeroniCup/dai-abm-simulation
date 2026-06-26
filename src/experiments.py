@@ -410,6 +410,82 @@ def run_oracle_delay_experiment(
     return combined_results, summary_df
 
 
+def run_shock_severity_experiment(
+    shock_values: list[float] | None = None,
+    shock_time: int = 30,
+    initial_dai_price: float = 1.0,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Run experiments across different ETH shock severities.
+
+    This experiment tests how increasingly severe collateral shocks affect
+    DAI peg stability, liquidation pressure, bad debt and keeper activity.
+    """
+    if shock_values is None:
+        shock_values = [-0.20, -0.35, -0.43, -0.55, -0.70]
+
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    all_results = []
+    summary_records = []
+
+    # Use a medium/high friction setting as the baseline for severity testing.
+    # This avoids making the system either too easy or completely impossible.
+    liquidation_config = LiquidationConfig(
+        liquidation_penalty=0.13,
+        gas_cost=250.0,
+        risk_cost_rate=0.00,
+        max_close_factor=0.5,
+        max_liquidations_per_step=5,
+    )
+
+    confidence_config = create_base_confidence_config()
+    dai_market_config = create_base_dai_market_config()
+
+    for shock_size in shock_values:
+        scenario_name = f"shock_{abs(int(shock_size * 100))}pct"
+
+        print(f"Running shock severity scenario: {scenario_name}")
+
+        sim_config = create_base_simulation_config(oracle_delay_steps=0)
+
+        results = run_shock_simulation(
+            config=sim_config,
+            liquidation_config=liquidation_config,
+            confidence_config=confidence_config,
+            dai_market_config=dai_market_config,
+            shock_time=shock_time,
+            shock_size=shock_size,
+            initial_dai_price=initial_dai_price,
+            execute_liquidations=True,
+        )
+
+        results["scenario"] = scenario_name
+        results["shock_size_experiment"] = shock_size
+
+        scenario_path = RESULTS_DIR / f"{scenario_name}_results.csv"
+        results.to_csv(scenario_path, index=False)
+
+        all_results.append(results)
+        summary_records.append(
+            compute_shock_severity_metrics(
+                scenario_name=scenario_name,
+                results=results,
+            )
+        )
+
+    combined_results = pd.concat(all_results, ignore_index=True)
+    summary = pd.DataFrame(summary_records)
+
+    combined_path = RESULTS_DIR / "shock_severity_combined_results.csv"
+    summary_path = RESULTS_DIR / "shock_severity_summary.csv"
+
+    combined_results.to_csv(combined_path, index=False)
+    summary.to_csv(summary_path, index=False)
+
+    return combined_results, summary
+
+
 def compute_oracle_delay_metrics(
     scenario_name: str,
     results: pd.DataFrame,
@@ -470,21 +546,79 @@ def compute_oracle_delay_metrics(
     }
 
 
+def compute_shock_severity_metrics(
+    scenario_name: str,
+    results: pd.DataFrame,
+) -> dict:
+    """
+    Compute summary metrics for shock-severity experiments.
+
+    These metrics focus on how different ETH shock sizes affect peg stability,
+    liquidation pressure, bad debt and keeper activity.
+    """
+    final = results.iloc[-1]
+
+    peg_deviation = (results["dai_price"] - 1.0).abs()
+
+    panic_mask = results["regime_after"] == "panic"
+    if panic_mask.any():
+        first_panic_step = int(results.loc[panic_mask, "step"].iloc[0])
+    else:
+        first_panic_step = None
+
+    material_depeg_mask = results["dai_price"] < 0.99
+    if material_depeg_mask.any():
+        first_material_depeg_step = int(
+            results.loc[material_depeg_mask, "step"].iloc[0]
+        )
+    else:
+        first_material_depeg_step = None
+
+    return {
+        "scenario": scenario_name,
+        "shock_size": float(final["shock_size_experiment"]),
+        "final_dai_price": float(final["dai_price"]),
+        "min_dai_price": float(results["dai_price"].min()),
+        "max_abs_peg_deviation": float(peg_deviation.max()),
+        "first_material_depeg_step": first_material_depeg_step,
+        "first_panic_step": first_panic_step,
+        "final_regime": str(final["regime_after"]),
+        "max_liquidatable_vaults": int(
+            results["n_liquidatable_before_liquidation"].max()
+        ),
+        "final_liquidatable_vaults": int(final["n_liquidatable"]),
+        "max_market_bad_debt_active": float(
+            results["market_total_bad_debt_active"].max()
+        ),
+        "final_market_bad_debt_active": float(
+            final["market_total_bad_debt_active"]
+        ),
+        "cumulative_keeper_profit": float(final["keeper_profit_cumulative"]),
+        "cumulative_debt_repaid": float(final["debt_repaid_cumulative"]),
+        "cumulative_bad_debt_realised": float(
+            final["bad_debt_realised_cumulative"]
+        ),
+        "cumulative_unprofitable_attempts": int(
+            final["unprofitable_liquidations_cumulative"]
+        ),
+        "cumulative_capacity_limited_attempts": int(
+            final["capacity_limited_liquidations_cumulative"]
+        ),
+    }
+
+
 if __name__ == "__main__":
     # Run:
     # python src/experiments.py
 
-    combined_results, summary_df = run_all_scenarios(
+    combined_results, summary = run_all_scenarios(
         shock_time=30,
         shock_size=-0.43,
         initial_dai_price=1.0,
     )
 
     print("\nScenario summary:")
-    print(summary_df)
-
-    print("\nSaved results to:")
-    print(RESULTS_DIR)
+    print(summary)
 
     oracle_results, oracle_summary = run_oracle_delay_experiment(
         delay_values=[0, 1, 3, 5, 10],
@@ -495,3 +629,12 @@ if __name__ == "__main__":
 
     print("\nOracle delay summary:")
     print(oracle_summary)
+
+    shock_results, shock_summary = run_shock_severity_experiment(
+        shock_values=[-0.20, -0.35, -0.43, -0.55, -0.70],
+        shock_time=30,
+        initial_dai_price=1.0,
+    )
+
+    print("\nShock severity summary:")
+    print(shock_summary)
