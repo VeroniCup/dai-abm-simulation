@@ -186,6 +186,146 @@ def create_scenario_configs() -> dict:
     return scenarios
 
 
+def create_confidence_sensitivity_configs() -> dict:
+    """
+    Create confidence and market configurations for sensitivity analysis.
+
+    The scenarios are ordered from resilient to extreme confidence breakdown.
+    Moving down the ladder:
+    - the market becomes less tolerant of peg deviation;
+    - the system becomes more sensitive to liquidation pressure and bad debt;
+    - stress/panic confidence falls;
+    - panic selling pressure increases;
+    - arbitrage demand weakens.
+    """
+    return {
+        "resilient_confidence": {
+            "confidence_config": ConfidenceConfig(
+                normal_lower_price=0.990,
+                normal_upper_price=1.010,
+                stress_lower_price=0.960,
+                max_normal_liquidatable_share=0.10,
+                max_stress_liquidatable_share=0.40,
+                bad_debt_panic_threshold=3000.0,
+                normal_confidence=1.0,
+                stress_confidence=0.75,
+                panic_confidence=0.35,
+                panic_selling_multiplier=1.0,
+            ),
+            "dai_market_config": DAIMarketConfig(
+                peg_price=1.0,
+                price_adjustment_speed=0.02,
+                arbitrage_strength=1.30,
+                above_peg_supply_strength=1.0,
+                panic_strength=0.25,
+                noise_std=0.0005,
+                min_price=0.50,
+                max_price=1.50,
+            ),
+        },
+
+        "baseline_confidence": {
+            "confidence_config": ConfidenceConfig(
+                normal_lower_price=0.990,
+                normal_upper_price=1.010,
+                stress_lower_price=0.970,
+                max_normal_liquidatable_share=0.05,
+                max_stress_liquidatable_share=0.30,
+                bad_debt_panic_threshold=1000.0,
+                normal_confidence=1.0,
+                stress_confidence=0.50,
+                panic_confidence=0.10,
+                panic_selling_multiplier=2.0,
+            ),
+            "dai_market_config": DAIMarketConfig(
+                peg_price=1.0,
+                price_adjustment_speed=0.02,
+                arbitrage_strength=1.00,
+                above_peg_supply_strength=1.0,
+                panic_strength=0.50,
+                noise_std=0.0005,
+                min_price=0.50,
+                max_price=1.50,
+            ),
+        },
+
+        "fragile_confidence": {
+            "confidence_config": ConfidenceConfig(
+                normal_lower_price=0.995,
+                normal_upper_price=1.005,
+                stress_lower_price=0.980,
+                max_normal_liquidatable_share=0.04,
+                max_stress_liquidatable_share=0.22,
+                bad_debt_panic_threshold=750.0,
+                normal_confidence=1.0,
+                stress_confidence=0.40,
+                panic_confidence=0.08,
+                panic_selling_multiplier=2.4,
+            ),
+            "dai_market_config": DAIMarketConfig(
+                peg_price=1.0,
+                price_adjustment_speed=0.02,
+                arbitrage_strength=0.80,
+                above_peg_supply_strength=1.0,
+                panic_strength=0.70,
+                noise_std=0.0005,
+                min_price=0.50,
+                max_price=1.50,
+            ),
+        },
+
+        "panic_sensitive": {
+            "confidence_config": ConfidenceConfig(
+                normal_lower_price=0.997,
+                normal_upper_price=1.003,
+                stress_lower_price=0.985,
+                max_normal_liquidatable_share=0.03,
+                max_stress_liquidatable_share=0.16,
+                bad_debt_panic_threshold=500.0,
+                normal_confidence=1.0,
+                stress_confidence=0.30,
+                panic_confidence=0.06,
+                panic_selling_multiplier=2.9,
+            ),
+            "dai_market_config": DAIMarketConfig(
+                peg_price=1.0,
+                price_adjustment_speed=0.02,
+                arbitrage_strength=0.60,
+                above_peg_supply_strength=1.0,
+                panic_strength=0.90,
+                noise_std=0.0005,
+                min_price=0.50,
+                max_price=1.50,
+            ),
+        },
+
+        "extreme_confidence_breakdown": {
+            "confidence_config": ConfidenceConfig(
+                normal_lower_price=0.998,
+                normal_upper_price=1.002,
+                stress_lower_price=0.990,
+                max_normal_liquidatable_share=0.02,
+                max_stress_liquidatable_share=0.10,
+                bad_debt_panic_threshold=250.0,
+                normal_confidence=1.0,
+                stress_confidence=0.20,
+                panic_confidence=0.04,
+                panic_selling_multiplier=3.5,
+            ),
+            "dai_market_config": DAIMarketConfig(
+                peg_price=1.0,
+                price_adjustment_speed=0.02,
+                arbitrage_strength=0.40,
+                above_peg_supply_strength=1.0,
+                panic_strength=1.10,
+                noise_std=0.0005,
+                min_price=0.50,
+                max_price=1.50,
+            ),
+        },
+    }
+
+
 def compute_summary_metrics(
     scenario_name: str,
     results: pd.DataFrame,
@@ -239,6 +379,195 @@ def compute_summary_metrics(
             final["bad_debt_realised_cumulative"]
         ),
         "cumulative_debt_repaid": float(final["debt_repaid_cumulative"]),
+        "cumulative_unprofitable_attempts": int(
+            final["unprofitable_liquidations_cumulative"]
+        ),
+    }
+
+
+def compute_oracle_delay_metrics(
+    scenario_name: str,
+    results: pd.DataFrame,
+) -> dict:
+    """
+    Compute summary metrics for oracle-delay experiments.
+
+    These metrics focus on hidden risk created when the oracle price lags
+    behind the market price.
+    """
+    final = results.iloc[-1]
+
+    hidden_bad_debt = results["hidden_bad_debt"]
+    hidden_positive = hidden_bad_debt > 0
+
+    if hidden_positive.any():
+        first_hidden_step = int(results.loc[hidden_positive, "step"].iloc[0])
+        last_hidden_step = int(results.loc[hidden_positive, "step"].iloc[-1])
+        hidden_duration = int(hidden_positive.sum())
+    else:
+        first_hidden_step = None
+        last_hidden_step = None
+        hidden_duration = 0
+
+    peg_deviation = (results["dai_price"] - 1.0).abs()
+
+    return {
+        "scenario": scenario_name,
+        "oracle_delay_steps": int(final["oracle_delay_steps"]),
+        "final_dai_price": float(final["dai_price"]),
+        "min_dai_price": float(results["dai_price"].min()),
+        "max_abs_peg_deviation": float(peg_deviation.max()),
+        "max_hidden_bad_debt": float(results["hidden_bad_debt"].max()),
+        "final_hidden_bad_debt": float(final["hidden_bad_debt"]),
+        "hidden_bad_debt_duration": hidden_duration,
+        "first_hidden_bad_debt_step": first_hidden_step,
+        "last_hidden_bad_debt_step": last_hidden_step,
+        "max_market_bad_debt_active": float(
+            results["market_total_bad_debt_active"].max()
+        ),
+        "max_oracle_bad_debt_active": float(
+            results["oracle_total_bad_debt_active"].max()
+        ),
+        "final_market_bad_debt_active": float(
+            final["market_total_bad_debt_active"]
+        ),
+        "final_oracle_bad_debt_active": float(
+            final["oracle_total_bad_debt_active"]
+        ),
+        "cumulative_keeper_profit": float(final["keeper_profit_cumulative"]),
+        "cumulative_debt_repaid": float(final["debt_repaid_cumulative"]),
+        "cumulative_bad_debt_realised": float(
+            final["bad_debt_realised_cumulative"]
+        ),
+        "cumulative_unprofitable_attempts": int(
+            final["unprofitable_liquidations_cumulative"]
+        ),
+    }
+
+
+def compute_shock_severity_metrics(
+    scenario_name: str,
+    results: pd.DataFrame,
+) -> dict:
+    """
+    Compute summary metrics for shock-severity experiments.
+
+    These metrics focus on how different ETH shock sizes affect peg stability,
+    liquidation pressure, bad debt and keeper activity.
+    """
+    final = results.iloc[-1]
+
+    peg_deviation = (results["dai_price"] - 1.0).abs()
+
+    panic_mask = results["regime_after"] == "panic"
+    if panic_mask.any():
+        first_panic_step = int(results.loc[panic_mask, "step"].iloc[0])
+    else:
+        first_panic_step = None
+
+    material_depeg_mask = results["dai_price"] < 0.99
+    if material_depeg_mask.any():
+        first_material_depeg_step = int(
+            results.loc[material_depeg_mask, "step"].iloc[0]
+        )
+    else:
+        first_material_depeg_step = None
+
+    return {
+        "scenario": scenario_name,
+        "shock_size": float(final["shock_size_experiment"]),
+        "final_dai_price": float(final["dai_price"]),
+        "min_dai_price": float(results["dai_price"].min()),
+        "max_abs_peg_deviation": float(peg_deviation.max()),
+        "first_material_depeg_step": first_material_depeg_step,
+        "first_panic_step": first_panic_step,
+        "final_regime": str(final["regime_after"]),
+        "max_liquidatable_vaults": int(
+            results["n_liquidatable_before_liquidation"].max()
+        ),
+        "final_liquidatable_vaults": int(final["n_liquidatable"]),
+        "max_market_bad_debt_active": float(
+            results["market_total_bad_debt_active"].max()
+        ),
+        "final_market_bad_debt_active": float(
+            final["market_total_bad_debt_active"]
+        ),
+        "cumulative_keeper_profit": float(final["keeper_profit_cumulative"]),
+        "cumulative_debt_repaid": float(final["debt_repaid_cumulative"]),
+        "cumulative_bad_debt_realised": float(
+            final["bad_debt_realised_cumulative"]
+        ),
+        "cumulative_unprofitable_attempts": int(
+            final["unprofitable_liquidations_cumulative"]
+        ),
+        "cumulative_capacity_limited_attempts": int(
+            final["capacity_limited_liquidations_cumulative"]
+        ),
+    }
+
+
+def compute_confidence_sensitivity_metrics(
+    scenario_name: str,
+    results: pd.DataFrame,
+) -> dict:
+    """
+    Compute summary metrics for confidence-sensitivity experiments.
+
+    These metrics focus on how market confidence and panic sensitivity affect
+    DAI peg stability under the same collateral shock and liquidation setting.
+    """
+    final = results.iloc[-1]
+
+    peg_deviation = (results["dai_price"] - 1.0).abs()
+
+    panic_mask = results["regime_after"] == "panic"
+    if panic_mask.any():
+        first_panic_step = int(results.loc[panic_mask, "step"].iloc[0])
+        panic_duration = int(panic_mask.sum())
+    else:
+        first_panic_step = None
+        panic_duration = 0
+
+    stress_mask = results["regime_after"] == "stress"
+    stress_duration = int(stress_mask.sum())
+
+    material_depeg_mask = results["dai_price"] < 0.99
+    if material_depeg_mask.any():
+        first_material_depeg_step = int(
+            results.loc[material_depeg_mask, "step"].iloc[0]
+        )
+        material_depeg_duration = int(material_depeg_mask.sum())
+    else:
+        first_material_depeg_step = None
+        material_depeg_duration = 0
+
+    return {
+        "scenario": scenario_name,
+        "final_dai_price": float(final["dai_price"]),
+        "min_dai_price": float(results["dai_price"].min()),
+        "max_abs_peg_deviation": float(peg_deviation.max()),
+        "first_material_depeg_step": first_material_depeg_step,
+        "material_depeg_duration": material_depeg_duration,
+        "first_panic_step": first_panic_step,
+        "panic_duration": panic_duration,
+        "stress_duration": stress_duration,
+        "final_regime": str(final["regime_after"]),
+        "mean_confidence_after": float(results["confidence_after"].mean()),
+        "min_confidence_after": float(results["confidence_after"].min()),
+        "max_panic_selling_pressure": float(
+            results["panic_selling_pressure_after"].max()
+        ),
+        "final_market_bad_debt_active": float(
+            final["market_total_bad_debt_active"]
+        ),
+        "max_market_bad_debt_active": float(
+            results["market_total_bad_debt_active"].max()
+        ),
+        "cumulative_keeper_profit": float(final["keeper_profit_cumulative"]),
+        "cumulative_debt_repaid": float(final["debt_repaid_cumulative"]),
+        "cumulative_bad_debt_realised": float(
+            final["bad_debt_realised_cumulative"]
+        ),
         "cumulative_unprofitable_attempts": int(
             final["unprofitable_liquidations_cumulative"]
         ),
@@ -486,125 +815,73 @@ def run_shock_severity_experiment(
     return combined_results, summary
 
 
-def compute_oracle_delay_metrics(
-    scenario_name: str,
-    results: pd.DataFrame,
-) -> dict:
+def run_confidence_sensitivity_experiment(
+    shock_time: int = 30,
+    shock_size: float = -0.43,
+    initial_dai_price: float = 1.0,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
-    Compute summary metrics for oracle-delay experiments.
+    Run confidence-sensitivity experiments.
 
-    These metrics focus on hidden risk created when the oracle price lags
-    behind the market price.
+    The collateral shock and liquidation setting are fixed. Only the confidence
+    and DAI market response parameters vary across scenarios.
     """
-    final = results.iloc[-1]
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
-    hidden_bad_debt = results["hidden_bad_debt"]
-    hidden_positive = hidden_bad_debt > 0
+    all_results = []
+    summary_records = []
 
-    if hidden_positive.any():
-        first_hidden_step = int(results.loc[hidden_positive, "step"].iloc[0])
-        last_hidden_step = int(results.loc[hidden_positive, "step"].iloc[-1])
-        hidden_duration = int(hidden_positive.sum())
-    else:
-        first_hidden_step = None
-        last_hidden_step = None
-        hidden_duration = 0
+    sim_config = create_base_simulation_config(oracle_delay_steps=0)
 
-    peg_deviation = (results["dai_price"] - 1.0).abs()
+    liquidation_config = LiquidationConfig(
+        liquidation_penalty=0.13,
+        gas_cost=250.0,
+        risk_cost_rate=0.00,
+        max_close_factor=0.5,
+        max_liquidations_per_step=5,
+    )
 
-    return {
-        "scenario": scenario_name,
-        "oracle_delay_steps": int(final["oracle_delay_steps"]),
-        "final_dai_price": float(final["dai_price"]),
-        "min_dai_price": float(results["dai_price"].min()),
-        "max_abs_peg_deviation": float(peg_deviation.max()),
-        "max_hidden_bad_debt": float(results["hidden_bad_debt"].max()),
-        "final_hidden_bad_debt": float(final["hidden_bad_debt"]),
-        "hidden_bad_debt_duration": hidden_duration,
-        "first_hidden_bad_debt_step": first_hidden_step,
-        "last_hidden_bad_debt_step": last_hidden_step,
-        "max_market_bad_debt_active": float(
-            results["market_total_bad_debt_active"].max()
-        ),
-        "max_oracle_bad_debt_active": float(
-            results["oracle_total_bad_debt_active"].max()
-        ),
-        "final_market_bad_debt_active": float(
-            final["market_total_bad_debt_active"]
-        ),
-        "final_oracle_bad_debt_active": float(
-            final["oracle_total_bad_debt_active"]
-        ),
-        "cumulative_keeper_profit": float(final["keeper_profit_cumulative"]),
-        "cumulative_debt_repaid": float(final["debt_repaid_cumulative"]),
-        "cumulative_bad_debt_realised": float(
-            final["bad_debt_realised_cumulative"]
-        ),
-        "cumulative_unprofitable_attempts": int(
-            final["unprofitable_liquidations_cumulative"]
-        ),
-    }
+    scenario_configs = create_confidence_sensitivity_configs()
 
+    for scenario_name, scenario_config in scenario_configs.items():
+        print(f"Running confidence sensitivity scenario: {scenario_name}")
 
-def compute_shock_severity_metrics(
-    scenario_name: str,
-    results: pd.DataFrame,
-) -> dict:
-    """
-    Compute summary metrics for shock-severity experiments.
-
-    These metrics focus on how different ETH shock sizes affect peg stability,
-    liquidation pressure, bad debt and keeper activity.
-    """
-    final = results.iloc[-1]
-
-    peg_deviation = (results["dai_price"] - 1.0).abs()
-
-    panic_mask = results["regime_after"] == "panic"
-    if panic_mask.any():
-        first_panic_step = int(results.loc[panic_mask, "step"].iloc[0])
-    else:
-        first_panic_step = None
-
-    material_depeg_mask = results["dai_price"] < 0.99
-    if material_depeg_mask.any():
-        first_material_depeg_step = int(
-            results.loc[material_depeg_mask, "step"].iloc[0]
+        results = run_shock_simulation(
+            config=sim_config,
+            liquidation_config=liquidation_config,
+            confidence_config=scenario_config["confidence_config"],
+            dai_market_config=scenario_config["dai_market_config"],
+            shock_time=shock_time,
+            shock_size=shock_size,
+            initial_dai_price=initial_dai_price,
+            execute_liquidations=True,
         )
-    else:
-        first_material_depeg_step = None
 
-    return {
-        "scenario": scenario_name,
-        "shock_size": float(final["shock_size_experiment"]),
-        "final_dai_price": float(final["dai_price"]),
-        "min_dai_price": float(results["dai_price"].min()),
-        "max_abs_peg_deviation": float(peg_deviation.max()),
-        "first_material_depeg_step": first_material_depeg_step,
-        "first_panic_step": first_panic_step,
-        "final_regime": str(final["regime_after"]),
-        "max_liquidatable_vaults": int(
-            results["n_liquidatable_before_liquidation"].max()
-        ),
-        "final_liquidatable_vaults": int(final["n_liquidatable"]),
-        "max_market_bad_debt_active": float(
-            results["market_total_bad_debt_active"].max()
-        ),
-        "final_market_bad_debt_active": float(
-            final["market_total_bad_debt_active"]
-        ),
-        "cumulative_keeper_profit": float(final["keeper_profit_cumulative"]),
-        "cumulative_debt_repaid": float(final["debt_repaid_cumulative"]),
-        "cumulative_bad_debt_realised": float(
-            final["bad_debt_realised_cumulative"]
-        ),
-        "cumulative_unprofitable_attempts": int(
-            final["unprofitable_liquidations_cumulative"]
-        ),
-        "cumulative_capacity_limited_attempts": int(
-            final["capacity_limited_liquidations_cumulative"]
-        ),
-    }
+        results["scenario"] = scenario_name
+        results["confidence_scenario"] = scenario_name
+
+        scenario_path = RESULTS_DIR / f"{scenario_name}_confidence_results.csv"
+        results.to_csv(scenario_path, index=False)
+
+        all_results.append(results)
+
+        summary_records.append(
+            compute_confidence_sensitivity_metrics(
+                scenario_name=scenario_name,
+                results=results,
+            )
+        )
+
+    combined_results = pd.concat(all_results, ignore_index=True)
+    summary = pd.DataFrame(summary_records)
+
+    combined_path = RESULTS_DIR / "confidence_sensitivity_combined_results.csv"
+    summary_path = RESULTS_DIR / "confidence_sensitivity_summary.csv"
+
+    combined_results.to_csv(combined_path, index=False)
+    summary.to_csv(summary_path, index=False)
+
+    return combined_results, summary
 
 
 if __name__ == "__main__":
@@ -638,3 +915,12 @@ if __name__ == "__main__":
 
     print("\nShock severity summary:")
     print(shock_summary)
+
+    confidence_results, confidence_summary = run_confidence_sensitivity_experiment(
+        shock_time=30,
+        shock_size=-0.43,
+        initial_dai_price=1.0,
+    )
+
+    print("\nConfidence sensitivity summary:")
+    print(confidence_summary)

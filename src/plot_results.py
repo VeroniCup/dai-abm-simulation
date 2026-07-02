@@ -674,6 +674,271 @@ def create_shock_severity_figures(
     return figure_paths
 
 
+CONFIDENCE_SCENARIO_ORDER = [
+    "resilient_confidence",
+    "baseline_confidence",
+    "fragile_confidence",
+    "panic_sensitive",
+    "extreme_confidence_breakdown",
+]
+
+
+def order_confidence_scenarios(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Order confidence scenarios from resilient to most fragile.
+    """
+    ordered = df.copy()
+    ordered["confidence_order"] = ordered["scenario"].map(
+        {name: i for i, name in enumerate(CONFIDENCE_SCENARIO_ORDER)}
+    )
+    return ordered.sort_values("confidence_order")
+
+
+def load_confidence_sensitivity_results(
+    path: Path | None = None,
+) -> pd.DataFrame:
+    """
+    Load combined confidence-sensitivity experiment results.
+    """
+    if path is None:
+        path = RESULTS_DIR / "confidence_sensitivity_combined_results.csv"
+
+    if not path.exists():
+        raise FileNotFoundError(
+            f"Could not find confidence-sensitivity results file: {path}"
+        )
+
+    return pd.read_csv(path)
+
+
+def load_confidence_sensitivity_summary(
+    path: Path | None = None,
+) -> pd.DataFrame:
+    """
+    Load confidence-sensitivity summary results.
+    """
+    if path is None:
+        path = RESULTS_DIR / "confidence_sensitivity_summary.csv"
+
+    if not path.exists():
+        raise FileNotFoundError(
+            f"Could not find confidence-sensitivity summary file: {path}"
+        )
+
+    return pd.read_csv(path)
+
+
+def plot_dai_price_by_confidence_sensitivity(
+    results: pd.DataFrame,
+    shock_time: int = 30,
+    save_path: Path | None = None,
+) -> Path:
+    """
+    Plot DAI price over time across confidence-sensitivity scenarios.
+    """
+    if save_path is None:
+        save_path = FIGURES_DIR / "dai_price_by_confidence_sensitivity.png"
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    scenario_order = order_confidence_scenarios(
+        results[["scenario"]].drop_duplicates()
+    )
+
+    for scenario_name in scenario_order["scenario"]:
+        scenario_df = results[results["scenario"] == scenario_name].sort_values("step")
+
+        label = scenario_name.replace("_", " ")
+
+        ax.plot(
+            scenario_df["step"],
+            scenario_df["dai_price"],
+            label=label,
+        )
+
+    ax.axhline(1.0, linestyle="--", linewidth=1, label="DAI peg")
+    ax.axvline(shock_time, linestyle=":", linewidth=1, label="ETH shock")
+
+    ax.set_title("DAI Price under Different Confidence Assumptions")
+    ax.set_xlabel("Simulation step")
+    ax.set_ylabel("DAI price")
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+
+    fig.tight_layout()
+    fig.savefig(save_path, dpi=300)
+    plt.close(fig)
+
+    return save_path
+
+
+def plot_final_dai_price_by_confidence_sensitivity(
+    summary: pd.DataFrame,
+    save_path: Path | None = None,
+) -> Path:
+    """
+    Plot final DAI price across confidence-sensitivity scenarios.
+    """
+    if save_path is None:
+        save_path = FIGURES_DIR / "final_dai_price_by_confidence_sensitivity.png"
+
+    summary = order_confidence_scenarios(summary)
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+
+    labels = summary["scenario"].str.replace("_", "\n")
+
+    ax.bar(
+        labels,
+        summary["final_dai_price"],
+    )
+
+    ax.set_ylim(0.70, 1.01)
+    ax.axhline(1.0, linestyle="--", linewidth=1, label="DAI peg")
+
+    ax.set_title("Final DAI Price by Confidence Scenario")
+    ax.set_xlabel("Confidence scenario")
+    ax.set_ylabel("Final DAI price")
+    ax.legend()
+    ax.grid(True, axis="y", alpha=0.3)
+
+    fig.tight_layout()
+    fig.savefig(save_path, dpi=300)
+    plt.close(fig)
+
+    return save_path
+
+
+def plot_material_depeg_duration_by_confidence_sensitivity(
+    summary: pd.DataFrame,
+    save_path: Path | None = None,
+) -> Path:
+    """
+    Plot duration of material below-peg deviation by confidence scenario.
+    """
+    if save_path is None:
+        save_path = (
+            FIGURES_DIR / "material_depeg_duration_by_confidence_sensitivity.png"
+        )
+
+    summary = order_confidence_scenarios(summary)
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+
+    labels = summary["scenario"].str.replace("_", "\n")
+
+    ax.bar(
+        labels,
+        summary["material_depeg_duration"],
+    )
+
+    ax.set_title("Material Depeg Duration by Confidence Scenario")
+    ax.set_xlabel("Confidence scenario")
+    ax.set_ylabel("Steps with DAI below 0.99")
+    ax.grid(True, axis="y", alpha=0.3)
+
+    fig.tight_layout()
+    fig.savefig(save_path, dpi=300)
+    plt.close(fig)
+
+    return save_path
+
+
+def plot_panic_duration_by_confidence_sensitivity(
+    summary: pd.DataFrame,
+    save_path: Path | None = None,
+) -> Path:
+    """
+    Plot panic-regime duration by confidence scenario.
+    """
+    if save_path is None:
+        save_path = FIGURES_DIR / "panic_duration_by_confidence_sensitivity.png"
+
+    summary = order_confidence_scenarios(summary)
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+
+    labels = summary["scenario"].str.replace("_", "\n")
+
+    ax.bar(
+        labels,
+        summary["panic_duration"],
+    )
+
+    ax.set_title("Panic Regime Duration by Confidence Scenario")
+    ax.set_xlabel("Confidence scenario")
+    ax.set_ylabel("Steps in panic regime")
+    ax.grid(True, axis="y", alpha=0.3)
+
+    fig.tight_layout()
+    fig.savefig(save_path, dpi=300)
+    plt.close(fig)
+
+    return save_path
+
+
+def plot_mean_confidence_by_confidence_sensitivity(
+    summary: pd.DataFrame,
+    save_path: Path | None = None,
+) -> Path:
+    """
+    Plot mean confidence level by confidence scenario.
+    """
+    if save_path is None:
+        save_path = FIGURES_DIR / "mean_confidence_by_confidence_sensitivity.png"
+
+    summary = order_confidence_scenarios(summary)
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+
+    labels = summary["scenario"].str.replace("_", "\n")
+
+    ax.bar(
+        labels,
+        summary["mean_confidence_after"],
+    )
+
+    ax.set_title("Mean Confidence Level by Confidence Scenario")
+    ax.set_xlabel("Confidence scenario")
+    ax.set_ylabel("Mean confidence level")
+    ax.grid(True, axis="y", alpha=0.3)
+
+    fig.tight_layout()
+    fig.savefig(save_path, dpi=300)
+    plt.close(fig)
+
+    return save_path
+
+
+def create_confidence_sensitivity_figures(
+    confidence_results: pd.DataFrame,
+    confidence_summary: pd.DataFrame,
+    shock_time: int = 30,
+) -> list[Path]:
+    """
+    Create all confidence-sensitivity figures.
+    """
+    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+
+    figure_paths = [
+        plot_dai_price_by_confidence_sensitivity(
+            confidence_results,
+            shock_time=shock_time,
+        ),
+        plot_final_dai_price_by_confidence_sensitivity(
+            confidence_summary,
+        ),
+        plot_material_depeg_duration_by_confidence_sensitivity(
+            confidence_summary,
+        ),
+        plot_mean_confidence_by_confidence_sensitivity(
+            confidence_summary,
+        ),
+    ]
+
+    return figure_paths
+
+
 if __name__ == "__main__":
     # Run:
     # python src/plot_results.py
@@ -699,6 +964,16 @@ if __name__ == "__main__":
         create_shock_severity_figures(
             shock_results=shock_results,
             shock_summary=shock_summary,
+            shock_time=30,
+        )
+    )
+
+    confidence_results = load_confidence_sensitivity_results()
+    confidence_summary = load_confidence_sensitivity_summary()
+    paths.extend(
+        create_confidence_sensitivity_figures(
+            confidence_results=confidence_results,
+            confidence_summary=confidence_summary,
             shock_time=30,
         )
     )
