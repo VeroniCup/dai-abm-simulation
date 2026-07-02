@@ -25,7 +25,11 @@ from pathlib import Path
 
 import pandas as pd
 
-from simulation import SimulationConfig, run_shock_simulation
+from simulation import (
+    SimulationConfig,
+    run_shock_simulation,
+    run_shock_recovery_simulation,
+)
 from liquidation import LiquidationConfig
 from confidence import ConfidenceConfig
 from dai_market import DAIMarketConfig
@@ -574,6 +578,62 @@ def compute_confidence_sensitivity_metrics(
     }
 
 
+def compute_recovery_metrics(
+    scenario_name: str,
+    results: pd.DataFrame,
+) -> dict:
+    """
+    Compute summary metrics for peg-recovery experiments.
+
+    These metrics focus on whether and when DAI returns near the peg after
+    collateral recovery.
+    """
+    final = results.iloc[-1]
+
+    peg_deviation = (results["dai_price"] - 1.0).abs()
+
+    below_099 = results["dai_price"] < 0.99
+    below_099_duration = int(below_099.sum())
+
+    recovered_mask = (
+        (results["step"] > 30)
+        & (results["dai_price"] >= 0.99)
+        & (results["market_total_bad_debt_active"] <= 1e-6)
+    )
+
+    if recovered_mask.any():
+        first_recovery_step = int(results.loc[recovered_mask, "step"].iloc[0])
+    else:
+        first_recovery_step = None
+
+    panic_mask = results["regime_after"] == "panic"
+    panic_duration = int(panic_mask.sum())
+
+    return {
+        "scenario": scenario_name,
+        "recovery_fraction": float(final["recovery_fraction_experiment"]),
+        "final_eth_price": float(final["market_eth_price"]),
+        "final_dai_price": float(final["dai_price"]),
+        "min_dai_price": float(results["dai_price"].min()),
+        "max_abs_peg_deviation": float(peg_deviation.max()),
+        "below_099_duration": below_099_duration,
+        "first_recovery_step": first_recovery_step,
+        "panic_duration": panic_duration,
+        "final_regime": str(final["regime_after"]),
+        "max_market_bad_debt_active": float(
+            results["market_total_bad_debt_active"].max()
+        ),
+        "final_market_bad_debt_active": float(
+            final["market_total_bad_debt_active"]
+        ),
+        "cumulative_keeper_profit": float(final["keeper_profit_cumulative"]),
+        "cumulative_debt_repaid": float(final["debt_repaid_cumulative"]),
+        "cumulative_bad_debt_realised": float(
+            final["bad_debt_realised_cumulative"]
+        ),
+    }
+
+
 def run_all_scenarios(
     shock_time: int = 30,
     shock_size: float = -0.43,
@@ -884,6 +944,86 @@ def run_confidence_sensitivity_experiment(
     return combined_results, summary
 
 
+def run_peg_recovery_experiment(
+    recovery_fractions: list[float] | None = None,
+    shock_time: int = 30,
+    shock_size: float = -0.43,
+    recovery_start: int = 40,
+    recovery_end: int = 90,
+    initial_dai_price: float = 1.0,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Run peg-recovery experiments using different ETH recovery paths.
+
+    The initial ETH shock is fixed. The experiment varies how much of the ETH
+    price loss is recovered after the shock.
+    """
+    if recovery_fractions is None:
+        recovery_fractions = [0.0, 0.25, 0.50, 0.75, 1.0]
+
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    all_results = []
+    summary_records = []
+
+    liquidation_config = LiquidationConfig(
+        liquidation_penalty=0.13,
+        gas_cost=250.0,
+        risk_cost_rate=0.00,
+        max_close_factor=0.5,
+        max_liquidations_per_step=5,
+    )
+
+    confidence_config = create_base_confidence_config()
+    dai_market_config = create_base_dai_market_config()
+
+    for recovery_fraction in recovery_fractions:
+        scenario_name = f"recovery_{int(recovery_fraction * 100)}pct"
+
+        print(f"Running peg recovery scenario: {scenario_name}")
+
+        sim_config = create_base_simulation_config(oracle_delay_steps=0)
+
+        results = run_shock_recovery_simulation(
+            config=sim_config,
+            liquidation_config=liquidation_config,
+            confidence_config=confidence_config,
+            dai_market_config=dai_market_config,
+            shock_time=shock_time,
+            shock_size=shock_size,
+            recovery_start=recovery_start,
+            recovery_end=recovery_end,
+            recovery_fraction=recovery_fraction,
+            initial_dai_price=initial_dai_price,
+            execute_liquidations=True,
+        )
+
+        results["scenario"] = scenario_name
+        results["recovery_fraction_experiment"] = recovery_fraction
+
+        scenario_path = RESULTS_DIR / f"{scenario_name}_results.csv"
+        results.to_csv(scenario_path, index=False)
+
+        all_results.append(results)
+        summary_records.append(
+            compute_recovery_metrics(
+                scenario_name=scenario_name,
+                results=results,
+            )
+        )
+
+    combined_results = pd.concat(all_results, ignore_index=True)
+    summary = pd.DataFrame(summary_records)
+
+    combined_path = RESULTS_DIR / "peg_recovery_combined_results.csv"
+    summary_path = RESULTS_DIR / "peg_recovery_summary.csv"
+
+    combined_results.to_csv(combined_path, index=False)
+    summary.to_csv(summary_path, index=False)
+
+    return combined_results, summary
+
+
 if __name__ == "__main__":
     # Run:
     # python src/experiments.py
@@ -893,7 +1033,6 @@ if __name__ == "__main__":
         shock_size=-0.43,
         initial_dai_price=1.0,
     )
-
     print("\nScenario summary:")
     print(summary)
 
@@ -903,7 +1042,6 @@ if __name__ == "__main__":
         shock_size=-0.43,
         initial_dai_price=1.0,
     )
-
     print("\nOracle delay summary:")
     print(oracle_summary)
 
@@ -912,7 +1050,6 @@ if __name__ == "__main__":
         shock_time=30,
         initial_dai_price=1.0,
     )
-
     print("\nShock severity summary:")
     print(shock_summary)
 
@@ -921,6 +1058,16 @@ if __name__ == "__main__":
         shock_size=-0.43,
         initial_dai_price=1.0,
     )
-
     print("\nConfidence sensitivity summary:")
     print(confidence_summary)
+
+    recovery_results, recovery_summary = run_peg_recovery_experiment(
+        recovery_fractions=[0.0, 0.25, 0.50, 0.75, 1.0],
+        shock_time=30,
+        shock_size=-0.43,
+        recovery_start=40,
+        recovery_end=90,
+        initial_dai_price=1.0,
+    )
+    print("\nPeg recovery summary:")
+    print(recovery_summary)

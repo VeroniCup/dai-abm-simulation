@@ -83,6 +83,73 @@ def generate_constant_price_path(
     )
 
 
+def generate_gbm_price_path(
+    config: PriceProcessConfig,
+    mu: float = 0.0,
+    sigma: float = 0.80,
+    dt: float = 1 / 365,
+    floor_price: float = 1e-8,
+) -> pd.DataFrame:
+    """
+    Generate a Geometric Brownian Motion ETH price path.
+
+    The process is:
+
+        dS_t = mu * S_t * dt + sigma * S_t * dW_t
+
+    Discretised as:
+
+        S_{t+1} = S_t * exp((mu - 0.5*sigma^2)*dt + sigma*sqrt(dt)*epsilon_t)
+
+    Parameters
+    ----------
+    config:
+        PriceProcessConfig object.
+    mu:
+        Annualised drift.
+    sigma:
+        Annualised volatility.
+    dt:
+        Time step size. Default is 1/365, interpreted as daily steps.
+    floor_price:
+        Minimum allowed price to avoid numerical issues.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with columns: step, eth_price, log_return.
+    """
+    config.validate()
+
+    if sigma < 0:
+        raise ValueError("sigma must be non-negative.")
+    if dt <= 0:
+        raise ValueError("dt must be positive.")
+    if floor_price <= 0:
+        raise ValueError("floor_price must be positive.")
+
+    rng = np.random.default_rng(config.random_seed)
+
+    prices = np.empty(config.n_steps, dtype=float)
+    prices[0] = config.initial_price
+
+    log_returns = np.zeros(config.n_steps, dtype=float)
+
+    for t in range(1, config.n_steps):
+        epsilon = rng.normal(0.0, 1.0)
+        log_return = (mu - 0.5 * sigma**2) * dt + sigma * np.sqrt(dt) * epsilon
+        log_returns[t] = log_return
+        prices[t] = max(prices[t - 1] * np.exp(log_return), floor_price)
+
+    return pd.DataFrame(
+        {
+            "step": np.arange(config.n_steps),
+            "eth_price": prices,
+            "log_return": log_returns,
+        }
+    )
+
+
 def generate_shock_price_path(
     config: PriceProcessConfig,
     shock_time: int = 50,
@@ -151,67 +218,83 @@ def generate_shock_price_path(
     )
 
 
-def generate_gbm_price_path(
+def generate_shock_recovery_price_path(
     config: PriceProcessConfig,
-    mu: float = 0.0,
-    sigma: float = 0.80,
-    dt: float = 1 / 365,
-    floor_price: float = 1e-8,
+    shock_time: int = 30,
+    shock_size: float = -0.43,
+    recovery_start: int = 40,
+    recovery_end: int = 90,
+    recovery_fraction: float = 0.5,
 ) -> pd.DataFrame:
     """
-    Generate a Geometric Brownian Motion ETH price path.
+    Generate an ETH price path with a discrete shock followed by gradual recovery.
 
-    The process is:
-
-        dS_t = mu * S_t * dt + sigma * S_t * dW_t
-
-    Discretised as:
-
-        S_{t+1} = S_t * exp((mu - 0.5*sigma^2)*dt + sigma*sqrt(dt)*epsilon_t)
+    The price first follows a constant path at the initial price. At shock_time,
+    it falls by shock_size. From recovery_start to recovery_end, it gradually
+    recovers a fraction of the lost value.
 
     Parameters
     ----------
     config:
-        PriceProcessConfig object.
-    mu:
-        Annualised drift.
-    sigma:
-        Annualised volatility.
-    dt:
-        Time step size. Default is 1/365, interpreted as daily steps.
-    floor_price:
-        Minimum allowed price to avoid numerical issues.
+        Price process configuration.
+    shock_time:
+        Step at which the ETH shock occurs.
+    shock_size:
+        Proportional shock. Example: -0.43 means a 43% fall.
+    recovery_start:
+        Step at which recovery begins.
+    recovery_end:
+        Step by which recovery is completed.
+    recovery_fraction:
+        Fraction of the lost value that is recovered.
+        Example: 0.5 means ETH recovers 50% of the initial loss.
 
     Returns
     -------
     pd.DataFrame
-        DataFrame with columns: step, eth_price, log_return.
+        Price path with columns step, eth_price and log_return.
     """
     config.validate()
 
-    if sigma < 0:
-        raise ValueError("sigma must be non-negative.")
-    if dt <= 0:
-        raise ValueError("dt must be positive.")
-    if floor_price <= 0:
-        raise ValueError("floor_price must be positive.")
+    if not 0 <= shock_time < config.n_steps:
+        raise ValueError("shock_time must be within the simulation horizon.")
+    if shock_size >= 0:
+        raise ValueError("shock_size should be negative for a downward shock.")
+    if recovery_start < shock_time:
+        raise ValueError("recovery_start must be greater than or equal to shock_time.")
+    if recovery_end <= recovery_start:
+        raise ValueError("recovery_end must be greater than recovery_start.")
+    if not 0.0 <= recovery_fraction <= 1.0:
+        raise ValueError("recovery_fraction must be between 0 and 1.")
 
-    rng = np.random.default_rng(config.random_seed)
+    steps = np.arange(config.n_steps)
 
-    prices = np.empty(config.n_steps, dtype=float)
-    prices[0] = config.initial_price
+    initial_price = config.initial_price
+    shocked_price = initial_price * (1.0 + shock_size)
+    lost_value = initial_price - shocked_price
+    recovered_price = shocked_price + recovery_fraction * lost_value
 
-    log_returns = np.zeros(config.n_steps, dtype=float)
+    prices = np.full(config.n_steps, initial_price, dtype=float)
 
-    for t in range(1, config.n_steps):
-        epsilon = rng.normal(0.0, 1.0)
-        log_return = (mu - 0.5 * sigma**2) * dt + sigma * np.sqrt(dt) * epsilon
-        log_returns[t] = log_return
-        prices[t] = max(prices[t - 1] * np.exp(log_return), floor_price)
+    for step in range(config.n_steps):
+        if step < shock_time:
+            prices[step] = initial_price
+        elif step < recovery_start:
+            prices[step] = shocked_price
+        elif step <= recovery_end:
+            recovery_progress = (step - recovery_start) / (recovery_end - recovery_start)
+            prices[step] = shocked_price + recovery_progress * (
+                recovered_price - shocked_price
+            )
+        else:
+            prices[step] = recovered_price
+
+    log_returns = np.zeros(config.n_steps)
+    log_returns[1:] = np.diff(np.log(prices))
 
     return pd.DataFrame(
         {
-            "step": np.arange(config.n_steps),
+            "step": steps,
             "eth_price": prices,
             "log_return": log_returns,
         }

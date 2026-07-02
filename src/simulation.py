@@ -39,10 +39,11 @@ from dai_market import (
 
 from price_process import (
     PriceProcessConfig,
-    generate_constant_price_path,
-    generate_shock_price_path,
-    generate_gbm_price_path,
     add_oracle_price,
+    generate_constant_price_path,
+    generate_gbm_price_path,
+    generate_shock_price_path,
+    generate_shock_recovery_price_path,
 )
 
 from vault import (
@@ -522,6 +523,43 @@ def run_constant_price_simulation(
     )
 
 
+def run_gbm_simulation(
+    config: SimulationConfig,
+    liquidation_config: LiquidationConfig,
+    confidence_config: ConfidenceConfig | None = None,
+    dai_market_config: DAIMarketConfig | None = None,
+    mu: float = 0.0,
+    sigma: float = 0.80,
+    dt: float = 1 / 365,
+    initial_dai_price: float = 1.0,
+    execute_liquidations: bool = True,
+) -> pd.DataFrame:
+    """
+    Run simulation with GBM ETH price path.
+    """
+    price_config = PriceProcessConfig(
+        n_steps=config.n_steps,
+        initial_price=config.initial_eth_price,
+        random_seed=config.random_seed,
+    )
+    price_path = generate_gbm_price_path(
+        config=price_config,
+        mu=mu,
+        sigma=sigma,
+        dt=dt,
+    )
+
+    return run_simulation_with_price_path(
+        config=config,
+        price_path=price_path,
+        liquidation_config=liquidation_config,
+        confidence_config=confidence_config,
+        dai_market_config=dai_market_config,
+        initial_dai_price=initial_dai_price,
+        execute_liquidations=execute_liquidations,
+    )
+
+
 def run_shock_simulation(
     config: SimulationConfig,
     liquidation_config: LiquidationConfig,
@@ -576,33 +614,38 @@ def run_shock_simulation(
     )
 
 
-def run_gbm_simulation(
+def run_shock_recovery_simulation(
     config: SimulationConfig,
     liquidation_config: LiquidationConfig,
     confidence_config: ConfidenceConfig | None = None,
     dai_market_config: DAIMarketConfig | None = None,
-    mu: float = 0.0,
-    sigma: float = 0.80,
-    dt: float = 1 / 365,
+    shock_time: int = 30,
+    shock_size: float = -0.43,
+    recovery_start: int = 40,
+    recovery_end: int = 90,
+    recovery_fraction: float = 0.5,
     initial_dai_price: float = 1.0,
     execute_liquidations: bool = True,
 ) -> pd.DataFrame:
     """
-    Run simulation with GBM ETH price path.
+    Run a simulation with an ETH shock followed by gradual collateral recovery.
     """
     price_config = PriceProcessConfig(
         n_steps=config.n_steps,
         initial_price=config.initial_eth_price,
         random_seed=config.random_seed,
     )
-    price_path = generate_gbm_price_path(
+
+    price_path = generate_shock_recovery_price_path(
         config=price_config,
-        mu=mu,
-        sigma=sigma,
-        dt=dt,
+        shock_time=shock_time,
+        shock_size=shock_size,
+        recovery_start=recovery_start,
+        recovery_end=recovery_end,
+        recovery_fraction=recovery_fraction,
     )
 
-    return run_simulation_with_price_path(
+    results = run_simulation_with_price_path(
         config=config,
         price_path=price_path,
         liquidation_config=liquidation_config,
@@ -611,6 +654,13 @@ def run_gbm_simulation(
         initial_dai_price=initial_dai_price,
         execute_liquidations=execute_liquidations,
     )
+
+    results["shock_size_experiment"] = shock_size
+    results["recovery_start_experiment"] = recovery_start
+    results["recovery_end_experiment"] = recovery_end
+    results["recovery_fraction_experiment"] = recovery_fraction
+
+    return results
 
 
 if __name__ == "__main__":
