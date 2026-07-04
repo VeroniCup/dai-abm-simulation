@@ -3,7 +3,7 @@ simulation.py
 
 Base simulation engine for the simplified ETH-backed DAI model.
 
-Version 2 connects:
+Version 2:
 - ETH price paths;
 - synthetic vault population;
 - vault collateral ratios;
@@ -12,10 +12,9 @@ Version 2 connects:
 - gas-cost frictions;
 - bad debt measurement.
 
-Later versions will add:
+Version 3:
 - DAI market price dynamics;
-- confidence/panic regimes;
-- DAI trader behaviour.
+- confidence/panic regimes.
 """
 
 from __future__ import annotations
@@ -347,6 +346,8 @@ def run_simulation_with_price_path(
             panic_selling_pressure=combined_panic_pressure,
             market_config=dai_market_config,
             rng=rng,
+            active_bad_debt=market_pre_summary["total_bad_debt_active"],
+            total_debt_active=market_pre_summary["total_debt_active"],
         )
 
         dai_price_before = dai_price
@@ -444,7 +445,13 @@ def run_simulation_with_price_path(
             "dai_panic_pressure": dai_pressures["panic_pressure"],
             "dai_total_supply_pressure": dai_pressures["total_supply_pressure"],
             "dai_net_pressure": dai_pressures["net_pressure"],
-            "dai_price_noise": dai_pressures["price_noise"],
+            "dai_price_noise": dai_pressures["noise"],
+            "peg_gap": dai_pressures["peg_gap"],
+            "recovery_bad_debt_ratio": dai_pressures["bad_debt_ratio"],
+            "recovery_discount": dai_pressures["recovery_discount"],
+            "arbitrage_recovery_pressure": dai_pressures["arbitrage_recovery_pressure"],
+            "policy_feedback_pressure": dai_pressures["policy_feedback_pressure"],
+            "total_recovery_pressure": dai_pressures["total_recovery_pressure"],
             "n_liquidatable_before_liquidation": pre_summary["n_liquidatable"],
             "n_attempted_liquidations": int(liquidation_summary["n_attempted"]),
             "n_successful_liquidations": int(liquidation_summary["n_liquidated"]),
@@ -465,7 +472,7 @@ def run_simulation_with_price_path(
             "bad_debt_realised_cumulative": cumulative_bad_debt_realised,
             "unprofitable_liquidations_cumulative": cumulative_unprofitable_attempts,
             "capacity_limited_liquidations_cumulative": cumulative_capacity_limited_attempts,
-            "bad_debt_ratio": bad_debt_ratio,
+            "systemic_bad_debt_ratio": bad_debt_ratio,
             "systemic_stress_pressure": systemic_stress_pressure,
             "combined_panic_pressure": combined_panic_pressure,
         }

@@ -108,6 +108,27 @@ def create_base_dai_market_config() -> DAIMarketConfig:
     )
 
 
+def create_recovery_dai_market_config() -> DAIMarketConfig:
+    """
+    Create DAI market config with peg-recovery feedback enabled.
+    """
+    return DAIMarketConfig(
+        peg_price=1.0,
+        price_adjustment_speed=0.02,
+        arbitrage_strength=1.0,
+        above_peg_supply_strength=1.0,
+        panic_strength=0.5,
+        noise_std=0.0005,
+        min_price=0.50,
+        max_price=1.50,
+        enable_peg_recovery=True,
+        arbitrage_recovery_strength=2.0,
+        policy_feedback_strength=1.5,
+        bad_debt_recovery_drag=5.0,
+        min_recovery_confidence=0.1,
+    )
+
+
 def create_scenario_configs() -> dict:
     """
     Create scenario-specific configurations.
@@ -975,7 +996,7 @@ def run_peg_recovery_experiment(
     )
 
     confidence_config = create_base_confidence_config()
-    dai_market_config = create_base_dai_market_config()
+    dai_market_config = create_recovery_dai_market_config()
 
     for recovery_fraction in recovery_fractions:
         scenario_name = f"recovery_{int(recovery_fraction * 100)}pct"

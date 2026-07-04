@@ -55,6 +55,13 @@ class DAIMarketConfig:
     min_price: float = 0.50
     max_price: float = 1.50
 
+    # Peg recovery mechanism.
+    enable_peg_recovery: bool = False
+    arbitrage_recovery_strength: float = 0.0
+    policy_feedback_strength: float = 0.0
+    bad_debt_recovery_drag: float = 1.0
+    min_recovery_confidence: float = 0.0
+
     def validate(self) -> None:
         """Validate DAI market configuration."""
         if self.peg_price <= 0:
@@ -73,6 +80,16 @@ class DAIMarketConfig:
             raise ValueError("min_price must be positive.")
         if self.max_price <= self.min_price:
             raise ValueError("max_price must be greater than min_price.")
+
+        # Arbitrage
+        if self.arbitrage_recovery_strength < 0:
+            raise ValueError("arbitrage_recovery_strength cannot be negative.")
+        if self.policy_feedback_strength < 0:
+            raise ValueError("policy_feedback_strength cannot be negative.")
+        if self.bad_debt_recovery_drag < 0:
+            raise ValueError("bad_debt_recovery_drag cannot be negative.")
+        if not 0 <= self.min_recovery_confidence <= 1:
+            raise ValueError("min_recovery_confidence must be between 0 and 1.")
 
 
 def calculate_dai_market_pressures(
@@ -146,18 +163,95 @@ def calculate_dai_market_pressures(
     }
 
 
+def calculate_peg_recovery_pressure(
+    dai_price: float,
+    confidence: float,
+    active_bad_debt: float,
+    total_debt_active: float,
+    market_config: DAIMarketConfig,
+) -> dict:
+    """
+    Calculate additional peg-recovery pressure.
+
+    This is a stylised recovery mechanism inspired by MakerDAO's target-rate
+    feedback logic and arbitrage demand around the peg.
+
+    If DAI trades below peg, recovery pressure increases. However, recovery is
+    weakened when confidence is low or when active bad debt remains large.
+    """
+    if not market_config.enable_peg_recovery:
+        return {
+            "peg_gap": 0.0,
+            "bad_debt_ratio": 0.0,
+            "recovery_discount": 0.0,
+            "arbitrage_recovery_pressure": 0.0,
+            "policy_feedback_pressure": 0.0,
+            "total_recovery_pressure": 0.0,
+        }
+
+    peg_gap = max(market_config.peg_price - dai_price, 0.0)
+
+    if peg_gap <= 0:
+        return {
+            "peg_gap": 0.0,
+            "bad_debt_ratio": 0.0,
+            "recovery_discount": 0.0,
+            "arbitrage_recovery_pressure": 0.0,
+            "policy_feedback_pressure": 0.0,
+            "total_recovery_pressure": 0.0,
+        }
+
+    if confidence < market_config.min_recovery_confidence:
+        confidence_effect = 0.0
+    else:
+        confidence_effect = confidence
+
+    if total_debt_active > 0:
+        bad_debt_ratio = active_bad_debt / total_debt_active
+    else:
+        bad_debt_ratio = 0.0
+
+    recovery_discount = confidence_effect / (
+        1.0 + market_config.bad_debt_recovery_drag * bad_debt_ratio
+    )
+
+    arbitrage_recovery_pressure = (
+        market_config.arbitrage_recovery_strength
+        * peg_gap
+        * recovery_discount
+    )
+
+    policy_feedback_pressure = (
+        market_config.policy_feedback_strength
+        * peg_gap
+        * recovery_discount
+    )
+
+    total_recovery_pressure = arbitrage_recovery_pressure + policy_feedback_pressure
+
+    return {
+        "peg_gap": peg_gap,
+        "bad_debt_ratio": bad_debt_ratio,
+        "recovery_discount": recovery_discount,
+        "arbitrage_recovery_pressure": arbitrage_recovery_pressure,
+        "policy_feedback_pressure": policy_feedback_pressure,
+        "total_recovery_pressure": total_recovery_pressure,
+    }
+
+
 def update_dai_price(
     dai_price: float,
     confidence: float,
     panic_selling_pressure: float,
     market_config: DAIMarketConfig,
     rng: np.random.Generator | None = None,
+    active_bad_debt: float = 0.0,
+    total_debt_active: float = 0.0,
 ) -> tuple[float, dict]:
     """
     Update DAI price by one step.
 
     Price update rule:
-
         P_{t+1} = P_t + eta * net_pressure + noise
 
     where net_pressure = demand pressure - supply pressure.
@@ -182,9 +276,6 @@ def update_dai_price(
     """
     market_config.validate()
 
-    if rng is None:
-        rng = np.random.default_rng()
-
     pressures = calculate_dai_market_pressures(
         dai_price=dai_price,
         confidence=confidence,
@@ -192,20 +283,33 @@ def update_dai_price(
         market_config=market_config,
     )
 
+    # Update DAI market pricing using demand, supply, panic and recovery pressures.
+    recovery_pressures = calculate_peg_recovery_pressure(
+        dai_price=dai_price,
+        confidence=confidence,
+        active_bad_debt=active_bad_debt,
+        total_debt_active=total_debt_active,
+        market_config=market_config,
+    )
+
+    net_pressure = (
+        pressures["net_pressure"]
+        + recovery_pressures["total_recovery_pressure"]
+    )
+
+    if rng is None:
+        rng = np.random.default_rng()
     noise = rng.normal(0.0, market_config.noise_std)
 
-    new_price = (
-        dai_price
-        + market_config.price_adjustment_speed * pressures["net_pressure"]
-        + noise
-    )
+    new_price = dai_price + market_config.price_adjustment_speed * net_pressure + noise
 
     new_price = float(
         np.clip(new_price, market_config.min_price, market_config.max_price)
     )
 
-    pressures["price_noise"] = noise
-    pressures["new_dai_price"] = new_price
+    pressures.update(recovery_pressures)
+    pressures["net_pressure"] = net_pressure
+    pressures["noise"] = noise
 
     return new_price, pressures
 
