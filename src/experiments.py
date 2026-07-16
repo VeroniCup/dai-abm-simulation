@@ -602,33 +602,158 @@ def compute_confidence_sensitivity_metrics(
 def compute_recovery_metrics(
     scenario_name: str,
     results: pd.DataFrame,
+    shock_time: int = 30,
 ) -> dict:
     """
     Compute summary metrics for peg-recovery experiments.
 
-    These metrics focus on whether and when DAI returns near the peg after
-    collateral recovery.
+    Recovery is measured in several ways:
+
+    1. Price recovery:
+       Whether DAI returns close to the peg after first breaching a threshold.
+
+    2. Full system recovery:
+       Whether DAI is close to peg, active bad debt is cleared, and the system
+       has exited the panic regime.
+
+    3. Recovery half-life:
+       After DAI reaches its post-shock trough, how many steps it takes to
+       recover half of the distance back to the peg.
     """
     final = results.iloc[-1]
 
     peg_deviation = (results["dai_price"] - 1.0).abs()
 
-    below_099 = results["dai_price"] < 0.99
-    below_099_duration = int(below_099.sum())
+    post_shock = results["step"] >= shock_time
+    post_shock_results = results.loc[post_shock].copy()
 
-    recovered_mask = (
-        (results["step"] > 30)
+    # ------------------------------------------------------------------
+    # Basic below-peg duration metrics
+    # ------------------------------------------------------------------
+    below_099 = post_shock & (results["dai_price"] < 0.99)
+    below_995 = post_shock & (results["dai_price"] < 0.995)
+
+    below_099_duration = int(below_099.sum())
+    below_995_duration = int(below_995.sum())
+
+    # ------------------------------------------------------------------
+    # First breach and recovery above 0.99
+    # Recovery is only counted if the price first breaches the threshold.
+    # ------------------------------------------------------------------
+    breach_099 = post_shock & (results["dai_price"] < 0.99)
+
+    if breach_099.any():
+        first_breach_099_step = int(results.loc[breach_099, "step"].iloc[0])
+
+        recovery_after_breach_099 = (
+            (results["step"] > first_breach_099_step)
+            & (results["dai_price"] >= 0.99)
+        )
+
+        if recovery_after_breach_099.any():
+            first_price_recovery_099_step = int(
+                results.loc[recovery_after_breach_099, "step"].iloc[0]
+            )
+        else:
+            first_price_recovery_099_step = None
+    else:
+        first_breach_099_step = None
+        first_price_recovery_099_step = None
+
+    # ------------------------------------------------------------------
+    # First breach and recovery above 0.995
+    # This is stricter and more useful for near-peg recovery.
+    # ------------------------------------------------------------------
+    breach_995 = post_shock & (results["dai_price"] < 0.995)
+
+    if breach_995.any():
+        first_breach_995_step = int(results.loc[breach_995, "step"].iloc[0])
+
+        recovery_after_breach_995 = (
+            (results["step"] > first_breach_995_step)
+            & (results["dai_price"] >= 0.995)
+        )
+
+        if recovery_after_breach_995.any():
+            first_price_recovery_995_step = int(
+                results.loc[recovery_after_breach_995, "step"].iloc[0]
+            )
+        else:
+            first_price_recovery_995_step = None
+    else:
+        first_breach_995_step = None
+        first_price_recovery_995_step = None
+
+    # ------------------------------------------------------------------
+    # Full system recovery:
+    # DAI close to peg, active bad debt cleared, and no longer in panic.
+    # ------------------------------------------------------------------
+    full_system_recovery_099 = (
+        post_shock
         & (results["dai_price"] >= 0.99)
         & (results["market_total_bad_debt_active"] <= 1e-6)
+        & (results["regime_after"] != "panic")
     )
 
-    if recovered_mask.any():
-        first_recovery_step = int(results.loc[recovered_mask, "step"].iloc[0])
+    if full_system_recovery_099.any():
+        first_full_system_recovery_099_step = int(
+            results.loc[full_system_recovery_099, "step"].iloc[0]
+        )
     else:
-        first_recovery_step = None
+        first_full_system_recovery_099_step = None
 
-    panic_mask = results["regime_after"] == "panic"
-    panic_duration = int(panic_mask.sum())
+    full_system_recovery_995 = (
+        post_shock
+        & (results["dai_price"] >= 0.995)
+        & (results["market_total_bad_debt_active"] <= 1e-6)
+        & (results["regime_after"] != "panic")
+    )
+
+    if full_system_recovery_995.any():
+        first_full_system_recovery_995_step = int(
+            results.loc[full_system_recovery_995, "step"].iloc[0]
+        )
+    else:
+        first_full_system_recovery_995_step = None
+
+    # ------------------------------------------------------------------
+    # Recovery half-life:
+    # Find the post-shock trough, then measure how long it takes to recover
+    # half of the distance from trough price back to the peg.
+    # ------------------------------------------------------------------
+    if post_shock_results.empty:
+        trough_step = None
+        trough_price = None
+        half_recovery_target = None
+        half_recovery_step = None
+        recovery_half_life = None
+    else:
+        trough_index = post_shock_results["dai_price"].idxmin()
+        trough_step = int(results.loc[trough_index, "step"])
+        trough_price = float(results.loc[trough_index, "dai_price"])
+
+        half_recovery_target = trough_price + 0.5 * (1.0 - trough_price)
+
+        half_recovery_mask = (
+            (results["step"] > trough_step)
+            & (results["dai_price"] >= half_recovery_target)
+        )
+
+        if half_recovery_mask.any():
+            half_recovery_step = int(
+                results.loc[half_recovery_mask, "step"].iloc[0]
+            )
+            recovery_half_life = half_recovery_step - trough_step
+        else:
+            half_recovery_step = None
+            recovery_half_life = None
+
+    # ------------------------------------------------------------------
+    # Regime durations
+    # ------------------------------------------------------------------
+    panic_mask = post_shock & (results["regime_after"] == "panic")
+    stress_mask = post_shock & (results["regime_after"] == "stress")
+    normal_mask = post_shock & (results["regime_after"] == "normal")
 
     return {
         "scenario": scenario_name,
@@ -637,16 +762,54 @@ def compute_recovery_metrics(
         "final_dai_price": float(final["dai_price"]),
         "min_dai_price": float(results["dai_price"].min()),
         "max_abs_peg_deviation": float(peg_deviation.max()),
+
+        # Threshold breach / recovery metrics.
         "below_099_duration": below_099_duration,
-        "first_recovery_step": first_recovery_step,
-        "panic_duration": panic_duration,
+        "below_995_duration": below_995_duration,
+        "first_breach_099_step": first_breach_099_step,
+        "first_breach_995_step": first_breach_995_step,
+        "first_price_recovery_099_step": first_price_recovery_099_step,
+        "first_price_recovery_995_step": first_price_recovery_995_step,
+
+        # Full system recovery metrics.
+        "first_full_system_recovery_099_step": (
+            first_full_system_recovery_099_step
+        ),
+        "first_full_system_recovery_995_step": (
+            first_full_system_recovery_995_step
+        ),
+
+        # Recovery half-life metrics.
+        "trough_step": trough_step,
+        "trough_dai_price": trough_price,
+        "half_recovery_target": half_recovery_target,
+        "half_recovery_step": half_recovery_step,
+        "recovery_half_life": recovery_half_life,
+
+        # Regime metrics.
+        "panic_duration": int(panic_mask.sum()),
+        "stress_duration": int(stress_mask.sum()),
+        "normal_duration": int(normal_mask.sum()),
         "final_regime": str(final["regime_after"]),
+
+        # Bad debt and recovery pressure.
         "max_market_bad_debt_active": float(
             results["market_total_bad_debt_active"].max()
         ),
         "final_market_bad_debt_active": float(
             final["market_total_bad_debt_active"]
         ),
+        "max_total_recovery_pressure": float(
+            results["total_recovery_pressure"].max()
+        ),
+        "max_arbitrage_recovery_pressure": float(
+            results["arbitrage_recovery_pressure"].max()
+        ),
+        "max_policy_feedback_pressure": float(
+            results["policy_feedback_pressure"].max()
+        ),
+
+        # Liquidation outcome metrics.
         "cumulative_keeper_profit": float(final["keeper_profit_cumulative"]),
         "cumulative_debt_repaid": float(final["debt_repaid_cumulative"]),
         "cumulative_bad_debt_realised": float(
@@ -1030,6 +1193,7 @@ def run_peg_recovery_experiment(
             compute_recovery_metrics(
                 scenario_name=scenario_name,
                 results=results,
+                shock_time=shock_time,
             )
         )
 
