@@ -22,6 +22,8 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 
+from collateral import normalise_collateral_prices
+
 
 @dataclass
 class Vault:
@@ -34,7 +36,7 @@ class Vault:
         Unique identifier of the vault.
     owner_id:
         Identifier of the vault owner.
-    collateral_eth:
+    collateral_amount:
         Amount of ETH locked in the vault.
     debt_dai:
         Amount of DAI debt minted/borrowed.
@@ -49,41 +51,31 @@ class Vault:
 
     vault_id: int
     owner_id: int
-    collateral_eth: float
+    collateral_amount: float
     debt_dai: float
     liquidation_ratio: float = 1.5
+    collateral_type: str = "ETH"
     is_active: bool = True
     is_liquidated: bool = False
 
     def validate(self) -> None:
         """Validate vault values."""
-        if self.collateral_eth < 0:
-            raise ValueError("collateral_eth cannot be negative.")
+        if self.collateral_amount < 0:
+            raise ValueError("collateral_amount cannot be negative.")
         if self.debt_dai < 0:
             raise ValueError("debt_dai cannot be negative.")
         if self.liquidation_ratio <= 1:
             raise ValueError("liquidation_ratio should be greater than 1.")
 
-    def collateral_value(self, eth_price: float) -> float:
+    def collateral_value(self, prices: float | dict[str, float]) -> float:
         """
-        Calculate the USD value of ETH collateral.
-
-        Parameters
-        ----------
-        eth_price:
-            ETH price in USD.
-
-        Returns
-        -------
-        float
-            Collateral value in USD.
+        Calculate the USD value of collateral.
         """
-        if eth_price < 0:
-            raise ValueError("eth_price cannot be negative.")
+        price_map = normalise_collateral_prices(prices)
+        collateral_price = price_map[self.collateral_type]
+        return self.collateral_amount * collateral_price
 
-        return self.collateral_eth * eth_price
-
-    def collateral_ratio(self, eth_price: float) -> float:
+    def collateral_ratio(self, prices: float) -> float:
         """
         Calculate the collateral ratio.
 
@@ -93,7 +85,7 @@ class Vault:
 
         Parameters
         ----------
-        eth_price:
+        prices:
             ETH price in USD.
 
         Returns
@@ -104,15 +96,15 @@ class Vault:
         if self.debt_dai == 0:
             return float("inf")
 
-        return self.collateral_value(eth_price) / self.debt_dai
+        return self.collateral_value(prices) / self.debt_dai
 
-    def is_liquidatable(self, eth_price: float) -> bool:
+    def is_liquidatable(self, prices: float) -> bool:
         """
         Check whether the vault is eligible for liquidation.
 
         Parameters
         ----------
-        eth_price:
+        prices:
             ETH price in USD.
 
         Returns
@@ -123,9 +115,9 @@ class Vault:
         if not self.is_active:
             return False
 
-        return self.collateral_ratio(eth_price) < self.liquidation_ratio
+        return self.collateral_ratio(prices) < self.liquidation_ratio
 
-    def bad_debt(self, eth_price: float) -> float:
+    def bad_debt(self, prices: float) -> float:
         """
         Calculate bad debt amount.
 
@@ -133,7 +125,7 @@ class Vault:
 
         Parameters
         ----------
-        eth_price:
+        prices:
             ETH price in USD.
 
         Returns
@@ -141,21 +133,21 @@ class Vault:
         float
             Bad debt amount in DAI/USD terms.
         """
-        return max(self.debt_dai - self.collateral_value(eth_price), 0.0)
+        return max(self.debt_dai - self.collateral_value(prices), 0.0)
 
-    def add_collateral(self, amount_eth: float) -> None:
+    def add_collateral(self, amount: float) -> None:
         """
         Add ETH collateral to the vault.
 
         Parameters
         ----------
-        amount_eth:
+        amount:
             Amount of ETH to add.
         """
-        if amount_eth < 0:
-            raise ValueError("amount_eth cannot be negative.")
+        if amount < 0:
+            raise ValueError("amount cannot be negative.")
 
-        self.collateral_eth += amount_eth
+        self.collateral_amount += amount
 
     def repay_debt(self, amount_dai: float) -> float:
         """
@@ -178,7 +170,7 @@ class Vault:
         self.debt_dai -= actual_repayment
         return actual_repayment
 
-    def mint_dai(self, amount_dai: float, eth_price: float) -> bool:
+    def mint_dai(self, amount_dai: float, prices: float) -> bool:
         """
         Try to mint additional DAI.
 
@@ -189,7 +181,7 @@ class Vault:
         ----------
         amount_dai:
             Amount of DAI to mint.
-        eth_price:
+        prices:
             Current ETH price.
 
         Returns
@@ -203,13 +195,13 @@ class Vault:
         old_debt = self.debt_dai
         self.debt_dai += amount_dai
 
-        if self.collateral_ratio(eth_price) < self.liquidation_ratio:
+        if self.collateral_ratio(prices) < self.liquidation_ratio:
             self.debt_dai = old_debt
             return False
 
         return True
 
-    def liquidate(self, eth_price: float) -> dict:
+    def liquidate(self, prices: float) -> dict:
         """
         Liquidate the vault.
 
@@ -218,7 +210,7 @@ class Vault:
 
         Parameters
         ----------
-        eth_price:
+        prices:
             ETH price in USD.
 
         Returns
@@ -236,13 +228,13 @@ class Vault:
                 "bad_debt": 0.0,
             }
 
-        collateral_value = self.collateral_value(eth_price)
+        collateral_value = self.collateral_value(prices)
         debt = self.debt_dai
-        bad_debt = self.bad_debt(eth_price)
+        bad_debt = self.bad_debt(prices)
 
         self.is_active = False
         self.is_liquidated = True
-        self.collateral_eth = 0.0
+        self.collateral_amount = 0.0
         self.debt_dai = 0.0
 
         return {
@@ -256,7 +248,7 @@ class Vault:
 
     def partial_liquidate(
             self,
-            eth_price: float,
+            prices: float,
             debt_repaid: float,
             liquidation_penalty: float = 0.13,
     ) -> dict:
@@ -277,25 +269,25 @@ class Vault:
                 "fully_liquidated": False,
                 "reason": "inactive",
                 "collateral_value_removed": 0.0,
-                "collateral_eth_removed": 0.0,
+                "collateral_amount_removed": 0.0,
                 "debt_repaid": 0.0,
                 "remaining_debt": self.debt_dai,
-                "remaining_collateral_eth": self.collateral_eth,
+                "remaining_collateral_amount": self.collateral_amount,
                 "bad_debt": 0.0,
             }
 
-        if eth_price <= 0:
-            raise ValueError("eth_price must be positive.")
+        if prices <= 0:
+            raise ValueError("prices must be positive.")
         if debt_repaid <= 0:
             raise ValueError("debt_repaid must be positive.")
         if liquidation_penalty < 0:
             raise ValueError("liquidation_penalty cannot be negative.")
 
-        bad_debt_before = self.bad_debt(eth_price)
+        bad_debt_before = self.bad_debt(prices)
 
         original_debt = self.debt_dai
-        original_collateral_eth = self.collateral_eth
-        original_collateral_value = original_collateral_eth * eth_price
+        original_collateral_amount = self.collateral_amount
+        original_collateral_value = original_collateral_amount * prices
 
         actual_debt_repaid = min(debt_repaid, original_debt)
 
@@ -307,16 +299,16 @@ class Vault:
             target_collateral_value_removed,
             original_collateral_value,
         )
-        collateral_eth_removed = collateral_value_removed / eth_price
+        collateral_amount_removed = collateral_value_removed / prices
 
         self.debt_dai -= actual_debt_repaid
-        self.collateral_eth -= collateral_eth_removed
+        self.collateral_amount -= collateral_amount_removed
 
-        bad_debt_after = self.bad_debt(eth_price)
+        bad_debt_after = self.bad_debt(prices)
 
         fully_liquidated = (
                 self.debt_dai <= 1e-9
-                or self.collateral_eth <= 1e-9
+                or self.collateral_amount <= 1e-9
                 or bad_debt_after > bad_debt_before
         )
 
@@ -324,7 +316,7 @@ class Vault:
 
         if fully_liquidated:
             self.debt_dai = 0.0
-            self.collateral_eth = 0.0
+            self.collateral_amount = 0.0
             self.is_active = False
             self.is_liquidated = True
 
@@ -334,10 +326,10 @@ class Vault:
             "fully_liquidated": fully_liquidated,
             "reason": "partial_liquidation",
             "collateral_value_removed": collateral_value_removed,
-            "collateral_eth_removed": collateral_eth_removed,
+            "collateral_amount_removed": collateral_amount_removed,
             "debt_repaid": actual_debt_repaid,
             "remaining_debt": self.debt_dai,
-            "remaining_collateral_eth": self.collateral_eth,
+            "remaining_collateral_amount": self.collateral_amount,
             "bad_debt": bad_debt_realised,
         }
 
@@ -346,7 +338,7 @@ def create_vault_from_target_cr(
     owner_id: int,
     debt_dai: float,
     target_collateral_ratio: float,
-    eth_price: float,
+    prices: float,
     liquidation_ratio: float = 1.5,
 ) -> Vault:
     """
@@ -369,7 +361,7 @@ def create_vault_from_target_cr(
         Initial DAI debt.
     target_collateral_ratio:
         Desired initial collateral ratio.
-    eth_price:
+    prices:
         ETH price in USD.
     liquidation_ratio:
         Liquidation ratio.
@@ -385,16 +377,16 @@ def create_vault_from_target_cr(
         raise ValueError(
             "target_collateral_ratio should be greater than liquidation_ratio."
         )
-    if eth_price <= 0:
-        raise ValueError("eth_price must be positive.")
+    if prices <= 0:
+        raise ValueError("prices must be positive.")
 
     collateral_value = debt_dai * target_collateral_ratio
-    collateral_eth = collateral_value / eth_price
+    collateral_amount = collateral_value / prices
 
     vault = Vault(
         vault_id=vault_id,
         owner_id=owner_id,
-        collateral_eth=collateral_eth,
+        collateral_amount=collateral_amount,
         debt_dai=debt_dai,
         liquidation_ratio=liquidation_ratio,
     )
@@ -404,7 +396,7 @@ def create_vault_from_target_cr(
 
 def generate_random_vaults(
     n_vaults: int,
-    eth_price: float,
+    prices: float,
     liquidation_ratio: float = 1.5,
     debt_mean: float = 5_000.0,
     debt_std: float = 1_000.0,
@@ -424,7 +416,7 @@ def generate_random_vaults(
     ----------
     n_vaults:
         Number of vaults to generate.
-    eth_price:
+    prices:
         Initial ETH price.
     liquidation_ratio:
         Liquidation ratio, e.g. 1.5.
@@ -448,8 +440,8 @@ def generate_random_vaults(
     """
     if n_vaults <= 0:
         raise ValueError("n_vaults must be positive.")
-    if eth_price <= 0:
-        raise ValueError("eth_price must be positive.")
+    if prices <= 0:
+        raise ValueError("prices must be positive.")
 
     rng = np.random.default_rng(random_seed)
 
@@ -468,7 +460,7 @@ def generate_random_vaults(
             owner_id=i,
             debt_dai=float(debts[i]),
             target_collateral_ratio=float(collateral_ratios[i]),
-            eth_price=eth_price,
+            prices=prices,
             liquidation_ratio=liquidation_ratio,
         )
         for i in range(n_vaults)
@@ -477,7 +469,7 @@ def generate_random_vaults(
     return vaults
 
 
-def vaults_to_dataframe(vaults: list[Vault], eth_price: float) -> pd.DataFrame:
+def vaults_to_dataframe(vaults: list[Vault], prices: float) -> pd.DataFrame:
     """
     Convert a list of vaults to a DataFrame.
 
@@ -485,7 +477,7 @@ def vaults_to_dataframe(vaults: list[Vault], eth_price: float) -> pd.DataFrame:
     ----------
     vaults:
         List of Vault objects.
-    eth_price:
+    prices:
         Current ETH price.
 
     Returns
@@ -500,15 +492,15 @@ def vaults_to_dataframe(vaults: list[Vault], eth_price: float) -> pd.DataFrame:
             {
                 "vault_id": vault.vault_id,
                 "owner_id": vault.owner_id,
-                "collateral_eth": vault.collateral_eth,
-                "collateral_value": vault.collateral_value(eth_price),
+                "collateral_amount": vault.collateral_amount,
+                "collateral_value": vault.collateral_value(prices),
                 "debt_dai": vault.debt_dai,
-                "collateral_ratio": vault.collateral_ratio(eth_price),
+                "collateral_ratio": vault.collateral_ratio(prices),
                 "liquidation_ratio": vault.liquidation_ratio,
                 "is_active": vault.is_active,
                 "is_liquidated": vault.is_liquidated,
-                "is_liquidatable": vault.is_liquidatable(eth_price),
-                "bad_debt": vault.bad_debt(eth_price),
+                "is_liquidatable": vault.is_liquidatable(prices),
+                "bad_debt": vault.bad_debt(prices),
             }
         )
 
@@ -519,18 +511,18 @@ if __name__ == "__main__":
     # Quick smoke test. Run:
     # python src/vault.py
 
-    initial_eth_price = 2_000.0
-    shocked_eth_price = 1_140.0
+    initial_prices = 2_000.0
+    shocked_prices = 1_140.0
 
     vaults = generate_random_vaults(
         n_vaults=10,
-        eth_price=initial_eth_price,
+        prices=initial_prices,
         liquidation_ratio=1.5,
         random_seed=42,
     )
 
-    before = vaults_to_dataframe(vaults, eth_price=initial_eth_price)
-    after = vaults_to_dataframe(vaults, eth_price=shocked_eth_price)
+    before = vaults_to_dataframe(vaults, prices=initial_prices)
+    after = vaults_to_dataframe(vaults, prices=shocked_prices)
 
     print("Before ETH shock:")
     print(before[["vault_id", "debt_dai", "collateral_ratio", "is_liquidatable"]])
