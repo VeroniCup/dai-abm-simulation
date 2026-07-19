@@ -21,6 +21,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+from matplotlib.image import AxesImage
 import pandas as pd
 
 
@@ -1542,6 +1543,232 @@ def create_peg_recovery_figures(
         plot_full_system_recovery_step(summary),
         plot_realised_bad_debt_by_recovery_fraction(summary),
         plot_regime_duration_by_recovery_fraction(summary),
+    ]
+
+
+# ---------------------------------------------------------------------
+# 06 Multi-collateral portfolios
+# ---------------------------------------------------------------------
+
+def _heatmap_annotation_colour(
+    image: AxesImage,
+    value: float,
+) -> str:
+    """Return black or white, whichever contrasts most with the cell colour."""
+    red, green, blue, _ = image.to_rgba(value)
+
+    def linearise(channel: float) -> float:
+        if channel <= 0.04045:
+            return channel / 12.92
+        return ((channel + 0.055) / 1.055) ** 2.4
+
+    luminance = (
+        0.2126 * linearise(float(red))
+        + 0.7152 * linearise(float(green))
+        + 0.0722 * linearise(float(blue))
+    )
+    black_contrast = (luminance + 0.05) / 0.05
+    white_contrast = 1.05 / (luminance + 0.05)
+
+    return "black" if black_contrast >= white_contrast else "white"
+
+def _plot_multicollateral_summary_heatmap(
+    summary: pd.DataFrame,
+    value_column: str,
+    title: str,
+    colourbar_label: str,
+    value_format: str,
+    save_path: Path,
+) -> Path:
+    """Plot a generic portfolio-by-shock summary heatmap."""
+    portfolio_order = list(dict.fromkeys(summary["portfolio"].astype(str)))
+    shock_order = list(dict.fromkeys(summary["shock_scenario"].astype(str)))
+    matrix = summary.pivot(
+        index="portfolio",
+        columns="shock_scenario",
+        values=value_column,
+    ).reindex(index=portfolio_order, columns=shock_order)
+
+    fig, ax = plt.subplots(figsize=(12, 6.5))
+    image = ax.imshow(matrix.to_numpy(dtype=float), aspect="auto", cmap="viridis")
+    colourbar = fig.colorbar(image, ax=ax)
+    colourbar.set_label(colourbar_label)
+
+    ax.set_xticks(range(len(shock_order)))
+    ax.set_xticklabels(
+        [format_scenario_label(name) for name in shock_order],
+        rotation=25,
+        ha="right",
+    )
+    ax.set_yticks(range(len(portfolio_order)))
+    ax.set_yticklabels(
+        [format_scenario_label(name) for name in portfolio_order]
+    )
+
+    for row_index, portfolio in enumerate(portfolio_order):
+        for column_index, shock_scenario in enumerate(shock_order):
+            value = float(matrix.loc[portfolio, shock_scenario])
+            ax.text(
+                column_index,
+                row_index,
+                f"{value:{value_format}}",
+                ha="center",
+                va="center",
+                color=_heatmap_annotation_colour(image, value),
+                fontsize=8,
+            )
+
+    ax.set_title(title)
+    ax.set_xlabel("Shock scenario")
+    ax.set_ylabel("Collateral portfolio")
+
+    return save_figure(fig, save_path)
+
+
+def plot_multicollateral_peak_peg_deviation(
+    system_summary: pd.DataFrame,
+    figure_dir: Path = MULTICOLLATERAL_FIGURES_DIR,
+) -> Path:
+    """Plot peak absolute peg deviation across the experiment grid."""
+    return _plot_multicollateral_summary_heatmap(
+        summary=system_summary,
+        value_column="peak_peg_deviation",
+        title="Peak DAI Peg Deviation by Portfolio and Shock",
+        colourbar_label="Peak absolute peg deviation",
+        value_format=".4f",
+        save_path=figure_dir / "peak_peg_deviation_heatmap.png",
+    )
+
+
+def plot_multicollateral_realised_bad_debt(
+    system_summary: pd.DataFrame,
+    figure_dir: Path = MULTICOLLATERAL_FIGURES_DIR,
+) -> Path:
+    """Plot realised bad debt across the experiment grid."""
+    return _plot_multicollateral_summary_heatmap(
+        summary=system_summary,
+        value_column="realised_bad_debt",
+        title="Realised Bad Debt by Portfolio and Shock",
+        colourbar_label="Realised bad debt (DAI)",
+        value_format=",.0f",
+        save_path=figure_dir / "realised_bad_debt_heatmap.png",
+    )
+
+
+def plot_multicollateral_dai_price(
+    system_results: pd.DataFrame,
+    shock_scenario: str = "systemic_shock",
+    shock_time: int = 30,
+    figure_dir: Path = MULTICOLLATERAL_FIGURES_DIR,
+) -> Path:
+    """Plot DAI price paths by portfolio for one shock scenario."""
+    selected = system_results.loc[
+        system_results["shock_scenario"] == shock_scenario
+    ]
+    if selected.empty:
+        raise ValueError(
+            f"No system results found for shock scenario '{shock_scenario}'."
+        )
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    for portfolio, portfolio_results in selected.groupby(
+        "portfolio",
+        sort=False,
+    ):
+        portfolio_results = portfolio_results.sort_values("step")
+        ax.plot(
+            portfolio_results["step"],
+            portfolio_results["dai_price"],
+            label=format_scenario_label(str(portfolio)),
+        )
+
+    ax.axhline(1.0, linestyle="--", linewidth=1, color="black", label="DAI peg")
+    ax.axvline(shock_time, linestyle=":", linewidth=1, color="grey")
+    ax.set_title(
+        "DAI Price by Collateral Portfolio under Systemic Shock"
+    )
+    ax.set_xlabel("Simulation step")
+    ax.set_ylabel("DAI price")
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+
+    return save_figure(
+        fig,
+        figure_dir / "dai_price_systemic_shock.png",
+    )
+
+
+def plot_multicollateral_bad_debt_by_collateral(
+    collateral_summary: pd.DataFrame,
+    shock_scenario: str = "systemic_shock",
+    figure_dir: Path = MULTICOLLATERAL_FIGURES_DIR,
+) -> Path:
+    """Plot dynamically grouped collateral bad debt for one shock scenario."""
+    selected = collateral_summary.loc[
+        collateral_summary["shock_scenario"] == shock_scenario
+    ]
+    if selected.empty:
+        raise ValueError(
+            f"No collateral summary found for shock scenario '{shock_scenario}'."
+        )
+
+    portfolio_order = list(dict.fromkeys(selected["portfolio"].astype(str)))
+    collateral_order = list(
+        dict.fromkeys(selected["collateral_type"].astype(str))
+    )
+    matrix = selected.pivot(
+        index="portfolio",
+        columns="collateral_type",
+        values="realised_bad_debt",
+    ).reindex(index=portfolio_order, columns=collateral_order).fillna(0.0)
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    matrix.plot(kind="bar", stacked=True, ax=ax)
+    ax.set_title("Realised Bad Debt Composition under Systemic Shock")
+    ax.set_xlabel("Collateral portfolio")
+    ax.set_ylabel("Realised bad debt (DAI)")
+    ax.set_xticklabels(
+        [format_scenario_label(name) for name in portfolio_order],
+        rotation=20,
+        ha="right",
+    )
+    ax.legend(title="Collateral type")
+    ax.grid(True, axis="y", alpha=0.3)
+
+    return save_figure(
+        fig,
+        figure_dir / "collateral_bad_debt_systemic_shock.png",
+    )
+
+
+def create_multicollateral_figures(
+    system_results: pd.DataFrame,
+    system_summary: pd.DataFrame,
+    collateral_summary: pd.DataFrame,
+    shock_time: int = 30,
+    figure_dir: Path = MULTICOLLATERAL_FIGURES_DIR,
+) -> list[Path]:
+    """Create all Experiment 06 dissertation figures."""
+    figure_dir.mkdir(parents=True, exist_ok=True)
+
+    return [
+        plot_multicollateral_peak_peg_deviation(
+            system_summary,
+            figure_dir=figure_dir,
+        ),
+        plot_multicollateral_realised_bad_debt(
+            system_summary,
+            figure_dir=figure_dir,
+        ),
+        plot_multicollateral_dai_price(
+            system_results,
+            shock_time=shock_time,
+            figure_dir=figure_dir,
+        ),
+        plot_multicollateral_bad_debt_by_collateral(
+            collateral_summary,
+            figure_dir=figure_dir,
+        ),
     ]
 
 

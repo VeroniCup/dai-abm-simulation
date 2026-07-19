@@ -29,21 +29,25 @@ class CollateralConfig:
     initial_price:
         Initial market price of one unit of collateral.
     liquidation_ratio:
-        Minimum collateral ratio required before liquidation.
-        Example: 1.50 means 150%.
+        Optional minimum collateral ratio required before liquidation.
+        Example: 1.50 means 150%. ``None`` uses the global simulation value.
     liquidation_penalty:
-        Fractional liquidation penalty.
-        Example: 0.13 means 13%.
+        Optional fractional liquidation penalty.
+        Example: 0.13 means 13%. ``None`` uses the global liquidation value.
     target_debt_share:
         Target share of total system debt assigned to this collateral type.
         Shares across a portfolio must sum to 1.
+    max_close_factor:
+        Optional maximum share of vault debt repaid by one liquidation.
+        ``None`` uses the global liquidation value.
     """
 
     name: str
     initial_price: float
-    liquidation_ratio: float
-    liquidation_penalty: float
+    liquidation_ratio: float | None
+    liquidation_penalty: float | None
     target_debt_share: float
+    max_close_factor: float | None = None
 
     def __post_init__(self) -> None:
         normalised_name = self.name.strip().upper()
@@ -64,14 +68,28 @@ class CollateralConfig:
                 "initial_price must be positive."
             )
 
-        if self.liquidation_ratio <= 1.0:
+        if (
+            self.liquidation_ratio is not None
+            and self.liquidation_ratio <= 1.0
+        ):
             raise ValueError(
                 "liquidation_ratio must be greater than 1.0."
             )
 
-        if self.liquidation_penalty < 0:
+        if (
+            self.liquidation_penalty is not None
+            and self.liquidation_penalty < 0
+        ):
             raise ValueError(
                 "liquidation_penalty must be non-negative."
+            )
+
+        if (
+            self.max_close_factor is not None
+            and not 0.0 < self.max_close_factor <= 1.0
+        ):
+            raise ValueError(
+                "max_close_factor must lie in (0, 1]."
             )
 
         if not 0.0 <= self.target_debt_share <= 1.0:
@@ -319,8 +337,8 @@ def create_eth_only_portfolio() -> CollateralPortfolioConfig:
             CollateralConfig(
                 name="ETH",
                 initial_price=2000.0,
-                liquidation_ratio=1.50,
-                liquidation_penalty=0.13,
+                liquidation_ratio=None,
+                liquidation_penalty=None,
                 target_debt_share=1.00,
             ),
         ),
@@ -472,11 +490,27 @@ if __name__ == "__main__":
         print(f"\n{portfolio_name}")
 
         for collateral in portfolio.collaterals:
+            liquidation_ratio = (
+                "global"
+                if collateral.liquidation_ratio is None
+                else f"{collateral.liquidation_ratio:.2f}"
+            )
+            liquidation_penalty = (
+                "global"
+                if collateral.liquidation_penalty is None
+                else f"{collateral.liquidation_penalty:.2%}"
+            )
+            close_factor = (
+                "global"
+                if collateral.max_close_factor is None
+                else f"{collateral.max_close_factor:.2%}"
+            )
             print(
                 f"  {collateral.name}: "
                 f"price={collateral.initial_price}, "
-                f"LR={collateral.liquidation_ratio:.2f}, "
-                f"penalty={collateral.liquidation_penalty:.2%}, "
+                f"LR={liquidation_ratio}, "
+                f"penalty={liquidation_penalty}, "
+                f"close_factor={close_factor}, "
                 f"debt_share={collateral.target_debt_share:.2%}"
             )
 

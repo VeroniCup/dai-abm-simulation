@@ -21,22 +21,42 @@ The aim is to compare how keeper incentives and confidence feedback affect:
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
+from dataclasses import dataclass, replace
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
+from collateral import (
+    CollateralPortfolioConfig,
+    create_balanced_portfolio,
+    create_btc_concentrated_portfolio,
+    create_crypto_diversified_portfolio,
+    create_eth_only_portfolio,
+    create_stable_heavy_portfolio,
+)
 from simulation import (
     SimulationConfig,
+    create_initial_vaults,
+    run_simulation_with_collateral_metrics,
     run_shock_simulation,
     run_shock_recovery_simulation,
 )
 from liquidation import LiquidationConfig
 from confidence import ConfidenceConfig
 from dai_market import DAIMarketConfig
+from price_process import PriceProcessConfig, generate_shock_price_path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RESULTS_DIR = PROJECT_ROOT / "outputs" / "results"
+FIGURES_DIR = PROJECT_ROOT / "outputs" / "figures"
+MULTICOLLATERAL_RESULTS_DIR = RESULTS_DIR / "06_multicollateral"
+MULTICOLLATERAL_FIGURES_DIR = FIGURES_DIR / "06_multicollateral"
+MULTICOLLATERAL_DIAGNOSTICS_DIR = (
+    MULTICOLLATERAL_RESULTS_DIR / "diagnostics"
+)
 
 
 def create_base_simulation_config(
@@ -1209,50 +1229,1204 @@ def run_peg_recovery_experiment(
     return combined_results, summary
 
 
+# ---------------------------------------------------------------------
+# 06 Multi-collateral portfolio experiments
+# ---------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class MultiCollateralShockScenario:
+    """Deterministic collateral shocks applied from one simulation step."""
+
+    name: str
+    shock_sizes: Mapping[str, float]
+
+    def __post_init__(self) -> None:
+        scenario_name = self.name.strip()
+        if not scenario_name:
+            raise ValueError("Shock scenario name must not be empty.")
+
+        normalised_shocks: dict[str, float] = {}
+        for collateral_type, shock_size in self.shock_sizes.items():
+            normalised_type = str(collateral_type).strip().upper()
+            if not normalised_type:
+                raise ValueError("Shock collateral types must not be empty.")
+            if normalised_type in normalised_shocks:
+                raise ValueError(
+                    f"Duplicate shock for collateral type '{normalised_type}'."
+                )
+
+            numeric_shock = float(shock_size)
+            if not -1.0 < numeric_shock < 0.0:
+                raise ValueError(
+                    "Collateral shock sizes must lie strictly between -1 and 0."
+                )
+            normalised_shocks[normalised_type] = numeric_shock
+
+        if not normalised_shocks:
+            raise ValueError("At least one collateral shock is required.")
+
+        object.__setattr__(self, "name", scenario_name)
+        object.__setattr__(self, "shock_sizes", normalised_shocks)
+
+
+def create_multicollateral_portfolios(
+) -> dict[str, CollateralPortfolioConfig]:
+    """Return the five agreed Experiment 06 portfolios."""
+    portfolios = (
+        create_eth_only_portfolio(),
+        create_crypto_diversified_portfolio(),
+        create_balanced_portfolio(),
+        create_stable_heavy_portfolio(),
+        create_btc_concentrated_portfolio(),
+    )
+    return {
+        portfolio.name: portfolio
+        for portfolio in portfolios
+    }
+
+
+def create_multicollateral_shock_scenarios(
+    crypto_crash_size: float = -0.43,
+    stable_depeg_size: float = -0.20,
+) -> dict[str, MultiCollateralShockScenario]:
+    """
+    Return the configurable deterministic Experiment 06 shock scenarios.
+
+    The defaults are stylised stress magnitudes rather than empirical
+    calibrations. The crypto magnitude matches the existing baseline ETH shock.
+    """
+    scenarios = (
+        MultiCollateralShockScenario(
+            name="eth_specific_crash",
+            shock_sizes={"ETH": crypto_crash_size},
+        ),
+        MultiCollateralShockScenario(
+            name="btc_specific_crash",
+            shock_sizes={"BTC": crypto_crash_size},
+        ),
+        MultiCollateralShockScenario(
+            name="correlated_crypto_crash",
+            shock_sizes={
+                "ETH": crypto_crash_size,
+                "BTC": crypto_crash_size,
+            },
+        ),
+        MultiCollateralShockScenario(
+            name="stable_depeg",
+            shock_sizes={"STABLE": stable_depeg_size},
+        ),
+        MultiCollateralShockScenario(
+            name="systemic_shock",
+            shock_sizes={
+                "ETH": crypto_crash_size,
+                "BTC": crypto_crash_size,
+                "STABLE": stable_depeg_size,
+            },
+        ),
+    )
+    return {
+        scenario.name: scenario
+        for scenario in scenarios
+    }
+
+
+def build_multicollateral_price_paths(
+    portfolio: CollateralPortfolioConfig,
+    shock_scenario: MultiCollateralShockScenario,
+    n_steps: int,
+    shock_time: int,
+    random_seed: int | None = 42,
+) -> dict[str, np.ndarray]:
+    """Build portfolio price paths with the existing deterministic generator."""
+    price_paths: dict[str, np.ndarray] = {}
+
+    for collateral in portfolio.collaterals:
+        price_config = PriceProcessConfig(
+            n_steps=n_steps,
+            initial_price=collateral.initial_price,
+            random_seed=random_seed,
+        )
+        shock_size = shock_scenario.shock_sizes.get(collateral.name, 0.0)
+        generated_path = generate_shock_price_path(
+            config=price_config,
+            shock_time=shock_time,
+            shock_size=shock_size,
+        )
+        price_paths[collateral.name] = generated_path["eth_price"].to_numpy()
+
+    return price_paths
+
+
+def compute_multicollateral_system_summary(
+    system_results: pd.DataFrame,
+) -> pd.DataFrame:
+    """Build one system summary row per portfolio and shock scenario."""
+    summary_records = []
+
+    for (portfolio, shock_scenario), run_results in system_results.groupby(
+        ["portfolio", "shock_scenario"],
+        sort=False,
+    ):
+        run_results = run_results.sort_values("step")
+        final = run_results.iloc[-1]
+        peg_deviation = run_results["dai_price"] - 1.0
+        realised_bad_debt = float(final["bad_debt_realised_cumulative"])
+        final_active_bad_debt = float(final["total_bad_debt_active"])
+
+        summary_records.append(
+            {
+                "portfolio": str(portfolio),
+                "shock_scenario": str(shock_scenario),
+                "peak_peg_deviation": float(peg_deviation.abs().max()),
+                "final_peg_deviation": float(peg_deviation.iloc[-1]),
+                "final_abs_peg_deviation": float(abs(peg_deviation.iloc[-1])),
+                "final_active_bad_debt": final_active_bad_debt,
+                "cumulative_bad_debt": (
+                    final_active_bad_debt + realised_bad_debt
+                ),
+                "realised_bad_debt": realised_bad_debt,
+                "cumulative_debt_repaid": float(
+                    final["debt_repaid_cumulative"]
+                ),
+                "keeper_profit": float(final["keeper_profit_cumulative"]),
+                "liquidation_volume": float(
+                    final["collateral_liquidated_cumulative"]
+                ),
+                "successful_liquidations": int(
+                    run_results["n_successful_liquidations"].sum()
+                ),
+                "final_active_debt": float(final["total_debt_active"]),
+            }
+        )
+
+    return pd.DataFrame(summary_records)
+
+
+def compute_multicollateral_collateral_summary(
+    collateral_results: pd.DataFrame,
+) -> pd.DataFrame:
+    """Build long-format collateral summaries for every experiment run."""
+    summary_records = []
+
+    for (
+        portfolio,
+        shock_scenario,
+        collateral_type,
+    ), run_results in collateral_results.groupby(
+        ["portfolio", "shock_scenario", "collateral_type"],
+        sort=False,
+    ):
+        run_results = run_results.sort_values("step")
+        final = run_results.iloc[-1]
+
+        summary_records.append(
+            {
+                "portfolio": str(portfolio),
+                "shock_scenario": str(shock_scenario),
+                "collateral_type": str(collateral_type),
+                "active_debt": float(final["active_debt"]),
+                "peak_active_debt": float(run_results["active_debt"].max()),
+                "realised_bad_debt": float(
+                    run_results["realised_bad_debt"].sum()
+                ),
+                "liquidations": int(
+                    run_results["successful_liquidations"].sum()
+                ),
+                "keeper_profit": float(run_results["keeper_profit"].sum()),
+                "debt_repaid": float(run_results["debt_repaid"].sum()),
+            }
+        )
+
+    return pd.DataFrame(summary_records)
+
+
+def validate_multicollateral_results(
+    system_results: pd.DataFrame,
+    collateral_results: pd.DataFrame,
+    system_summary: pd.DataFrame,
+    collateral_summary: pd.DataFrame,
+) -> None:
+    """Validate detailed and summary reconciliation for every experiment run."""
+    step_fields = {
+        "realised_bad_debt": "bad_debt_realised_step",
+        "debt_repaid": "debt_repaid_step",
+        "keeper_profit": "keeper_profit_step",
+        "successful_liquidations": "n_successful_liquidations",
+    }
+
+    for (portfolio, shock_scenario), system_run in system_results.groupby(
+        ["portfolio", "shock_scenario"],
+        sort=False,
+    ):
+        collateral_run = collateral_results.loc[
+            (collateral_results["portfolio"] == portfolio)
+            & (collateral_results["shock_scenario"] == shock_scenario)
+        ]
+        collateral_by_step = collateral_run.groupby("step", sort=True).sum(
+            numeric_only=True
+        )
+        system_by_step = system_run.sort_values("step").set_index("step")
+
+        for collateral_field, system_field in step_fields.items():
+            if not np.allclose(
+                collateral_by_step[collateral_field],
+                system_by_step[system_field],
+            ):
+                raise ValueError(
+                    "Collateral results do not reconcile for "
+                    f"{portfolio}/{shock_scenario}: {collateral_field}."
+                )
+
+        system_summary_row = system_summary.loc[
+            (system_summary["portfolio"] == portfolio)
+            & (system_summary["shock_scenario"] == shock_scenario)
+        ].iloc[0]
+        collateral_summary_rows = collateral_summary.loc[
+            (collateral_summary["portfolio"] == portfolio)
+            & (collateral_summary["shock_scenario"] == shock_scenario)
+        ]
+        summary_fields = {
+            "realised_bad_debt": "realised_bad_debt",
+            "debt_repaid": "cumulative_debt_repaid",
+            "keeper_profit": "keeper_profit",
+            "liquidations": "successful_liquidations",
+            "active_debt": "final_active_debt",
+        }
+
+        for collateral_field, system_field in summary_fields.items():
+            if not np.isclose(
+                collateral_summary_rows[collateral_field].sum(),
+                system_summary_row[system_field],
+            ):
+                raise ValueError(
+                    "Collateral summary does not reconcile for "
+                    f"{portfolio}/{shock_scenario}: {collateral_field}."
+                )
+
+
+def save_multicollateral_outputs(
+    system_results: pd.DataFrame,
+    collateral_results: pd.DataFrame,
+    system_summary: pd.DataFrame,
+    collateral_summary: pd.DataFrame,
+    output_dir: Path = MULTICOLLATERAL_RESULTS_DIR,
+) -> dict[str, Path]:
+    """Save Experiment 06 tables directly in the results directory."""
+    paths = {
+        "system_results": output_dir / "system_results.csv",
+        "collateral_results": output_dir / "collateral_results.csv",
+        "system_summary": output_dir / "system_summary.csv",
+        "collateral_summary": output_dir / "collateral_summary.csv",
+    }
+    frames = {
+        "system_results": system_results,
+        "collateral_results": collateral_results,
+        "system_summary": system_summary,
+        "collateral_summary": collateral_summary,
+    }
+
+    for name, path in paths.items():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        frames[name].to_csv(path, index=False)
+
+    return paths
+
+
+def run_multicollateral_experiment(
+    portfolios: Mapping[str, CollateralPortfolioConfig] | None = None,
+    shock_scenarios: Mapping[
+        str,
+        MultiCollateralShockScenario,
+    ] | None = None,
+    simulation_config: SimulationConfig | None = None,
+    liquidation_config: LiquidationConfig | None = None,
+    confidence_config: ConfidenceConfig | None = None,
+    dai_market_config: DAIMarketConfig | None = None,
+    shock_time: int = 30,
+    initial_dai_price: float = 1.0,
+    output_dir: Path = MULTICOLLATERAL_RESULTS_DIR,
+    save_outputs: bool = True,
+    generate_figures: bool = True,
+    figure_dir: Path = MULTICOLLATERAL_FIGURES_DIR,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Run the complete portfolio-by-shock Experiment 06 grid."""
+    if portfolios is None:
+        portfolios = create_multicollateral_portfolios()
+    if shock_scenarios is None:
+        shock_scenarios = create_multicollateral_shock_scenarios()
+    if not portfolios:
+        raise ValueError("At least one collateral portfolio is required.")
+    if not shock_scenarios:
+        raise ValueError("At least one shock scenario is required.")
+
+    if simulation_config is None:
+        simulation_config = create_base_simulation_config(
+            oracle_delay_steps=0,
+        )
+
+    default_scenario = create_scenario_configs()["high_gas"]
+    if liquidation_config is None:
+        liquidation_config = default_scenario["liquidation_config"]
+    if confidence_config is None:
+        confidence_config = default_scenario["confidence_config"]
+    if dai_market_config is None:
+        dai_market_config = default_scenario["dai_market_config"]
+
+    system_runs = []
+    collateral_runs = []
+
+    for portfolio_name, portfolio in portfolios.items():
+        if portfolio_name != portfolio.name:
+            raise ValueError(
+                "Portfolio mapping keys must match portfolio names: "
+                f"'{portfolio_name}' != '{portfolio.name}'."
+            )
+
+        portfolio_config = replace(
+            simulation_config,
+            collateral_portfolio=portfolio,
+        )
+
+        for scenario_name, shock_scenario in shock_scenarios.items():
+            if scenario_name != shock_scenario.name:
+                raise ValueError(
+                    "Shock mapping keys must match scenario names: "
+                    f"'{scenario_name}' != '{shock_scenario.name}'."
+                )
+
+            print(
+                "Running Experiment 06: "
+                f"portfolio={portfolio_name}, shock={scenario_name}"
+            )
+            price_paths = build_multicollateral_price_paths(
+                portfolio=portfolio,
+                shock_scenario=shock_scenario,
+                n_steps=portfolio_config.n_steps,
+                shock_time=shock_time,
+                random_seed=portfolio_config.random_seed,
+            )
+            system_results, collateral_results = (
+                run_simulation_with_collateral_metrics(
+                    config=portfolio_config,
+                    price_path=price_paths,
+                    liquidation_config=liquidation_config,
+                    confidence_config=confidence_config,
+                    dai_market_config=dai_market_config,
+                    initial_dai_price=initial_dai_price,
+                    execute_liquidations=True,
+                )
+            )
+            system_results.insert(0, "portfolio", portfolio_name)
+            system_results.insert(1, "shock_scenario", scenario_name)
+            collateral_results.insert(0, "portfolio", portfolio_name)
+            collateral_results.insert(1, "shock_scenario", scenario_name)
+            system_runs.append(system_results)
+            collateral_runs.append(collateral_results)
+
+    combined_system_results = pd.concat(system_runs, ignore_index=True)
+    combined_collateral_results = pd.concat(
+        collateral_runs,
+        ignore_index=True,
+    )
+    system_summary = compute_multicollateral_system_summary(
+        combined_system_results
+    )
+    collateral_summary = compute_multicollateral_collateral_summary(
+        combined_collateral_results
+    )
+    validate_multicollateral_results(
+        system_results=combined_system_results,
+        collateral_results=combined_collateral_results,
+        system_summary=system_summary,
+        collateral_summary=collateral_summary,
+    )
+
+    if save_outputs:
+        save_multicollateral_outputs(
+            system_results=combined_system_results,
+            collateral_results=combined_collateral_results,
+            system_summary=system_summary,
+            collateral_summary=collateral_summary,
+            output_dir=output_dir,
+        )
+
+    if generate_figures:
+        from plot_results import create_multicollateral_figures
+
+        create_multicollateral_figures(
+            system_results=combined_system_results,
+            system_summary=system_summary,
+            collateral_summary=collateral_summary,
+            shock_time=shock_time,
+            figure_dir=figure_dir,
+        )
+
+    return (
+        combined_system_results,
+        combined_collateral_results,
+        system_summary,
+        collateral_summary,
+    )
+
+
+# ---------------------------------------------------------------------
+# 06 Multi-collateral diagnostics
+# ---------------------------------------------------------------------
+
+def create_initial_collateral_risk_diagnostics(
+    portfolios: Mapping[str, CollateralPortfolioConfig] | None = None,
+    simulation_config: SimulationConfig | None = None,
+) -> pd.DataFrame:
+    """Describe the seeded initial vault populations in long format."""
+    if portfolios is None:
+        portfolios = create_multicollateral_portfolios()
+    if simulation_config is None:
+        simulation_config = create_base_simulation_config(
+            oracle_delay_steps=0,
+        )
+
+    records = []
+
+    for portfolio_name, portfolio in portfolios.items():
+        portfolio_config = replace(
+            simulation_config,
+            collateral_portfolio=portfolio,
+        )
+        vaults = create_initial_vaults(portfolio_config)
+        initial_prices = portfolio.initial_prices
+        if "ETH" in initial_prices:
+            initial_prices["ETH"] = portfolio_config.initial_eth_price
+
+        for vault in vaults:
+            initial_ratio = float(vault.collateral_ratio(initial_prices))
+            distance_to_liquidation = (
+                initial_ratio - vault.liquidation_ratio
+            )
+            critical_decline = (
+                1.0 - vault.liquidation_ratio / initial_ratio
+            )
+
+            if not 0.0 <= critical_decline < 1.0:
+                raise ValueError(
+                    "Initial vault diagnostic requires active vaults above "
+                    "their liquidation ratios."
+                )
+
+            # Check the analytical threshold against the vault's existing
+            # liquidatability rule on either side of the strict boundary.
+            critical_multiplier = 1.0 - critical_decline
+            epsilon = min(1e-9, critical_multiplier / 2.0)
+            safe_prices = initial_prices.copy()
+            liquidatable_prices = initial_prices.copy()
+            initial_price = initial_prices[vault.collateral_type]
+            safe_prices[vault.collateral_type] = initial_price * (
+                critical_multiplier + epsilon
+            )
+            liquidatable_prices[vault.collateral_type] = initial_price * (
+                critical_multiplier - epsilon
+            )
+
+            if vault.is_liquidatable(safe_prices):
+                raise ValueError(
+                    "Critical price-decline calculation failed above the "
+                    f"boundary for vault {vault.vault_id}."
+                )
+            if not vault.is_liquidatable(liquidatable_prices):
+                raise ValueError(
+                    "Critical price-decline calculation failed below the "
+                    f"boundary for vault {vault.vault_id}."
+                )
+
+            records.append(
+                {
+                    "portfolio": portfolio_name,
+                    "collateral_type": vault.collateral_type,
+                    "vault_id": vault.vault_id,
+                    "debt_dai": float(vault.debt_dai),
+                    "initial_collateral_ratio": initial_ratio,
+                    "liquidation_ratio": float(vault.liquidation_ratio),
+                    "distance_to_liquidation": float(
+                        distance_to_liquidation
+                    ),
+                    "critical_proportional_price_decline": float(
+                        critical_decline
+                    ),
+                }
+            )
+
+    return pd.DataFrame(records)
+
+
+def build_stable_depeg_diagnostic_price_paths(
+    portfolio: CollateralPortfolioConfig,
+    stable_price_level: float,
+    n_steps: int,
+    shock_time: int,
+    random_seed: int | None = 42,
+) -> dict[str, np.ndarray]:
+    """Build deterministic paths for one absolute STABLE price level."""
+    if not portfolio.contains("STABLE"):
+        raise ValueError(
+            f"Portfolio '{portfolio.name}' does not contain STABLE collateral."
+        )
+
+    stable_initial_price = portfolio.get("STABLE").initial_price
+    numeric_level = float(stable_price_level)
+    if not 0.0 < numeric_level <= stable_initial_price:
+        raise ValueError(
+            "stable_price_level must be positive and no greater than the "
+            "portfolio's initial STABLE price."
+        )
+
+    price_paths: dict[str, np.ndarray] = {}
+
+    for collateral in portfolio.collaterals:
+        shock_size = 0.0
+        if collateral.name == "STABLE":
+            shock_size = numeric_level / collateral.initial_price - 1.0
+
+        generated_path = generate_shock_price_path(
+            config=PriceProcessConfig(
+                n_steps=n_steps,
+                initial_price=collateral.initial_price,
+                random_seed=random_seed,
+            ),
+            shock_time=shock_time,
+            shock_size=shock_size,
+        )
+        price_paths[collateral.name] = generated_path[
+            "eth_price"
+        ].to_numpy()
+
+    return price_paths
+
+
+def run_stable_depeg_severity_diagnostic(
+    stable_price_levels: Sequence[float] = (
+        1.00,
+        0.98,
+        0.95,
+        0.90,
+        0.85,
+        0.80,
+        0.75,
+        0.70,
+        0.65,
+    ),
+    portfolios: Mapping[str, CollateralPortfolioConfig] | None = None,
+    simulation_config: SimulationConfig | None = None,
+    liquidation_config: LiquidationConfig | None = None,
+    confidence_config: ConfidenceConfig | None = None,
+    dai_market_config: DAIMarketConfig | None = None,
+    shock_time: int = 30,
+) -> pd.DataFrame:
+    """Run the in-memory STABLE depeg severity sweep."""
+    all_portfolios = create_multicollateral_portfolios()
+    if portfolios is None:
+        portfolios = {
+            "balanced": all_portfolios["balanced"],
+            "stable_heavy": all_portfolios["stable_heavy"],
+        }
+    if simulation_config is None:
+        simulation_config = create_base_simulation_config(
+            oracle_delay_steps=0,
+        )
+
+    default_scenario = create_scenario_configs()["high_gas"]
+    if liquidation_config is None:
+        liquidation_config = default_scenario["liquidation_config"]
+    if confidence_config is None:
+        confidence_config = default_scenario["confidence_config"]
+    if dai_market_config is None:
+        dai_market_config = default_scenario["dai_market_config"]
+
+    levels = sorted(
+        {float(level) for level in stable_price_levels},
+        reverse=True,
+    )
+    if not levels:
+        raise ValueError("At least one STABLE price level is required.")
+
+    records = []
+
+    for portfolio_name, portfolio in portfolios.items():
+        portfolio_config = replace(
+            simulation_config,
+            collateral_portfolio=portfolio,
+        )
+        initial_vaults = create_initial_vaults(portfolio_config)
+        stable_vaults = [
+            vault
+            for vault in initial_vaults
+            if vault.collateral_type == "STABLE"
+        ]
+        initial_stable_debt = float(
+            sum(vault.debt_dai for vault in stable_vaults)
+        )
+        initially_exposed_vaults = len(stable_vaults)
+        if initial_stable_debt <= 0 or initially_exposed_vaults <= 0:
+            raise ValueError(
+                f"Portfolio '{portfolio_name}' has no STABLE exposure."
+            )
+
+        for stable_price_level in levels:
+            print(
+                "Running STABLE diagnostic: "
+                f"portfolio={portfolio_name}, level={stable_price_level:.2f}"
+            )
+            shock_prices = portfolio.initial_prices
+            if "ETH" in shock_prices:
+                shock_prices["ETH"] = portfolio_config.initial_eth_price
+            shock_prices["STABLE"] = stable_price_level
+            liquidatable_at_shock = sum(
+                vault.is_liquidatable(shock_prices)
+                for vault in stable_vaults
+            )
+            price_paths = build_stable_depeg_diagnostic_price_paths(
+                portfolio=portfolio,
+                stable_price_level=stable_price_level,
+                n_steps=portfolio_config.n_steps,
+                shock_time=shock_time,
+                random_seed=portfolio_config.random_seed,
+            )
+            system_results, collateral_results = (
+                run_simulation_with_collateral_metrics(
+                    config=portfolio_config,
+                    price_path=price_paths,
+                    liquidation_config=liquidation_config,
+                    confidence_config=confidence_config,
+                    dai_market_config=dai_market_config,
+                    execute_liquidations=True,
+                )
+            )
+            stable_results = collateral_results.loc[
+                collateral_results["collateral_type"] == "STABLE"
+            ].sort_values("step")
+            final_stable = stable_results.iloc[-1]
+            peg_deviation = system_results["dai_price"] - 1.0
+            realised_bad_debt = float(
+                stable_results["realised_bad_debt"].sum()
+            )
+            debt_repaid = float(stable_results["debt_repaid"].sum())
+            successful_liquidations = int(
+                stable_results["successful_liquidations"].sum()
+            )
+            keeper_profit = float(stable_results["keeper_profit"].sum())
+
+            records.append(
+                {
+                    "portfolio": portfolio_name,
+                    "stable_price_level": stable_price_level,
+                    "peak_dai_peg_deviation": float(
+                        peg_deviation.abs().max()
+                    ),
+                    "final_dai_peg_deviation": float(
+                        peg_deviation.iloc[-1]
+                    ),
+                    "stable_liquidatable_vaults_at_shock": int(
+                        liquidatable_at_shock
+                    ),
+                    "stable_peak_liquidatable_vaults": int(
+                        stable_results["liquidatable_vaults"].max()
+                    ),
+                    "stable_final_liquidatable_vaults": int(
+                        final_stable["liquidatable_vaults"]
+                    ),
+                    "stable_initial_debt": initial_stable_debt,
+                    "stable_active_debt": float(final_stable["active_debt"]),
+                    "stable_realised_bad_debt": realised_bad_debt,
+                    "stable_debt_repaid": debt_repaid,
+                    "stable_successful_liquidations": (
+                        successful_liquidations
+                    ),
+                    "stable_keeper_profit": keeper_profit,
+                    "minimum_confidence": float(
+                        system_results["confidence_after"].min()
+                    ),
+                    "final_confidence": float(
+                        system_results["confidence_after"].iloc[-1]
+                    ),
+                    "realised_bad_debt_per_initial_stable_debt": (
+                        realised_bad_debt / initial_stable_debt
+                    ),
+                    "debt_repaid_per_initial_stable_debt": (
+                        debt_repaid / initial_stable_debt
+                    ),
+                    "successful_liquidations_per_exposed_vault": (
+                        successful_liquidations / initially_exposed_vaults
+                    ),
+                    "initially_exposed_stable_vaults": (
+                        initially_exposed_vaults
+                    ),
+                    "first_liquidatable_level": False,
+                }
+            )
+
+    sweep = pd.DataFrame(records)
+    for portfolio_name, portfolio_rows in sweep.groupby(
+        "portfolio",
+        sort=False,
+    ):
+        liquidatable_rows = portfolio_rows.loc[
+            portfolio_rows["stable_liquidatable_vaults_at_shock"] > 0
+        ]
+        if not liquidatable_rows.empty:
+            first_index = liquidatable_rows.index[0]
+            sweep.loc[first_index, "first_liquidatable_level"] = True
+
+    return sweep
+
+
+def compute_exposure_normalised_diagnostics(
+    collateral_results: pd.DataFrame,
+    initial_risk: pd.DataFrame,
+    shock_scenarios: Mapping[
+        str,
+        MultiCollateralShockScenario,
+    ] | None = None,
+) -> pd.DataFrame:
+    """Normalise shocked-collateral outcomes by their initial exposures."""
+    if shock_scenarios is None:
+        shock_scenarios = create_multicollateral_shock_scenarios()
+
+    records = []
+
+    for (portfolio, shock_scenario), run_results in collateral_results.groupby(
+        ["portfolio", "shock_scenario"],
+        sort=False,
+    ):
+        scenario = shock_scenarios[str(shock_scenario)]
+
+        for collateral_type, shock_size in scenario.shock_sizes.items():
+            exposure = initial_risk.loc[
+                (initial_risk["portfolio"] == portfolio)
+                & (initial_risk["collateral_type"] == collateral_type)
+            ]
+            if exposure.empty:
+                continue
+
+            initial_debt = float(exposure["debt_dai"].sum())
+            initially_exposed_vaults = int(len(exposure))
+            if initial_debt <= 0 or initially_exposed_vaults <= 0:
+                raise ValueError(
+                    "Exposure-normalised diagnostics require positive "
+                    "initial debt and vault counts."
+                )
+
+            outcomes = run_results.loc[
+                run_results["collateral_type"] == collateral_type
+            ]
+            if outcomes.empty:
+                raise ValueError(
+                    "Detailed collateral results are missing shocked "
+                    f"collateral '{collateral_type}' for "
+                    f"{portfolio}/{shock_scenario}."
+                )
+            realised_bad_debt = float(
+                outcomes["realised_bad_debt"].sum()
+            )
+            debt_repaid = float(outcomes["debt_repaid"].sum())
+            successful_liquidations = int(
+                outcomes["successful_liquidations"].sum()
+            )
+
+            records.append(
+                {
+                    "portfolio": str(portfolio),
+                    "shock_scenario": str(shock_scenario),
+                    "shocked_collateral_type": collateral_type,
+                    "proportional_price_shock": float(shock_size),
+                    "initial_debt": initial_debt,
+                    "initially_exposed_vaults": initially_exposed_vaults,
+                    "realised_bad_debt": realised_bad_debt,
+                    "debt_repaid": debt_repaid,
+                    "successful_liquidations": successful_liquidations,
+                    "realised_bad_debt_per_initial_debt": (
+                        realised_bad_debt / initial_debt
+                    ),
+                    "debt_repaid_per_initial_debt": (
+                        debt_repaid / initial_debt
+                    ),
+                    "successful_liquidations_per_exposed_vault": (
+                        successful_liquidations / initially_exposed_vaults
+                    ),
+                }
+            )
+
+    return pd.DataFrame(records)
+
+
+def _compare_result_frames(
+    first_results: pd.DataFrame,
+    second_results: pd.DataFrame,
+    tolerance: float,
+    columns: Sequence[str] | None = None,
+) -> tuple[bool, bool, list[str], float]:
+    """Compare aligned result frames exactly and within tolerance."""
+    if tolerance < 0:
+        raise ValueError("tolerance cannot be negative.")
+
+    ignored_columns = {"shock_scenario"}
+    if columns is None:
+        comparison_columns = [
+            column
+            for column in first_results.columns
+            if column not in ignored_columns
+        ]
+    else:
+        comparison_columns = list(columns)
+
+    if not set(comparison_columns).issubset(second_results.columns):
+        raise ValueError("Result frames do not contain matching columns.")
+
+    first = first_results.loc[:, comparison_columns].reset_index(drop=True)
+    second = second_results.loc[:, comparison_columns].reset_index(drop=True)
+    if first.shape != second.shape:
+        return False, False, comparison_columns, float("inf")
+
+    differing_columns = []
+    max_abs_difference = 0.0
+
+    for column in comparison_columns:
+        first_column = first[column]
+        second_column = second[column]
+
+        if (
+            pd.api.types.is_numeric_dtype(first_column)
+            and pd.api.types.is_numeric_dtype(second_column)
+        ):
+            first_values = first_column.to_numpy(dtype=float)
+            second_values = second_column.to_numpy(dtype=float)
+            equivalent = np.allclose(
+                first_values,
+                second_values,
+                rtol=tolerance,
+                atol=tolerance,
+                equal_nan=True,
+            )
+            finite = np.isfinite(first_values) & np.isfinite(second_values)
+            if finite.any():
+                max_abs_difference = max(
+                    max_abs_difference,
+                    float(
+                        np.max(
+                            np.abs(
+                                first_values[finite]
+                                - second_values[finite]
+                            )
+                        )
+                    ),
+                )
+        else:
+            equivalent = first_column.equals(second_column)
+
+        if not equivalent:
+            differing_columns.append(column)
+
+    return (
+        first.equals(second),
+        not differing_columns,
+        differing_columns,
+        max_abs_difference,
+    )
+
+
+def compare_named_scenarios(
+    portfolio_name: str,
+    first_scenario_name: str,
+    second_scenario_name: str,
+    first_price_paths: Mapping[str, np.ndarray],
+    second_price_paths: Mapping[str, np.ndarray],
+    first_results: pd.DataFrame,
+    second_results: pd.DataFrame,
+    tolerance: float = 1e-12,
+) -> dict:
+    """Compare two named scenarios' price paths and result DataFrames."""
+    collateral_types = sorted(
+        set(first_price_paths) | set(second_price_paths)
+    )
+    differing_price_paths = []
+    price_paths_numerically_equivalent = True
+    price_paths_exactly_identical = True
+    max_price_path_difference = 0.0
+
+    for collateral_type in collateral_types:
+        if (
+            collateral_type not in first_price_paths
+            or collateral_type not in second_price_paths
+        ):
+            differing_price_paths.append(collateral_type)
+            price_paths_numerically_equivalent = False
+            price_paths_exactly_identical = False
+            continue
+
+        first_path = np.asarray(first_price_paths[collateral_type], dtype=float)
+        second_path = np.asarray(
+            second_price_paths[collateral_type],
+            dtype=float,
+        )
+        exact = np.array_equal(first_path, second_path)
+        equivalent = (
+            first_path.shape == second_path.shape
+            and np.allclose(
+                first_path,
+                second_path,
+                rtol=tolerance,
+                atol=tolerance,
+            )
+        )
+        if not exact:
+            price_paths_exactly_identical = False
+            differing_price_paths.append(collateral_type)
+        if not equivalent:
+            price_paths_numerically_equivalent = False
+        if first_path.shape == second_path.shape:
+            max_price_path_difference = max(
+                max_price_path_difference,
+                float(np.max(np.abs(first_path - second_path))),
+            )
+
+    (
+        results_exact,
+        results_equivalent,
+        differing_result_columns,
+        max_result_difference,
+    ) = _compare_result_frames(
+        first_results=first_results,
+        second_results=second_results,
+        tolerance=tolerance,
+    )
+    core_outcome_columns = [
+        "step",
+        "dai_price",
+        "total_debt_active",
+        "n_liquidatable",
+        "confidence_after",
+        "regime_after",
+        "n_successful_liquidations",
+        "debt_repaid_step",
+        "bad_debt_realised_step",
+        "keeper_profit_step",
+    ]
+    (
+        core_exact,
+        core_equivalent,
+        differing_core_columns,
+        _,
+    ) = _compare_result_frames(
+        first_results=first_results,
+        second_results=second_results,
+        tolerance=tolerance,
+        columns=core_outcome_columns,
+    )
+
+    return {
+        "portfolio": portfolio_name,
+        "first_scenario": first_scenario_name,
+        "second_scenario": second_scenario_name,
+        "tolerance": tolerance,
+        "price_paths_exactly_identical": price_paths_exactly_identical,
+        "price_paths_numerically_equivalent": (
+            price_paths_numerically_equivalent
+        ),
+        "differing_price_paths": ";".join(differing_price_paths),
+        "max_price_path_difference": max_price_path_difference,
+        "result_frames_exactly_identical": results_exact,
+        "result_frames_numerically_equivalent": results_equivalent,
+        "differing_result_columns": ";".join(differing_result_columns),
+        "max_result_difference": max_result_difference,
+        "core_outcomes_exactly_identical": core_exact,
+        "core_outcomes_numerically_equivalent": core_equivalent,
+        "differing_core_outcome_columns": ";".join(
+            differing_core_columns
+        ),
+    }
+
+
+def run_scenario_equivalence_diagnostic(
+    system_results: pd.DataFrame,
+    portfolios: Mapping[str, CollateralPortfolioConfig] | None = None,
+    shock_scenarios: Mapping[
+        str,
+        MultiCollateralShockScenario,
+    ] | None = None,
+    first_scenario_name: str = "correlated_crypto_crash",
+    second_scenario_name: str = "systemic_shock",
+    simulation_config: SimulationConfig | None = None,
+    shock_time: int = 30,
+    tolerance: float = 1e-12,
+) -> pd.DataFrame:
+    """Compare two saved Experiment 06 scenarios for every portfolio."""
+    if portfolios is None:
+        portfolios = create_multicollateral_portfolios()
+    if shock_scenarios is None:
+        shock_scenarios = create_multicollateral_shock_scenarios()
+    if simulation_config is None:
+        simulation_config = create_base_simulation_config(
+            oracle_delay_steps=0,
+        )
+
+    first_scenario = shock_scenarios[first_scenario_name]
+    second_scenario = shock_scenarios[second_scenario_name]
+    records = []
+
+    for portfolio_name, portfolio in portfolios.items():
+        first_paths = build_multicollateral_price_paths(
+            portfolio=portfolio,
+            shock_scenario=first_scenario,
+            n_steps=simulation_config.n_steps,
+            shock_time=shock_time,
+            random_seed=simulation_config.random_seed,
+        )
+        second_paths = build_multicollateral_price_paths(
+            portfolio=portfolio,
+            shock_scenario=second_scenario,
+            n_steps=simulation_config.n_steps,
+            shock_time=shock_time,
+            random_seed=simulation_config.random_seed,
+        )
+        first_results = system_results.loc[
+            (system_results["portfolio"] == portfolio_name)
+            & (system_results["shock_scenario"] == first_scenario_name)
+        ].sort_values("step")
+        second_results = system_results.loc[
+            (system_results["portfolio"] == portfolio_name)
+            & (system_results["shock_scenario"] == second_scenario_name)
+        ].sort_values("step")
+        if first_results.empty or second_results.empty:
+            raise ValueError(
+                "System results are missing a scenario required for the "
+                f"equivalence diagnostic in portfolio '{portfolio_name}'."
+            )
+
+        records.append(
+            compare_named_scenarios(
+                portfolio_name=portfolio_name,
+                first_scenario_name=first_scenario_name,
+                second_scenario_name=second_scenario_name,
+                first_price_paths=first_paths,
+                second_price_paths=second_paths,
+                first_results=first_results,
+                second_results=second_results,
+                tolerance=tolerance,
+            )
+        )
+
+    return pd.DataFrame(records)
+
+
+def save_multicollateral_diagnostics(
+    diagnostics: Mapping[str, pd.DataFrame],
+    output_dir: Path = MULTICOLLATERAL_DIAGNOSTICS_DIR,
+) -> dict[str, Path]:
+    """Save Milestone 6 diagnostic tables without touching Experiment 06 CSVs."""
+    filenames = {
+        "stable_depeg_severity": "stable_depeg_severity_sweep.csv",
+        "initial_collateral_risk": "initial_collateral_risk.csv",
+        "exposure_normalised": "exposure_normalised_metrics.csv",
+        "scenario_equivalence": "scenario_equivalence.csv",
+    }
+    output_dir.mkdir(parents=True, exist_ok=True)
+    paths = {}
+
+    for name, filename in filenames.items():
+        path = output_dir / filename
+        diagnostics[name].to_csv(path, index=False)
+        paths[name] = path
+
+    return paths
+
+
+def run_multicollateral_diagnostics(
+    stable_price_levels: Sequence[float] = (
+        1.00,
+        0.98,
+        0.95,
+        0.90,
+        0.85,
+        0.80,
+        0.75,
+        0.70,
+        0.65,
+    ),
+    output_dir: Path = MULTICOLLATERAL_DIAGNOSTICS_DIR,
+    save_outputs: bool = True,
+    tolerance: float = 1e-12,
+) -> dict[str, pd.DataFrame]:
+    """Build all Milestone 6 diagnostics from existing Experiment 06 outputs."""
+    system_path = MULTICOLLATERAL_RESULTS_DIR / "system_results.csv"
+    collateral_path = MULTICOLLATERAL_RESULTS_DIR / "collateral_results.csv"
+    if not system_path.exists() or not collateral_path.exists():
+        raise FileNotFoundError(
+            "Experiment 06 detailed outputs are required before diagnostics."
+        )
+
+    system_results = pd.read_csv(system_path)
+    collateral_results = pd.read_csv(collateral_path)
+    portfolios = create_multicollateral_portfolios()
+    shock_scenarios = create_multicollateral_shock_scenarios()
+    initial_risk = create_initial_collateral_risk_diagnostics(
+        portfolios=portfolios
+    )
+    stable_depeg = run_stable_depeg_severity_diagnostic(
+        stable_price_levels=stable_price_levels
+    )
+    exposure_normalised = compute_exposure_normalised_diagnostics(
+        collateral_results=collateral_results,
+        initial_risk=initial_risk,
+        shock_scenarios=shock_scenarios,
+    )
+    scenario_equivalence = run_scenario_equivalence_diagnostic(
+        system_results=system_results,
+        portfolios=portfolios,
+        shock_scenarios=shock_scenarios,
+        tolerance=tolerance,
+    )
+    diagnostics = {
+        "stable_depeg_severity": stable_depeg,
+        "initial_collateral_risk": initial_risk,
+        "exposure_normalised": exposure_normalised,
+        "scenario_equivalence": scenario_equivalence,
+    }
+
+    if save_outputs:
+        save_multicollateral_diagnostics(
+            diagnostics=diagnostics,
+            output_dir=output_dir,
+        )
+
+    return diagnostics
+
+
 if __name__ == "__main__":
     # Run:
     # python src/experiments.py
+    diagnostic_results = run_multicollateral_diagnostics()
 
-    combined_results, summary = run_all_scenarios(
-        shock_time=30,
-        shock_size=-0.43,
-        initial_dai_price=1.0,
+    first_liquidatable = diagnostic_results[
+        "stable_depeg_severity"
+    ].loc[lambda frame: frame["first_liquidatable_level"]]
+    print("\nFirst liquidatable STABLE sweep levels:")
+    print(
+        first_liquidatable.loc[
+            :,
+            [
+                "portfolio",
+                "stable_price_level",
+                "stable_liquidatable_vaults_at_shock",
+            ],
+        ].to_string(index=False)
     )
-    print("\nScenario summary:")
-    print(summary)
 
-    oracle_results, oracle_summary = run_oracle_delay_experiment(
-        delay_values=[0, 1, 3, 5, 10],
-        shock_time=30,
-        shock_size=-0.43,
-        initial_dai_price=1.0,
+    print("\nScenario-equivalence diagnostic:")
+    print(
+        diagnostic_results["scenario_equivalence"].loc[
+            :,
+            [
+                "portfolio",
+                "differing_price_paths",
+                "result_frames_exactly_identical",
+                "core_outcomes_exactly_identical",
+            ],
+        ].to_string(index=False)
     )
-    print("\nOracle delay summary:")
-    print(oracle_summary)
-
-    shock_results, shock_summary = run_shock_severity_experiment(
-        shock_values=[-0.20, -0.35, -0.43, -0.55, -0.70],
-        shock_time=30,
-        initial_dai_price=1.0,
-    )
-    print("\nShock severity summary:")
-    print(shock_summary)
-
-    confidence_results, confidence_summary = run_confidence_sensitivity_experiment(
-        shock_time=30,
-        shock_size=-0.43,
-        initial_dai_price=1.0,
-    )
-    print("\nConfidence sensitivity summary:")
-    print(confidence_summary)
-
-    recovery_results, recovery_summary = run_peg_recovery_experiment(
-        recovery_fractions=[0.0, 0.25, 0.50, 0.75, 1.0],
-        shock_time=30,
-        shock_size=-0.43,
-        recovery_start=40,
-        recovery_end=90,
-        initial_dai_price=1.0,
-    )
-    print("\nPeg recovery summary:")
-    print(recovery_summary)

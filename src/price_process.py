@@ -1,11 +1,12 @@
 """
 price_process.py
 
-ETH price process generators for the DAI stability simulation.
+Collateral price-path infrastructure for the DAI stability simulation.
 
-This module provides simple price paths used to stress-test the simulated
-DAI system. We start with transparent and controllable processes rather than
-trying to reproduce real ETH market dynamics.
+This module retains the existing ETH price generators and provides a canonical
+representation for aligned market and oracle price paths across collateral
+types. Price generation remains transparent and controllable rather than trying
+to reproduce complete crypto-asset market dynamics.
 
 Main functions:
 - generate_constant_price_path
@@ -15,6 +16,7 @@ Main functions:
 
 from __future__ import annotations
 
+from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Optional
 
@@ -47,6 +49,303 @@ class PriceProcessConfig:
             raise ValueError("n_steps must be positive.")
         if self.initial_price <= 0:
             raise ValueError("initial_price must be positive.")
+
+
+@dataclass(frozen=True)
+class CollateralPricePaths:
+    """
+    Canonical aligned market and oracle price paths.
+
+    Attributes
+    ----------
+    steps:
+        One-dimensional integer simulation steps.
+    market_prices:
+        Market price arrays keyed by normalised collateral identifier.
+    oracle_prices:
+        Oracle price arrays keyed by the same collateral identifiers.
+
+    Notes
+    -----
+    Every market and oracle path has exactly one value per simulation step.
+    """
+
+    steps: np.ndarray
+    market_prices: dict[str, np.ndarray]
+    oracle_prices: dict[str, np.ndarray]
+
+    def __post_init__(self) -> None:
+        steps = np.asarray(self.steps)
+        if steps.ndim != 1:
+            raise ValueError("steps must be one-dimensional.")
+        if len(steps) == 0:
+            raise ValueError("price paths must contain at least one step.")
+
+        numeric_steps = steps.astype(float)
+        if not np.isfinite(numeric_steps).all():
+            raise ValueError("steps must contain only finite values.")
+        if not np.equal(numeric_steps, np.floor(numeric_steps)).all():
+            raise ValueError("steps must contain integer values.")
+
+        integer_steps = numeric_steps.astype(int)
+        if len(np.unique(integer_steps)) != len(integer_steps):
+            raise ValueError("steps must not contain duplicates.")
+
+        market_prices = _normalise_price_arrays(
+            self.market_prices,
+            expected_length=len(integer_steps),
+            label="market",
+        )
+        oracle_prices = _normalise_price_arrays(
+            self.oracle_prices,
+            expected_length=len(integer_steps),
+            label="oracle",
+        )
+
+        if set(market_prices) != set(oracle_prices):
+            raise ValueError(
+                "Market and oracle price paths must contain the same "
+                "collateral types."
+            )
+
+        object.__setattr__(self, "steps", integer_steps)
+        object.__setattr__(self, "market_prices", market_prices)
+        object.__setattr__(self, "oracle_prices", oracle_prices)
+
+    def __len__(self) -> int:
+        """Return the number of aligned simulation steps."""
+        return len(self.steps)
+
+    def iter_price_maps(
+        self,
+    ) -> Iterator[tuple[int, dict[str, float], dict[str, float]]]:
+        """Yield each step with its market and oracle price maps."""
+        for index, step in enumerate(self.steps):
+            market_at_step = {
+                collateral_type: float(path[index])
+                for collateral_type, path in self.market_prices.items()
+            }
+            oracle_at_step = {
+                collateral_type: float(path[index])
+                for collateral_type, path in self.oracle_prices.items()
+            }
+
+            yield int(step), market_at_step, oracle_at_step
+
+
+PricePathValues = pd.DataFrame | pd.Series | np.ndarray | Sequence[float]
+PricePathInput = (
+    CollateralPricePaths
+    | PricePathValues
+    | Mapping[str, PricePathValues]
+)
+
+
+def _normalise_collateral_type(collateral_type: object) -> str:
+    """Return a validated uppercase collateral identifier."""
+    normalised_type = str(collateral_type).strip().upper()
+    if not normalised_type:
+        raise ValueError("Collateral price-path keys must not be empty.")
+    return normalised_type
+
+
+def _normalise_price_arrays(
+    price_paths: Mapping[str, np.ndarray],
+    expected_length: int,
+    label: str,
+) -> dict[str, np.ndarray]:
+    """Validate and copy price arrays keyed by collateral type."""
+    if not price_paths:
+        raise ValueError(f"{label.capitalize()} price paths must not be empty.")
+
+    normalised_paths: dict[str, np.ndarray] = {}
+
+    for collateral_type, values in price_paths.items():
+        normalised_type = _normalise_collateral_type(collateral_type)
+        if normalised_type in normalised_paths:
+            raise ValueError(
+                f"Duplicate {label} price path for '{normalised_type}'."
+            )
+
+        path = np.asarray(values, dtype=float)
+        if path.ndim != 1:
+            raise ValueError(
+                f"{label.capitalize()} price path for {normalised_type} "
+                "must be one-dimensional."
+            )
+        if len(path) != expected_length:
+            raise ValueError(
+                f"{label.capitalize()} price path for {normalised_type} "
+                f"has length {len(path)}; expected {expected_length}."
+            )
+        if not np.isfinite(path).all():
+            raise ValueError(
+                f"{label.capitalize()} price path for {normalised_type} "
+                "must contain only finite values."
+            )
+        if (path <= 0).any():
+            raise ValueError(
+                f"{label.capitalize()} prices for {normalised_type} "
+                "must be positive."
+            )
+
+        normalised_paths[normalised_type] = path.copy()
+
+    return normalised_paths
+
+
+def _extract_price_path_values(
+    collateral_type: str,
+    price_path: PricePathValues,
+) -> tuple[np.ndarray | None, np.ndarray]:
+    """Extract optional steps and prices from one external path value."""
+    if isinstance(price_path, pd.DataFrame):
+        steps = (
+            price_path["step"].to_numpy()
+            if "step" in price_path.columns
+            else None
+        )
+
+        price_columns = (
+            f"{collateral_type.lower()}_price",
+            "price",
+        )
+        price_column = next(
+            (column for column in price_columns if column in price_path.columns),
+            None,
+        )
+
+        if price_column is None:
+            raise ValueError(
+                f"DataFrame price path for {collateral_type} must contain "
+                f"'{price_columns[0]}' or 'price'."
+            )
+
+        values = price_path[price_column].to_numpy(dtype=float)
+        return steps, values
+
+    if isinstance(price_path, pd.Series):
+        return None, price_path.to_numpy(dtype=float)
+
+    if isinstance(price_path, (str, bytes)):
+        raise TypeError("Price paths must be numeric sequences, not text.")
+
+    values = np.asarray(price_path, dtype=float)
+    return None, values
+
+
+def _apply_oracle_delay(
+    market_prices: np.ndarray,
+    delay_steps: int,
+) -> np.ndarray:
+    """Apply the existing fixed-step oracle delay to one market price path."""
+    if delay_steps < 0:
+        raise ValueError("delay_steps cannot be negative.")
+
+    delayed = market_prices.copy()
+    if delay_steps == 0:
+        return delayed
+
+    delayed[:delay_steps] = market_prices[0]
+    if delay_steps < len(market_prices):
+        delayed[delay_steps:] = market_prices[:-delay_steps]
+
+    return delayed
+
+
+def normalise_collateral_price_paths(
+    price_paths: PricePathInput,
+    delay_steps: int = 0,
+) -> CollateralPricePaths:
+    """
+    Convert supported external price paths into the canonical representation.
+
+    Supported inputs are:
+
+    - the legacy ETH DataFrame with ``step`` and ``eth_price`` columns;
+    - a one-dimensional legacy ETH price sequence;
+    - a mapping from collateral type to a DataFrame or numeric sequence;
+    - an existing :class:`CollateralPricePaths` object.
+
+    Oracle prices are derived independently for each collateral type using the
+    same fixed delay. Existing ETH-only paths therefore retain their historical
+    oracle behaviour.
+    """
+    if delay_steps < 0:
+        raise ValueError("delay_steps cannot be negative.")
+
+    if isinstance(price_paths, CollateralPricePaths):
+        steps = price_paths.steps
+        raw_market_prices: Mapping[str, np.ndarray] = price_paths.market_prices
+    elif isinstance(price_paths, Mapping):
+        if not price_paths:
+            raise ValueError("Collateral price-path mapping must not be empty.")
+
+        raw_market_prices_dict: dict[str, np.ndarray] = {}
+        steps = None
+        expected_length: int | None = None
+
+        for collateral_type, price_path in price_paths.items():
+            normalised_type = _normalise_collateral_type(collateral_type)
+            if normalised_type in raw_market_prices_dict:
+                raise ValueError(
+                    f"Duplicate price path for '{normalised_type}'."
+                )
+
+            path_steps, values = _extract_price_path_values(
+                normalised_type,
+                price_path,
+            )
+
+            if values.ndim != 1:
+                raise ValueError(
+                    f"Price path for {normalised_type} must be one-dimensional."
+                )
+
+            if expected_length is None:
+                expected_length = len(values)
+            elif len(values) != expected_length:
+                raise ValueError(
+                    "All collateral price paths must have the same length."
+                )
+
+            if path_steps is not None:
+                if steps is None:
+                    steps = path_steps
+                elif not np.array_equal(np.asarray(steps), path_steps):
+                    raise ValueError(
+                        "All collateral price paths must use identical steps."
+                    )
+
+            raw_market_prices_dict[normalised_type] = values
+
+        if expected_length is None:
+            raise ValueError("Collateral price paths must not be empty.")
+        if steps is None:
+            steps = np.arange(expected_length)
+
+        raw_market_prices = raw_market_prices_dict
+    else:
+        steps, eth_prices = _extract_price_path_values("ETH", price_paths)
+        if steps is None:
+            steps = np.arange(len(eth_prices))
+        raw_market_prices = {"ETH": eth_prices}
+
+    normalised_market_prices = _normalise_price_arrays(
+        raw_market_prices,
+        expected_length=len(steps),
+        label="market",
+    )
+    oracle_prices = {
+        collateral_type: _apply_oracle_delay(path, delay_steps)
+        for collateral_type, path in normalised_market_prices.items()
+    }
+
+    return CollateralPricePaths(
+        steps=np.asarray(steps),
+        market_prices=normalised_market_prices,
+        oracle_prices=oracle_prices,
+    )
 
 
 def generate_constant_price_path(
@@ -388,12 +687,8 @@ def add_oracle_price(
         raise ValueError(f"{price_col} not found in price_path.")
 
     delayed = price_path.copy()
-
-    if delay_steps == 0:
-        delayed[oracle_col] = delayed[price_col]
-    else:
-        delayed[oracle_col] = delayed[price_col].shift(delay_steps)
-        delayed[oracle_col] = delayed[oracle_col].fillna(delayed[price_col].iloc[0])
+    market_prices = delayed[price_col].to_numpy(dtype=float)
+    delayed[oracle_col] = _apply_oracle_delay(market_prices, delay_steps)
 
     return delayed
 
@@ -406,6 +701,10 @@ if __name__ == "__main__":
     constant = generate_constant_price_path(config)
     shock = generate_shock_price_path(config, shock_time=30, shock_size=-0.43)
     gbm = generate_gbm_price_path(config)
+    canonical = normalise_collateral_price_paths(
+        {"ETH": shock},
+        delay_steps=3,
+    )
 
     print("Constant path:")
     print(constant.head())
@@ -415,3 +714,7 @@ if __name__ == "__main__":
 
     print("\nGBM path:")
     print(gbm.head())
+
+    print("\nCanonical ETH price maps around shock_time:")
+    canonical_rows = list(canonical.iter_price_maps())
+    print(canonical_rows[27:34])

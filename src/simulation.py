@@ -1,7 +1,7 @@
 """
 simulation.py
 
-Base simulation engine for the simplified ETH-backed DAI model.
+Base simulation engine for the simplified collateral-backed DAI model.
 
 Version 2:
 - ETH price paths;
@@ -36,18 +36,25 @@ from dai_market import (
     update_dai_price,
 )
 
+from collateral import (
+    CollateralPortfolioConfig,
+    create_eth_only_portfolio,
+    normalise_collateral_prices,
+)
+
 from price_process import (
+    PricePathInput,
     PriceProcessConfig,
-    add_oracle_price,
     generate_constant_price_path,
     generate_gbm_price_path,
     generate_shock_price_path,
     generate_shock_recovery_price_path,
+    normalise_collateral_price_paths,
 )
 
 from vault import (
     Vault,
-    generate_random_vaults,
+    generate_portfolio_vaults,
     vaults_to_dataframe,
 )
 
@@ -83,6 +90,9 @@ class SimulationConfig:
         Standard deviation of initial collateral ratio.
     random_seed:
         Random seed for reproducibility.
+    collateral_portfolio:
+        Portfolio used to assign one collateral type to each initial vault.
+        ``None`` preserves the legacy ETH-only configuration.
     """
 
     n_steps: int = 200
@@ -97,6 +107,7 @@ class SimulationConfig:
     collateral_ratio_std: float = 0.25
 
     random_seed: Optional[int] = 42
+    collateral_portfolio: CollateralPortfolioConfig | None = None
 
     def validate(self) -> None:
         """Validate basic simulation inputs."""
@@ -120,6 +131,25 @@ class SimulationConfig:
             raise ValueError("collateral_ratio_std cannot be negative.")
         if self.oracle_delay_steps < 0:
             raise ValueError("oracle_delay_steps cannot be negative.")
+        if (
+            self.collateral_portfolio is not None
+            and not isinstance(
+                self.collateral_portfolio,
+                CollateralPortfolioConfig,
+            )
+        ):
+            raise TypeError(
+                "collateral_portfolio must be a CollateralPortfolioConfig or None."
+            )
+
+
+def get_collateral_portfolio(
+    config: SimulationConfig,
+) -> CollateralPortfolioConfig:
+    """Return the configured portfolio or the default ETH-only portfolio."""
+    if config.collateral_portfolio is None:
+        return create_eth_only_portfolio()
+    return config.collateral_portfolio
 
 
 def create_initial_vaults(config: SimulationConfig) -> list[Vault]:
@@ -138,9 +168,18 @@ def create_initial_vaults(config: SimulationConfig) -> list[Vault]:
     """
     config.validate()
 
-    return generate_random_vaults(
+    portfolio = get_collateral_portfolio(config)
+    initial_prices = portfolio.initial_prices
+
+    # Preserve the existing SimulationConfig ETH price as the source for ETH
+    # vault initialisation. Other collateral prices come from the portfolio.
+    if "ETH" in initial_prices:
+        initial_prices["ETH"] = config.initial_eth_price
+
+    return generate_portfolio_vaults(
         n_vaults=config.n_vaults,
-        eth_price=config.initial_eth_price,
+        prices=initial_prices,
+        portfolio=portfolio,
         liquidation_ratio=config.liquidation_ratio,
         debt_mean=config.debt_mean,
         debt_std=config.debt_std,
@@ -152,7 +191,7 @@ def create_initial_vaults(config: SimulationConfig) -> list[Vault]:
 
 def summarise_vault_system(
     vaults: list[Vault],
-    eth_price: float,
+    prices: float | dict[str, float],
     step: int,
 ) -> dict:
     """
@@ -162,8 +201,8 @@ def summarise_vault_system(
     ----------
     vaults:
         List of Vault objects.
-    eth_price:
-        Current ETH price.
+    prices:
+        Scalar ETH price or collateral price map.
     step:
         Current simulation step.
 
@@ -172,7 +211,8 @@ def summarise_vault_system(
     dict
         System-level summary.
     """
-    vault_df = vaults_to_dataframe(vaults, eth_price=eth_price)
+    price_map = normalise_collateral_prices(prices)
+    vault_df = vaults_to_dataframe(vaults, prices=price_map)
 
     active_df = vault_df[vault_df["is_active"]].copy()
 
@@ -197,7 +237,7 @@ def summarise_vault_system(
 
     return {
         "step": step,
-        "eth_price": eth_price,
+        "eth_price": price_map["ETH"],
         "n_vaults_total": len(vault_df),
         "n_vaults_active": n_active_vaults,
         "n_vaults_liquidated_cumulative": n_liquidated_vaults,
@@ -210,17 +250,100 @@ def summarise_vault_system(
     }
 
 
-def run_simulation_with_price_path(
+def summarise_vaults_by_collateral(
+    vaults: list[Vault],
+    prices: float | dict[str, float],
+    step: int,
+    collateral_types: tuple[str, ...] | None = None,
+    realised_bad_debt: dict[str, float] | None = None,
+    liquidation_results: pd.DataFrame | None = None,
+) -> pd.DataFrame:
+    """Return long-format post-action metrics by collateral type."""
+    price_map = normalise_collateral_prices(prices)
+    vault_df = vaults_to_dataframe(vaults, prices=price_map)
+
+    if collateral_types is None:
+        collateral_types = tuple(
+            dict.fromkeys(vault_df["collateral_type"].astype(str))
+        )
+
+    if realised_bad_debt is None:
+        realised_bad_debt = {}
+
+    records = []
+
+    for collateral_type in collateral_types:
+        collateral_df = vault_df.loc[
+            vault_df["collateral_type"] == collateral_type
+        ]
+        active_df = collateral_df.loc[collateral_df["is_active"]]
+        realised_bad_debt_value = float(
+            realised_bad_debt.get(collateral_type, 0.0)
+        )
+        debt_repaid = 0.0
+        successful_liquidations = 0
+        unprofitable_attempts = 0
+        keeper_profit = 0.0
+
+        if liquidation_results is not None and not liquidation_results.empty:
+            collateral_liquidations = liquidation_results.loc[
+                liquidation_results["collateral_type"] == collateral_type
+            ]
+            successful_rows = collateral_liquidations.loc[
+                collateral_liquidations["liquidated"]
+            ]
+            realised_bad_debt_value = float(
+                successful_rows["bad_debt"].sum()
+            )
+            debt_repaid = float(
+                collateral_liquidations["debt_repaid"].sum()
+            )
+            successful_liquidations = int(
+                collateral_liquidations["liquidated"].sum()
+            )
+            unprofitable_attempts = int(
+                (
+                    collateral_liquidations["reason"] == "unprofitable"
+                ).sum()
+            )
+            keeper_profit = float(
+                collateral_liquidations["realised_keeper_profit"].sum()
+            )
+
+        records.append(
+            {
+                "step": step,
+                "collateral_type": collateral_type,
+                "active_vaults": int(len(active_df)),
+                "active_debt": float(active_df["debt_dai"].sum()),
+                "collateral_value": float(
+                    active_df["collateral_value"].sum()
+                ),
+                "liquidatable_vaults": int(
+                    active_df["is_liquidatable"].sum()
+                ),
+                "realised_bad_debt": realised_bad_debt_value,
+                "debt_repaid": debt_repaid,
+                "successful_liquidations": successful_liquidations,
+                "unprofitable_attempts": unprofitable_attempts,
+                "keeper_profit": keeper_profit,
+            }
+        )
+
+    return pd.DataFrame(records)
+
+
+def _run_simulation_with_price_path(
     config: SimulationConfig,
-    price_path: pd.DataFrame,
+    price_path: PricePathInput,
     liquidation_config: LiquidationConfig,
     confidence_config: ConfidenceConfig | None = None,
     dai_market_config: DAIMarketConfig | None = None,
     initial_dai_price: float = 1.0,
     execute_liquidations: bool = True,
-) -> pd.DataFrame:
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
-    Run the simulation using a provided ETH price path.
+    Run the simulation and return system and collateral-level results.
 
     This version includes:
     - vault dynamics;
@@ -233,7 +356,9 @@ def run_simulation_with_price_path(
     config:
         SimulationConfig object.
     price_path:
-        DataFrame containing columns 'step' and 'eth_price'.
+        Legacy ETH price path or a mapping of collateral types to aligned paths.
+        All inputs are converted to the canonical collateral price-path
+        representation before the simulation loop starts.
     liquidation_config:
         LiquidationConfig object.
     confidence_config:
@@ -247,8 +372,8 @@ def run_simulation_with_price_path(
 
     Returns
     -------
-    pd.DataFrame
-        System-level simulation results by time step.
+    tuple[pd.DataFrame, pd.DataFrame]
+        System-level and long-format collateral-level results.
     """
     config.validate()
     liquidation_config.validate()
@@ -264,23 +389,34 @@ def run_simulation_with_price_path(
     if initial_dai_price <= 0:
         raise ValueError("initial_dai_price must be positive.")
 
-    required_cols = {"step", "eth_price"}
-    missing_cols = required_cols - set(price_path.columns)
-    if missing_cols:
-        raise ValueError(f"price_path is missing columns: {missing_cols}")
-
-    price_path = add_oracle_price(
-        price_path=price_path,
+    collateral_price_paths = normalise_collateral_price_paths(
+        price_paths=price_path,
         delay_steps=config.oracle_delay_steps,
-        price_col="eth_price",
-        oracle_col="oracle_eth_price",
     )
+
+    portfolio = get_collateral_portfolio(config)
+    missing_price_paths = (
+        set(portfolio.collateral_names)
+        - set(collateral_price_paths.market_prices)
+    )
+    if missing_price_paths:
+        raise ValueError(
+            "Missing price paths for portfolio collateral types: "
+            f"{sorted(missing_price_paths)}."
+        )
+
+    if "ETH" not in collateral_price_paths.market_prices:
+        raise ValueError(
+            "ETH price path is required to preserve the existing system-level "
+            "ETH price columns."
+        )
 
     rng = np.random.default_rng(config.random_seed)
 
     vaults = create_initial_vaults(config)
 
     records = []
+    collateral_records = []
 
     dai_price = initial_dai_price
 
@@ -291,24 +427,26 @@ def run_simulation_with_price_path(
     cumulative_unprofitable_attempts = 0
     cumulative_capacity_limited_attempts = 0
 
-    for _, row in price_path.iterrows():
-        step = int(row["step"])
-        eth_price = float(row["eth_price"])
-        oracle_eth_price = float(row["oracle_eth_price"])
+    for step, market_prices, oracle_prices in (
+        collateral_price_paths.iter_price_maps()
+    ):
+        # These scalar values are retained for the legacy ETH-only output schema.
+        eth_price = market_prices["ETH"]
+        oracle_eth_price = oracle_prices["ETH"]
 
-        # State before keeper action using oracle price.
+        # State before keeper action using collateral-specific oracle prices.
         # This is what the protocol sees.
         pre_summary = summarise_vault_system(
             vaults=vaults,
-            eth_price=oracle_eth_price,
+            prices=oracle_prices,
             step=step,
         )
 
-        # State before keeper action using true market price.
+        # State before keeper action using collateral-specific market prices.
         # This captures hidden economic stress when the oracle is delayed.
         market_pre_summary = summarise_vault_system(
             vaults=vaults,
-            eth_price=eth_price,
+            prices=market_prices,
             step=step,
         )
 
@@ -364,12 +502,14 @@ def run_simulation_with_price_path(
             "debt_repaid": 0.0,
             "collateral_liquidated": 0.0,
         }
+        liquidation_df: pd.DataFrame | None = None
 
         if execute_liquidations and pre_summary["n_liquidatable"] > 0:
             liquidation_df = liquidate_vaults(
                 vaults=vaults,
-                eth_price=oracle_eth_price,
+                prices=oracle_prices,
                 config=liquidation_config,
+                portfolio=portfolio,
             )
             liquidation_summary = summarise_liquidations(liquidation_df)
 
@@ -388,18 +528,29 @@ def run_simulation_with_price_path(
                 liquidation_summary["n_capacity_limited"]
             )
 
-        # State after keeper action using oracle price.
+        # State after keeper action using collateral-specific oracle prices.
         post_summary = summarise_vault_system(
             vaults=vaults,
-            eth_price=oracle_eth_price,
+            prices=oracle_prices,
             step=step,
         )
 
-        # State after keeper action using true market price.
+        # State after keeper action using collateral-specific market prices.
         market_post_summary = summarise_vault_system(
             vaults=vaults,
-            eth_price=eth_price,
+            prices=market_prices,
             step=step,
+        )
+
+        collateral_step = summarise_vaults_by_collateral(
+            vaults=vaults,
+            prices=market_prices,
+            step=step,
+            collateral_types=portfolio.collateral_names,
+            liquidation_results=liquidation_df,
+        )
+        collateral_records.extend(
+            collateral_step.to_dict(orient="records")
         )
 
         confidence_state_after = get_confidence_state(
@@ -479,7 +630,50 @@ def run_simulation_with_price_path(
 
         records.append(record)
 
-    return pd.DataFrame(records)
+    return pd.DataFrame(records), pd.DataFrame(collateral_records)
+
+
+def run_simulation_with_price_path(
+    config: SimulationConfig,
+    price_path: PricePathInput,
+    liquidation_config: LiquidationConfig,
+    confidence_config: ConfidenceConfig | None = None,
+    dai_market_config: DAIMarketConfig | None = None,
+    initial_dai_price: float = 1.0,
+    execute_liquidations: bool = True,
+) -> pd.DataFrame:
+    """Run a simulation and return the existing system-level DataFrame."""
+    system_results, _ = _run_simulation_with_price_path(
+        config=config,
+        price_path=price_path,
+        liquidation_config=liquidation_config,
+        confidence_config=confidence_config,
+        dai_market_config=dai_market_config,
+        initial_dai_price=initial_dai_price,
+        execute_liquidations=execute_liquidations,
+    )
+    return system_results
+
+
+def run_simulation_with_collateral_metrics(
+    config: SimulationConfig,
+    price_path: PricePathInput,
+    liquidation_config: LiquidationConfig,
+    confidence_config: ConfidenceConfig | None = None,
+    dai_market_config: DAIMarketConfig | None = None,
+    initial_dai_price: float = 1.0,
+    execute_liquidations: bool = True,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Run a simulation and return system and collateral-level DataFrames."""
+    return _run_simulation_with_price_path(
+        config=config,
+        price_path=price_path,
+        liquidation_config=liquidation_config,
+        confidence_config=confidence_config,
+        dai_market_config=dai_market_config,
+        initial_dai_price=initial_dai_price,
+        execute_liquidations=execute_liquidations,
+    )
 
 
 def run_constant_price_simulation(

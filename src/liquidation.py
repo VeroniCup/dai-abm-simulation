@@ -1,7 +1,7 @@
 """
 liquidation.py
 
-Simplified keeper/liquidation mechanics for the ETH-backed DAI simulation.
+Simplified keeper/liquidation mechanics for the collateral-backed DAI simulation.
 
 In MakerDAO-like systems, vaults do not liquidate themselves automatically.
 External actors, often called keepers, must be incentivised to trigger and
@@ -15,10 +15,10 @@ This module models a simplified liquidation decision:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
 
 import pandas as pd
 
+from collateral import CollateralPortfolioConfig
 from vault import Vault
 
 
@@ -64,10 +64,36 @@ class LiquidationConfig:
                 raise ValueError("max_liquidations_per_step must be positive or None.")
 
 
+def resolve_liquidation_parameters(
+    vault: Vault,
+    config: LiquidationConfig,
+    portfolio: CollateralPortfolioConfig | None = None,
+) -> tuple[float, float]:
+    """
+    Resolve liquidation penalty and close factor for one vault.
+
+    Explicit collateral parameters take precedence. Missing collateral
+    overrides, or an omitted portfolio, use the existing global configuration.
+    """
+    liquidation_penalty = config.liquidation_penalty
+    max_close_factor = config.max_close_factor
+
+    if portfolio is not None:
+        collateral = portfolio.get(vault.collateral_type)
+
+        if collateral.liquidation_penalty is not None:
+            liquidation_penalty = collateral.liquidation_penalty
+        if collateral.max_close_factor is not None:
+            max_close_factor = collateral.max_close_factor
+
+    return liquidation_penalty, max_close_factor
+
+
 def expected_liquidation_profit(
     vault: Vault,
-    eth_price: float,
+    prices: float | dict[str, float],
     config: LiquidationConfig,
+    portfolio: CollateralPortfolioConfig | None = None,
 ) -> float:
     """
     Estimate keeper profit from liquidating a vault.
@@ -79,10 +105,12 @@ def expected_liquidation_profit(
     ----------
     vault:
         Vault object.
-    eth_price:
-        Current ETH price.
+    prices:
+        Scalar ETH price or collateral price map.
     config:
         LiquidationConfig object.
+    portfolio:
+        Optional collateral configuration used to resolve explicit overrides.
 
     Returns
     -------
@@ -91,12 +119,17 @@ def expected_liquidation_profit(
     """
     config.validate()
 
-    if not vault.is_liquidatable(eth_price):
+    if not vault.is_liquidatable(prices):
         return 0.0
 
-    debt_repaid = vault.debt_dai * config.max_close_factor
+    liquidation_penalty, max_close_factor = resolve_liquidation_parameters(
+        vault=vault,
+        config=config,
+        portfolio=portfolio,
+    )
+    debt_repaid = vault.debt_dai * max_close_factor
 
-    gross_reward = debt_repaid * config.liquidation_penalty
+    gross_reward = debt_repaid * liquidation_penalty
     risk_cost = debt_repaid * config.risk_cost_rate
 
     return gross_reward - config.gas_cost - risk_cost
@@ -104,8 +137,9 @@ def expected_liquidation_profit(
 
 def keeper_will_liquidate(
     vault: Vault,
-    eth_price: float,
+    prices: float | dict[str, float],
     config: LiquidationConfig,
+    portfolio: CollateralPortfolioConfig | None = None,
 ) -> bool:
     """
     Decide whether a keeper liquidates a vault.
@@ -114,23 +148,31 @@ def keeper_will_liquidate(
     ----------
     vault:
         Vault object.
-    eth_price:
-        Current ETH price.
+    prices:
+        Scalar ETH price or collateral price map.
     config:
         LiquidationConfig object.
+    portfolio:
+        Optional collateral configuration used to resolve explicit overrides.
 
     Returns
     -------
     bool
         True if the vault is liquidatable and expected profit is positive.
     """
-    return expected_liquidation_profit(vault, eth_price, config) > 0
+    return expected_liquidation_profit(
+        vault,
+        prices,
+        config,
+        portfolio=portfolio,
+    ) > 0
 
 
 def execute_keeper_liquidation(
     vault: Vault,
-    eth_price: float,
+    prices: float | dict[str, float],
     config: LiquidationConfig,
+    portfolio: CollateralPortfolioConfig | None = None,
 ) -> dict:
     """
     Execute liquidation if profitable.
@@ -139,10 +181,12 @@ def execute_keeper_liquidation(
     ----------
     vault:
         Vault object.
-    eth_price:
-        Current ETH price.
+    prices:
+        Scalar ETH price or collateral price map.
     config:
         LiquidationConfig object.
+    portfolio:
+        Optional collateral configuration used to resolve explicit overrides.
 
     Returns
     -------
@@ -151,54 +195,67 @@ def execute_keeper_liquidation(
     """
     config.validate()
 
-    expected_profit = expected_liquidation_profit(vault, eth_price, config)
+    expected_profit = expected_liquidation_profit(
+        vault,
+        prices,
+        config,
+        portfolio=portfolio,
+    )
 
-    if not vault.is_liquidatable(eth_price):
+    if not vault.is_liquidatable(prices):
         return {
             "vault_id": vault.vault_id,
+            "collateral_type": vault.collateral_type,
             "attempted": False,
             "liquidated": False,
             "fully_liquidated": False,
             "reason": "not_liquidatable",
             "expected_profit": expected_profit,
             "realised_keeper_profit": 0.0,
-            "bad_debt": vault.bad_debt(eth_price),
+            "bad_debt": vault.bad_debt(prices),
             "debt_repaid": 0.0,
-            "collateral_value": vault.collateral_value(eth_price),
-            "collateral_value_before": vault.collateral_value(eth_price),
+            "collateral_value": vault.collateral_value(prices),
+            "collateral_value_before": vault.collateral_value(prices),
             "remaining_debt": vault.debt_dai,
-            "remaining_collateral_eth": vault.collateral_eth,
+            "remaining_collateral_amount": vault.collateral_amount,
         }
 
     if expected_profit <= 0:
         return {
             "vault_id": vault.vault_id,
+            "collateral_type": vault.collateral_type,
             "attempted": True,
             "liquidated": False,
             "fully_liquidated": False,
             "reason": "unprofitable",
             "expected_profit": expected_profit,
             "realised_keeper_profit": 0.0,
-            "bad_debt": vault.bad_debt(eth_price),
+            "bad_debt": vault.bad_debt(prices),
             "debt_repaid": 0.0,
-            "collateral_value": vault.collateral_value(eth_price),
-            "collateral_value_before": vault.collateral_value(eth_price),
+            "collateral_value": vault.collateral_value(prices),
+            "collateral_value_before": vault.collateral_value(prices),
             "remaining_debt": vault.debt_dai,
-            "remaining_collateral_eth": vault.collateral_eth,
+            "remaining_collateral_amount": vault.collateral_amount,
         }
 
-    debt_repaid = vault.debt_dai * config.max_close_factor
-    collateral_value_before = vault.collateral_value(eth_price)
-    bad_debt_before = vault.bad_debt(eth_price)
+    liquidation_penalty, max_close_factor = resolve_liquidation_parameters(
+        vault=vault,
+        config=config,
+        portfolio=portfolio,
+    )
+    debt_repaid = vault.debt_dai * max_close_factor
+    collateral_value_before = vault.collateral_value(prices)
+    bad_debt_before = vault.bad_debt(prices)
 
     liquidation_summary = vault.partial_liquidate(
-        eth_price=eth_price,
+        prices=prices,
         debt_repaid=debt_repaid,
-        liquidation_penalty=config.liquidation_penalty,
+        liquidation_penalty=liquidation_penalty,
     )
 
     return {
         "vault_id": vault.vault_id,
+        "collateral_type": vault.collateral_type,
         "attempted": True,
         "liquidated": liquidation_summary["liquidated"],
         "fully_liquidated": liquidation_summary["fully_liquidated"],
@@ -210,14 +267,17 @@ def execute_keeper_liquidation(
         "collateral_value": liquidation_summary["collateral_value_removed"],
         "collateral_value_before": collateral_value_before,
         "remaining_debt": liquidation_summary["remaining_debt"],
-        "remaining_collateral_eth": liquidation_summary["remaining_collateral_eth"],
+        "remaining_collateral_amount": liquidation_summary[
+            "remaining_collateral_amount"
+        ],
     }
 
 
 def liquidate_vaults(
     vaults: list[Vault],
-    eth_price: float,
+    prices: float | dict[str, float],
     config: LiquidationConfig,
+    portfolio: CollateralPortfolioConfig | None = None,
 ) -> pd.DataFrame:
     """
     Apply keeper liquidation decision to all vaults.
@@ -230,10 +290,12 @@ def liquidate_vaults(
     ----------
     vaults:
         List of Vault objects.
-    eth_price:
-        Current ETH price.
+    prices:
+        Scalar ETH price or collateral price map.
     config:
         LiquidationConfig object.
+    portfolio:
+        Optional collateral configuration used to resolve explicit overrides.
 
     Returns
     -------
@@ -247,15 +309,16 @@ def liquidate_vaults(
     for vault in vaults:
         expected_profit = expected_liquidation_profit(
             vault=vault,
-            eth_price=eth_price,
+            prices=prices,
             config=config,
+            portfolio=portfolio,
         )
 
         preliminary_records.append(
             {
                 "vault": vault,
                 "vault_id": vault.vault_id,
-                "is_liquidatable": vault.is_liquidatable(eth_price),
+                "is_liquidatable": vault.is_liquidatable(prices),
                 "expected_profit": expected_profit,
                 "is_profitable": expected_profit > 0,
             }
@@ -290,60 +353,64 @@ def liquidate_vaults(
             # vault.partial_liquidate().
             record = execute_keeper_liquidation(
                 vault=vault,
-                eth_price=eth_price,
+                prices=prices,
                 config=config,
+                portfolio=portfolio,
             )
 
         else:
-            if not vault.is_liquidatable(eth_price):
+            if not vault.is_liquidatable(prices):
                 record = {
                     "vault_id": vault.vault_id,
+                    "collateral_type": vault.collateral_type,
                     "attempted": False,
                     "liquidated": False,
                     "fully_liquidated": False,
                     "reason": "not_liquidatable",
                     "expected_profit": row["expected_profit"],
                     "realised_keeper_profit": 0.0,
-                    "bad_debt": vault.bad_debt(eth_price),
+                    "bad_debt": vault.bad_debt(prices),
                     "debt_repaid": 0.0,
-                    "collateral_value": vault.collateral_value(eth_price),
-                    "collateral_value_before": vault.collateral_value(eth_price),
+                    "collateral_value": vault.collateral_value(prices),
+                    "collateral_value_before": vault.collateral_value(prices),
                     "remaining_debt": vault.debt_dai,
-                    "remaining_collateral_eth": vault.collateral_eth,
+                    "remaining_collateral_amount": vault.collateral_amount,
                 }
 
             elif row["expected_profit"] <= 0:
                 record = {
                     "vault_id": vault.vault_id,
+                    "collateral_type": vault.collateral_type,
                     "attempted": True,
                     "liquidated": False,
                     "fully_liquidated": False,
                     "reason": "unprofitable",
                     "expected_profit": row["expected_profit"],
                     "realised_keeper_profit": 0.0,
-                    "bad_debt": vault.bad_debt(eth_price),
+                    "bad_debt": vault.bad_debt(prices),
                     "debt_repaid": 0.0,
-                    "collateral_value": vault.collateral_value(eth_price),
-                    "collateral_value_before": vault.collateral_value(eth_price),
+                    "collateral_value": vault.collateral_value(prices),
+                    "collateral_value_before": vault.collateral_value(prices),
                     "remaining_debt": vault.debt_dai,
-                    "remaining_collateral_eth": vault.collateral_eth,
+                    "remaining_collateral_amount": vault.collateral_amount,
                 }
 
             else:
                 record = {
                     "vault_id": vault.vault_id,
+                    "collateral_type": vault.collateral_type,
                     "attempted": True,
                     "liquidated": False,
                     "fully_liquidated": False,
                     "reason": "capacity_limited",
                     "expected_profit": row["expected_profit"],
                     "realised_keeper_profit": 0.0,
-                    "bad_debt": vault.bad_debt(eth_price),
+                    "bad_debt": vault.bad_debt(prices),
                     "debt_repaid": 0.0,
-                    "collateral_value": vault.collateral_value(eth_price),
-                    "collateral_value_before": vault.collateral_value(eth_price),
+                    "collateral_value": vault.collateral_value(prices),
+                    "collateral_value_before": vault.collateral_value(prices),
                     "remaining_debt": vault.debt_dai,
-                    "remaining_collateral_eth": vault.collateral_eth,
+                    "remaining_collateral_amount": vault.collateral_amount,
                 }
 
         final_records.append(record)
@@ -425,12 +492,12 @@ if __name__ == "__main__":
 
     from vault import generate_random_vaults, vaults_to_dataframe
 
-    initial_eth_price = 2_000.0
-    shocked_eth_price = 1_140.0
+    initial_prices = 2_000.0
+    shocked_prices = 1_140.0
 
     vaults = generate_random_vaults(
         n_vaults=10,
-        eth_price=initial_eth_price,
+        prices=initial_prices,
         liquidation_ratio=1.5,
         random_seed=42,
     )
@@ -443,7 +510,7 @@ if __name__ == "__main__":
         max_liquidations_per_step=3,
     )
 
-    before = vaults_to_dataframe(vaults, eth_price=shocked_eth_price)
+    before = vaults_to_dataframe(vaults, prices=shocked_prices)
     print("Vaults after ETH shock, before liquidation:")
     print(
         before[
@@ -459,7 +526,7 @@ if __name__ == "__main__":
 
     liquidation_df = liquidate_vaults(
         vaults=vaults,
-        eth_price=shocked_eth_price,
+        prices=shocked_prices,
         config=liq_config,
     )
 
@@ -483,7 +550,7 @@ if __name__ == "__main__":
     print("\nLiquidation summary:")
     print(summarise_liquidations(liquidation_df))
 
-    after = vaults_to_dataframe(vaults, eth_price=shocked_eth_price)
+    after = vaults_to_dataframe(vaults, prices=shocked_prices)
     print("\nVaults after liquidation:")
     print(
         after[
