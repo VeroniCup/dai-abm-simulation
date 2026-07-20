@@ -145,6 +145,23 @@ class ValidationTests(unittest.TestCase):
         self.assertEqual(report["by_asset"]["ETH"]["missing_hour_count"], 1)
         self.assertTrue(any("ETH is missing 1 requested hours" in item for item in failures))
 
+    def test_dune_nil_volume_placeholder_is_reported_as_unavailable(self) -> None:
+        frame = self._complete_frame()
+        frame["volume_usd"] = "<nil>"
+        with tempfile.TemporaryDirectory() as directory:
+            raw_path = Path(directory) / "raw.csv"
+            frame.to_csv(raw_path, index=False)
+            report, failures = validation.validate_prices(
+                raw_path,
+                requested_start=pd.Timestamp("2024-06-01T00:00:00Z"),
+                requested_end=pd.Timestamp("2024-06-01T02:00:00Z"),
+            )
+
+        self.assertEqual(failures, [])
+        self.assertEqual(report["null_volume_count"], 8)
+        for asset_report in report["by_asset"].values():
+            self.assertEqual(asset_report["null_volume_count"], 2)
+
 
 if __name__ == "__main__":
     unittest.main()

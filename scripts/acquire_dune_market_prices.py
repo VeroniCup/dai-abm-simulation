@@ -22,7 +22,10 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-from validate_dune_market_prices import validate_prices
+try:
+    from validate_dune_market_prices import validate_prices
+except ModuleNotFoundError:  # Supports imports through the scripts namespace.
+    from .validate_dune_market_prices import validate_prices
 
 
 API_ROOT = "https://api.dune.com/api/v1"
@@ -407,7 +410,11 @@ def append_manifest_records(
         "credit_delta": "",
     }
     with manifest_path.open("a", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=fieldnames,
+            lineterminator="\n",
+        )
         for series_name, model_variable, unit, notes in SERIES:
             row = {column: "" for column in fieldnames}
             row.update(common)

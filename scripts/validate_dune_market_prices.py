@@ -112,6 +112,10 @@ def validate_prices(
     frame = frame.assign(_timestamp=timestamps)
     frame["contract_address"] = frame["contract_address"].str.lower()
     frame["price_usd"] = pd.to_numeric(frame["price_usd"], errors="coerce")
+    volume_text = frame["volume_usd"].astype("string").str.strip().str.lower()
+    frame["_volume_missing"] = frame["volume_usd"].isna() | volume_text.isin(
+        {"", "<nil>", "nil", "null", "none"}
+    )
 
     if invalid_count:
         failures.append(f"{invalid_count} timestamps could not be parsed")
@@ -251,7 +255,7 @@ def validate_prices(
             "source_change_dates_utc": source_change_dates,
             "unexpected_contract_addresses": unexpected_addresses,
             "unexpected_blockchain_values": unexpected_asset_blockchains,
-            "null_volume_count": int(subset["volume_usd"].isna().sum()),
+            "null_volume_count": int(subset["_volume_missing"].sum()),
             "stablecoin_price_warning": stablecoin_warning,
         }
 
@@ -270,6 +274,7 @@ def validate_prices(
         "actual_total_rows": int(len(frame)),
         "duplicate_asset_hour_row_count": duplicate_count,
         "null_price_count": null_price_count,
+        "null_volume_count": int(frame["_volume_missing"].sum()),
         "non_positive_price_count": non_positive_price_count,
         "invalid_timestamp_count": invalid_count,
         "naive_timestamp_count": naive_count,
