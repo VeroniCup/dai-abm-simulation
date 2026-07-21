@@ -110,6 +110,55 @@ deduplicated, imputed or removed. Review flags identify observations for
 source and economic assessment; they do not classify observations as errors.
 The raw-file checksum is verified again after processing.
 
+## Phase 1B Dune hourly Ethereum gas acquisition
+
+The production template is `sql/dune_ethereum_hourly_gas.sql`. It aggregates
+`ethereum.transactions` and `ethereum.blocks` to 20 hourly fields. Effective
+gas-price percentiles use Dune's approximate percentile aggregation. The
+template uses matching partition and timestamp filters and is rendered into 13
+fixed, contiguous half-open chunks covering 2021-06-01 through 2024-07-01.
+
+`scripts/acquire_dune_hourly_gas.py` is the local persistence and validation
+state machine used with Dune MCP. It has no network or API-key path. Query and
+execution identifiers are atomically recorded under
+`data/raw/gas/chunks/state/` before result retrieval. Retrieved MCP results are
+written to a filesystem `.partial.json`; the script serialises result rows to a
+flushed `.partial.csv`, parses and structurally validates that file, and then
+uses an atomic rename for the final chunk CSV. Retrieval, persistence and
+validation are separate durable states. Completed chunks cannot be replaced,
+and failed or incomplete chunks require explicit replacement authorisation.
+
+The 13 original chunk CSVs remain under `data/raw/gas/chunks/`. After all chunks
+passed, they were sorted and concatenated locally without deduplication or
+value changes into:
+
+```text
+data/raw/gas/dune_ethereum_hourly_gas_2021-06-01_2024-06-30.csv
+```
+
+The combined panel contains 27,024 UTC hours and 20 columns. Its SHA-256 is
+`694a901ba6cf2a60a95014398900ab77508a9ce8218cb05acd6424fa23637541`.
+Chunk query/execution IDs, checksums, validation results, credit readings and
+the excluded aborted attempt are recorded in the ignored acquisition ledger,
+metadata, validation and aborted-attempt files alongside the raw panel. The
+manifest retains the combined provenance even though generated raw files are
+excluded from Git.
+
+The first chunk-01 attempt completed and was retrieved but failed before local
+persistence. Its unavailable query and execution identifiers were not
+fabricated, no result rows from it entered the dataset, and its 0.089-credit
+usage is excluded from the successful production-batch cost of 4.379 credits.
+The execution-level production compute sum was 4.381 credits; the small
+difference reflects usage-meter timing and rounding. Phase 1B discovery and
+benchmarking used 0.665 credits in aggregate, making cumulative Phase 1B usage
+5.133 credits.
+
+The hourly table supplies the price of gas, not liquidation-specific gas
+usage. Keeper cost in USD must later combine a separately estimated gas-unit
+distribution with the selected hourly effective gas price and the Phase 1A ETH
+price: `gas_units × gas_price_gwei × 1e-9 × eth_price_usd`. No such conversion,
+regime estimation or price/gas panel join is performed during raw acquisition.
+
 ## Source schema
 
 Every source requires:

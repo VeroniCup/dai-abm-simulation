@@ -30,9 +30,19 @@ results/
 figures/
 logs/
 
-# Data
-data/raw/
-data/processed/
+# Data: retain directory documentation, ignore raw and processed datasets.
+data/raw/market/*
+!data/raw/market/README.md
+data/raw/gas/*
+!data/raw/gas/README.md
+data/raw/protocol/*
+!data/raw/protocol/README.md
+data/raw/vaults/*
+!data/raw/vaults/README.md
+data/raw/liquidations/*
+!data/raw/liquidations/README.md
+data/processed/*
+!data/processed/README.md
 
 # Python packaging
 build/
