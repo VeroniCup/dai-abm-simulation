@@ -51,7 +51,7 @@
       "coverage": "[2019-11-01T00:00:00Z, 2020-04-01T00:00:00Z) for the five validated methodology months",
       "validation_status": "passed for Phase 1E-A methodology validation",
       "checksum_policy": "Each acquired month or subwindow and each locally derived split/combination is checksum-addressed in provenance.",
-      "acquisition_status": "Phase 1E-A complete; Phase 1E-B representative calibration acquisition planned"
+      "acquisition_status": "Phase 1E-A complete; Phase 1E-B quiet-mature, USDC/SVB and Terra/CeFi representative windows reconstructed and validated"
     }
   ]
 }

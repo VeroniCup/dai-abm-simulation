@@ -11,8 +11,52 @@
   },
   "phase_1e_b": {
     "name": "Representative calibration acquisition",
-    "status": "planned",
+    "status": "quiet_mature_usdc_svb_and_terra_cefi_complete_validated",
     "strategy_path": "docs/phase1e_representative_calibration_strategy.md",
+    "tranche_01_manifest_path": "data/provenance/vaults/representative_regimes/tranche_01_manifest.json",
+    "tranche_01_report_path": "docs/phase1e_b_tranche1_acquisition_report.md",
+    "quiet_mature_status": "complete_reconstructed_validated",
+    "usdc_svb_status": "complete_reconstructed_validated",
+    "usdc_svb_manifest_path": "data/provenance/vaults/representative_regimes/usdc_svb_2023-03-06_2023-03-20/manifest.json",
+    "usdc_svb_report_path": "docs/phase1e_b_usdc_svb_acquisition_report.md",
+    "usdc_svb_reconstruction_path": "data/processed/vaults/representative_regimes/usdc_svb_2023-03-06_2023-03-20/",
+    "terra_cefi_status": "complete_reconstructed_validated",
+    "terra_cefi_manifest_path": "data/provenance/vaults/representative_regimes/terra_cefi_2022-05-05_2022-06-20/manifest.json",
+    "terra_cefi_report_path": "docs/phase1e_b_terra_cefi_acquisition_report.md",
+    "terra_cefi_reconstruction_path": "data/processed/vaults/representative_regimes/terra_cefi_2022-05-05_2022-06-20/",
+    "terra_cefi_query_ids": [
+      8114864,
+      8114886,
+      8115091,
+      8115144
+    ],
+    "terra_cefi_execution_ids": [
+      "01KYFDJ837CX994C5M7X86NQTK",
+      "01KYFDPTRNR88V6GFBY26EF3QW",
+      "01KYFFDRSK307GPERBXT1T8NZA",
+      "01KYFFXT027TNG0TGY1Q1PFDZW"
+    ],
+    "terra_cefi_observed_credits": 25.063,
+    "terra_cefi_remaining_quota": 1457.592,
+    "usdc_svb_query_ids": [
+      8114261,
+      8114306,
+      8114317,
+      8114330
+    ],
+    "usdc_svb_execution_ids": [
+      "01KYF8VPQX313BHVF26YJ7HVXJ",
+      "01KYF99ZAGP21DYD8RHD6F6YQ8",
+      "01KYF9CDRX9MR7J5HXTKXT6K15",
+      "01KYF9EZP5HH8D6RKPAMQ6TWHK"
+    ],
+    "usdc_svb_observed_credits": 90.8,
+    "usdc_svb_remaining_quota": 1482.655,
+    "quiet_mature_reconstruction_path": "data/processed/vaults/representative_regimes/quiet_mature_2024-02-01_2024-03-01/",
+    "quiet_mature_rate_repair_query_id": 8113965,
+    "quiet_mature_rate_repair_execution_id": "01KYF6F87HFW5EADJJ0BZM2VMN",
+    "quiet_mature_rate_repair_observed_credits": 11.39,
+    "quiet_mature_rate_repair_validation": "passed",
     "original_continuous_plan_status": "intentionally_superseded"
   },
   "chunk_03_local_recovery": {
@@ -312,7 +356,7 @@
   "sample_end_exclusive_utc": "2024-07-01T00:00:00+00:00",
   "sample_start_utc": "2021-06-01T00:00:00+00:00",
   "scan_start_utc": "2019-11-01T00:00:00+00:00",
-  "status": "phase_1e_a_complete_phase_1e_b_planned",
+  "status": "phase_1e_a_complete_phase_1e_b_two_windows_complete",
   "methodology_revision": "Continuous acquisition after chunk 05 was intentionally superseded by representative regime windows. The observed quota evidence remains recorded below as the empirical basis for the design change, not as a failed phase.",
   "streams": {},
   "target_ilks": [
@@ -323,5 +367,5 @@
     "WBTC-B",
     "WBTC-C"
   ],
-  "updated_at_utc": "2026-07-23T20:34:05.670527+00:00"
+  "updated_at_utc": "2026-07-26T13:27:19.711392+00:00"
 }

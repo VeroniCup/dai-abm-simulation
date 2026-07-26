@@ -41,13 +41,26 @@ The pre-Liquidations-2.0 evidence is retained for method validation and owner
 behaviour comparisons. It will not be pooled uncritically with Liquidations 2.0
 auction outcomes.
 
+### Tranche 1 implementation note
+
+The first authorised tranche is recorded in
+[`phase1e_b_tranche1_acquisition_report.md`](phase1e_b_tranche1_acquisition_report.md).
+Quiet-mature boundary, mutation and ownership evidence passed, and its
+historically unbounded rate result was replaced by the bounded Method B
+extraction. The same architecture subsequently completed the USDC/SVB window
+with exact replay and a 90.800-credit observed delta. The detailed records are
+the [tranche 1 report](phase1e_b_tranche1_acquisition_report.md) and the
+[USDC/SVB acquisition report](phase1e_b_usdc_svb_acquisition_report.md).
+
 ## Representative calibration windows
 
 The market evidence below was calculated locally from the validated Phase 1A
-and Phase 1B panels. Row and credit ranges are planning estimates, not acquired
-results. Credit ranges use the observed March 2020 rate of approximately 0.0060
-credits per exported 15-column mutation row; execution overhead and pricing
-changes remain uncertain.
+and Phase 1B panels. Row and credit ranges remain pre-acquisition planning
+estimates for unexecuted windows. Quiet mature and USDC/SVB now have
+authoritative realised dimensions and costs in their linked acquisition
+reports. Credit forecasts use the observed March 2020 rate of approximately
+0.0060 credits per exported 15-column mutation row; execution overhead and
+pricing changes remain uncertain.
 
 | Role | Half-open window | Empirical motivation and model use | Expected mutation rows | Expected incremental credits |
 |---|---|---|---:|---:|
@@ -224,3 +237,12 @@ statistical focus and cost proportionality.
 - Exact beneficial ownership, off-chain keeper costs and hedging costs remain
   partly unobserved.
 - Credit forecasts depend on Dune pricing and realised result dimensions.
+
+## Terra/CeFi execution note
+
+The 5 May–20 June 2022 Terra/CeFi window is complete. Its 5,111 boundary rows,
+17,593 raw Vat mutations, 6,565 ownership records and 4,086-row sparse rate
+ledger pass validation. Exact replay reconciles the closing boundary and all
+649 Phase 1C Barks link unambiguously to canonical grabs. This operational
+history does not revise the representative-window methodology. Details are in
+`phase1e_b_terra_cefi_acquisition_report.md`.

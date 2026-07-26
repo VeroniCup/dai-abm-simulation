@@ -37,6 +37,50 @@ This document deliberately does not:
 - describe a protocol setting, literature assumption or experimental choice
   as an empirical estimate.
 
+### Phase 2A implementation record
+
+The bounded Phase 2A tranche has implemented the parts of this plan that are
+identifiable from validated Phase 1A--1D data. Its generated candidate bundle
+is under `data/processed/estimation/phase2a/`, and its concise technical record
+is the [Phase 2A parameter-estimation report](phase2a_parameter_estimation_report.md).
+No candidate has been written into simulator configuration.
+
+Phase 2A does not supersede the Phase 1E-B dependency recorded below.
+Quiet-mature and USDC/SVB evidence is now acquired and validated; nine
+Phase 1E-B-dependent parameter candidates have subsequently been estimated in
+Phase 2B and remain subject to review.
+The completed Terra/CeFi window contributes 649 exact Bark–grab links and
+pre-grab states. Phase 2C has now used them to produce a protocol-level
+`max_close_factor = 1.0` review candidate; the value remains unadopted.
+
+The first Phase 1E-B tranche is documented in the
+[tranche 1 acquisition report](phase1e_b_tranche1_acquisition_report.md).
+Its quiet-mature reconstruction is complete after the bounded Method B rate
+repair. The separately authorised
+[USDC/SVB window](phase1e_b_usdc_svb_acquisition_report.md) also passes exact
+opening-to-closing replay. These results establish estimation readiness; they
+do not themselves estimate or adopt any simulator value.
+
+### Phase 2B implementation record
+
+The bounded Phase 2B tranche has now estimated the nine authorised
+vault-population candidates supported by the quiet-mature and USDC/SVB
+reconstructions. The generated registry and diagnostics are under
+`data/processed/estimation/phase2b_vaults/`, and the methods and results are
+documented in the
+[Phase 2B vault-parameter report](phase2b_vault_parameter_estimation_report.md).
+No estimate has been adopted. Raw debt and collateral-ratio moments remain
+provisional distribution choices because the current global Gaussian
+interfaces do not preserve the observed heavy tails or exact-ilk
+heterogeneity. `n_vaults` remains a provisional computational scaling choice.
+
+`max_close_factor` is supported by 649 exact Terra/CeFi Bark–grab links. All
+observations are full closures. Phase 2C reports this degeneracy and
+distinguishes empirical Maker Liquidations 2.0 semantics from partial-close
+scenario design. Bull expansion remains a secondary leverage and
+collateral-composition sensitivity. The withheld FTX interval was not used for
+fitting.
+
 ---
 
 ## 2. Parameter classification
@@ -1894,3 +1938,25 @@ The final Phase 2 hand-off should permit an independent researcher to start
 from the validated empirical artefacts, reproduce every transformation and
 estimate, instantiate the same simulator configuration and rerun the stated
 validation tests.
+
+The Terra/CeFi boundary, mutation, ownership and sparse-rate streams have
+passed. Exact replay reconciles the closing boundary, and the 649 linked grabs
+make close-factor estimation methodologically ready for Phase 2C. The updated
+parameter-readiness status is documented in
+`phase1e_b_terra_cefi_acquisition_report.md`.
+
+Phase 2C has now completed that review without adopting parameters. The
+simulator field is confirmed as a per-vault debt-close fraction, for which the
+649 full-position grabs support a protocol-level candidate of `1.0`.
+Per-Take auction execution, clustered arrivals and keeper throughput remain
+separate quantities with different interface requirements. The stress-share
+review preserves USDC/SVB and Terra/CeFi as labelled moderate and severe
+evidence rather than pooling them. Full methods and model-interface
+recommendations are in
+`phase2c_liquidation_parameter_estimation_report.md`.
+
+The subsequent adoption audit reconciles 56 authoritative parameter
+subsections and consolidates all 80 Phase 2A–2C candidate records without
+adopting them. It separates configuration-only candidates from distribution,
+regime, liquidation and behavioural interface work. The staged decision
+framework is in `parameter_adoption_and_model_interface_plan.md`.
