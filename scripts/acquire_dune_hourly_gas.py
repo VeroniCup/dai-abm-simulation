@@ -28,16 +28,22 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_TEMPLATE = PROJECT_ROOT / "sql" / "dune_ethereum_hourly_gas.sql"
 DEFAULT_RAW_DIR = PROJECT_ROOT / "data" / "raw" / "gas"
 DEFAULT_CHUNK_DIR = DEFAULT_RAW_DIR / "chunks"
-DEFAULT_STATE_DIR = DEFAULT_CHUNK_DIR / "state"
-DEFAULT_LEDGER = DEFAULT_RAW_DIR / "dune_ethereum_hourly_gas_chunk_ledger.json"
+DEFAULT_PROVENANCE_DIR = PROJECT_ROOT / "data" / "provenance" / "gas"
+DEFAULT_STATE_DIR = DEFAULT_PROVENANCE_DIR / "state"
+DEFAULT_CHUNK_VALIDATION_DIR = DEFAULT_PROVENANCE_DIR / "chunks"
+DEFAULT_LEDGER = DEFAULT_PROVENANCE_DIR / "dune_ethereum_hourly_gas_chunk_ledger.json"
 DEFAULT_ABORTED_ATTEMPTS = (
-    DEFAULT_RAW_DIR / "dune_ethereum_hourly_gas_aborted_attempts.json"
+    DEFAULT_PROVENANCE_DIR / "dune_ethereum_hourly_gas_aborted_attempts.json"
 )
 DEFAULT_COMBINED = (
-    DEFAULT_RAW_DIR / "dune_ethereum_hourly_gas_2021-06-01_2024-06-30.csv"
+    PROJECT_ROOT
+    / "data"
+    / "processed"
+    / "gas"
+    / "dune_ethereum_hourly_gas_assembled_2021-06-01_2024-06-30.csv"
 )
-DEFAULT_METADATA = DEFAULT_RAW_DIR / "dune_ethereum_hourly_gas_acquisition.json"
-DEFAULT_VALIDATION = DEFAULT_RAW_DIR / "dune_ethereum_hourly_gas_validation.json"
+DEFAULT_METADATA = DEFAULT_PROVENANCE_DIR / "dune_ethereum_hourly_gas_acquisition.json"
+DEFAULT_VALIDATION = DEFAULT_PROVENANCE_DIR / "dune_ethereum_hourly_gas_validation.json"
 FULL_START = pd.Timestamp("2021-06-01T00:00:00Z")
 FULL_END = pd.Timestamp("2024-07-01T00:00:00Z")
 LONDON_HOUR = pd.Timestamp("2021-08-05T12:00:00Z")
@@ -427,6 +433,8 @@ def initialise_chunk(
     state_dir: Path,
     template: Path,
     *,
+    chunk_dir: Path | None = None,
+    validation_dir: Path | None = None,
     replace_failed_chunk: bool = False,
 ) -> dict[str, Any]:
     """Create planned state, refusing implicit retries or replacements."""
@@ -452,13 +460,16 @@ def initialise_chunk(
         replacement_stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
         archive = path.with_name(f"{path.stem}.replaced-{replacement_stamp}.json")
         os.replace(path, archive)
-        chunk_dir = state_dir.parent
+        raw_chunk_dir = chunk_dir if chunk_dir is not None else state_dir.parent
+        chunk_validation_dir = (
+            validation_dir if validation_dir is not None else raw_chunk_dir
+        )
         stem = chunk_stem(chunk_number)
         replaceable_artifacts = (
-            chunk_dir / f"{stem}.csv",
-            chunk_dir / f"{stem}.validation.json",
-            chunk_dir / f".{stem}.partial.csv",
-            chunk_dir / f".chunk_{chunk_number:02d}.partial.json",
+            raw_chunk_dir / f"{stem}.csv",
+            chunk_validation_dir / f"{stem}.validation.json",
+            raw_chunk_dir / f".{stem}.partial.csv",
+            raw_chunk_dir / f".chunk_{chunk_number:02d}.partial.json",
         )
         for artifact in replaceable_artifacts:
             if artifact.exists():
@@ -627,6 +638,7 @@ def persist_chunk_payload(
     chunk_dir: Path,
     ledger_path: Path,
     template: Path,
+    validation_dir: Path | None = None,
     duration_seconds: float | None = None,
     fail_after: str | None = None,
 ) -> dict[str, Any]:
@@ -666,7 +678,9 @@ def persist_chunk_payload(
         stem = chunk_stem(chunk_number)
         partial_csv = chunk_dir / f".{stem}.partial.csv"
         raw_path = chunk_dir / f"{stem}.csv"
-        validation_path = chunk_dir / f"{stem}.validation.json"
+        validation_path = (
+            validation_dir if validation_dir is not None else chunk_dir
+        ) / f"{stem}.validation.json"
         if raw_path.exists():
             raise GasAcquisitionError(f"Refusing to overwrite chunk {chunk_number:02d}.")
         if partial_csv.exists():
@@ -882,6 +896,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--replace-failed-chunk", action="store_true")
     parser.add_argument("--template", type=Path, default=DEFAULT_TEMPLATE)
     parser.add_argument("--chunk-dir", type=Path, default=DEFAULT_CHUNK_DIR)
+    parser.add_argument(
+        "--chunk-validation-dir",
+        type=Path,
+        default=DEFAULT_CHUNK_VALIDATION_DIR,
+    )
     parser.add_argument("--state-dir", type=Path, default=DEFAULT_STATE_DIR)
     parser.add_argument("--ledger", type=Path, default=DEFAULT_LEDGER)
     parser.add_argument("--aborted-attempts", type=Path, default=DEFAULT_ABORTED_ATTEMPTS)
@@ -915,6 +934,8 @@ def main() -> int:
                 args.chunk,
                 args.state_dir,
                 args.template,
+                chunk_dir=args.chunk_dir,
+                validation_dir=args.chunk_validation_dir,
                 replace_failed_chunk=args.replace_failed_chunk,
             )
         elif args.action == "record-usage-before":
@@ -965,6 +986,7 @@ def main() -> int:
                 payload_file=args.payload_file,
                 state_dir=args.state_dir,
                 chunk_dir=args.chunk_dir,
+                validation_dir=args.chunk_validation_dir,
                 ledger_path=args.ledger,
                 template=args.template,
                 duration_seconds=args.duration_seconds,

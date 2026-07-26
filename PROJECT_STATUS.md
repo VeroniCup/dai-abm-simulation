@@ -4,6 +4,9 @@
 
 - Branch: `feature/multi-collateral`
 - Multi-collateral implementation is complete through Experiment 06.
+- Empirical infrastructure is complete through Milestone 9 software validation;
+  market, gas, liquidation and protocol evidence has been acquired, while vault
+  calibration awaits the planned representative-window sample.
 - Changes remain uncommitted unless stated otherwise.
 
 ## Completed implementation milestones
@@ -51,6 +54,53 @@ Shocks:
 - `stable_depeg`
 - `systemic_shock`
 
+### Milestones 7–8 — Market empirical infrastructure
+
+- Configuration-driven UTC source adaptation and explicit unit conversion.
+- Aligned market-time panels, calibration/validation samples and stress regimes.
+- Transition matrices, empirical pools, overlap reports and descriptive summaries.
+- Synthetic validation outputs are separated from real baseline outputs.
+
+### Milestone 9 — Protocol, vault and liquidation empirical panels
+
+- Effective-dated, explicit mapping from source collateral identifiers to ETH,
+  BTC and STABLE model classes.
+- Long-format protocol-time, vault-snapshot and liquidation-event panels.
+- Separate quality reports and descriptive collateral, vault and liquidation
+  summaries.
+- Real baseline execution remains disabled until source files, mappings and
+  complete manifest records are supplied.
+
+## Empirical acquisition status
+
+### Phase 1E-A — Methodology validation
+
+**Status: Complete**
+
+- Authoritative Vat mutation, liquidation-annotation and ownership sources were
+  identified and validated.
+- Signed mutation values, numeric trace ordering, root traces, deterministic
+  source keys, pagination, atomic persistence and resumability were tested.
+- Five monthly Vat-mutation chunks from November 2019 through March 2020 were
+  validated and retained with their provenance and checksums.
+- The work establishes that the acquisition and reconstruction method is
+  technically reproducible.
+
+### Phase 1E-B — Representative calibration acquisition
+
+**Status: Planned**
+
+Continuous reconstruction of every mutation through June 2024 has been
+intentionally superseded. The remaining vault-data task is to acquire
+representative ordinary, bull-market, crypto-stress, stablecoin-depeg and quiet
+mature windows, with one stress window withheld for validation.
+
+This is a methodological change rather than an incomplete or failed
+acquisition. The revised design estimates conditional vault behaviour at a
+substantially higher information-to-credit ratio while continuous Phase 1A,
+Phase 1B and Phase 1C panels continue to identify market regimes, gas
+conditions and liquidation arrival frequencies.
+
 ## Current outputs
 
 Results:
@@ -95,14 +145,17 @@ conclusions.
 
 ## Next research stage
 
-Before final robustness analysis:
+Research question: **How do collateral composition, cross-asset dependence
+and liquidation frictions jointly affect DAI
+solvency and peg resilience under market stress?**
 
-1. diagnose stable-depeg thresholds;
-2. inspect collateral-ratio and distance-to-liquidation distributions;
-3. calculate exposure-normalised outcomes;
-4. detect equivalent scenario paths and results;
-5. select defensible empirical parameter ranges;
-6. run multi-seed and shock-severity robustness checks.
+Sequence:
+
+* Phase 1E-B — representative vault calibration acquisition;
+* Milestone 10 — regime-conditioned estimation and bootstrap paths, following
+  `docs/parameter_estimation_plan.md`;
+* Milestone 11 — model calibration and withheld-window validation;
+* Milestone 12 — empirically calibrated counterfactual experiments.
 
 ## Research decisions reserved for the user
 

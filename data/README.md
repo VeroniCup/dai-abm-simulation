@@ -41,7 +41,7 @@ The script polls one execution, stops without retrying on failure or timeout,
 and fetches each CSV result page at most once. Raw output is written to
 `data/raw/market/` without imputation, sorting or value transformation. It also
 records the query ID, execution ID, UTC acquisition time, coverage, row count
-and SHA-256 checksum in an execution sidecar and `data/data_manifest.csv`.
+and SHA-256 checksum in an execution sidecar and `data/provenance/manifests/data_manifest.csv`.
 If polling times out, resume the same execution rather than paying for another:
 
 ```bash
@@ -67,7 +67,7 @@ Validate the untouched result locally with:
 ```bash
 python scripts/validate_dune_market_prices.py \
   data/raw/market/dune_prices_hourly_2021-06-01_2024-06-30.csv \
-  --report data/raw/market/dune_prices_hourly_validation.json
+  --report data/provenance/market/dune_prices_hourly_2021-06-01_2024-06-30.validation.json
 ```
 
 Validation checks the requested UTC boundaries, identifiers, row counts,
@@ -86,18 +86,20 @@ python scripts/process_dune_market_prices.py \
 ```
 
 The command is deterministic apart from recorded creation timestamps and has
-no network or Dune API path. It writes generated, Git-ignored artefacts under
-`data/processed/market/`:
+no network or Dune API path. It writes generated analytical CSVs under
+`data/processed/market/` and their provenance sidecars under
+`data/provenance/market/`:
 
 - `dune_hourly_market_prices_processed.csv` — one row per UTC hour with the
   exact raw prices, hourly log returns, DAI and USDC peg measures and source
   provenance;
 - `stablecoin_extreme_review.csv` — every DAI or USDC observation meeting the
   documented price, peg-deviation or centred rolling-median review criteria;
-- `dune_hourly_market_prices_processing_metadata.json` — input/output
-  checksums, dimensions, transformation definitions and descriptive review;
-- `dune_hourly_market_prices_processed_validation.json` — formula, timestamp,
-  provenance and exact raw-price reconciliation checks.
+- `data/provenance/market/dune_hourly_market_prices_processing_metadata.json`
+  — input/output checksums, dimensions, transformation definitions and
+  descriptive review;
+- `data/provenance/market/dune_hourly_market_prices_processed_validation.json`
+  — formula, timestamp, provenance and exact raw-price reconciliation checks.
 
 Log returns are `log(price_t) - log(price_t-1)`, with the first observation
 left missing. Peg deviation is price minus one; absolute peg deviation is its
@@ -121,7 +123,7 @@ fixed, contiguous half-open chunks covering 2021-06-01 through 2024-07-01.
 `scripts/acquire_dune_hourly_gas.py` is the local persistence and validation
 state machine used with Dune MCP. It has no network or API-key path. Query and
 execution identifiers are atomically recorded under
-`data/raw/gas/chunks/state/` before result retrieval. Retrieved MCP results are
+`data/provenance/gas/state/` before result retrieval. Retrieved MCP results are
 written to a filesystem `.partial.json`; the script serialises result rows to a
 flushed `.partial.csv`, parses and structurally validates that file, and then
 uses an atomic rename for the final chunk CSV. Retrieval, persistence and
@@ -133,14 +135,14 @@ passed, they were sorted and concatenated locally without deduplication or
 value changes into:
 
 ```text
-data/raw/gas/dune_ethereum_hourly_gas_2021-06-01_2024-06-30.csv
+data/processed/gas/dune_ethereum_hourly_gas_assembled_2021-06-01_2024-06-30.csv
 ```
 
 The combined panel contains 27,024 UTC hours and 20 columns. Its SHA-256 is
 `694a901ba6cf2a60a95014398900ab77508a9ce8218cb05acd6424fa23637541`.
 Chunk query/execution IDs, checksums, validation results, credit readings and
-the excluded aborted attempt are recorded in the ignored acquisition ledger,
-metadata, validation and aborted-attempt files alongside the raw panel. The
+the excluded aborted attempt are recorded in the acquisition ledger, metadata,
+validation and aborted-attempt files under `data/provenance/gas/`. The
 manifest retains the combined provenance even though generated raw files are
 excluded from Git.
 
@@ -156,8 +158,62 @@ benchmarking used 0.665 credits in aggregate, making cumulative Phase 1B usage
 The hourly table supplies the price of gas, not liquidation-specific gas
 usage. Keeper cost in USD must later combine a separately estimated gas-unit
 distribution with the selected hourly effective gas price and the Phase 1A ETH
-price: `gas_units × gas_price_gwei × 1e-9 × eth_price_usd`. No such conversion,
-regime estimation or price/gas panel join is performed during raw acquisition.
+price: `gas_units × gas_price_gwei × 1e-9 × eth_price_usd`. No conversion,
+regime construction or price/gas join is performed during raw acquisition.
+
+## Phase 1B processed gas and joined market--gas panels
+
+Run the entirely local processor only after the raw gas and Phase 1A market
+checksums have passed:
+
+```bash
+python scripts/process_dune_hourly_gas.py \
+  --gas-input data/processed/gas/dune_ethereum_hourly_gas_assembled_2021-06-01_2024-06-30.csv \
+  --market-input data/processed/market/dune_hourly_market_prices_processed.csv
+```
+
+The processor has no Dune, API or network path. It writes generated,
+Git-ignored artefacts under `data/processed/gas/` and
+`data/processed/combined/`:
+
+- `dune_ethereum_hourly_gas_processed.csv` — 27,024 rows and 41 columns,
+  preserving all 20 raw gas fields and adding explicit spreads, ratios, fee
+  shares, logs, changes and two descriptive candidate-regime classifications;
+- `hourly_market_gas_panel.csv` — an exact one-to-one UTC join with the Phase
+  1A panel, containing 27,024 rows and 66 columns;
+- `gas_extreme_review.csv` — the 3,939-hour union of the documented full-sample
+  percentile and absolute log-change review triggers, with deterministic
+  consecutive-run fields and market context;
+- descriptive statistics under `data/processed/gas/`; processing metadata and
+  separate processed-gas and joined-panel validation JSON files under
+  `data/provenance/gas/`.
+
+The validated checksums are:
+
+- processed gas panel:
+  `4be17a29f9fb17e966131f09c4c6a41fbcca305350eba912759f74e85f5a1008`;
+- joined panel:
+  `86ed2ac5a5d364cc57e8b41e137ef369a0fce7a393d386b4b38fc1ebd1be0545`;
+- gas-extreme review:
+  `be78c1688ba87764b51f8e6b685f55a8b5534992cfa81d94f01d8fb9620008c8`.
+
+Pre-London base-fee and priority-fee shares remain structurally missing. The
+mixed London activation hour retains its observed EIP-1559 block share, and
+fully post-London shares are calculated only where their denominators are
+valid. Effective gas price remains the cross-period measure.
+
+The joined panel includes hypothetical USD indices for 100,000, 300,000 and
+500,000 gas units at median, P90 and P99 effective gas prices. These variables
+do not represent empirically estimated Maker liquidation transaction costs
+because liquidation-specific gas units have not yet been acquired, and they
+must not be used to set `LiquidationConfig.gas_cost`.
+
+Candidate classification A uses full-sample median effective-gas-price P75 and
+P95 thresholds. Classification B separately identifies broad median-price
+elevation, upper-tail P99-to-median bidding pressure and high target-normalised
+utilisation, with a compound state when at least two conditions hold. Both are
+descriptive candidate regimes, not final chosen simulator states or calibrated
+parameters. No row is filled, clipped, smoothed, deduplicated or removed.
 
 ## Source schema
 
@@ -227,7 +283,7 @@ calculated across gaps.
 
 ## Data manifest
 
-`data/data_manifest.csv` contains one provenance record for every configured
+`data/provenance/manifests/data_manifest.csv` contains one provenance record for every configured
 source and canonical model variable. Its fields are:
 
 - `series_name`, `model_variable`, `source_name`, `source_reference`;
@@ -238,8 +294,9 @@ source and canonical model variable. Its fields are:
 
 Dune acquisitions additionally populate query and execution identifiers,
 requested and actual coverage, SQL and raw-file checksums, row counts,
-validation status, source behaviour and credit usage. Phase 1A processing adds
-the processed and review paths and checksums, processing-script checksum,
+validation status, source behaviour and credit usage. Phase 1A and Phase 1B
+processing add the processed, joined, review and descriptive-summary paths and
+checksums, processing-script checksum,
 creation timestamp, processed dimensions, transformation definition and
 processed-validation status. These provenance fields do not change the
 existing baseline-manifest requirements.
@@ -268,7 +325,7 @@ outputs are written to `outputs/empirical/baseline/`.
 
 ## Synthetic fixture
 
-`data/fixtures/empirical_market_fixture.csv` is deliberately synthetic and is
+`tests/fixtures/empirical_market_fixture.csv` is deliberately synthetic and is
 used only by the executable validation in `src/empirical_data.py`. Its dates,
 prices, gas values and liquidation values are not empirical observations and
 must not be cited as findings.
@@ -295,7 +352,7 @@ gas cost, bad debt, debt, or collateral value is inferred when unavailable.
 Vault and liquidation collateral values must target DAI before they can be
 compared with DAI debt; the adapter does not assume that another quote currency
 is equivalent to DAI.
-The files under `data/fixtures/protocol/` are synthetic software fixtures and
+The files under `tests/fixtures/protocol/` are synthetic software fixtures and
 must not be reported as empirical findings.
 
 When both vault collateral value and positive debt exist, the canonical
@@ -305,7 +362,7 @@ configured tolerance. If recomputation is impossible, a supplied ratio is used
 and labelled as such; otherwise the derived fields remain unavailable.
 
 For a real run, each configured file needs a complete record in
-`data/data_manifest.csv` whose `source_name` and `raw_filename` match the source
+`data/provenance/manifests/data_manifest.csv` whose `source_name` and `raw_filename` match the source
 configuration. Run:
 
 ```bash

@@ -32,7 +32,8 @@ API_ROOT = "https://api.dune.com/api/v1"
 DEFAULT_OUTPUT = Path(
     "data/raw/market/dune_prices_hourly_2021-06-01_2024-06-30.csv"
 )
-DEFAULT_MANIFEST = Path("data/data_manifest.csv")
+DEFAULT_MANIFEST = Path("data/provenance/manifests/data_manifest.csv")
+DEFAULT_PROVENANCE_DIRECTORY = Path("data/provenance/market")
 DEFAULT_SQL_FILE = Path("sql/dune_hourly_market_prices.sql")
 REQUESTED_START = "2021-06-01 00:00:00 UTC"
 REQUESTED_END = "2024-07-01 00:00:00 UTC"
@@ -452,6 +453,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--validation-report", type=Path)
+    parser.add_argument(
+        "--provenance-directory",
+        type=Path,
+        default=DEFAULT_PROVENANCE_DIRECTORY,
+    )
     parser.add_argument("--timeout-seconds", type=int, default=1800)
     parser.add_argument("--poll-seconds", type=float, default=5.0)
     parser.add_argument("--page-size", type=int, default=50_000)
@@ -487,7 +493,9 @@ def main() -> int:
     sql_checksum = sha256_file(args.sql_file)
     print(f"Local SQL SHA-256: {sql_checksum}")
 
-    state_path = args.output.with_suffix(args.output.suffix + ".execution.json")
+    state_path = args.provenance_directory / (
+        args.output.stem + ".execution.json"
+    )
     if (
         state_path.exists()
         and args.mode == "saved-query"
@@ -542,7 +550,9 @@ def main() -> int:
         validation_report, validation_failures = validate_prices(args.output)
         validation_report_path = (
             args.validation_report
-            or args.output.with_suffix(args.output.suffix + ".validation.json")
+            or args.provenance_directory / (
+                args.output.stem + ".validation.json"
+            )
         )
         write_json(validation_report_path, validation_report)
         state_record.update(

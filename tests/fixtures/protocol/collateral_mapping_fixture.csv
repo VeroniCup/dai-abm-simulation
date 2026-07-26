@@ -1,0 +1,4 @@
+source_collateral_type,model_collateral_type,effective_start,effective_end,notes
+SYNTH_ETH,ETH,2020-01-01T00:00:00Z,2020-01-03T00:00:00Z,Synthetic validation only
+SYNTH_BTC,BTC,2020-01-01T00:00:00Z,2020-01-03T00:00:00Z,Synthetic validation only
+SYNTH_STABLE,STABLE,2020-01-01T00:00:00Z,2020-01-03T00:00:00Z,Synthetic validation only

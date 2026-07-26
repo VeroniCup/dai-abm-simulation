@@ -18,6 +18,34 @@ This document complements `empirical.md` and `parameters.md` and should be updat
 
 ---
 
+# Revised Phase 1E methodology
+
+The original plan proposed continuous vault-mutation acquisition from the
+earliest relevant ilk activation through June 2024. That design was useful for
+discovering authoritative sources and proving reconstruction correctness, but
+validated acquisition costs show that it is not the best empirical design for
+the dissertation.
+
+Phase 1E is now divided into:
+
+- **Phase 1E-A — Methodology validation: Complete.** Discovery, diagnostics,
+  parser repairs, deterministic ordering, pagination, resumability and chunks
+  01–05 are preserved as validated evidence.
+- **Phase 1E-B — Representative calibration acquisition: Planned.** Acquire
+  purposively selected ordinary and stressed windows that identify simulator
+  parameters and behavioural assumptions.
+
+The continuous plan is retained in provenance as the original design; it is no
+longer the intended production methodology. Continuous market, gas and
+liquidation-count panels remain appropriate because they are compact hourly
+aggregates. The representative-window change applies to high-volume vault
+mutation and state reconstruction.
+
+The detailed window design, parameter mapping and credit roadmap are recorded
+in `docs/phase1e_representative_calibration_strategy.md`.
+
+---
+
 # Overall workflow
 
 ```text
@@ -135,7 +163,12 @@ Expected confidence:
 
 ★★★☆☆
 
-This is expected to be the most challenging dataset.
+Vault evidence will be collected from representative regimes rather than as a
+continuous census. Liquidation events already acquired in Phase 1C retain their
+event-level scope.
+
+This remains the most demanding identification problem because mutation-active
+vaults are not an unbiased cross-section of all vaults.
 
 ---
 
@@ -294,9 +327,13 @@ Official Maker governance spell archive.
 
 Preferred strategy
 
-Monthly snapshots.
+Representative cross-sectional snapshots aligned with the Phase 1E-B
+calibration windows. The sample must include inactive vaults where possible so
+that mutation-active vaults do not determine the entire leverage distribution.
 
-Additional snapshots should be collected around stress periods.
+Window mutation ledgers should be combined with an authoritative opening
+snapshot or a targeted pre-window history for affected urns. The first mutation
+in a window must not be treated as an opening balance.
 
 For every vault:
 
@@ -400,34 +437,27 @@ BigQuery Ethereum logs.
 
 # Calibration and validation periods
 
-Current recommended baseline
+Continuous Phase 1A and Phase 1B panels retain their validated coverage from
+June 2021 through June 2024. Phase 1E-B uses the following representative vault
+windows:
 
-Calibration
+| Role | Half-open window |
+|---|---|
+| Existing early-system method comparison | 2020-02-01 to 2020-03-01 |
+| Existing Black Thursday method comparison | 2020-03-01 to 2020-04-01 |
+| Bull market and WBTC-B/C activation | 2021-11-15 to 2021-12-06 |
+| Terra and CeFi contagion | 2022-05-05 to 2022-06-20 |
+| FTX withheld validation | 2022-11-01 to 2022-11-21 |
+| USDC/SVB depeg | 2023-03-06 to 2023-03-20 |
+| Quiet mature market | 2024-02-01 to 2024-03-01 |
 
-```
-2021-06-01
-↓
+The 2020 observations validate accounting and provide legacy behavioural
+comparisons; they are not pooled as Liquidations 2.0 auction evidence. The FTX
+window is withheld from primary behavioural estimation.
 
-2022-12-31
-```
-
-Validation
-
-```
-2023-01-01
-↓
-
-2024-06-30
-```
-
-Reasons
-
-- post-Liquidations 2.0
-- consistent protocol architecture
-- contains both normal and stressed markets
-- chronological train/test split
-
-These dates may be revised after inspecting actual data availability.
+Purposive window frequencies must not be interpreted as unconditional event
+probabilities. Those probabilities use continuous exposure denominators from
+the market, gas and liquidation panels.
 
 ---
 
@@ -470,7 +500,7 @@ No dataset should enter the empirical pipeline without complete provenance.
 | Gas | Dune | BigQuery | Etherscan |
 | Protocol state | Dune | Contract state | Governance archive |
 | Risk parameters | Governance archive | Contract state | Manual reconstruction |
-| Vault snapshots | Dune | Archive node | Monthly sampling |
+| Vault snapshots | Dune | Archive node | Representative-window sampling |
 | Liquidations | Dune | BigQuery logs | Manual decoding |
 
 Every required dataset has at least one backup source.
@@ -527,7 +557,13 @@ protocol_time_panel.csv
 
 ## Phase 3 — Vault panel
 
-Acquire monthly snapshots.
+Acquire the Phase 1E-B representative windows in information-per-credit order.
+For each window, acquire:
+
+- a representative opening snapshot or validated targeted opening history;
+- canonical signed Vat mutations;
+- ownership mappings where available; and
+- effective protocol and accumulated-rate joins.
 
 Estimate:
 
@@ -538,7 +574,7 @@ Estimate:
 Produce:
 
 ```
-vault_snapshot_panel.csv
+representative_vault_calibration_panel.csv
 ```
 
 ---
@@ -570,13 +606,17 @@ liquidation_event_panel.csv
 
 ✅ Synthetic validation completed.
 
-⬜ Real market data not yet downloaded.
+✅ Phase 1A market data acquired and processed.
 
-⬜ Protocol history not yet acquired.
+✅ Phase 1B gas data acquired and processed.
 
-⬜ Vault snapshots not yet acquired.
+✅ Phase 1C Liquidations 2.0 data acquired and validated.
 
-⬜ Liquidation history not yet acquired.
+✅ Phase 1D protocol-parameter history acquired and validated.
+
+✅ Phase 1E-A methodology validation complete.
+
+⬜ Phase 1E-B representative calibration windows planned.
 
 ⬜ Empirical calibration not yet started.
 
@@ -593,3 +633,9 @@ The objective of this acquisition stage is **not** to maximise the quantity of d
 - traceable to an original source.
 
 A smaller, higher-quality dataset is preferable to a larger dataset with uncertain provenance or inconsistent definitions.
+
+The representative-window strategy applies this principle explicitly. It
+preserves the original continuous design and completed chunks for
+reproducibility, while directing remaining credits to observations that
+identify ordinary behaviour, prolonged crypto stress, stablecoin contagion and
+out-of-sample performance.

@@ -1,0 +1,65 @@
+# Empirical market-panel configuration.
+#
+# Relative paths are resolved from the repository root. Null values must be
+# replaced before this configuration can be used with real observations.
+
+output_mode: baseline
+output_timezone: UTC
+simulation_frequency: "1h"
+manifest_path: data/provenance/manifests/data_manifest.csv
+processed_data_dir: data/processed
+
+calibration_period:
+  start: null
+  end: null
+
+validation_period:
+  start: null
+  end: null
+
+rolling_volatility_window: 24
+
+regime:
+  return_lower_quantile: 0.05
+  volatility_upper_quantile: 0.90
+  gas_upper_quantile: 0.90
+  dai_peg_upper_quantile: 0.90
+  liquidation_upper_quantile: 0.90
+  minimum_stress_conditions: 2
+
+# Add further entries when prices, gas and liquidation observations are held
+# in separate files. Canonical column names are documented in data/README.md.
+input_files:
+  - name: market_and_gas
+    path: null
+    timestamp_column: null
+    source_timezone: null
+    duplicate_aggregation: null
+    resample_aggregation: null
+    columns:
+      eth_market_price:
+        source_column: null
+        source_unit: null
+        target_unit: null
+        unit_conversion: null
+      btc_market_price:
+        source_column: null
+        source_unit: null
+        target_unit: null
+        unit_conversion: null
+      stable_market_price:
+        source_column: null
+        source_unit: null
+        target_unit: null
+        unit_conversion: null
+      dai_market_price:
+        source_column: null
+        source_unit: null
+        target_unit: null
+        unit_conversion: null
+      gas_cost_proxy:
+        source_column: null
+        source_unit: null
+        target_unit: null
+        unit_conversion: null
+      liquidation_volume: null

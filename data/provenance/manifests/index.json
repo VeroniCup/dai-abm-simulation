@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "purpose": "Concise entry point to authoritative empirical-data manifests after the structural data-hierarchy migration.",
+  "checksum_policy": "Authoritative raw, assembled and processed artefacts are identified by SHA-256 in the detailed manifests or validation records; this index does not duplicate their complete contents.",
+  "categories": [
+    {
+      "category": "Phase 1A market prices",
+      "authoritative_manifest": "data/provenance/manifests/data_manifest.csv",
+      "raw_source_location": "data/raw/market/",
+      "processed_output_location": "data/processed/market/",
+      "coverage": "[2021-06-01T00:00:00Z, 2024-07-01T00:00:00Z)",
+      "validation_status": "passed",
+      "checksum_policy": "Raw and processed SHA-256 values are recorded in the detailed data manifest.",
+      "acquisition_status": "complete"
+    },
+    {
+      "category": "Phase 1B Ethereum gas",
+      "authoritative_manifest": "data/provenance/gas/dune_ethereum_hourly_gas_chunk_ledger.json",
+      "raw_source_location": "data/raw/gas/chunks/",
+      "processed_output_location": "data/processed/gas/",
+      "coverage": "[2021-06-01T00:00:00Z, 2024-07-01T00:00:00Z)",
+      "validation_status": "passed",
+      "checksum_policy": "Every immutable chunk and the locally assembled panel has a recorded SHA-256 value.",
+      "acquisition_status": "complete"
+    },
+    {
+      "category": "Phase 1C Liquidations 2.0",
+      "authoritative_manifest": "data/provenance/liquidations/manifest.json",
+      "raw_source_location": "data/raw/liquidations/chunks/",
+      "processed_output_location": "data/processed/liquidations/",
+      "coverage": "[2021-06-01T00:00:00Z, 2024-07-01T00:00:00Z)",
+      "validation_status": "passed",
+      "checksum_policy": "Monthly source extracts and final derived outputs are checksum-addressed in the category manifest and validation records.",
+      "acquisition_status": "complete"
+    },
+    {
+      "category": "Phase 1D protocol parameters",
+      "authoritative_manifest": "data/provenance/protocol/manifest.json",
+      "raw_source_location": "data/raw/protocol/",
+      "processed_output_location": "data/processed/protocol/",
+      "coverage": "[2021-06-01T00:00:00Z, 2024-07-01T00:00:00Z)",
+      "validation_status": "passed",
+      "checksum_policy": "Module extracts, documented defaults and reconstructed outputs retain SHA-256 provenance.",
+      "acquisition_status": "complete"
+    },
+    {
+      "category": "Phase 1E vault methodology validation",
+      "authoritative_manifest": "data/provenance/vaults/manifest.json",
+      "raw_source_location": "data/raw/vaults/chunks/",
+      "processed_output_location": "data/processed/vaults/chunks/",
+      "coverage": "[2019-11-01T00:00:00Z, 2020-04-01T00:00:00Z) for the five validated methodology months",
+      "validation_status": "passed for Phase 1E-A methodology validation",
+      "checksum_policy": "Each acquired month or subwindow and each locally derived split/combination is checksum-addressed in provenance.",
+      "acquisition_status": "Phase 1E-A complete; Phase 1E-B representative calibration acquisition planned"
+    }
+  ]
+}

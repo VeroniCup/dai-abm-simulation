@@ -1,0 +1,5 @@
+event_at,event_key,vault_key,ilk,debt_at_risk,debt_repaid,collateral_sold,collateral_value,penalty_pct,gas_cost,keeper_reward,auction_seconds,bad_debt,successful
+2020-01-01 03:00:00,L1,B1,SYNTH_BTC,2000,1500,0.06,1800,13,50,250,1800,0,true
+2020-01-01 04:00:00,L2,E1,SYNTH_ETH,2000,1000,0.6,1200,13,75,125,2400,100,true
+2020-01-02 05:00:00,L3,S1,SYNTH_STABLE,2000,0,0,0,13,,,,2000,false
+2020-01-02 06:00:00,L4,U1,SYNTH_UNKNOWN,80,50,6,60,10,,,,30,true

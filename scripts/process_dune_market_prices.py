@@ -38,10 +38,11 @@ DEFAULT_INPUT = Path(
     "data/raw/market/dune_prices_hourly_2021-06-01_2024-06-30.csv"
 )
 DEFAULT_RAW_VALIDATION = Path(
-    "data/raw/market/dune_prices_hourly_2021-06-01_2024-06-30.validation.json"
+    "data/provenance/market/dune_prices_hourly_2021-06-01_2024-06-30.validation.json"
 )
 DEFAULT_OUTPUT_DIRECTORY = Path("data/processed/market")
-DEFAULT_MANIFEST = Path("data/data_manifest.csv")
+DEFAULT_PROVENANCE_DIRECTORY = Path("data/provenance/market")
+DEFAULT_MANIFEST = Path("data/provenance/manifests/data_manifest.csv")
 DEFAULT_START = pd.Timestamp("2021-06-01T00:00:00Z")
 DEFAULT_END_EXCLUSIVE = pd.Timestamp("2024-07-01T00:00:00Z")
 ASSET_PRICE_COLUMNS = {
@@ -875,6 +876,11 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=DEFAULT_OUTPUT_DIRECTORY,
     )
+    parser.add_argument(
+        "--provenance-directory",
+        type=Path,
+        default=DEFAULT_PROVENANCE_DIRECTORY,
+    )
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     return parser.parse_args()
 
@@ -883,10 +889,15 @@ def main() -> int:
     """Run the complete local Phase 1A processing workflow."""
     args = parse_args()
     output_directory = args.output_directory
+    provenance_directory = args.provenance_directory
     processed_path = output_directory / "dune_hourly_market_prices_processed.csv"
     review_path = output_directory / "stablecoin_extreme_review.csv"
-    metadata_path = output_directory / "dune_hourly_market_prices_processing_metadata.json"
-    validation_path = output_directory / "dune_hourly_market_prices_processed_validation.json"
+    metadata_path = (
+        provenance_directory / "dune_hourly_market_prices_processing_metadata.json"
+    )
+    validation_path = (
+        provenance_directory / "dune_hourly_market_prices_processed_validation.json"
+    )
     script_path = Path(__file__).resolve()
 
     raw, integrity = validate_raw_integrity(

@@ -1,0 +1,69 @@
+-- Phase 1C production unique transaction bridge: 18_2022_11.
+WITH selected_hashes(tx_hash) AS (
+    VALUES
+        (0x08dd5856704e7687b9418903500ee427fed19cfec6190f31af07d16be80b22f9),
+        (0x15ef0c97413c38c5c4a7844e17358bff45ee2c31e26bdbc4e6e3bbc7bc55be33),
+        (0x16857616e5a5621bedb14d76c4ff00ff3310ada8c6a639f006e4724269932a39),
+        (0x1f2078448f5f7c0a1be5bda49746b042b9800cb5117071925f412605e545aa18),
+        (0x26c17ddc3a40ede4d6460edf1dd6c569b381192735fc433d22702700616636f4),
+        (0x273db44d92ae561e390c0541488922c35ed89fa8d711eb3bed3e4ce44902a848),
+        (0x33e2b6efe7e043713a71fa0de35b84bbf638bcf9e1294651ba5bd259eb3361a9),
+        (0x35ba20665e80309fa7646082c222f004241e0a123275401c9ade301efb5578b3),
+        (0x37e2c2bd6efed9b4c1764c650c7f25ceffe479a687c14a42886570d3ccc47cb9),
+        (0x431e0e3c86ee90332cd595156c0a35a31d8eb1098265d08247db7ed173d072f5),
+        (0x4771bd2780da20e337df44e6f26d6f0405f9da01429cd5549f7a8c1b76ac665b),
+        (0x4f3592eebb572af6643fb0d409de07fb5b16d2134b673e6861244bbca3b2a73b),
+        (0x562e47dac6a8b53d91895b1f9c87480234948dc5c979f16c09fa71a5e32ece7a),
+        (0x5c4103d67bb7ae7df078ed4122ca31659a8207f1cb2897f28423f886774aaf0d),
+        (0x66f6e0749f6f73c4f6c0848a9dc9e9e22879842bab8c935683be6f2bf6ea5ba9),
+        (0x6f8a5466c78d7049f16c6a4246f45b44acf1059dd18cdf8d020389f6b96a0c4e),
+        (0x711acd19576ca87974ed1f35d66af436aed7562baf31255a02a58c82c33592bd),
+        (0x7a030d9229caf7cd9882e8383765a2d90b29950e1470e3d1d40713da17c0db43),
+        (0x7b9a05dc2445fe7e9f54ec5a0dd8a6796d5be77a572eac2324304b79d440edf4),
+        (0x86585b25d99e94babf045427b0220277e3d1937fb28fa8779c40fbba675e07ef),
+        (0x866e8825e205379e1f599bcbc8ea7757c613c061ddf900e40f6d4bd3fb0a33c7),
+        (0x8751acd7b0a2771e723e7d1e14f0706ae10603b07661320bffe6c71cace3afc8),
+        (0x8a3af15563a5ad58e478ca8da142764861db1dc3e9c7d21b37d3152184d83522),
+        (0x8fe45cc10d19ed9c8cd24d19e1a75414f4e24befdc4c9d70f908ef05bd4391e7),
+        (0x9023b547ee4d45fdd88accdb7a016f9c68e3b0da63a609851f03f22044086cb5),
+        (0x9c80a3a6c8da42459a65a18787506f73c46d2e7e9b808a229a32c931e17a5585),
+        (0xac16b126fbbceba98f17ad77530ac87063d73a336b6e4a998128ef5f98ea2f06),
+        (0xadc6265400c04d064983b482047ee087ff5aa2e123571f8e01cc3e16b5ff0b91),
+        (0xadc6fdc16d7e691a95e4afc9a0d61d3985a760672bb87ce99cf3e10c798ca18b),
+        (0xc280aa81122f2beaa7420ca0e61feb23fe6fd20315f68311ce124e52d7bc9c7a),
+        (0xc6e93f6a0abcd2a4dd667e29fc71685b4ecbb7f1273d266048f20cc224387144),
+        (0xc76fc1c8704d9d83bab34f00bee71f3b04fac861b9c1bc8013dfbf947b0234b6),
+        (0xd0d17c3d8a24cc79f25ad306a2db2edf72dace028518d25156947e632f3292db),
+        (0xd7d741b9cb5078a6da140a543e30d206ab86241a1964f197d690ed94431f2688),
+        (0xd93bedf6f45452d35cf0dbe8e72a086acd78dd83f7ccc03f1229069cc7ee63eb),
+        (0xde93900b59f3bd63853a37518917de6c9c52237a753824f01a8495e0670e295f),
+        (0xdfd73028b8bd13cecf019c623bf323ee8a6bcb330d42ca04e486350549568678),
+        (0xe0b9ec6cde417bb452af5e6933ccd92fd92f97aa4031fd062e85e6b47abb7a60),
+        (0xe93ec46546490c3288e0416d27e937577b8f79be03f5f4115347570615f3cd85),
+        (0xeb1410e3d40f59457f3d57acc64330803665b9fac7629e9363ce57ca1a8af42c),
+        (0xf3a686d4a72686620b6dfcb2346e59db0e679f3d454941b55f0f8fa61d6150f1),
+        (0xf66ab09330feedfcd6a0ab27dfa0a27775aa710136217bbf8f9f72185ccf1d46),
+        (0xf892687ec9c99460511628571442415d407cb0d50899d4fc3ddc0e4e5b666728),
+        (0xfafa6bfb68fd9aeeedb66939071352752682733f29293d8a98f93dc1e08df514)
+)
+SELECT
+    CONCAT('0x', TO_HEX(t.hash)) AS tx_hash,
+    CONCAT('0x', TO_HEX(t."from")) AS transaction_sender,
+    CONCAT('0x', TO_HEX(t."to")) AS transaction_recipient,
+    t.success,
+    t.gas_limit,
+    t.gas_used,
+    t.gas_price,
+    t.max_fee_per_gas,
+    t.max_priority_fee_per_gas,
+    t.priority_fee_per_gas,
+    t.block_time,
+    t.block_number,
+    t.block_date,
+    t.index AS transaction_index
+FROM ethereum.transactions t
+JOIN selected_hashes h ON t.hash = h.tx_hash
+WHERE t.block_date >= DATE '2022-11-01'
+  AND t.block_date < DATE '2022-12-08'
+  AND t.block_time >= TIMESTAMP '2022-11-01 00:00:00'
+  AND t.block_time < TIMESTAMP '2022-12-08 00:00:00'

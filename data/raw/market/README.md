@@ -5,11 +5,12 @@ The Phase 1A source is `prices.hour`, queried by
 is labelled `ETH`, while WBTC remains `WBTC` as the BTC-collateral price proxy.
 
 The private temporary production query covered the half-open UTC interval from
-2021-06-01 00:00:00 to 2024-07-01 00:00:00. Its untouched CSV, execution
-sidecar and validation report are kept in this directory but ignored by Git.
-They can be identified and integrity-checked using the temporary query ID,
+2021-06-01 00:00:00 to 2024-07-01 00:00:00. Its untouched CSV is kept here,
+while the execution sidecar and validation report are under
+`data/provenance/market/`; generated artefacts are ignored by Git. They can be
+identified and integrity-checked using the temporary query ID,
 execution ID, SQL checksum and raw-file checksum committed in
-`data/data_manifest.csv`.
+`data/provenance/manifests/data_manifest.csv`.
 
 Run the local validation without modifying the raw result:
 
