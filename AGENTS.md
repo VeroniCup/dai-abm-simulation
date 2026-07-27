@@ -1,5 +1,8 @@
 # AGENTS.md
 
+Before using "dynamic workflows", "ultra code" or any harness feature that immediately 
+spawns a large swarm of subagents, always explain the tradeoffs and ask the user for explicit approval.
+
 ## Project purpose
 
 This repository implements a simplified agent-based simulation of DAI stability
@@ -190,3 +193,110 @@ regeneration or full integration validation.
 For changes affecting backward compatibility, verify that equivalent ETH-only
 representations and identical seeds produce equal results within the required
 numerical tolerance.
+
+## Target Repository Architecture
+
+<!-- BEGIN APPROVED TARGET REPOSITORY ARCHITECTURE -->
+
+### Target architecture status
+
+The domain-first repository architecture is the approved target for the next
+dedicated restructuring. It has not yet been implemented. Until an authorised
+migration stage is completed, current paths remain authoritative.
+
+The full implementation specification, file-level path map, compatibility
+policy, and validation sequence are in
+`docs/repository_restructuring_specification.md`.
+
+### Domain-first organising principle
+
+Organise empirical work first by:
+
+* `market`;
+* `gas`;
+* `vaults`;
+* `liquidations`;
+* `protocol`.
+
+Within each data domain, repeat the lifecycle:
+
+* `raw/`;
+* `processed/`;
+* `model_inputs/`;
+* `provenance/`.
+
+The approved top-level and important second-level target is:
+
+```text
+src/dai_sim/
+├── model/
+├── inputs/
+├── calibration/
+├── experiments/
+└── common/
+
+config/
+├── profiles/
+├── experiments/
+├── sensitivities/
+└── protocol/
+
+data/
+├── market/{raw,processed,model_inputs,provenance}/
+├── gas/{raw,processed,model_inputs,provenance}/
+├── vaults/{raw,processed,model_inputs,provenance}/
+├── liquidations/{raw,processed,model_inputs,provenance}/
+├── protocol/{raw,processed,model_inputs,provenance}/
+└── provenance/
+
+workflows/
+├── market/
+├── gas/
+├── vaults/
+├── liquidations/
+├── protocol/
+├── inputs/
+├── calibration/
+├── experiments/
+└── maintenance/
+
+sql/<domain>/{templates,generated}/
+docs/{overview,model,calibration,experiments,data,validation,archive}/
+tests/{model,inputs,calibration,experiments,workflows,integration,fixtures}/
+outputs/{experiments,diagnostics,figures,tables}/
+```
+
+### Mandatory future rules
+
+* Active paths describe domain and purpose, not development chronology.
+* Do not create new active files or directories named for phases, tranches,
+  attempts, temporary repairs, or version suffixes such as `final_v3`.
+* Phase and tranche labels belong only in `docs/archive/`, historically
+  necessary provenance, and Git history.
+* Use singular Python model modules where appropriate, such as `vault.py` and
+  `liquidation.py`; use plural domain directories such as `vaults/` and
+  `liquidations/`.
+* Use the workflow verbs `acquire`, `process`, `reconstruct`, `build_inputs`,
+  `calibrate`, `validate`, and `run` consistently.
+* Expose user-facing configuration profiles named `legacy`, `empirical`, and
+  `empirical_stress`; do not expose cumulative Tranche configurations.
+* Place compact empirical runtime inputs under the owning domain's
+  `model_inputs/` directory, not under `config/`.
+* Place development-history reports and plans under `docs/archive/`.
+* Preserve behavioural neutrality during restructuring. Structural moves must
+  not be combined with model, parameter, or empirical-feature changes.
+* Consult `docs/repository_restructuring_specification.md` before any structural
+  change.
+
+### Temporary transition rule
+
+Until the approved migration is implemented:
+
+* use current paths where required;
+* do not create ad hoc hybrid folders;
+* do not partially implement the target architecture outside an authorised
+  migration stage;
+* record new work using current paths only when necessary, and map it in the
+  restructuring specification before migration.
+
+<!-- END APPROVED TARGET REPOSITORY ARCHITECTURE -->
