@@ -65,6 +65,12 @@ It provides a runtime bridge for paired empirical debt and collateral-ratio
 evidence, while preserving the distinction between candidate estimation and
 parameter adoption.
 
+Tranche C extends that bridge to empirical market and gas inputs. The opt-in
+implementation is documented in
+[the Tranche C empirical market and gas report](tranche_c_empirical_market_and_gas_report.md).
+It consumes validated hourly return and gas artefacts without re-estimating
+parameters or changing the equations that consume prices and gas costs.
+
 The first Phase 1E-B tranche is documented in the
 [tranche 1 acquisition report](phase1e_b_tranche1_acquisition_report.md).
 Its quiet-mature reconstruction is complete after the bounded Method B rate

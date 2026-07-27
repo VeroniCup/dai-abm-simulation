@@ -194,7 +194,7 @@ or behavioural parameters.
 
 ## Recommended next tranche
 
-The next implementation tranche should add empirical market and gas sampling
-or another explicitly authorised interface from the adoption roadmap. Parameter
-estimation, regime switching and simulator-mechanics changes remain separate
-gates.
+The follow-on Tranche C implementation now adds empirical market-return blocks
+and empirical gas-input generation as another opt-in layer. It is documented
+in `docs/tranche_c_empirical_market_and_gas_report.md`. Parameter estimation,
+regime switching and simulator-mechanics changes remain separate gates.

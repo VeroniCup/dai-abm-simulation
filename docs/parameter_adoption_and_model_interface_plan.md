@@ -505,6 +505,12 @@ Add aligned moving blocks and a regime-labelled gas sampler while retaining
 GBM and scalar gas modes. Test block boundaries, correlations, seed
 reproducibility, zero-gas handling and unit conversion.
 
+Implementation note: Tranche C is now implemented as an opt-in empirical
+environment-input layer. It adds aligned ETH/WBTC return blocks, compact
+market/gas and liquidation-gas runtime pools, and explicit empirical gas input
+modes while preserving legacy GBM and scalar gas defaults. The implementation
+report is `docs/tranche_c_empirical_market_and_gas_report.md`.
+
 ### Tranche D — liquidation demand and throughput
 
 Only after B and C, consider a hurdle demand overlay, capacity distribution and
@@ -521,8 +527,8 @@ coefficients as direct empirical estimates.
 The smallest completed tranches are **Tranche A**, implemented as a separate
 empirical configuration with no change to legacy defaults, and **Tranche B**,
 implemented as an opt-in distribution-aware vault initialisation interface.
-Later market/gas sampling, liquidation-arrival and behavioural interfaces
-remain separately gated.
+**Tranche C** is also complete as an opt-in empirical market/gas input layer.
+Later liquidation-arrival and behavioural interfaces remain separately gated.
 
 ## Adoption-validation framework
 

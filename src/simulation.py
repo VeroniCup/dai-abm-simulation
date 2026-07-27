@@ -19,7 +19,8 @@ Version 3:
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from collections.abc import Sequence
+from dataclasses import dataclass, replace
 from typing import Optional
 
 import pandas as pd
@@ -342,6 +343,7 @@ def _run_simulation_with_price_path(
     initial_dai_price: float = 1.0,
     execute_liquidations: bool = True,
     initial_vaults: list[Vault] | None = None,
+    gas_cost_path: Sequence[float] | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     Run the simulation and return system and collateral-level results.
@@ -389,6 +391,14 @@ def _run_simulation_with_price_path(
 
     if initial_dai_price <= 0:
         raise ValueError("initial_dai_price must be positive.")
+    if gas_cost_path is not None:
+        if len(gas_cost_path) != config.n_steps:
+            raise ValueError("gas_cost_path length must match config.n_steps.")
+        gas_cost_values = np.asarray(gas_cost_path, dtype=float)
+        if not np.isfinite(gas_cost_values).all() or (gas_cost_values < 0).any():
+            raise ValueError("gas_cost_path must contain finite non-negative values.")
+    else:
+        gas_cost_values = None
 
     collateral_price_paths = normalise_collateral_price_paths(
         price_paths=price_path,
@@ -432,9 +442,14 @@ def _run_simulation_with_price_path(
     cumulative_unprofitable_attempts = 0
     cumulative_capacity_limited_attempts = 0
 
-    for step, market_prices, oracle_prices in (
+    for step_index, (step, market_prices, oracle_prices) in enumerate(
         collateral_price_paths.iter_price_maps()
     ):
+        step_liquidation_config = (
+            liquidation_config
+            if gas_cost_values is None
+            else replace(liquidation_config, gas_cost=float(gas_cost_values[step_index]))
+        )
         # These scalar values are retained for the legacy ETH-only output schema.
         eth_price = market_prices["ETH"]
         oracle_eth_price = oracle_prices["ETH"]
@@ -513,7 +528,7 @@ def _run_simulation_with_price_path(
             liquidation_df = liquidate_vaults(
                 vaults=vaults,
                 prices=oracle_prices,
-                config=liquidation_config,
+                config=step_liquidation_config,
                 portfolio=portfolio,
             )
             liquidation_summary = summarise_liquidations(liquidation_df)
@@ -647,6 +662,7 @@ def run_simulation_with_price_path(
     initial_dai_price: float = 1.0,
     execute_liquidations: bool = True,
     initial_vaults: list[Vault] | None = None,
+    gas_cost_path: Sequence[float] | None = None,
 ) -> pd.DataFrame:
     """Run a simulation and return the existing system-level DataFrame."""
     system_results, _ = _run_simulation_with_price_path(
@@ -658,6 +674,7 @@ def run_simulation_with_price_path(
         initial_dai_price=initial_dai_price,
         execute_liquidations=execute_liquidations,
         initial_vaults=initial_vaults,
+        gas_cost_path=gas_cost_path,
     )
     return system_results
 
@@ -671,6 +688,7 @@ def run_simulation_with_collateral_metrics(
     initial_dai_price: float = 1.0,
     execute_liquidations: bool = True,
     initial_vaults: list[Vault] | None = None,
+    gas_cost_path: Sequence[float] | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Run a simulation and return system and collateral-level DataFrames."""
     return _run_simulation_with_price_path(
@@ -682,6 +700,7 @@ def run_simulation_with_collateral_metrics(
         initial_dai_price=initial_dai_price,
         execute_liquidations=execute_liquidations,
         initial_vaults=initial_vaults,
+        gas_cost_path=gas_cost_path,
     )
 
 

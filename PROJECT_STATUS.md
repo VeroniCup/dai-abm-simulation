@@ -200,7 +200,7 @@ conditions and liquidation arrival frequencies.
 
 ### Parameter-adoption and model-interface review
 
-**Status: Tranches A and B complete**
+**Status: Tranches A, B and C complete**
 
 - All 56 authoritative parameter subsections and 70 material implemented
   configuration/runtime fields (including all 50 live dataclass fields) are
@@ -214,11 +214,15 @@ conditions and liquidation arrival frequencies.
   separate opt-in Tranche B path using compact representative-regime sampling
   pools. It does not change the legacy default generator or Tranche A
   configuration-only behaviour.
-- Regime switching, liquidation-arrival, market/gas sampling and behavioural
-  changes remain later, separately gated tranches. See
+- Empirical market-return block bootstrapping and empirical gas-input
+  generation have been implemented as a separate opt-in Tranche C path. Legacy
+  GBM and scalar gas remain the defaults.
+- Regime switching, liquidation-arrival and behavioural changes remain later,
+  separately gated tranches. See
   `docs/parameter_adoption_and_model_interface_plan.md` and
   `docs/tranche_a_empirical_configuration_report.md` and
-  `docs/tranche_b_distributional_vault_initialisation_report.md`.
+  `docs/tranche_b_distributional_vault_initialisation_report.md` and
+  `docs/tranche_c_empirical_market_and_gas_report.md`.
 
 ## Current outputs
 
