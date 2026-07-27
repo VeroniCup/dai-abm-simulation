@@ -200,18 +200,25 @@ conditions and liquidation arrival frequencies.
 
 ### Parameter-adoption and model-interface review
 
-**Status: Consolidated plan complete; no adoption implemented**
+**Status: Tranches A and B complete**
 
 - All 56 authoritative parameter subsections and 70 material implemented
   configuration/runtime fields (including all 50 live dataclass fields) are
   mapped to one primary adoption class.
 - The review preserves 80 Phase 2A–2C candidate records without pooling
   conflicting regimes, collaterals or semantic stages.
-- The smallest safe next step is a separate configuration-only empirical
-  bundle that retains all legacy defaults and established experiments.
-- Distribution, regime, liquidation-arrival and behavioural changes remain
-  later, separately gated tranches. See
-  `docs/parameter_adoption_and_model_interface_plan.md`.
+- The separate configuration-only empirical bundle has been implemented as an
+  explicit opt-in path. It retains all legacy defaults and established
+  experiments.
+- Distribution-aware vault initialisation has also been implemented as a
+  separate opt-in Tranche B path using compact representative-regime sampling
+  pools. It does not change the legacy default generator or Tranche A
+  configuration-only behaviour.
+- Regime switching, liquidation-arrival, market/gas sampling and behavioural
+  changes remain later, separately gated tranches. See
+  `docs/parameter_adoption_and_model_interface_plan.md` and
+  `docs/tranche_a_empirical_configuration_report.md` and
+  `docs/tranche_b_distributional_vault_initialisation_report.md`.
 
 ## Current outputs
 
@@ -263,9 +270,8 @@ solvency and peg resilience under market stress?**
 
 Sequence:
 
-* Tranche A configuration-only empirical bundle, subject to explicit
-  authorisation and the gates in
-  `docs/parameter_adoption_and_model_interface_plan.md`;
+* next empirical-interface tranche, subject to explicit authorisation and the
+  gates in `docs/parameter_adoption_and_model_interface_plan.md`;
 * Milestone 11 — model calibration and withheld-window validation;
 * Milestone 12 — empirically calibrated counterfactual experiments.
 

@@ -1,0 +1,34 @@
+# Opt-in Phase 2 Tranche A empirical configuration.
+# Existing defaults and experiment commands do not load this file automatically.
+
+bundle_name: phase2_empirical_baseline
+mode: empirical_tranche_a
+description: "Configuration-only empirical bundle for compatible Phase 2A-2C candidates."
+source_manifest: config/empirical/tranche_a_manifest.json
+
+simulation:
+  n_vaults: 500  # Phase 2B; configuration_ready_with_sensitivity; synthetic vaults; computational scaling candidate.
+
+collateral_portfolio:
+  name: phase2_empirical_eth_wbtc
+  target_debt_shares:
+    ETH: 0.8483941126796408  # Phase 2B; configuration_ready_with_sensitivity; share of sampled system debt.
+    BTC: 0.1516058873203592  # Phase 2B; configuration_ready_with_sensitivity; share of sampled system debt.
+  compatibility_defaults:
+    initial_prices:
+      ETH: 2000.0  # Current simulator compatibility value; not a Tranche A empirical candidate.
+      BTC: 30000.0  # Current simulator compatibility value; not a Tranche A empirical candidate.
+
+liquidation:
+  max_close_factor: 1.0  # Phase 2C; configuration_ready; fraction of one vault's debt repaid in one liquidation.
+
+confidence:
+  normal_lower_price: 0.9992875  # Phase 2A; configuration_ready_with_sensitivity; USD per DAI threshold.
+  normal_upper_price: 1.0030259166666666  # Phase 2A; configuration_ready_with_sensitivity; USD per DAI threshold.
+  stress_lower_price: 0.9967380166666668  # Phase 2A; configuration_ready_with_sensitivity; USD per DAI threshold.
+  max_normal_liquidatable_share: 0.0  # Phase 2B; configuration_ready_with_sensitivity; share of active vaults.
+
+provenance:
+  candidate_status: audited_tranche_a_configuration_only
+  legacy_defaults_preserved: true
+  later_interface_work_may_supersede: true

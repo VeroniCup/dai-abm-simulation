@@ -1,0 +1,33 @@
+# Low-side opt-in Phase 2 Tranche A sensitivity configuration.
+
+bundle_name: phase2_empirical_low_sensitivity
+mode: empirical_tranche_a
+description: "Low-side sensitivity for bounded Tranche A configuration candidates."
+source_manifest: config/empirical/tranche_a_manifest.json
+
+simulation:
+  n_vaults: 100  # Phase 2B lower convergence bound; synthetic vaults.
+
+collateral_portfolio:
+  name: phase2_empirical_low_sensitivity
+  target_debt_shares:
+    ETH: 0.9151466591405398  # Complement of lower BTC share; share of sampled system debt.
+    BTC: 0.08485334085946024  # Phase 2B lower BTC share; share of sampled system debt.
+  compatibility_defaults:
+    initial_prices:
+      ETH: 2000.0  # Current simulator compatibility value; not a Tranche A empirical candidate.
+      BTC: 30000.0  # Current simulator compatibility value; not a Tranche A empirical candidate.
+
+liquidation:
+  max_close_factor: 1.0  # Phase 2C protocol-close compatibility scalar.
+
+confidence:
+  normal_lower_price: 0.9992875  # Phase 2A central threshold; no numeric sensitivity range recorded.
+  normal_upper_price: 1.0030259166666666  # Phase 2A central threshold; no numeric sensitivity range recorded.
+  stress_lower_price: 0.9967380166666668  # Phase 2A central threshold; no numeric sensitivity range recorded.
+  max_normal_liquidatable_share: 0.0  # Phase 2B range is degenerate at zero.
+
+provenance:
+  candidate_status: audited_tranche_a_sensitivity
+  legacy_defaults_preserved: true
+  later_interface_work_may_supersede: true

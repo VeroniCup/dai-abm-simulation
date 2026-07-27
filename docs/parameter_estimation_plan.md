@@ -53,6 +53,18 @@ The completed Terra/CeFi window contributes 649 exact Bark–grab links and
 pre-grab states. Phase 2C has now used them to produce a protocol-level
 `max_close_factor = 1.0` review candidate; the value remains unadopted.
 
+The separate Tranche A empirical configuration bundle now documents the first
+configuration-only adoption step in
+[the Tranche A empirical configuration report](tranche_a_empirical_configuration_report.md).
+It is opt-in only and does not change the methodological classification below.
+
+The subsequent Tranche B implementation introduces the optional
+distribution-aware vault-initialisation interface described in
+[the Tranche B distribution-aware initialisation report](tranche_b_distributional_vault_initialisation_report.md).
+It provides a runtime bridge for paired empirical debt and collateral-ratio
+evidence, while preserving the distinction between candidate estimation and
+parameter adoption.
+
 The first Phase 1E-B tranche is documented in the
 [tranche 1 acquisition report](phase1e_b_tranche1_acquisition_report.md).
 Its quiet-mature reconstruction is complete after the bounded Method B rate

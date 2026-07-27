@@ -1,0 +1,132 @@
+{
+  "bundle_name": "phase2_empirical_baseline",
+  "creation_purpose": "Opt-in configuration-only adoption of semantically compatible Phase 2A-2C candidates.",
+  "candidate_count_note": "The primary bundle includes seven conceptual candidates and eight configuration-field assignments; ETH and BTC target_debt_share assignments are one conceptual candidate.",
+  "sensitivity_scope_note": "The low/high sensitivity YAML files are bounded population-and-debt-share sensitivity bundles only. Confidence-threshold sensitivity remains deferred because the candidate audit did not establish complete numerical ranges for those fields.",
+  "normal_liquidatable_share_note": "max_normal_liquidatable_share remains 0.0. Future sensitivity must check its interaction with n_vaults because the smallest positive observed share is 1 / n_vaults.",
+  "source_commit": "13e4560e09e50549ed92fc1b8db99abf0e598c56",
+  "legacy_default_preservation": "Legacy configuration files, default experiment factories and Experiments 1-5 remain unchanged. The empirical bundle is selected only by explicitly loading config/empirical/phase2_empirical_baseline.yaml.",
+  "candidate_registry_checksums": {
+    "data/processed/estimation/adoption_review/parameter_adoption_matrix.csv": "a78a3824c967de1cf794c4128115d67b461d7c207f94ea6b4a44acfc535b44ed",
+    "data/processed/estimation/adoption_review/configuration_ready_candidates.csv": "71e60ba546d860c10d3de0a1e91b016117432f1510b0fd425b2b799219e0dd02",
+    "data/processed/estimation/adoption_review/candidate_consolidation.csv": "c92986f5ac0975804b08c9d1a5fad69886be3fc07e5a8feae625971fc99ffd44",
+    "data/processed/estimation/adoption_review/model_interface_gaps.csv": "8a8c83ab731396c36697e987154f79536d2228df2707ea46ac3cbf6d922c93a3",
+    "data/processed/estimation/adoption_review/proposed_implementation_tranches.csv": "b13cc33e38513bbfeb22aa70cd704d4ba3a88b43f4e6e484a69bf58bef0239de"
+  },
+  "included_parameters": [
+    {
+      "parameter": "n_vaults",
+      "field": "SimulationConfig.n_vaults",
+      "candidate_value": 500,
+      "units": "synthetic vaults",
+      "source_phase": "2B",
+      "adoption_class": "configuration_ready_with_sensitivity",
+      "sensitivity_range": {"lower": 100, "upper": 1000},
+      "implementation_status": "include_primary",
+      "notes": "Computational scaling candidate, not observed Maker vault population."
+    },
+    {
+      "parameter": "target_debt_share",
+      "field": "CollateralConfig.target_debt_share",
+      "candidate_value": {"ETH": 0.8483941126796408, "BTC": 0.1516058873203592},
+      "units": "share of sampled system debt",
+      "source_phase": "2B",
+      "adoption_class": "configuration_ready_with_sensitivity",
+      "sensitivity_range": {"BTC": [0.08485334085946024, 0.2451900989821847], "ETH": [0.7324089774246498, 0.9119418233850346]},
+      "implementation_status": "include_primary",
+      "notes": "Mapped to implemented ETH/BTC collateral-family debt shares."
+    },
+    {
+      "parameter": "max_close_factor",
+      "field": "LiquidationConfig.max_close_factor",
+      "candidate_value": 1.0,
+      "units": "fraction of one vault's debt",
+      "source_phase": "2C",
+      "adoption_class": "configuration_ready",
+      "sensitivity_range": null,
+      "implementation_status": "include_primary",
+      "notes": "Supported by 649 exact Terra/CeFi Bark-grab observations as protocol-level full-vault closure; auction Take fractions remain deferred."
+    },
+    {
+      "parameter": "normal_lower_price",
+      "field": "ConfidenceConfig.normal_lower_price",
+      "candidate_value": 0.9992875,
+      "units": "USD per DAI",
+      "source_phase": "2A",
+      "adoption_class": "configuration_ready_with_sensitivity",
+      "sensitivity_range": "nearby-threshold sensitivity required; no numeric range recorded",
+      "implementation_status": "include_primary",
+      "notes": "Compatibility scalar for the existing confidence threshold."
+    },
+    {
+      "parameter": "normal_upper_price",
+      "field": "ConfidenceConfig.normal_upper_price",
+      "candidate_value": 1.0030259166666666,
+      "units": "USD per DAI",
+      "source_phase": "2A",
+      "adoption_class": "configuration_ready_with_sensitivity",
+      "sensitivity_range": "nearby-threshold sensitivity required; no numeric range recorded",
+      "implementation_status": "include_primary",
+      "notes": "Compatibility scalar for the existing confidence threshold."
+    },
+    {
+      "parameter": "stress_lower_price",
+      "field": "ConfidenceConfig.stress_lower_price",
+      "candidate_value": 0.9967380166666668,
+      "units": "USD per DAI",
+      "source_phase": "2A",
+      "adoption_class": "configuration_ready_with_sensitivity",
+      "sensitivity_range": "nearby-threshold sensitivity required; no numeric range recorded",
+      "implementation_status": "include_primary",
+      "notes": "Compatibility scalar for the existing confidence threshold."
+    },
+    {
+      "parameter": "max_normal_liquidatable_share",
+      "field": "ConfidenceConfig.max_normal_liquidatable_share",
+      "candidate_value": 0.0,
+      "units": "share of active vaults",
+      "source_phase": "2B",
+      "adoption_class": "configuration_ready_with_sensitivity",
+      "sensitivity_range": [0.0, 0.0],
+      "implementation_status": "include_primary",
+      "notes": "Degenerate observed quiet-window threshold; retained as a compatibility scalar. Population-size sensitivity is still required because any positive count enters in increments of 1 / n_vaults."
+    }
+  ],
+  "excluded_parameters": [
+    {
+      "parameter": "min_collateral_ratio_buffer",
+      "field": "generate_*_vaults.min_collateral_ratio_buffer",
+      "candidate_value": 0.4927578319238673,
+      "reason": "exclude_missing_current_field",
+      "notes": "The current top-level configuration objects do not expose this generator argument without an interface change."
+    },
+    {
+      "parameter": "mu",
+      "field": "generate_gbm_price_path.mu",
+      "candidate_value": {"ETH": 0.000020683874929400927, "WBTC": 0.000028097430039838248, "STABLE_proxy_USDC": -0.00000009961245747512497},
+      "reason": "exclude_interface_mismatch",
+      "notes": "The current scalar GBM path does not represent collateral-specific hourly moments without a new price-path interface or explicit conversion."
+    },
+    {
+      "parameter": "sigma",
+      "field": "generate_gbm_price_path.sigma",
+      "candidate_value": {"ETH": 0.006082614959678903, "WBTC": 0.0047429127302706054, "STABLE_proxy_USDC": 0.0006672093036257861},
+      "reason": "exclude_interface_mismatch",
+      "notes": "The current scalar GBM path does not represent collateral-specific hourly volatility without a new price-path interface or explicit conversion."
+    },
+    {
+      "parameter": "liquidation_ratio",
+      "field": "CollateralConfig.liquidation_ratio",
+      "candidate_value": "exact-ilk value effective at a pre-registered baseline timestamp",
+      "reason": "exclude_interface_mismatch",
+      "notes": "The current empirical bundle represents ETH/BTC collateral families, not exact Maker ilks."
+    },
+    {
+      "parameter": "liquidation_penalty",
+      "field": "CollateralConfig.liquidation_penalty",
+      "candidate_value": "exact-ilk value effective at a pre-registered baseline timestamp",
+      "reason": "exclude_interface_mismatch",
+      "notes": "The current empirical bundle represents ETH/BTC collateral families, not exact Maker ilks."
+    }
+  ]
+}

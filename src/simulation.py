@@ -341,6 +341,7 @@ def _run_simulation_with_price_path(
     dai_market_config: DAIMarketConfig | None = None,
     initial_dai_price: float = 1.0,
     execute_liquidations: bool = True,
+    initial_vaults: list[Vault] | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     Run the simulation and return system and collateral-level results.
@@ -413,7 +414,11 @@ def _run_simulation_with_price_path(
 
     rng = np.random.default_rng(config.random_seed)
 
-    vaults = create_initial_vaults(config)
+    vaults = (
+        create_initial_vaults(config)
+        if initial_vaults is None
+        else list(initial_vaults)
+    )
 
     records = []
     collateral_records = []
@@ -641,6 +646,7 @@ def run_simulation_with_price_path(
     dai_market_config: DAIMarketConfig | None = None,
     initial_dai_price: float = 1.0,
     execute_liquidations: bool = True,
+    initial_vaults: list[Vault] | None = None,
 ) -> pd.DataFrame:
     """Run a simulation and return the existing system-level DataFrame."""
     system_results, _ = _run_simulation_with_price_path(
@@ -651,6 +657,7 @@ def run_simulation_with_price_path(
         dai_market_config=dai_market_config,
         initial_dai_price=initial_dai_price,
         execute_liquidations=execute_liquidations,
+        initial_vaults=initial_vaults,
     )
     return system_results
 
@@ -663,6 +670,7 @@ def run_simulation_with_collateral_metrics(
     dai_market_config: DAIMarketConfig | None = None,
     initial_dai_price: float = 1.0,
     execute_liquidations: bool = True,
+    initial_vaults: list[Vault] | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Run a simulation and return system and collateral-level DataFrames."""
     return _run_simulation_with_price_path(
@@ -673,6 +681,7 @@ def run_simulation_with_collateral_metrics(
         dai_market_config=dai_market_config,
         initial_dai_price=initial_dai_price,
         execute_liquidations=execute_liquidations,
+        initial_vaults=initial_vaults,
     )
 
 

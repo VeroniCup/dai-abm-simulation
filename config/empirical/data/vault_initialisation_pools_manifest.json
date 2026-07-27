@@ -1,0 +1,44 @@
+{
+  "artefact": "vault_initialisation_pools",
+  "audit_path": "data/processed/estimation/tranche_b/vault_initialisation_pool_audit.csv",
+  "audit_sha256": "a9ecf7d560da8cb50be99be8d50c806c4205f3d152a371a55f82b8ac5e67627e",
+  "columns": [
+    "pool_row_id",
+    "source_window",
+    "regime_label",
+    "state_label",
+    "timestamp_utc",
+    "ilk",
+    "collateral_family",
+    "debt_dai",
+    "collateral_ratio",
+    "liquidation_ratio",
+    "absolute_buffer",
+    "relative_buffer"
+  ],
+  "notes": "Opening states only; active indebted vaults with valid collateral ratio and liquidation ratio. No urn, owner, transaction hash or event-history fields are included.",
+  "output_path": "config/empirical/data/vault_initialisation_pools.csv",
+  "output_sha256": "5230a30aa2c2aebe69ef859ccdcbb785eb44f20a691b431f2fd01b0d16558892",
+  "rows": 7208,
+  "source_rows": [
+    {
+      "path": "data/processed/vaults/representative_regimes/quiet_mature_2024-02-01_2024-03-01/opening_vault_state.csv",
+      "regime_label": "normal",
+      "sha256": "5bb240cfa175339887c9e4254bc5edcdca469f349baa35bc5da43e1514f42ebe",
+      "source_window": "quiet_mature_2024-02-01_2024-03-01"
+    },
+    {
+      "path": "data/processed/vaults/representative_regimes/usdc_svb_2023-03-06_2023-03-20/opening_vault_state.csv",
+      "regime_label": "moderate_stress",
+      "sha256": "35e34954d2916b4829798547bc7a62e249329777fe961719421567d24ce67bac",
+      "source_window": "usdc_svb_2023-03-06_2023-03-20"
+    },
+    {
+      "path": "data/processed/vaults/representative_regimes/terra_cefi_2022-05-05_2022-06-20/opening_vault_state.csv",
+      "regime_label": "severe_stress",
+      "sha256": "d0a956716525e9db0493e30f91e2d66ee39147c40ccd1abcfac3c33086993c2f",
+      "source_window": "terra_cefi_2022-05-05_2022-06-20"
+    }
+  ],
+  "version": "tranche_b_v1"
+}

@@ -475,12 +475,29 @@ legacy outputs. Stop if a supposedly ready field requires mechanics changes.
 Current defaults and Experiments 1–5 remain untouched unless the empirical
 configuration is explicitly selected.
 
+Implementation note: Tranche A is now implemented as an opt-in bundle under
+`config/empirical/`, with its audit report at
+`docs/tranche_a_empirical_configuration_report.md`. The implementation adopts
+only current-interface-compatible rows. Exact-ilk protocol constants, scalar
+GBM moments with unresolved hourly conversion and generator-only collateral
+buffer values remain excluded for later tranches.
+
 ### Tranche B — distribution-aware vault initialisation
 
 Add the optional empirical joint sampler and collateral-specific parametric
 fallback. Update `vault.py`, `simulation.py`, `collateral.py` and a small
 configuration adapter. Test economic support, tails, dependence, deterministic
 seeds, small-pool fallback and exact ETH-only equivalence.
+
+Implementation note: Tranche B is now implemented as an opt-in
+distribution-aware initialisation path. The runtime pool and configuration are
+under `config/empirical/`, the diagnostic outputs are under the ignored
+`data/processed/estimation/tranche_b/` directory, and the implementation
+report is
+`docs/tranche_b_distributional_vault_initialisation_report.md`. The legacy
+Gaussian initialiser remains the default, and Tranche A continues to use its
+configuration-only behaviour unless the Tranche B bundle is explicitly
+selected.
 
 ### Tranche C — empirical market and gas sampling
 
@@ -501,8 +518,11 @@ Use minimum-distance or SMM after the observable interfaces are fixed. Test
 ablation, sensitivity and withheld FTX validation. Never present latent
 coefficients as direct empirical estimates.
 
-The smallest safe next tranche is **Tranche A**, implemented as a separate
-empirical configuration with no change to legacy defaults.
+The smallest completed tranches are **Tranche A**, implemented as a separate
+empirical configuration with no change to legacy defaults, and **Tranche B**,
+implemented as an opt-in distribution-aware vault initialisation interface.
+Later market/gas sampling, liquidation-arrival and behavioural interfaces
+remain separately gated.
 
 ## Adoption-validation framework
 

@@ -1,0 +1,46 @@
+# Opt-in Phase 2 Tranche B compatibility configuration using legacy Gaussian
+# vault initialisation with the Tranche A scalar configuration values.
+
+bundle_name: phase2_empirical_legacy_gaussian
+mode: empirical_tranche_b
+description: "Tranche B compatibility smoke bundle retaining Gaussian vault initialisation."
+source_manifest: config/empirical/tranche_a_manifest.json
+
+simulation:
+  n_vaults: 500
+
+collateral_portfolio:
+  name: phase2_empirical_eth_wbtc
+  target_debt_shares:
+    ETH: 0.8483941126796408
+    BTC: 0.1516058873203592
+  compatibility_defaults:
+    initial_prices:
+      ETH: 2000.0
+      BTC: 30000.0
+
+liquidation:
+  max_close_factor: 1.0
+
+confidence:
+  normal_lower_price: 0.9992875
+  normal_upper_price: 1.0030259166666666
+  stress_lower_price: 0.9967380166666668
+  max_normal_liquidatable_share: 0.0
+
+vault_initialisation:
+  mode: legacy_gaussian
+  seed: 20260726
+  regime: normal
+  fallback: parametric_truncated
+  by_ilk: false
+  minimum_exact_ilk_pool_size: 50
+  allow_initial_liquidatable: false
+  sample_with_replacement: true
+  max_sampling_attempts: 10000
+
+provenance:
+  candidate_status: audited_tranche_b_legacy_compatibility
+  legacy_defaults_preserved: true
+  tranche_a_values_preserved: true
+  later_interface_work_may_supersede: false
