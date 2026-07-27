@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dai-abm-simulation"
+version = "0.1.0a0"
+description = "Agent-based simulation of DAI stability under market stress"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dynamic = ["dependencies"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["dai_sim*"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
