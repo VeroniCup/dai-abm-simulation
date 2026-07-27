@@ -71,6 +71,13 @@ implementation is documented in
 It consumes validated hourly return and gas artefacts without re-estimating
 parameters or changing the equations that consume prices and gas costs.
 
+Tranche D adds the corresponding opt-in bridge for liquidation-arrival demand
+and keeper-throughput separation. It uses the Phase 2C Terra/CeFi
+Bark--grab/hourly evidence to sample a hurdle-count demand process before the
+existing keeper-profit and capacity rules are applied. The implementation is
+documented in
+[the Tranche D liquidation-arrival and capacity report](tranche_d_liquidation_arrival_and_capacity_report.md).
+
 The first Phase 1E-B tranche is documented in the
 [tranche 1 acquisition report](phase1e_b_tranche1_acquisition_report.md).
 Its quiet-mature reconstruction is complete after the bounded Method B rate
@@ -1045,6 +1052,13 @@ backlog duration and collateral competition with held-out stress windows.
 capacity would change the economic mechanism and is outside this estimation
 task.
 
+The Tranche D interface separates this throughput cap from empirical
+liquidation-arrival demand. In the opt-in hurdle-count mode,
+`max_liquidations_per_step` limits attempted opportunities after demand has
+already been truncated to simulated unsafe-vault inventory; in legacy mode,
+all eligible liquidatable vaults continue to be considered by the existing
+liquidation routine.
+
 ### 4.5 Confidence-regime parameters
 
 #### 4.5.1 `normal_lower_price`
@@ -1972,6 +1986,13 @@ review preserves USDC/SVB and Terra/CeFi as labelled moderate and severe
 evidence rather than pooling them. Full methods and model-interface
 recommendations are in
 `phase2c_liquidation_parameter_estimation_report.md`.
+
+Tranche D has since implemented the liquidation-arrival part of that interface
+as an opt-in hurdle-count process. It preserves `max_close_factor` as a
+per-vault close fraction and treats keeper throughput as the distinct
+`max_liquidations_per_step` cap. Sequence and auction-execution evidence
+remain diagnostic only. See
+`tranche_d_liquidation_arrival_and_capacity_report.md`.
 
 The subsequent adoption audit reconciles 56 authoritative parameter
 subsections and consolidates all 80 Phase 2A–2C candidate records without

@@ -65,6 +65,10 @@ from liquidation import (
     summarise_liquidations,
 )
 
+from liquidation_demand import (
+    LiquidationDemandProcess,
+)
+
 
 @dataclass(frozen=True)
 class SimulationConfig:
@@ -344,6 +348,7 @@ def _run_simulation_with_price_path(
     execute_liquidations: bool = True,
     initial_vaults: list[Vault] | None = None,
     gas_cost_path: Sequence[float] | None = None,
+    liquidation_demand_process: LiquidationDemandProcess | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     Run the simulation and return system and collateral-level results.
@@ -399,6 +404,10 @@ def _run_simulation_with_price_path(
             raise ValueError("gas_cost_path must contain finite non-negative values.")
     else:
         gas_cost_values = None
+    empirical_liquidation_demand = (
+        liquidation_demand_process is not None
+        and liquidation_demand_process.config.mode != "legacy_all_eligible"
+    )
 
     collateral_price_paths = normalise_collateral_price_paths(
         price_paths=price_path,
@@ -523,14 +532,30 @@ def _run_simulation_with_price_path(
             "collateral_liquidated": 0.0,
         }
         liquidation_df: pd.DataFrame | None = None
+        liquidation_demand_decision = None
 
         if execute_liquidations and pre_summary["n_liquidatable"] > 0:
-            liquidation_df = liquidate_vaults(
-                vaults=vaults,
-                prices=oracle_prices,
-                config=step_liquidation_config,
-                portfolio=portfolio,
-            )
+            if empirical_liquidation_demand:
+                liquidation_demand_decision = liquidation_demand_process.sample_step(
+                    step=step,
+                    liquidatable_inventory=int(pre_summary["n_liquidatable"]),
+                    keeper_capacity=step_liquidation_config.max_liquidations_per_step,
+                )
+                liquidation_df = liquidate_vaults(
+                    vaults=vaults,
+                    prices=oracle_prices,
+                    config=step_liquidation_config,
+                    portfolio=portfolio,
+                    bounded_demand=liquidation_demand_decision.bounded_demand,
+                    attempt_budget=liquidation_demand_decision.attempt_budget,
+                )
+            else:
+                liquidation_df = liquidate_vaults(
+                    vaults=vaults,
+                    prices=oracle_prices,
+                    config=step_liquidation_config,
+                    portfolio=portfolio,
+                )
             liquidation_summary = summarise_liquidations(liquidation_df)
 
             cumulative_keeper_profit += float(liquidation_summary["keeper_profit"])
@@ -647,6 +672,31 @@ def _run_simulation_with_price_path(
             "systemic_stress_pressure": systemic_stress_pressure,
             "combined_panic_pressure": combined_panic_pressure,
         }
+        if empirical_liquidation_demand:
+            if liquidation_demand_decision is None:
+                liquidation_demand_decision = liquidation_demand_process.sample_step(
+                    step=step,
+                    liquidatable_inventory=int(pre_summary["n_liquidatable"]),
+                    keeper_capacity=step_liquidation_config.max_liquidations_per_step,
+                )
+            record.update(
+                {
+                    "liquidation_demand_mode": liquidation_demand_process.config.mode,
+                    "sampled_liquidation_demand": liquidation_demand_decision.sampled_demand,
+                    "bounded_liquidation_demand": liquidation_demand_decision.bounded_demand,
+                    "liquidation_attempt_budget": liquidation_demand_decision.attempt_budget,
+                    "liquidation_demand_activity": liquidation_demand_decision.activity_draw,
+                    "liquidation_demand_truncated_by_inventory": (
+                        liquidation_demand_decision.demand_truncated_by_inventory
+                    ),
+                    "liquidation_demand_truncated_by_capacity": (
+                        liquidation_demand_decision.demand_truncated_by_capacity
+                    ),
+                    "liquidation_unresolved_inventory_after_step": int(
+                        market_post_summary["n_liquidatable"]
+                    ),
+                }
+            )
 
         records.append(record)
 
@@ -663,6 +713,7 @@ def run_simulation_with_price_path(
     execute_liquidations: bool = True,
     initial_vaults: list[Vault] | None = None,
     gas_cost_path: Sequence[float] | None = None,
+    liquidation_demand_process: LiquidationDemandProcess | None = None,
 ) -> pd.DataFrame:
     """Run a simulation and return the existing system-level DataFrame."""
     system_results, _ = _run_simulation_with_price_path(
@@ -675,6 +726,7 @@ def run_simulation_with_price_path(
         execute_liquidations=execute_liquidations,
         initial_vaults=initial_vaults,
         gas_cost_path=gas_cost_path,
+        liquidation_demand_process=liquidation_demand_process,
     )
     return system_results
 
@@ -689,6 +741,7 @@ def run_simulation_with_collateral_metrics(
     execute_liquidations: bool = True,
     initial_vaults: list[Vault] | None = None,
     gas_cost_path: Sequence[float] | None = None,
+    liquidation_demand_process: LiquidationDemandProcess | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Run a simulation and return system and collateral-level DataFrames."""
     return _run_simulation_with_price_path(
@@ -701,6 +754,7 @@ def run_simulation_with_collateral_metrics(
         execute_liquidations=execute_liquidations,
         initial_vaults=initial_vaults,
         gas_cost_path=gas_cost_path,
+        liquidation_demand_process=liquidation_demand_process,
     )
 
 

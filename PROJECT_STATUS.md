@@ -200,11 +200,12 @@ conditions and liquidation arrival frequencies.
 
 ### Parameter-adoption and model-interface review
 
-**Status: Tranches A, B and C complete**
+**Status: Tranches A, B, C and D complete**
 
-- All 56 authoritative parameter subsections and 70 material implemented
-  configuration/runtime fields (including all 50 live dataclass fields) are
-  mapped to one primary adoption class.
+- All 56 authoritative parameter subsections and the pre-Tranche-D
+  configuration/runtime interface review are mapped to one primary adoption
+  class, with the new Tranche D demand fields documented as a separate opt-in
+  extension.
 - The review preserves 80 Phase 2A–2C candidate records without pooling
   conflicting regimes, collaterals or semantic stages.
 - The separate configuration-only empirical bundle has been implemented as an
@@ -217,12 +218,17 @@ conditions and liquidation arrival frequencies.
 - Empirical market-return block bootstrapping and empirical gas-input
   generation have been implemented as a separate opt-in Tranche C path. Legacy
   GBM and scalar gas remain the defaults.
-- Regime switching, liquidation-arrival and behavioural changes remain later,
-  separately gated tranches. See
+- Empirical liquidation-arrival demand and keeper-throughput separation have
+  been implemented as a separate opt-in Tranche D path. Legacy liquidation
+  demand remains the default, and keeper-profit, close-factor, auction and
+  confidence mechanics are unchanged.
+- Regime switching and behavioural changes remain later, separately gated
+  tranches. See
   `docs/parameter_adoption_and_model_interface_plan.md` and
   `docs/tranche_a_empirical_configuration_report.md` and
   `docs/tranche_b_distributional_vault_initialisation_report.md` and
-  `docs/tranche_c_empirical_market_and_gas_report.md`.
+  `docs/tranche_c_empirical_market_and_gas_report.md` and
+  `docs/tranche_d_liquidation_arrival_and_capacity_report.md`.
 
 ## Current outputs
 
@@ -288,4 +294,7 @@ Codex must not decide these silently:
 - whether stable depegs directly affect confidence or DAI demand;
 - whether oracle delay should vary by collateral;
 - changes to realised bad-debt accounting;
-- changes to keeper-capacity measurement.
+- adoption of the opt-in Tranche D liquidation-demand path as a dissertation
+  baseline rather than a sensitivity interface;
+- changes to keeper-capacity measurement beyond the current explicit
+  throughput cap.

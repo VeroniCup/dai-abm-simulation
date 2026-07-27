@@ -1,0 +1,55 @@
+{
+  "diagnostics": {
+    "bark_count": 649,
+    "conditional_activity_count": 48,
+    "conditional_activity_probability": 0.34782608695652173,
+    "conditional_inventory_positive_hours": 138,
+    "grab_count": 649,
+    "hour_count": 1104,
+    "hourly_count_mean": 0.5878623188405797,
+    "hourly_count_variance": 12.344041119739138,
+    "hourly_variance_to_mean": 20.99818396947921,
+    "maximum_daily_grabs": 170,
+    "maximum_hourly_grabs": 46,
+    "maximum_liquidatable_share": 0.0284697508896797,
+    "positive_count_maximum": 46,
+    "positive_count_mean": 9.984615384615385,
+    "positive_count_median": 5.0,
+    "positive_count_minimum": 1,
+    "positive_hour_count": 65,
+    "unconditional_activity_probability": 0.058876811594202896,
+    "zero_hour_share": 0.9411231884057971
+  },
+  "forbidden_fields_excluded": [
+    "transaction_hash",
+    "urn",
+    "owner",
+    "auction_id",
+    "raw_event_payload"
+  ],
+  "method": "Phase 2C runtime-pool construction only; no parameter estimation or data acquisition",
+  "outputs": {
+    "config/empirical/data/liquidation_arrival_hourly_pool.csv": {
+      "columns": 12,
+      "rows": 1104,
+      "sha256": "cc29435bb0434237aba438ee98bded77f086704c7400bb5016e2b58703258c8a"
+    },
+    "config/empirical/data/liquidation_sequence_pool.csv": {
+      "columns": 10,
+      "rows": 54,
+      "sha256": "9fdd5f3b5fb97e2dd41d0201bad34909ad05e423ad6b52f65219f49f02a1c7ed"
+    }
+  },
+  "phase": "tranche_d_liquidation_arrival_runtime_pools",
+  "sequence_sensitivity": {
+    "implemented_in_simulator": false,
+    "reason": "The 54 transaction-time sequences are retained as diagnostics, but Tranche D only activates the primary independent hurdle-count mode."
+  },
+  "source_checksums": {
+    "data/processed/estimation/phase2c_liquidations/liquidation_sequence_estimates.csv": "8812a42ae6b4942acf2590d2608b426815aea0cef7ffa38375d6aebddba144c2",
+    "data/processed/vaults/representative_regimes/terra_cefi_2022-05-05_2022-06-20/bark_grab_linkage.csv": "e852969ccb4ae1ec9488e9aa1b75953cfcea090af9514ffc51d39c1339007734",
+    "data/processed/vaults/representative_regimes/terra_cefi_2022-05-05_2022-06-20/liquidation_sequence_summary.csv": "afba1e9d5d5b49e375efb52b5c3835a0bdd84fb0fa89dafb6e18be3eef43660d",
+    "data/processed/vaults/representative_regimes/terra_cefi_2022-05-05_2022-06-20/stress_tail_diagnostics.csv": "d83c82ddda0e7dfe46849b75206f85a1587896355ffde75264566e60e2b8356b"
+  },
+  "status": "complete"
+}

@@ -278,6 +278,8 @@ def liquidate_vaults(
     prices: float | dict[str, float],
     config: LiquidationConfig,
     portfolio: CollateralPortfolioConfig | None = None,
+    bounded_demand: int | None = None,
+    attempt_budget: int | None = None,
 ) -> pd.DataFrame:
     """
     Apply keeper liquidation decision to all vaults.
@@ -303,6 +305,24 @@ def liquidate_vaults(
         Liquidation attempt records for all vaults.
     """
     config.validate()
+    if bounded_demand is not None and bounded_demand < 0:
+        raise ValueError("bounded_demand cannot be negative.")
+    if attempt_budget is not None and attempt_budget < 0:
+        raise ValueError("attempt_budget cannot be negative.")
+    if (
+        bounded_demand is None
+        and attempt_budget is not None
+    ) or (
+        bounded_demand is not None
+        and attempt_budget is None
+    ):
+        raise ValueError("bounded_demand and attempt_budget must be supplied together.")
+    if (
+        bounded_demand is not None
+        and attempt_budget is not None
+        and attempt_budget > bounded_demand
+    ):
+        raise ValueError("attempt_budget cannot exceed bounded_demand.")
 
     preliminary_records = []
 
@@ -326,21 +346,37 @@ def liquidate_vaults(
 
     preliminary_df = pd.DataFrame(preliminary_records)
 
-    profitable_df = preliminary_df[
-        preliminary_df["is_liquidatable"] & preliminary_df["is_profitable"]
-    ].copy()
+    if bounded_demand is None:
+        profitable_df = preliminary_df[
+            preliminary_df["is_liquidatable"] & preliminary_df["is_profitable"]
+        ].copy()
 
-    profitable_df = profitable_df.sort_values(
-        "expected_profit",
-        ascending=False,
-    )
-
-    if config.max_liquidations_per_step is not None:
-        executable_vault_ids = set(
-            profitable_df.head(config.max_liquidations_per_step)["vault_id"]
+        profitable_df = profitable_df.sort_values(
+            "expected_profit",
+            ascending=False,
         )
+
+        if config.max_liquidations_per_step is not None:
+            executable_vault_ids = set(
+                profitable_df.head(config.max_liquidations_per_step)["vault_id"]
+            )
+        else:
+            executable_vault_ids = set(profitable_df["vault_id"])
+        demand_selected_vault_ids: set[int] | None = None
     else:
-        executable_vault_ids = set(profitable_df["vault_id"])
+        liquidatable_df = preliminary_df[
+            preliminary_df["is_liquidatable"]
+        ].copy()
+        liquidatable_df = liquidatable_df.sort_values(
+            ["expected_profit", "vault_id"],
+            ascending=[False, True],
+        )
+        demand_selected_vault_ids = set(
+            liquidatable_df.head(bounded_demand)["vault_id"]
+        )
+        executable_vault_ids = set(
+            liquidatable_df.head(attempt_budget)["vault_id"]
+        )
 
     final_records = []
 
@@ -377,6 +413,24 @@ def liquidate_vaults(
                     "remaining_collateral_amount": vault.collateral_amount,
                 }
 
+            elif demand_selected_vault_ids is not None and vault_id not in demand_selected_vault_ids:
+                record = {
+                    "vault_id": vault.vault_id,
+                    "collateral_type": vault.collateral_type,
+                    "attempted": False,
+                    "liquidated": False,
+                    "fully_liquidated": False,
+                    "reason": "demand_not_sampled",
+                    "expected_profit": row["expected_profit"],
+                    "realised_keeper_profit": 0.0,
+                    "bad_debt": vault.bad_debt(prices),
+                    "debt_repaid": 0.0,
+                    "collateral_value": vault.collateral_value(prices),
+                    "collateral_value_before": vault.collateral_value(prices),
+                    "remaining_debt": vault.debt_dai,
+                    "remaining_collateral_amount": vault.collateral_amount,
+                }
+
             elif row["expected_profit"] <= 0:
                 record = {
                     "vault_id": vault.vault_id,
@@ -385,6 +439,24 @@ def liquidate_vaults(
                     "liquidated": False,
                     "fully_liquidated": False,
                     "reason": "unprofitable",
+                    "expected_profit": row["expected_profit"],
+                    "realised_keeper_profit": 0.0,
+                    "bad_debt": vault.bad_debt(prices),
+                    "debt_repaid": 0.0,
+                    "collateral_value": vault.collateral_value(prices),
+                    "collateral_value_before": vault.collateral_value(prices),
+                    "remaining_debt": vault.debt_dai,
+                    "remaining_collateral_amount": vault.collateral_amount,
+                }
+
+            elif demand_selected_vault_ids is not None:
+                record = {
+                    "vault_id": vault.vault_id,
+                    "collateral_type": vault.collateral_type,
+                    "attempted": False,
+                    "liquidated": False,
+                    "fully_liquidated": False,
+                    "reason": "capacity_limited",
                     "expected_profit": row["expected_profit"],
                     "realised_keeper_profit": 0.0,
                     "bad_debt": vault.bad_debt(prices),

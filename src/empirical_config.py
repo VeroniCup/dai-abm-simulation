@@ -71,7 +71,7 @@ SUPPORTED_BUNDLE_KEYS = {
 SUPPORTED_SIMULATION_KEYS = {"n_vaults"}
 SUPPORTED_PORTFOLIO_KEYS = {"name", "target_debt_shares", "compatibility_defaults"}
 SUPPORTED_COMPATIBILITY_KEYS = {"initial_prices"}
-SUPPORTED_LIQUIDATION_KEYS = {"max_close_factor"}
+SUPPORTED_LIQUIDATION_KEYS = {"max_close_factor", "max_liquidations_per_step"}
 SUPPORTED_CONFIDENCE_KEYS = {
     "normal_lower_price",
     "normal_upper_price",
@@ -212,7 +212,14 @@ def _build_liquidation_config(
     base: LiquidationConfig,
 ) -> LiquidationConfig:
     _reject_unknown_keys(raw, SUPPORTED_LIQUIDATION_KEYS, "liquidation")
-    config = replace(base, max_close_factor=float(raw["max_close_factor"]))
+    max_liquidations = raw.get("max_liquidations_per_step")
+    config = replace(
+        base,
+        max_close_factor=float(raw["max_close_factor"]),
+        max_liquidations_per_step=(
+            None if max_liquidations is None else int(max_liquidations)
+        ),
+    )
     config.validate()
     return config
 

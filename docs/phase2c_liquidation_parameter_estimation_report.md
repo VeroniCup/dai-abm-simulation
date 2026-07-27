@@ -172,7 +172,7 @@ replaced by the Terra minimum.
 | stress liquidatable share | global scalar threshold | labelled severity hierarchy needs a declared scenario or new regime interface |
 | initial ratio buffer | global absolute scalar floor | directly compatible for normal initialisation |
 | auction execution fraction | absent | requires a new field and multi-stage execution |
-| liquidation arrivals | absent | requires a distribution interface |
+| liquidation arrivals | absent at Phase 2C review time | requires a distribution interface; later implemented by opt-in Tranche D |
 | auction duration | absent | descriptive only without auction mechanics |
 
 Current defaults are `1.0` for `max_close_factor`, no throughput cap, `0.30`
@@ -190,8 +190,9 @@ A semantic mismatch must not be treated as a numerical calibration failure.
 - `max_liquidations_per_step`: `provisional_distribution_choice`; retain the
   empirical hourly/sequence distribution and select scalars only for declared
   sensitivities.
-- liquidation arrival process: `blocked_by_model_interface`; a transparent
-  hurdle representation is preferred to Poisson.
+- liquidation arrival process: `interface_implemented_not_adopted`; Tranche D
+  now provides the preferred transparent hurdle-count representation as an
+  opt-in runtime path, while leaving legacy defaults unchanged.
 - auction execution fraction: `blocked_by_model_interface`; retain separately
   from the protocol close.
 - `max_stress_liquidatable_share`:
@@ -230,3 +231,9 @@ directly configuration-ready Phase 2C candidate, while auction execution,
 clustered arrivals and regime-specific stress thresholds remain separately
 gated interface decisions. No value has been adopted. See
 `parameter_adoption_and_model_interface_plan.md`.
+
+The later Tranche D implementation uses this Phase 2C evidence to build a
+compact hourly liquidation-arrival runtime pool and an opt-in hurdle-count
+demand process. It does not reinterpret `max_close_factor`, introduce auction
+execution or adopt a new baseline calibration. See
+`tranche_d_liquidation_arrival_and_capacity_report.md`.

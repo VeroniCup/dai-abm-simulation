@@ -241,7 +241,8 @@ price-level jumps.
 
 ## Recommended next tranche
 
-The next tranche should remain separately authorised. Candidate directions are
-liquidation-arrival/throughput interfaces or behavioural calibration. Tranche C
-does not implement hurdle liquidations, auction execution or confidence
-mechanics.
+The subsequent Tranche D implementation now adds the separately authorised
+opt-in liquidation-arrival and keeper-throughput interface. Tranche C itself
+remains limited to empirical market and gas inputs; it does not implement
+hurdle liquidations, auction execution or confidence mechanics. Tranche D is
+documented in `tranche_d_liquidation_arrival_and_capacity_report.md`.

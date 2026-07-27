@@ -279,17 +279,18 @@ Four stages must remain distinct:
 The current ABM models stage 1 endogenously and combines stages 2–4 into one
 keeper action. `max_liquidations_per_step` is deterministic execution capacity.
 
-The recommended dissertation core retains endogenous liquidation demand and a
-separate deterministic capacity cap. An optional later extension may add a
-hurdle demand overlay:
+The recommended dissertation core retains endogenous unsafe-vault creation and
+a separate deterministic capacity cap. The Tranche D implementation now adds
+an opt-in hurdle demand overlay:
 
 - probability of any Bark activity in an hour; and
 - empirical positive Bark count conditional on activity.
 
-It must not create a second liquidation demand process on top of already
-liquidatable vaults without a clearly defined mapping. The Phase 2C
-variance-to-mean ratio and zero mass reject a simple Poisson representation,
-but do not require a Hawkes model.
+It does not create a second liquidation state variable. Instead, it observes
+the simulator's current liquidatable inventory, samples a bounded empirical
+arrival count and then applies the separate keeper-throughput cap. The Phase
+2C variance-to-mean ratio and zero mass reject a simple Poisson
+representation, but do not require a Hawkes model.
 
 Keeper participation should move towards an explicit minimum expected-profit
 threshold. Evidence comes from Phase 1C clean and failed Take transactions,
@@ -513,10 +514,13 @@ report is `docs/tranche_c_empirical_market_and_gas_report.md`.
 
 ### Tranche D — liquidation demand and throughput
 
-Only after B and C, consider a hurdle demand overlay, capacity distribution and
-minimum-profit keeper threshold. Test the liquidatable/Bark/grab/Take
-distinctions, backlog, capacity and profit accounting. Stop on double-counted
-endogenous liquidation demand.
+Implemented as an opt-in hurdle-count demand interface after Tranches B and C.
+It tests the liquidatable/Bark/grab/Take distinctions, backlog, capacity and
+profit accounting while preserving legacy defaults. The primary hurdle
+probability is the Phase 2C conditional start-inventory-positive activity
+estimate, and positive counts are sampled from the compact Terra/CeFi hourly
+arrival pool. Sequence sensitivity is retained as a diagnostic artefact only;
+no auction lifecycle or confidence mechanism is added.
 
 ### Tranche E — confidence and behavioural calibration
 
@@ -528,7 +532,10 @@ The smallest completed tranches are **Tranche A**, implemented as a separate
 empirical configuration with no change to legacy defaults, and **Tranche B**,
 implemented as an opt-in distribution-aware vault initialisation interface.
 **Tranche C** is also complete as an opt-in empirical market/gas input layer.
-Later liquidation-arrival and behavioural interfaces remain separately gated.
+**Tranche D** is complete as an opt-in empirical liquidation-arrival and
+keeper-throughput interface. Later behavioural interfaces remain separately
+gated. The implementation report is
+`tranche_d_liquidation_arrival_and_capacity_report.md`.
 
 ## Adoption-validation framework
 
