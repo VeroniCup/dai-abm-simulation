@@ -43,7 +43,7 @@ PROVENANCE_STREAM_ROOT = PROVENANCE_ROOT / "streams"
 GENERATED_SQL_ROOT = ROOT / "sql" / "vaults" / "generated"
 INGRESS_ROOT = PROVENANCE_ROOT / "ingress"
 MANIFEST_PATH = PROVENANCE_ROOT / "manifest.json"
-TEMPLATE_PATH = ROOT / "sql" / "dune_phase1e_vat_mutations_monthly.sql"
+TEMPLATE_PATH = ROOT / "sql" / "vaults" / "templates" / "vat_mutations_monthly.sql"
 SCAN_START = pd.Timestamp("2019-11-01T00:00:00Z")
 SAMPLE_START = pd.Timestamp("2021-06-01T00:00:00Z")
 SAMPLE_END = pd.Timestamp("2024-07-01T00:00:00Z")
@@ -78,15 +78,15 @@ RATE_COLUMNS = (
 )
 STREAM_SPECS = {
     "open": {
-        "sql": ROOT / "sql" / "dune_phase1e_manager_open_mappings.sql",
+        "sql": ROOT / "sql" / "vaults" / "templates" / "manager_open_mappings.sql",
         "columns": OPEN_COLUMNS,
     },
     "give": {
-        "sql": ROOT / "sql" / "dune_phase1e_manager_gives.sql",
+        "sql": ROOT / "sql" / "vaults" / "templates" / "manager_gives.sql",
         "columns": GIVE_COLUMNS,
     },
     "rate": {
-        "sql": ROOT / "sql" / "dune_phase1e_accumulated_rates.sql",
+        "sql": ROOT / "sql" / "vaults" / "templates" / "accumulated_rates.sql",
         "columns": RATE_COLUMNS,
     },
 }

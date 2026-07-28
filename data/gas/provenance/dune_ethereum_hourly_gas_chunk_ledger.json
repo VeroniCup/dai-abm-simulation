@@ -438,6 +438,6 @@
     "ethereum.transactions",
     "ethereum.blocks"
   ],
-  "sql_template_path": "sql/dune_ethereum_hourly_gas.sql",
+  "sql_template_path": "sql/gas/templates/hourly_conditions.sql",
   "sql_template_sha256": "2a392f66e427b5dd1dbd97c7d65d61c4c594a3bb5dde9d7fd5d819725b939ae7"
 }

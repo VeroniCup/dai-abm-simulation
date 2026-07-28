@@ -33,7 +33,7 @@ import pandas as pd
 
 
 PROJECT_ROOT = REPOSITORY_ROOT
-DEFAULT_TEMPLATE = PROJECT_ROOT / "sql" / "dune_ethereum_hourly_gas.sql"
+DEFAULT_TEMPLATE = PROJECT_ROOT / "sql" / "gas" / "templates" / "hourly_conditions.sql"
 DEFAULT_RAW_DIR = PROJECT_ROOT / "data" / "gas" / "raw"
 DEFAULT_CHUNK_DIR = DEFAULT_RAW_DIR / "chunks"
 DEFAULT_PROVENANCE_DIR = PROJECT_ROOT / "data" / "gas" / "provenance"

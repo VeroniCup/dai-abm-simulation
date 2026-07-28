@@ -46,7 +46,14 @@ from workflows.maintenance.archive.liquidation_diagnostic import (
 
 
 PROJECT_ROOT = REPOSITORY_ROOT
-ACTION_SQL = PROJECT_ROOT / "sql" / "dune_phase1c_liquidation_actions_diagnostic.sql"
+ACTION_SQL = (
+    PROJECT_ROOT
+    / "sql"
+    / "liquidations"
+    / "generated"
+    / "history"
+    / "liquidation_actions_diagnostic.sql"
+)
 DIAGNOSTIC_DIR = (
     PROJECT_ROOT / "data" / "liquidations" / "provenance" / "archive" / "diagnostic"
 )
@@ -61,7 +68,8 @@ TRANSACTION_SQL = (
     / "sql"
     / "liquidations"
     / "generated"
-    / "phase1c_liquidation_transactions_attempt3.sql"
+    / "history"
+    / "liquidation_transactions_attempt3.sql"
 )
 ATTEMPT_METADATA = DIAGNOSTIC_DIR / "phase1c_liquidation_attempt3_metadata.json"
 ATTEMPT_VALIDATION = DIAGNOSTIC_DIR / "phase1c_liquidation_attempt3_validation.json"

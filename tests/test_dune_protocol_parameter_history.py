@@ -60,7 +60,12 @@ def test_all_production_sql_passes_preflight():
 
 def test_clipper_stopped_diagnostic_is_bounded_and_explicit():
     sql = (
-        history.ROOT / "sql" / "dune_phase1d_clipper_stopped_diagnostic.sql"
+        history.ROOT
+        / "sql"
+        / "protocol"
+        / "generated"
+        / "history"
+        / "clipper_stopped_diagnostic.sql"
     ).read_text(encoding="utf-8").lower()
     assert sql.count("0xc67963a226eddd77b91ad8c421630a1b0adff270") == 1
     for mapping in history.CLIPPER_MAPPINGS.values():

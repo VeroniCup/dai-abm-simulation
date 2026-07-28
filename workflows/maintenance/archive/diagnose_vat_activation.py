@@ -33,7 +33,14 @@ from urllib.request import Request, urlopen
 
 
 ROOT = REPOSITORY_ROOT
-SQL_PATH = ROOT / "sql" / "dune_phase1d_vat_wbtc_activation_diagnostic.sql"
+SQL_PATH = (
+    ROOT
+    / "sql"
+    / "protocol"
+    / "generated"
+    / "history"
+    / "vat_wbtc_activation_diagnostic.sql"
+)
 OUTPUT_DIR = (
     ROOT / "data" / "protocol" / "provenance" / "archive" / "diagnostic"
 )

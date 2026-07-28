@@ -27,7 +27,14 @@ from typing import Any, Iterable
 
 
 PROJECT_ROOT = REPOSITORY_ROOT
-DEFAULT_SQL = PROJECT_ROOT / "sql" / "dune_phase1c_liquidation_diagnostic.sql"
+DEFAULT_SQL = (
+    PROJECT_ROOT
+    / "sql"
+    / "liquidations"
+    / "generated"
+    / "history"
+    / "liquidation_diagnostic.sql"
+)
 DEFAULT_DIR = (
     PROJECT_ROOT / "data" / "liquidations" / "provenance" / "archive" / "diagnostic"
 )

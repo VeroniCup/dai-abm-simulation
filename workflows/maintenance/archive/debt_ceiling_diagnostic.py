@@ -28,7 +28,14 @@ from typing import Any
 
 
 ROOT = REPOSITORY_ROOT
-SQL_PATH = ROOT / "sql" / "dune_phase1d_eth_a_debt_ceiling_diagnostic.sql"
+SQL_PATH = (
+    ROOT
+    / "sql"
+    / "protocol"
+    / "generated"
+    / "history"
+    / "eth_a_debt_ceiling_diagnostic.sql"
+)
 DIAGNOSTIC_DIR = (
     ROOT / "data" / "protocol" / "provenance" / "archive" / "diagnostic"
 )

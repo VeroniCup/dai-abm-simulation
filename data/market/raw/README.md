@@ -1,7 +1,7 @@
 # Raw Dune market data
 
 The Phase 1A source is `prices.hour`, queried by
-`sql/dune_hourly_market_prices.sql` for Ethereum WETH, WBTC, DAI and USDC. WETH
+`sql/market/templates/hourly_prices.sql` for Ethereum WETH, WBTC, DAI and USDC. WETH
 is labelled `ETH`, while WBTC remains `WBTC` as the BTC-collateral price proxy.
 
 The private temporary production query covered the half-open UTC interval from

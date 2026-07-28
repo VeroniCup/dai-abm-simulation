@@ -37,15 +37,15 @@ TARGET_ILKS = ("ETH-A", "ETH-B", "ETH-C", "WBTC-A", "WBTC-B", "WBTC-C")
 
 DIAGNOSTICS = {
     "frob": {
-        "sql": ROOT / "sql" / "dune_phase1e_vat_frob_diagnostic.sql",
+        "sql": ROOT / "sql" / "vaults" / "templates" / "vat_frob_diagnostic.sql",
         "stem": "phase1e_vat_frob_diagnostic",
     },
     "liquidation": {
-        "sql": ROOT / "sql" / "dune_phase1e_liquidation_linkage_diagnostic.sql",
+        "sql": ROOT / "sql" / "vaults" / "templates" / "liquidation_linkage_diagnostic.sql",
         "stem": "phase1e_liquidation_linkage_diagnostic",
     },
     "ownership": {
-        "sql": ROOT / "sql" / "dune_phase1e_owner_mapping_diagnostic.sql",
+        "sql": ROOT / "sql" / "vaults" / "templates" / "owner_mapping_diagnostic.sql",
         "stem": "phase1e_owner_mapping_diagnostic",
     },
 }

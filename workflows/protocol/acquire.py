@@ -100,20 +100,20 @@ class ModuleSpec:
 
 
 MODULES = {
-    "vat": ModuleSpec("Vat", "dune_phase1d_vat_parameters.sql", (
+    "vat": ModuleSpec("Vat", "protocol/templates/vat_parameters.sql", (
         "debt_ceiling", "minimum_debt", "global_debt_ceiling",
     )),
-    "spot": ModuleSpec("Spot", "dune_phase1d_spot_parameters.sql", (
+    "spot": ModuleSpec("Spot", "protocol/templates/spot_parameters.sql", (
         "liquidation_ratio", "oracle_adapter", "effective_liquidation_spot",
     )),
-    "jug": ModuleSpec("Jug", "dune_phase1d_jug_parameters.sql", (
+    "jug": ModuleSpec("Jug", "protocol/templates/jug_parameters.sql", (
         "stability_fee_duty", "stability_fee_base",
     )),
-    "dog": ModuleSpec("Dog", "dune_phase1d_dog_parameters.sql", (
+    "dog": ModuleSpec("Dog", "protocol/templates/dog_parameters.sql", (
         "liquidation_penalty", "ilk_liquidation_capacity",
         "global_liquidation_capacity", "clipper_mapping",
     )),
-    "clipper": ModuleSpec("Clipper", "dune_phase1d_clipper_parameters.sql", (
+    "clipper": ModuleSpec("Clipper", "protocol/templates/clipper_parameters.sql", (
         "auction_price_buffer", "auction_tail", "auction_cusp",
         "auction_keeper_fraction", "auction_keeper_fixed", "auction_stopped",
     )),
@@ -132,7 +132,12 @@ CLIPPER_STOPPED_DIAGNOSTIC_PATH = (
     DIAGNOSTIC_DIR / "phase1d_clipper_stopped_diagnostic.csv"
 )
 CLIPPER_STOPPED_MINIMAL_SQL_PATH = (
-    ROOT / "sql" / "dune_phase1d_clipper_stopped_minimal_diagnostic.sql"
+    ROOT
+    / "sql"
+    / "protocol"
+    / "generated"
+    / "history"
+    / "clipper_stopped_minimal_diagnostic.sql"
 )
 CLIPPER_STOPPED_MINIMAL_PATH = (
     DIAGNOSTIC_DIR / "phase1d_clipper_stopped_minimal_diagnostic.csv"

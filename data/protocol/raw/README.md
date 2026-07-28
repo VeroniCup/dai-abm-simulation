@@ -10,7 +10,7 @@ and production manifests are stored under `data/protocol/provenance/`. Derived
 change ledgers, intervals and hourly panels are under
 `data/protocol/processed/`. These generated artefacts remain ignored;
 the durable diagnostic SQL is
-`sql/dune_phase1d_eth_a_debt_ceiling_diagnostic.sql` and the local validation
+`sql/protocol/generated/history/eth_a_debt_ceiling_diagnostic.sql` and the local validation
 implementation is `workflows/maintenance/archive/debt_ceiling_diagnostic.py`.
 
 The Phase 1D diagnostic does not constitute production acquisition and does not

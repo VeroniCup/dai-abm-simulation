@@ -26,7 +26,7 @@ should be added to a lifecycle-first location.
 
 ## Dune hourly market-price acquisition
 
-The production SQL is stored in `sql/dune_hourly_market_prices.sql`. It maps
+The production SQL is stored in `sql/market/templates/hourly_prices.sql`. It maps
 Dune's WETH instrument to the raw-data asset label `ETH`; WBTC remains `WBTC`
 and is documented as the BTC-collateral price proxy, not native BTC. The query
 uses `prices.hour`, four Ethereum contract addresses and the half-open UTC
@@ -120,7 +120,7 @@ The raw-file checksum is verified again after processing.
 
 ## Phase 1B Dune hourly Ethereum gas acquisition
 
-The production template is `sql/dune_ethereum_hourly_gas.sql`. It aggregates
+The production template is `sql/gas/templates/hourly_conditions.sql`. It aggregates
 `ethereum.transactions` and `ethereum.blocks` to 20 hourly fields. Effective
 gas-price percentiles use Dune's approximate percentile aggregation. The
 template uses matching partition and timestamp filters and is rendered into 13

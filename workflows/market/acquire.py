@@ -39,7 +39,9 @@ DEFAULT_OUTPUT = Path(
 )
 DEFAULT_MANIFEST = Path("data/provenance/data_manifest.csv")
 DEFAULT_PROVENANCE_DIRECTORY = Path("data/market/provenance")
-DEFAULT_SQL_FILE = Path("sql/dune_hourly_market_prices.sql")
+DEFAULT_SQL_FILE = (
+    REPOSITORY_ROOT / "sql" / "market" / "templates" / "hourly_prices.sql"
+)
 REQUESTED_START = "2021-06-01 00:00:00 UTC"
 REQUESTED_END = "2024-07-01 00:00:00 UTC"
 TERMINAL_FAILURE_STATES = {

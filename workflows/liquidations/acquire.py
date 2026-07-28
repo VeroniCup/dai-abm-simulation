@@ -43,14 +43,21 @@ from workflows.maintenance.archive.liquidation_diagnostic_attempt3 import (
 
 
 PROJECT_ROOT = REPOSITORY_ROOT
-DIAGNOSTIC_SQL = PROJECT_ROOT / "sql" / "dune_phase1c_liquidation_actions_diagnostic.sql"
+DIAGNOSTIC_SQL = (
+    PROJECT_ROOT
+    / "sql"
+    / "liquidations"
+    / "generated"
+    / "history"
+    / "liquidation_actions_diagnostic.sql"
+)
 RAW_ROOT = PROJECT_ROOT / "data" / "liquidations" / "raw"
 PROCESSED_ROOT = PROJECT_ROOT / "data" / "liquidations" / "processed"
 PROVENANCE_ROOT = PROJECT_ROOT / "data" / "liquidations" / "provenance"
 CHUNK_ROOT = RAW_ROOT / "chunks"
 CHUNK_VALIDATION_ROOT = PROVENANCE_ROOT / "chunks"
 STATE_ROOT = PROVENANCE_ROOT / "state"
-SQL_ROOT = PROJECT_ROOT / "sql" / "liquidations" / "generated"
+SQL_ROOT = PROJECT_ROOT / "sql" / "liquidations" / "generated" / "history"
 INGRESS_ROOT = PROVENANCE_ROOT / "ingress"
 MANIFEST = PROVENANCE_ROOT / "manifest.json"
 ACTION_COMBINED = PROCESSED_ROOT / "phase1c_liquidation_actions_2021-06-01_2024-06-30.csv"
@@ -62,7 +69,7 @@ LEGACY_STATE = PROVENANCE_ROOT / "archive" / "legacy" / "phase1c_legacy_check_st
 LEGACY_RAW = PROVENANCE_ROOT / "archive" / "legacy" / "phase1c_legacy_check.csv"
 LEGACY_CORRECTED_STATE = PROVENANCE_ROOT / "legacy" / "phase1c_legacy_check_corrected_state.json"
 LEGACY_CORRECTED_RAW = PROVENANCE_ROOT / "legacy" / "phase1c_legacy_check_corrected.csv"
-LEGACY_CORRECTED_SQL = SQL_ROOT / "phase1c_legacy_cat_bite_check_corrected.sql"
+LEGACY_CORRECTED_SQL = SQL_ROOT / "legacy_cat_bite_check_corrected.sql"
 FINAL_METADATA = PROVENANCE_ROOT / "metadata.json"
 CHUNK_18_RECOVERY_STATE = STATE_ROOT / "chunk_18_2022_11_transaction.recovery.state.json"
 CHUNK_18_RECOVERY_PAYLOAD = PROVENANCE_ROOT / "archive" / "chunk_18" / ".chunk_18_2022_11_transaction.recovery.partial.json"
@@ -1016,7 +1023,7 @@ def prepare_legacy_check() -> dict[str, Any]:
     if LEGACY_STATE.exists() or LEGACY_RAW.exists():
         raise ProductionAcquisitionError("Refusing to overwrite legacy-check artefacts.")
     sql = legacy_sql()
-    sql_path = SQL_ROOT / "phase1c_legacy_cat_flipper_check.sql"
+    sql_path = SQL_ROOT / "legacy_cat_flipper_check.sql"
     _write_text_atomic(sql_path, sql)
     state = {
         "operation": "bounded count-only Cat/Flipper production-sample check",
