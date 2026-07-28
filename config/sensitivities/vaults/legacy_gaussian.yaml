@@ -1,0 +1,8 @@
+sensitivity_name: vault_legacy_gaussian
+description: "Use the established Gaussian vault initialiser."
+source_path: config/empirical/sensitivity/phase2_empirical_legacy_gaussian.yaml
+source_sha256: ac3288becb390c5b3b2cd6c41507eeb2931983d2fe6fb52428005c0c91bbb5db
+overrides:
+  vault_initialisation:
+    mode: legacy_gaussian
+    by_ilk: false

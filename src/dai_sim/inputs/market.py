@@ -40,7 +40,12 @@ DEFAULT_CONFIG_PATH = PROJECT_ROOT / "config" / "empirical.yaml"
 DEFAULT_PROCESSED_DATA_DIR = PROJECT_ROOT / "data" / "processed"
 
 DEFAULT_MARKET_GAS_POOL_PATH = (
-    REPOSITORY_ROOT / "config" / "empirical" / "data" / "market_gas_hourly_pool.csv"
+    REPOSITORY_ROOT
+    / "data"
+    / "market"
+    / "model_inputs"
+    / "environment_blocks"
+    / "pool.csv"
 )
 VALID_MARKET_MODES = {"legacy_gbm", "empirical_block_bootstrap"}
 VALID_MARKET_POOLS = {"all_calibration", "normal", "stress"}

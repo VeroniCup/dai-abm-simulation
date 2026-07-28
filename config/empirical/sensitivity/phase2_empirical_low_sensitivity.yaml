@@ -3,7 +3,7 @@
 bundle_name: phase2_empirical_low_sensitivity
 mode: empirical_tranche_a
 description: "Low-side sensitivity for bounded Tranche A configuration candidates."
-source_manifest: config/empirical/tranche_a_manifest.json
+source_manifest: data/protocol/provenance/parameter_adoption/manifest.json
 
 simulation:
   n_vaults: 100  # Phase 2B lower convergence bound; synthetic vaults.

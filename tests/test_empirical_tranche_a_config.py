@@ -32,7 +32,14 @@ HIGH_CONFIG = (
     REPOSITORY_ROOT
     / "config/empirical/sensitivity/phase2_empirical_high_sensitivity.yaml"
 )
-MANIFEST = REPOSITORY_ROOT / "config/empirical/tranche_a_manifest.json"
+MANIFEST = (
+    REPOSITORY_ROOT
+    / "data"
+    / "protocol"
+    / "provenance"
+    / "parameter_adoption"
+    / "manifest.json"
+)
 
 
 def test_adoption_review_input_checksums_match_manifest() -> None:

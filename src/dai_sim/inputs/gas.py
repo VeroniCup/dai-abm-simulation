@@ -20,7 +20,12 @@ from .configuration import REPOSITORY_ROOT, sha256_file
 
 
 DEFAULT_LIQUIDATION_GAS_POOL_PATH = (
-    REPOSITORY_ROOT / "config" / "empirical" / "data" / "liquidation_gas_pool.csv"
+    REPOSITORY_ROOT
+    / "data"
+    / "liquidations"
+    / "model_inputs"
+    / "keeper_gas"
+    / "pool.csv"
 )
 VALID_GAS_MODES = {"legacy_scalar", "empirical_components", "empirical_total_cost"}
 VALID_ZERO_POLICIES = {"exclude_zero_primary", "include_zero_sensitivity"}

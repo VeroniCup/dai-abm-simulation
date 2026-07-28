@@ -356,7 +356,7 @@ def panel_source_from_mapping(
 
 
 def load_protocol_config(
-    path: Path | str = REPOSITORY_ROOT / "config/protocol.yaml",
+    path: Path | str = REPOSITORY_ROOT / "config/protocol/parameters.yaml",
 ) -> ProtocolDataConfig:
     """Load a complete real-data protocol configuration."""
     config_path = Path(path)
@@ -1244,7 +1244,7 @@ def run_synthetic_validation(write_outputs: bool = True) -> ProtocolPipelineResu
 
 
 def run_baseline_protocol_pipeline(
-    config_path: Path | str = REPOSITORY_ROOT / "config/protocol.yaml",
+    config_path: Path | str = REPOSITORY_ROOT / "config/protocol/parameters.yaml",
 ) -> ProtocolPipelineResults:
     """Run a configured real baseline and write only Milestone 9 outputs."""
     config = load_protocol_config(config_path)
@@ -1260,7 +1260,11 @@ def run_baseline_protocol_pipeline(
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--mode", choices=("synthetic_validation", "baseline"), default="synthetic_validation")
-    parser.add_argument("--config", type=Path, default=REPOSITORY_ROOT / "config/protocol.yaml")
+    parser.add_argument(
+        "--config",
+        type=Path,
+        default=REPOSITORY_ROOT / "config/protocol/parameters.yaml",
+    )
     arguments = parser.parse_args()
     if arguments.mode == "baseline":
         results = run_baseline_protocol_pipeline(arguments.config)

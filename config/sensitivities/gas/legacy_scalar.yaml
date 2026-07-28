@@ -1,0 +1,11 @@
+sensitivity_name: gas_legacy_scalar
+description: "Use empirical market blocks with the established scalar gas cost."
+source_path: config/empirical/sensitivity/phase2_empirical_market_blocks_legacy_gas.yaml
+source_sha256: c171cf979eb6262a062f25352e530eb177e7238444ea47d374f6b1a101a1fd3d
+overrides:
+  market_process:
+    alignment_mode: market_only
+  gas_process:
+    mode: legacy_scalar
+    seed: null
+    alignment_mode: independent

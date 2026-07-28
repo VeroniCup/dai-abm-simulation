@@ -1,0 +1,12 @@
+sensitivity_name: vault_population_100
+description: "Use the approved 100-vault bound and its associated lower BTC debt-share bound."
+source_path: config/empirical/sensitivity/phase2_empirical_low_sensitivity.yaml
+source_sha256: 5cea6fefa5114152430c06705184ab86b15430a10a82a33603331116b5d87e6c
+overrides:
+  simulation:
+    n_vaults: 100
+  collateral_portfolio:
+    name: empirical_population_100
+    target_debt_shares:
+      ETH: 0.9151466591405398
+      BTC: 0.08485334085946024

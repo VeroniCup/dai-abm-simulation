@@ -4,7 +4,7 @@
 bundle_name: phase2_empirical_baseline
 mode: empirical_tranche_a
 description: "Configuration-only empirical bundle for compatible Phase 2A-2C candidates."
-source_manifest: config/empirical/tranche_a_manifest.json
+source_manifest: data/protocol/provenance/parameter_adoption/manifest.json
 
 simulation:
   n_vaults: 500  # Phase 2B; configuration_ready_with_sensitivity; synthetic vaults; computational scaling candidate.

@@ -44,9 +44,11 @@ from vault_initialisation import (  # noqa: E402
 OUTPUT_DIR = REPOSITORY_ROOT / "data" / "processed" / "estimation" / "tranche_b"
 SMOKE_CONFIGS = {
     "legacy_gaussian": None,
-    "tranche_a_configuration_only": REPOSITORY_ROOT / "config/empirical/phase2_empirical_baseline.yaml",
-    "tranche_b_parametric_truncated": REPOSITORY_ROOT / "config/empirical/sensitivity/phase2_empirical_parametric_truncated.yaml",
-    "tranche_b_empirical_joint": DEFAULT_TRANCHE_B_CONFIG_PATH,
+    "tranche_a_configuration_only": (),
+    "tranche_b_parametric_truncated": (
+        REPOSITORY_ROOT / "config/sensitivities/vaults/parametric_truncated.yaml",
+    ),
+    "tranche_b_empirical_joint": (),
 }
 
 
@@ -101,7 +103,7 @@ def _initial_state_metrics(name: str, result, config) -> dict[str, object]:
 
 def _run_smoke() -> pd.DataFrame:
     rows: list[dict[str, object]] = []
-    for name, path in SMOKE_CONFIGS.items():
+    for name, sensitivity_paths in SMOKE_CONFIGS.items():
         start = time.perf_counter()
         if name == "legacy_gaussian":
             config = replace(create_base_simulation_config(), n_steps=8)
@@ -110,14 +112,17 @@ def _run_smoke() -> pd.DataFrame:
             confidence = ConfidenceConfig()
             market = DAIMarketConfig()
         elif name == "tranche_a_configuration_only":
-            bundle = load_empirical_configuration_bundle(path)
+            bundle = load_empirical_configuration_bundle(DEFAULT_TRANCHE_B_CONFIG_PATH)
             config = replace(bundle.simulation_config, n_steps=8)
             init = initialise_vaults(config, VaultInitialisationConfig())
             liquidation = bundle.liquidation_config
             confidence = bundle.confidence_config
             market = bundle.dai_market_config
         else:
-            bundle = load_tranche_b_configuration(path)
+            bundle = load_tranche_b_configuration(
+                DEFAULT_TRANCHE_B_CONFIG_PATH,
+                sensitivity_paths=sensitivity_paths,
+            )
             config = replace(bundle.base_bundle.simulation_config, n_steps=8)
             init = initialise_vaults(config, bundle.initialisation)
             liquidation = bundle.base_bundle.liquidation_config
@@ -241,9 +246,9 @@ def main() -> None:
     metadata = {
         "phase": "tranche_b_distributional_vault_initialisation",
         "status": "complete",
-        "pool_path": "config/empirical/data/vault_initialisation_pools.csv",
+        "pool_path": "data/vaults/model_inputs/initialisation/pool.csv",
         "pool_sha256": sha256_file(DEFAULT_POOL_PATH),
-        "primary_configuration": "config/empirical/phase2_empirical_distributional.yaml",
+        "primary_configuration": "config/profiles/empirical.yaml",
         "primary_configuration_sha256": sha256_file(DEFAULT_TRANCHE_B_CONFIG_PATH),
         "outputs": {
             path.name: {

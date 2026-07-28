@@ -17,7 +17,7 @@
     "relative_buffer"
   ],
   "notes": "Opening states only; active indebted vaults with valid collateral ratio and liquidation ratio. No urn, owner, transaction hash or event-history fields are included.",
-  "output_path": "config/empirical/data/vault_initialisation_pools.csv",
+  "output_path": "data/vaults/model_inputs/initialisation/pool.csv",
   "output_sha256": "5230a30aa2c2aebe69ef859ccdcbb785eb44f20a691b431f2fd01b0d16558892",
   "rows": 7208,
   "source_rows": [

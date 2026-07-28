@@ -1,0 +1,7 @@
+sensitivity_name: gas_high_q90
+description: "Price component gas using the aligned hourly P90 network gas price."
+source_path: config/empirical/sensitivity/phase2_empirical_market_gas_high_gas_q90.yaml
+source_sha256: 86077d6f917f3c1ba829518a6501bd1cbfb670e66aa11b002cc91d529fe9d863
+overrides:
+  gas_process:
+    network_gas_column: p90_effective_gas_price_gwei

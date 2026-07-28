@@ -89,14 +89,20 @@ def build_diagnostics() -> dict[str, Path]:
         bundle.liquidation_demand.pool_sha256,
     )
     sequence_pool = pd.read_csv(
-        REPOSITORY_ROOT / "config" / "empirical" / "data" / "liquidation_sequence_pool.csv"
+        REPOSITORY_ROOT
+        / "data"
+        / "liquidations"
+        / "model_inputs"
+        / "arrival"
+        / "sequence_pool.csv"
     )
     manifest_path = (
         REPOSITORY_ROOT
-        / "config"
-        / "empirical"
         / "data"
-        / "liquidation_arrival_pools_manifest.json"
+        / "liquidations"
+        / "model_inputs"
+        / "arrival"
+        / "manifest.json"
     )
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     stats = arrival_pool_statistics(pool)
@@ -114,10 +120,11 @@ def build_diagnostics() -> dict[str, Path]:
                 "rows": len(sequence_pool),
                 "sha256": sha256_file(
                     REPOSITORY_ROOT
-                    / "config"
-                    / "empirical"
                     / "data"
-                    / "liquidation_sequence_pool.csv"
+                    / "liquidations"
+                    / "model_inputs"
+                    / "arrival"
+                    / "sequence_pool.csv"
                 ),
                 "sequence_sensitivity_implemented": False,
             },

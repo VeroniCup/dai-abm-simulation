@@ -49,19 +49,24 @@ from vault_initialisation import initialise_vaults, load_tranche_b_configuration
 
 
 OUTPUT_DIR = REPOSITORY_ROOT / "data" / "processed" / "estimation" / "tranche_c"
-PRIMARY_CONFIG = REPOSITORY_ROOT / "config/empirical/phase2_empirical_market_gas.yaml"
+PRIMARY_CONFIG = REPOSITORY_ROOT / "config/profiles/empirical.yaml"
 CONFIGS = {
-    "primary_168_component_gas": PRIMARY_CONFIG,
-    "block_72_component_gas": REPOSITORY_ROOT
-    / "config/empirical/sensitivity/phase2_empirical_market_gas_block_72.yaml",
-    "block_336_component_gas": REPOSITORY_ROOT
-    / "config/empirical/sensitivity/phase2_empirical_market_gas_block_336.yaml",
-    "q90_component_gas": REPOSITORY_ROOT
-    / "config/empirical/sensitivity/phase2_empirical_market_gas_high_gas_q90.yaml",
-    "zero_inclusive_total_cost": REPOSITORY_ROOT
-    / "config/empirical/sensitivity/phase2_empirical_market_gas_zero_inclusive.yaml",
-    "market_blocks_legacy_gas": REPOSITORY_ROOT
-    / "config/empirical/sensitivity/phase2_empirical_market_blocks_legacy_gas.yaml",
+    "primary_168_component_gas": (),
+    "block_72_component_gas": (
+        REPOSITORY_ROOT / "config/sensitivities/market/block_72h.yaml",
+    ),
+    "block_336_component_gas": (
+        REPOSITORY_ROOT / "config/sensitivities/market/block_336h.yaml",
+    ),
+    "q90_component_gas": (
+        REPOSITORY_ROOT / "config/sensitivities/gas/high_q90.yaml",
+    ),
+    "zero_inclusive_total_cost": (
+        REPOSITORY_ROOT / "config/sensitivities/gas/zero_inclusive.yaml",
+    ),
+    "market_blocks_legacy_gas": (
+        REPOSITORY_ROOT / "config/sensitivities/gas/legacy_scalar.yaml",
+    ),
 }
 
 
@@ -157,8 +162,11 @@ def _market_validation() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
 
 def _gas_validation() -> pd.DataFrame:
     rows = []
-    for label, path in CONFIGS.items():
-        bundle = load_tranche_c_configuration(path)
+    for label, sensitivity_paths in CONFIGS.items():
+        bundle = load_tranche_c_configuration(
+            PRIMARY_CONFIG,
+            sensitivity_paths=sensitivity_paths,
+        )
         if bundle.gas_process.mode == "legacy_scalar":
             result = legacy_scalar_gas()
             rows.append(
@@ -314,7 +322,10 @@ def _run_smoke() -> pd.DataFrame:
         "block_72_component_gas",
         "block_336_component_gas",
     ]:
-        bundle = load_tranche_c_configuration(CONFIGS[label])
+        bundle = load_tranche_c_configuration(
+            PRIMARY_CONFIG,
+            sensitivity_paths=CONFIGS[label],
+        )
         sim = replace(bundle.tranche_b_bundle.base_bundle.simulation_config, n_steps=smoke_horizon)
         init = initialise_vaults(sim, bundle.tranche_b_bundle.initialisation)
         market = generate_empirical_price_paths(
@@ -390,13 +401,13 @@ def main() -> None:
         "status": "complete",
         "configuration": str(PRIMARY_CONFIG.relative_to(REPOSITORY_ROOT)),
         "configuration_sha256": sha256_file(PRIMARY_CONFIG),
-        "market_pool": "config/empirical/data/market_gas_hourly_pool.csv",
+        "market_pool": "data/market/model_inputs/environment_blocks/pool.csv",
         "market_pool_sha256": sha256_file(
-            REPOSITORY_ROOT / "config/empirical/data/market_gas_hourly_pool.csv"
+            REPOSITORY_ROOT / "data/market/model_inputs/environment_blocks/pool.csv"
         ),
-        "liquidation_gas_pool": "config/empirical/data/liquidation_gas_pool.csv",
+        "liquidation_gas_pool": "data/liquidations/model_inputs/keeper_gas/pool.csv",
         "liquidation_gas_pool_sha256": sha256_file(
-            REPOSITORY_ROOT / "config/empirical/data/liquidation_gas_pool.csv"
+            REPOSITORY_ROOT / "data/liquidations/model_inputs/keeper_gas/pool.csv"
         ),
         "ftx_used_for_calibration": False,
         "legacy_gbm_default_changed": False,

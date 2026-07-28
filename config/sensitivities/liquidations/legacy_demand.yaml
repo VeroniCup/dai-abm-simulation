@@ -1,0 +1,8 @@
+sensitivity_name: liquidation_legacy_demand
+description: "Use the established all-eligible liquidation-demand mechanism."
+source_path: config/empirical/sensitivity/phase2_empirical_liquidation_arrivals_legacy_demand.yaml
+source_sha256: ff937b9c928748d187a746e77d5dfd623c587d7fee581ed4c0902f2d9d10ec93
+overrides:
+  liquidation_demand:
+    mode: legacy_all_eligible
+    hurdle_probability: null

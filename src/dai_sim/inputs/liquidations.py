@@ -31,7 +31,12 @@ def sha256_file(path: Path) -> str:
 
 
 DEFAULT_LIQUIDATION_ARRIVAL_POOL_PATH = (
-    REPOSITORY_ROOT / "config" / "empirical" / "data" / "liquidation_arrival_hourly_pool.csv"
+    REPOSITORY_ROOT
+    / "data"
+    / "liquidations"
+    / "model_inputs"
+    / "arrival"
+    / "hourly_pool.csv"
 )
 
 VALID_LIQUIDATION_DEMAND_MODES = {"legacy_all_eligible", "empirical_hurdle_count"}

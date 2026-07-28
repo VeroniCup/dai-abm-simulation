@@ -7,14 +7,19 @@ market blocks and Tranche C gas inputs. It does not alter simulator defaults.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
+import hashlib
 import json
 
 import yaml
 
-from .configuration import REPOSITORY_ROOT, sha256_file
+from .configuration import (
+    REPOSITORY_ROOT,
+    load_configuration_payload,
+    sha256_file,
+)
 from .gas import (
     GasProcessConfig,
     GasProcessResult,
@@ -40,14 +45,12 @@ from .vaults import (
 
 
 DEFAULT_TRANCHE_C_CONFIG_PATH = (
-    REPOSITORY_ROOT / "config" / "empirical" / "phase2_empirical_market_gas.yaml"
+    REPOSITORY_ROOT / "config" / "profiles" / "empirical.yaml"
 )
 DEFAULT_TRANCHE_D_CONFIG_PATH = (
-    REPOSITORY_ROOT
-    / "config"
-    / "empirical"
-    / "phase2_empirical_liquidation_arrivals.yaml"
+    REPOSITORY_ROOT / "config" / "profiles" / "empirical.yaml"
 )
+VALID_SEMANTIC_PROFILE_MODES = {"legacy", "empirical", "empirical_stress"}
 
 
 @dataclass(frozen=True)
@@ -227,19 +230,22 @@ def _deep_merge(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any
 
 def load_tranche_c_configuration(
     path: Path | str = DEFAULT_TRANCHE_C_CONFIG_PATH,
+    *,
+    sensitivity_paths: tuple[Path | str, ...] = (),
 ) -> TrancheCConfigurationBundle:
     """Load and validate the explicit Tranche C configuration."""
-    config_path = Path(path)
-    raw = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
+    config_path = Path(path).resolve()
+    raw = load_configuration_payload(config_path, sensitivity_paths)
     if not isinstance(raw, dict):
         raise ValueError("Tranche C configuration must be a mapping.")
-    if raw.get("mode") != "empirical_tranche_c":
-        raise ValueError("Tranche C mode must be empirical_tranche_c.")
+    if raw.get("mode") not in {"empirical_tranche_c"} | VALID_SEMANTIC_PROFILE_MODES:
+        raise ValueError("Tranche C mode must be semantic or empirical_tranche_c.")
 
     base_payload = dict(raw)
     base_payload["mode"] = "empirical_tranche_b"
     base_payload.pop("market_process", None)
     base_payload.pop("gas_process", None)
+    base_payload.pop("liquidation_demand", None)
     temporary = config_path.with_suffix(".base_for_validation.yaml")
     try:
         temporary.write_text(yaml.safe_dump(base_payload, sort_keys=False), encoding="utf-8")
@@ -260,10 +266,12 @@ def load_tranche_c_configuration(
 
 def load_tranche_d_configuration(
     path: Path | str = DEFAULT_TRANCHE_D_CONFIG_PATH,
+    *,
+    sensitivity_paths: tuple[Path | str, ...] = (),
 ) -> TrancheDConfigurationBundle:
-    """Load and validate the explicit Tranche D configuration."""
-    config_path = Path(path)
-    raw = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
+    """Load a complete profile with optional explicit ordered sensitivities."""
+    config_path = Path(path).resolve()
+    raw = load_configuration_payload(config_path, sensitivity_paths)
     if not isinstance(raw, dict):
         raise ValueError("Tranche D configuration must be a mapping.")
     if "base_config" in raw:
@@ -276,8 +284,8 @@ def load_tranche_d_configuration(
         override = dict(raw)
         override.pop("base_config")
         raw = _deep_merge(base_raw, override)
-    if raw.get("mode") != "empirical_tranche_d":
-        raise ValueError("Tranche D mode must be empirical_tranche_d.")
+    if raw.get("mode") not in {"empirical_tranche_d"} | VALID_SEMANTIC_PROFILE_MODES:
+        raise ValueError("Tranche D mode must be semantic or empirical_tranche_d.")
 
     base_payload = dict(raw)
     base_payload["mode"] = "empirical_tranche_c"
@@ -297,6 +305,71 @@ def load_tranche_d_configuration(
         tranche_c_bundle=tranche_c_bundle,
         liquidation_demand=_parse_liquidation_demand(raw.get("liquidation_demand")),
     )
+
+
+def load_configuration_profile(
+    path: Path | str = DEFAULT_TRANCHE_D_CONFIG_PATH,
+    *,
+    sensitivity_paths: tuple[Path | str, ...] = (),
+) -> TrancheDConfigurationBundle:
+    """Load and fully validate one semantic profile and explicit overrides."""
+    return load_tranche_d_configuration(
+        path,
+        sensitivity_paths=sensitivity_paths,
+    )
+
+
+def _canonical_value(value: Any) -> Any:
+    """Normalise loaded values for behaviour-only configuration comparison."""
+    if isinstance(value, Path):
+        return "<repository-relative-path>"
+    if isinstance(value, dict):
+        return {
+            str(key): _canonical_value(item)
+            for key, item in sorted(value.items(), key=lambda pair: str(pair[0]))
+        }
+    if isinstance(value, (list, tuple)):
+        return [_canonical_value(item) for item in value]
+    return value
+
+
+def configuration_behaviour_payload(
+    bundle: TrancheDConfigurationBundle,
+) -> dict[str, Any]:
+    """Return the complete loaded runtime configuration without path metadata."""
+    tranche_c = bundle.tranche_c_bundle
+    tranche_b = tranche_c.tranche_b_bundle
+    base = tranche_b.base_bundle
+    simulation = asdict(base.simulation_config)
+    portfolio = simulation.get("collateral_portfolio")
+    if isinstance(portfolio, dict):
+        portfolio = dict(portfolio)
+        portfolio.pop("name", None)
+        simulation["collateral_portfolio"] = portfolio
+    return _canonical_value(
+        {
+            "simulation": simulation,
+            "liquidation": asdict(base.liquidation_config),
+            "confidence": asdict(base.confidence_config),
+            "dai_market": asdict(base.dai_market_config),
+            "vault_initialisation": asdict(tranche_b.initialisation),
+            "market_process": asdict(tranche_c.market_process),
+            "gas_process": asdict(tranche_c.gas_process),
+            "liquidation_demand": asdict(bundle.liquidation_demand),
+        }
+    )
+
+
+def configuration_behaviour_sha256(
+    bundle: TrancheDConfigurationBundle,
+) -> str:
+    """Hash the stable canonical representation of loaded runtime behaviour."""
+    encoded = json.dumps(
+        configuration_behaviour_payload(bundle),
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
 
 
 def generate_environment_inputs(

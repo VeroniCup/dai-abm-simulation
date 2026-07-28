@@ -1,0 +1,8 @@
+sensitivity_name: vault_parametric_truncated
+description: "Use the bounded truncated-parametric vault initialiser."
+source_path: config/empirical/sensitivity/phase2_empirical_parametric_truncated.yaml
+source_sha256: 9b0f3ed3db91e3621e89d58f8173547c5e3ede08ea44e1519dcaa07913bcd621
+overrides:
+  vault_initialisation:
+    mode: parametric_truncated
+    by_ilk: false

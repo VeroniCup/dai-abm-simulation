@@ -93,13 +93,23 @@ def test_runtime_pool_reproduces_phase2c_counts() -> None:
     )
     assert sha256_file(DEFAULT_LIQUIDATION_ARRIVAL_POOL_PATH) == ARRIVAL_POOL_SHA
     assert sha256_file(
-        REPOSITORY_ROOT / "config/empirical/data/liquidation_sequence_pool.csv"
+        REPOSITORY_ROOT
+        / "data"
+        / "liquidations"
+        / "model_inputs"
+        / "arrival"
+        / "sequence_pool.csv"
     ) == SEQUENCE_POOL_SHA
 
 
 def test_sequence_pool_reproduces_54_sequences() -> None:
     sequence = pd.read_csv(
-        REPOSITORY_ROOT / "config/empirical/data/liquidation_sequence_pool.csv"
+        REPOSITORY_ROOT
+        / "data"
+        / "liquidations"
+        / "model_inputs"
+        / "arrival"
+        / "sequence_pool.csv"
     )
     assert len(sequence) == 54
     assert int(sequence["sequence_size"].sum()) == 649
@@ -340,16 +350,22 @@ def test_tranche_d_configuration_loads_and_preserves_tranche_c_pools() -> None:
 
 def test_tranche_d_sensitivity_base_config_overrides() -> None:
     lower = load_tranche_d_configuration(
-        REPOSITORY_ROOT
-        / "config/empirical/sensitivity/phase2_empirical_liquidation_arrivals_hurdle_lower.yaml"
+        DEFAULT_TRANCHE_D_CONFIG_PATH,
+        sensitivity_paths=(
+            REPOSITORY_ROOT / "config/sensitivities/liquidations/hurdle_low.yaml",
+        ),
     )
     capacity = load_tranche_d_configuration(
-        REPOSITORY_ROOT
-        / "config/empirical/sensitivity/phase2_empirical_liquidation_arrivals_capacity_lower.yaml"
+        DEFAULT_TRANCHE_D_CONFIG_PATH,
+        sensitivity_paths=(
+            REPOSITORY_ROOT / "config/sensitivities/liquidations/capacity_low.yaml",
+        ),
     )
     legacy = load_tranche_d_configuration(
-        REPOSITORY_ROOT
-        / "config/empirical/sensitivity/phase2_empirical_liquidation_arrivals_legacy_demand.yaml"
+        DEFAULT_TRANCHE_D_CONFIG_PATH,
+        sensitivity_paths=(
+            REPOSITORY_ROOT / "config/sensitivities/liquidations/legacy_demand.yaml",
+        ),
     )
     assert lower.liquidation_demand.hurdle_probability == pytest.approx(
         0.2608695652173913,

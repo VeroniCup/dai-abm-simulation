@@ -1,0 +1,7 @@
+sensitivity_name: liquidation_hurdle_low
+description: "Use the lower observed liquidation-initiation hurdle probability."
+source_path: config/empirical/sensitivity/phase2_empirical_liquidation_arrivals_hurdle_lower.yaml
+source_sha256: 0067069aaec27f45d1f0899649cb3efb7e11dfe3d0a6bf5db4a83287231a4ffd
+overrides:
+  liquidation_demand:
+    hurdle_probability: 0.2608695652173913

@@ -4,7 +4,7 @@
 bundle_name: phase2_empirical_legacy_gaussian
 mode: empirical_tranche_b
 description: "Tranche B compatibility smoke bundle retaining Gaussian vault initialisation."
-source_manifest: config/empirical/tranche_a_manifest.json
+source_manifest: data/protocol/provenance/parameter_adoption/manifest.json
 
 simulation:
   n_vaults: 500

@@ -19,7 +19,7 @@
     "target_normalised_block_utilisation"
   ],
   "notes": "Compact runtime pool for aligned ETH/WBTC hourly log returns and hourly network gas-price conditions. No DAI path is used as an exogenous simulation input.",
-  "output_path": "config/empirical/data/market_gas_hourly_pool.csv",
+  "output_path": "data/market/model_inputs/environment_blocks/pool.csv",
   "output_sha256": "b69276801bacf789f8ae91789983cc98a8a6d42d0a992940c0bcfa109ca25b7d",
   "return_type": "hourly_log_return",
   "rows": 27024,

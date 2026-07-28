@@ -24,6 +24,7 @@ from dai_sim.model.vault import Vault, create_vault_from_target_cr, vaults_to_da
 
 from .configuration import (
     REPOSITORY_ROOT,
+    load_configuration_payload,
     load_empirical_configuration_bundle,
     sha256_file,
     verify_adoption_review_checksums,
@@ -31,17 +32,23 @@ from .configuration import (
 
 
 DEFAULT_POOL_PATH = (
-    REPOSITORY_ROOT / "config" / "empirical" / "data" / "vault_initialisation_pools.csv"
+    REPOSITORY_ROOT
+    / "data"
+    / "vaults"
+    / "model_inputs"
+    / "initialisation"
+    / "pool.csv"
 )
 DEFAULT_POOL_MANIFEST = (
     REPOSITORY_ROOT
-    / "config"
-    / "empirical"
     / "data"
-    / "vault_initialisation_pools_manifest.json"
+    / "vaults"
+    / "model_inputs"
+    / "initialisation"
+    / "manifest.json"
 )
 DEFAULT_TRANCHE_B_CONFIG_PATH = (
-    REPOSITORY_ROOT / "config" / "empirical" / "phase2_empirical_distributional.yaml"
+    REPOSITORY_ROOT / "config" / "profiles" / "empirical.yaml"
 )
 
 VALID_MODES = {"legacy_gaussian", "parametric_truncated", "empirical_joint"}
@@ -237,20 +244,29 @@ def _parse_initialisation(raw: dict[str, Any] | None) -> VaultInitialisationConf
 
 def load_tranche_b_configuration(
     path: Path | str = DEFAULT_TRANCHE_B_CONFIG_PATH,
+    *,
+    sensitivity_paths: tuple[Path | str, ...] = (),
 ) -> TrancheBConfigurationBundle:
     """Load the explicit Tranche B configuration bundle."""
     verify_adoption_review_checksums()
-    config_path = Path(path)
-    with config_path.open(encoding="utf-8") as handle:
-        raw = yaml.safe_load(handle) or {}
+    config_path = Path(path).resolve()
+    raw = load_configuration_payload(config_path, sensitivity_paths)
     if not isinstance(raw, dict):
         raise ValueError("Tranche B configuration must be a mapping.")
-    if raw.get("mode") != "empirical_tranche_b":
-        raise ValueError("Tranche B mode must be empirical_tranche_b.")
+    if raw.get("mode") not in {
+        "empirical_tranche_b",
+        "legacy",
+        "empirical",
+        "empirical_stress",
+    }:
+        raise ValueError("Tranche B mode must be semantic or empirical_tranche_b.")
 
     base_payload = dict(raw)
     base_payload["mode"] = "empirical_tranche_a"
     base_payload.pop("vault_initialisation", None)
+    base_payload.pop("market_process", None)
+    base_payload.pop("gas_process", None)
+    base_payload.pop("liquidation_demand", None)
     temporary = config_path.with_suffix(".base_for_validation.yaml")
     try:
         temporary.write_text(yaml.safe_dump(base_payload, sort_keys=False), encoding="utf-8")

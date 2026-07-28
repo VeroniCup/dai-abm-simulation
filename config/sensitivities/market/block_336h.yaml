@@ -1,0 +1,7 @@
+sensitivity_name: market_block_336h
+description: "Use 336-hour aligned empirical market blocks."
+source_path: config/empirical/sensitivity/phase2_empirical_market_gas_block_336.yaml
+source_sha256: 51cec3562371742440a026fddbd7cde8ce8ae3c7b57695ebd94db49d3a7968fe
+overrides:
+  market_process:
+    block_length_hours: 336

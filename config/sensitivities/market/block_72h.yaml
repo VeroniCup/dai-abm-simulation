@@ -1,0 +1,7 @@
+sensitivity_name: market_block_72h
+description: "Use 72-hour aligned empirical market blocks."
+source_path: config/empirical/sensitivity/phase2_empirical_market_gas_block_72.yaml
+source_sha256: 12fe1a3123b745404588d5c11ae56f8513bb0cf2693b8cb6ad78e151962a4120
+overrides:
+  market_process:
+    block_length_hours: 72

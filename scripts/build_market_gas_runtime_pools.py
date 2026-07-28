@@ -16,13 +16,18 @@ import pandas as pd
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
-OUTPUT_DIR = REPOSITORY_ROOT / "config" / "empirical" / "data"
+MARKET_OUTPUT_DIR = (
+    REPOSITORY_ROOT / "data" / "market" / "model_inputs" / "environment_blocks"
+)
+LIQUIDATION_OUTPUT_DIR = (
+    REPOSITORY_ROOT / "data" / "liquidations" / "model_inputs" / "keeper_gas"
+)
 AUDIT_DIR = REPOSITORY_ROOT / "data" / "processed" / "estimation" / "tranche_c"
 
-MARKET_GAS_OUTPUT = OUTPUT_DIR / "market_gas_hourly_pool.csv"
-MARKET_GAS_MANIFEST = OUTPUT_DIR / "market_gas_hourly_pool_manifest.json"
-LIQUIDATION_GAS_OUTPUT = OUTPUT_DIR / "liquidation_gas_pool.csv"
-LIQUIDATION_GAS_MANIFEST = OUTPUT_DIR / "liquidation_gas_pool_manifest.json"
+MARKET_GAS_OUTPUT = MARKET_OUTPUT_DIR / "pool.csv"
+MARKET_GAS_MANIFEST = MARKET_OUTPUT_DIR / "manifest.json"
+LIQUIDATION_GAS_OUTPUT = LIQUIDATION_OUTPUT_DIR / "pool.csv"
+LIQUIDATION_GAS_MANIFEST = LIQUIDATION_OUTPUT_DIR / "manifest.json"
 
 SOURCE_CHECKSUMS = {
     "data/processed/combined/hourly_market_gas_panel.csv": (
@@ -263,7 +268,8 @@ def _write_csv(frame: pd.DataFrame, path: Path) -> None:
 
 def write_outputs() -> None:
     """Build and write all Tranche C runtime pools and manifests."""
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    MARKET_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    LIQUIDATION_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     AUDIT_DIR.mkdir(parents=True, exist_ok=True)
     checksums = verify_source_checksums()
 

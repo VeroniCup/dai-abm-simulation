@@ -1,9 +1,8 @@
-"""
-Opt-in empirical configuration bundle loading for Phase 2 Tranche A.
+"""Semantic configuration profiles and explicit sensitivity overrides.
 
-This module deliberately leaves the legacy experiment factories untouched.
-It validates a separate YAML bundle and converts only audited, compatible
-configuration-ready candidates into existing simulator dataclasses.
+Legacy experiment factories remain untouched. Complete profiles are loaded
+only when requested, while partial sensitivities are applied explicitly and in
+caller-supplied order.
 """
 
 from __future__ import annotations
@@ -26,9 +25,20 @@ from dai_sim.model.simulation import SimulationConfig
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_EMPIRICAL_CONFIG_PATH = (
-    REPOSITORY_ROOT / "config" / "empirical" / "phase2_empirical_baseline.yaml"
+    REPOSITORY_ROOT / "config" / "profiles" / "empirical.yaml"
 )
-DEFAULT_MANIFEST_PATH = REPOSITORY_ROOT / "config" / "empirical" / "tranche_a_manifest.json"
+DEFAULT_LEGACY_CONFIG_PATH = REPOSITORY_ROOT / "config" / "profiles" / "legacy.yaml"
+DEFAULT_EMPIRICAL_STRESS_CONFIG_PATH = (
+    REPOSITORY_ROOT / "config" / "profiles" / "empirical_stress.yaml"
+)
+DEFAULT_MANIFEST_PATH = (
+    REPOSITORY_ROOT
+    / "data"
+    / "protocol"
+    / "provenance"
+    / "parameter_adoption"
+    / "manifest.json"
+)
 
 EXPECTED_ADOPTION_REVIEW_CHECKSUMS = {
     "data/processed/estimation/adoption_review/parameter_adoption_matrix.csv": (
@@ -66,17 +76,85 @@ SUPPORTED_BUNDLE_KEYS = {
     "collateral_portfolio",
     "liquidation",
     "confidence",
+    "dai_market",
+    "vault_initialisation",
+    "market_process",
+    "gas_process",
+    "liquidation_demand",
     "provenance",
 }
-SUPPORTED_SIMULATION_KEYS = {"n_vaults"}
+SUPPORTED_SIMULATION_KEYS = {
+    "n_steps",
+    "n_vaults",
+    "initial_eth_price",
+    "liquidation_ratio",
+    "oracle_delay_steps",
+    "debt_mean",
+    "debt_std",
+    "collateral_ratio_mean",
+    "collateral_ratio_std",
+    "random_seed",
+}
 SUPPORTED_PORTFOLIO_KEYS = {"name", "target_debt_shares", "compatibility_defaults"}
 SUPPORTED_COMPATIBILITY_KEYS = {"initial_prices"}
-SUPPORTED_LIQUIDATION_KEYS = {"max_close_factor", "max_liquidations_per_step"}
+SUPPORTED_LIQUIDATION_KEYS = {
+    "liquidation_penalty",
+    "gas_cost",
+    "risk_cost_rate",
+    "max_close_factor",
+    "max_liquidations_per_step",
+}
 SUPPORTED_CONFIDENCE_KEYS = {
     "normal_lower_price",
     "normal_upper_price",
     "stress_lower_price",
     "max_normal_liquidatable_share",
+    "max_stress_liquidatable_share",
+    "bad_debt_panic_threshold",
+    "normal_confidence",
+    "stress_confidence",
+    "panic_confidence",
+    "panic_selling_multiplier",
+}
+SUPPORTED_DAI_MARKET_KEYS = {
+    "peg_price",
+    "price_adjustment_speed",
+    "arbitrage_strength",
+    "above_peg_supply_strength",
+    "panic_strength",
+    "noise_std",
+    "min_price",
+    "max_price",
+    "enable_peg_recovery",
+    "arbitrage_recovery_strength",
+    "policy_feedback_strength",
+    "bad_debt_recovery_drag",
+    "min_recovery_confidence",
+}
+SEMANTIC_PROFILE_MODES = {"legacy", "empirical", "empirical_stress"}
+COMPATIBILITY_PROFILE_MODES = {
+    "empirical_tranche_a",
+    "empirical_tranche_b",
+    "empirical_tranche_c",
+    "empirical_tranche_d",
+}
+SENSITIVITY_METADATA_KEYS = {
+    "sensitivity_name",
+    "description",
+    "source_path",
+    "source_sha256",
+    "overrides",
+}
+OVERRIDABLE_PROFILE_KEYS = {
+    "simulation",
+    "collateral_portfolio",
+    "liquidation",
+    "confidence",
+    "dai_market",
+    "vault_initialisation",
+    "market_process",
+    "gas_process",
+    "liquidation_demand",
 }
 
 
@@ -87,8 +165,8 @@ class EmpiricalConfigurationBundle:
     bundle_name: str
     config_path: Path
     config_sha256: str
-    manifest_path: Path
-    manifest_sha256: str
+    manifest_path: Path | None
+    manifest_sha256: str | None
     simulation_config: SimulationConfig
     liquidation_config: LiquidationConfig
     confidence_config: ConfidenceConfig
@@ -163,12 +241,19 @@ def _build_portfolio(raw: dict[str, Any]) -> CollateralPortfolioConfig:
     _reject_unknown_keys(defaults, SUPPORTED_COMPATIBILITY_KEYS, "compatibility_defaults")
     initial_prices = _require_mapping(defaults.get("initial_prices"), "initial_prices")
 
-    if set(shares) != {"ETH", "BTC"}:
-        raise ValueError("Tranche A target_debt_shares must contain ETH and BTC.")
+    collateral_names = tuple(shares)
+    if not collateral_names or not set(collateral_names).issubset({"ETH", "BTC"}):
+        raise ValueError(
+            "target_debt_shares must contain one or both of ETH and BTC."
+        )
+    if set(initial_prices) != set(shares):
+        raise ValueError(
+            "compatibility initial_prices must match target_debt_shares."
+        )
 
     total_share = 0.0
     collaterals: list[CollateralConfig] = []
-    for collateral_name in ("ETH", "BTC"):
+    for collateral_name in collateral_names:
         share = float(shares[collateral_name])
         price = float(initial_prices[collateral_name])
         _validate_probability(share, f"{collateral_name} target_debt_share")
@@ -186,7 +271,7 @@ def _build_portfolio(raw: dict[str, Any]) -> CollateralPortfolioConfig:
 
     if abs(total_share - 1.0) > 1e-9:
         raise ValueError(
-            "Tranche A target debt shares must sum to 1.0; "
+            "Target debt shares must sum to 1.0; "
             f"received {total_share:.12f}."
         )
 
@@ -199,10 +284,31 @@ def _build_simulation_config(
     base: SimulationConfig,
 ) -> SimulationConfig:
     _reject_unknown_keys(raw, SUPPORTED_SIMULATION_KEYS, "simulation")
-    n_vaults = int(raw["n_vaults"])
+    n_vaults = int(raw.get("n_vaults", base.n_vaults))
     if n_vaults <= 0:
         raise ValueError("n_vaults must be positive.")
-    config = replace(base, n_vaults=n_vaults, collateral_portfolio=portfolio)
+    config = replace(
+        base,
+        n_steps=int(raw.get("n_steps", base.n_steps)),
+        n_vaults=n_vaults,
+        initial_eth_price=float(raw.get("initial_eth_price", base.initial_eth_price)),
+        liquidation_ratio=float(raw.get("liquidation_ratio", base.liquidation_ratio)),
+        oracle_delay_steps=int(raw.get("oracle_delay_steps", base.oracle_delay_steps)),
+        debt_mean=float(raw.get("debt_mean", base.debt_mean)),
+        debt_std=float(raw.get("debt_std", base.debt_std)),
+        collateral_ratio_mean=float(
+            raw.get("collateral_ratio_mean", base.collateral_ratio_mean)
+        ),
+        collateral_ratio_std=float(
+            raw.get("collateral_ratio_std", base.collateral_ratio_std)
+        ),
+        random_seed=(
+            None
+            if raw.get("random_seed", base.random_seed) is None
+            else int(raw.get("random_seed", base.random_seed))
+        ),
+        collateral_portfolio=portfolio,
+    )
     config.validate()
     return config
 
@@ -215,9 +321,16 @@ def _build_liquidation_config(
     max_liquidations = raw.get("max_liquidations_per_step")
     config = replace(
         base,
-        max_close_factor=float(raw["max_close_factor"]),
+        liquidation_penalty=float(
+            raw.get("liquidation_penalty", base.liquidation_penalty)
+        ),
+        gas_cost=float(raw.get("gas_cost", base.gas_cost)),
+        risk_cost_rate=float(raw.get("risk_cost_rate", base.risk_cost_rate)),
+        max_close_factor=float(raw.get("max_close_factor", base.max_close_factor)),
         max_liquidations_per_step=(
-            None if max_liquidations is None else int(max_liquidations)
+            base.max_liquidations_per_step
+            if "max_liquidations_per_step" not in raw
+            else (None if max_liquidations is None else int(max_liquidations))
         ),
     )
     config.validate()
@@ -235,9 +348,138 @@ def _build_confidence_config(
         normal_upper_price=float(raw["normal_upper_price"]),
         stress_lower_price=float(raw["stress_lower_price"]),
         max_normal_liquidatable_share=float(raw["max_normal_liquidatable_share"]),
+        max_stress_liquidatable_share=float(
+            raw.get(
+                "max_stress_liquidatable_share",
+                base.max_stress_liquidatable_share,
+            )
+        ),
+        bad_debt_panic_threshold=float(
+            raw.get("bad_debt_panic_threshold", base.bad_debt_panic_threshold)
+        ),
+        normal_confidence=float(raw.get("normal_confidence", base.normal_confidence)),
+        stress_confidence=float(raw.get("stress_confidence", base.stress_confidence)),
+        panic_confidence=float(raw.get("panic_confidence", base.panic_confidence)),
+        panic_selling_multiplier=float(
+            raw.get("panic_selling_multiplier", base.panic_selling_multiplier)
+        ),
     )
     config.validate()
     return config
+
+
+def _build_dai_market_config(
+    raw: dict[str, Any] | None,
+    base: DAIMarketConfig,
+) -> DAIMarketConfig:
+    if raw is None:
+        base.validate()
+        return base
+    _reject_unknown_keys(raw, SUPPORTED_DAI_MARKET_KEYS, "dai_market")
+    values = {
+        key: raw.get(key, getattr(base, key))
+        for key in SUPPORTED_DAI_MARKET_KEYS
+    }
+    config = replace(
+        base,
+        peg_price=float(values["peg_price"]),
+        price_adjustment_speed=float(values["price_adjustment_speed"]),
+        arbitrage_strength=float(values["arbitrage_strength"]),
+        above_peg_supply_strength=float(values["above_peg_supply_strength"]),
+        panic_strength=float(values["panic_strength"]),
+        noise_std=float(values["noise_std"]),
+        min_price=float(values["min_price"]),
+        max_price=float(values["max_price"]),
+        enable_peg_recovery=bool(values["enable_peg_recovery"]),
+        arbitrage_recovery_strength=float(values["arbitrage_recovery_strength"]),
+        policy_feedback_strength=float(values["policy_feedback_strength"]),
+        bad_debt_recovery_drag=float(values["bad_debt_recovery_drag"]),
+        min_recovery_confidence=float(values["min_recovery_confidence"]),
+    )
+    config.validate()
+    return config
+
+
+def _load_yaml_mapping(path: Path | str, context: str) -> dict[str, Any]:
+    resolved = Path(path)
+    with resolved.open(encoding="utf-8") as handle:
+        payload = yaml.safe_load(handle) or {}
+    if not isinstance(payload, dict):
+        raise ValueError(f"{context} must be a mapping.")
+    return payload
+
+
+def _merge_override(base: Any, override: Any, path: tuple[str, ...] = ()) -> Any:
+    """Merge an explicit override, rejecting mapping/list type conflicts."""
+    location = ".".join(path) or "<root>"
+    if isinstance(base, dict):
+        if not isinstance(override, dict):
+            raise ValueError(f"Type conflict at {location}: mapping required.")
+        result = dict(base)
+        for key, value in override.items():
+            child_path = path + (str(key),)
+            result[key] = (
+                _merge_override(result[key], value, child_path)
+                if key in result
+                else value
+            )
+        return result
+    if isinstance(override, dict):
+        raise ValueError(f"Type conflict at {location}: scalar or list required.")
+    if isinstance(base, list) != isinstance(override, list):
+        if isinstance(base, list) or isinstance(override, list):
+            raise ValueError(f"Type conflict at {location}: list shape differs.")
+    return override
+
+
+def apply_configuration_overrides(
+    profile: dict[str, Any],
+    sensitivities: list[dict[str, Any]] | tuple[dict[str, Any], ...],
+) -> dict[str, Any]:
+    """Apply validated partial sensitivities in explicit caller order."""
+    if not isinstance(profile, dict):
+        raise ValueError("Complete profile must be a mapping.")
+    result = dict(profile)
+    for index, sensitivity in enumerate(sensitivities):
+        if not isinstance(sensitivity, dict):
+            raise ValueError(f"Sensitivity {index} must be a mapping.")
+        _reject_unknown_keys(
+            sensitivity,
+            SENSITIVITY_METADATA_KEYS,
+            f"sensitivity {index}",
+        )
+        overrides = sensitivity.get("overrides")
+        if not isinstance(overrides, dict) or not overrides:
+            raise ValueError(f"Sensitivity {index} overrides must be a non-empty mapping.")
+        unknown = set(overrides) - OVERRIDABLE_PROFILE_KEYS
+        if unknown:
+            raise ValueError(
+                f"Sensitivity {index} contains unsupported override keys: "
+                f"{sorted(unknown)}."
+            )
+        result = _merge_override(result, overrides)
+    return result
+
+
+def load_configuration_payload(
+    profile_path: Path | str,
+    sensitivity_paths: tuple[Path | str, ...] = (),
+) -> dict[str, Any]:
+    """Load one complete profile and explicit semantic sensitivity files."""
+    profile = _load_yaml_mapping(profile_path, "Configuration profile")
+    sensitivities: list[dict[str, Any]] = []
+    for path in sensitivity_paths:
+        sensitivity = _load_yaml_mapping(path, "Configuration sensitivity")
+        source_path = sensitivity.get("source_path")
+        source_sha256 = sensitivity.get("source_sha256")
+        if not isinstance(source_path, str) or not isinstance(source_sha256, str):
+            raise ValueError("Sensitivity source_path and source_sha256 are required.")
+        if len(source_sha256) != 64 or any(
+            character not in "0123456789abcdef" for character in source_sha256
+        ):
+            raise ValueError("Sensitivity source_sha256 must be a lowercase SHA-256.")
+        sensitivities.append(sensitivity)
+    return apply_configuration_overrides(profile, sensitivities)
 
 
 def load_empirical_configuration_bundle(
@@ -255,23 +497,26 @@ def load_empirical_configuration_bundle(
     Missing simulator fields inherit supplied base objects or dataclass
     defaults. No default experiment path calls this function.
     """
-    config_path = Path(path)
+    config_path = Path(path).resolve()
     if verify_registry_checksums:
         verify_adoption_review_checksums()
 
-    with config_path.open(encoding="utf-8") as handle:
-        raw = yaml.safe_load(handle) or {}
-    if not isinstance(raw, dict):
-        raise ValueError("Empirical configuration must be a mapping.")
+    raw = _load_yaml_mapping(config_path, "Empirical configuration")
     _reject_unknown_keys(raw, SUPPORTED_BUNDLE_KEYS, "bundle")
 
     bundle_name = str(raw.get("bundle_name", "")).strip()
-    if not bundle_name.startswith("phase2_empirical_"):
-        raise ValueError("Tranche A bundle_name must start with phase2_empirical_.")
-    if raw.get("mode") != "empirical_tranche_a":
-        raise ValueError("Tranche A mode must be empirical_tranche_a.")
+    mode = str(raw.get("mode", "")).strip()
+    if mode not in SEMANTIC_PROFILE_MODES | COMPATIBILITY_PROFILE_MODES:
+        raise ValueError(f"Unsupported configuration profile mode: {mode}.")
+    if not bundle_name:
+        raise ValueError("Configuration bundle_name must not be empty.")
 
-    manifest_path = REPOSITORY_ROOT / str(raw["source_manifest"])
+    source_manifest = raw.get("source_manifest")
+    manifest_path = (
+        None
+        if source_manifest is None
+        else REPOSITORY_ROOT / str(source_manifest)
+    )
     portfolio = _build_portfolio(
         _require_mapping(raw.get("collateral_portfolio"), "collateral_portfolio")
     )
@@ -288,15 +533,19 @@ def load_empirical_configuration_bundle(
         _require_mapping(raw.get("confidence"), "confidence"),
         base=base_confidence_config or ConfidenceConfig(),
     )
-    dai_market = base_dai_market_config or DAIMarketConfig()
-    dai_market.validate()
+    dai_market = _build_dai_market_config(
+        raw.get("dai_market"),
+        base_dai_market_config or DAIMarketConfig(),
+    )
 
     return EmpiricalConfigurationBundle(
         bundle_name=bundle_name,
         config_path=config_path,
         config_sha256=sha256_file(config_path),
         manifest_path=manifest_path,
-        manifest_sha256=sha256_file(manifest_path),
+        manifest_sha256=(
+            None if manifest_path is None else sha256_file(manifest_path)
+        ),
         simulation_config=simulation,
         liquidation_config=liquidation,
         confidence_config=confidence,
@@ -316,7 +565,11 @@ def empirical_run_provenance(
         "configuration_bundle_name": bundle.bundle_name,
         "configuration_file": str(bundle.config_path.relative_to(REPOSITORY_ROOT)),
         "configuration_sha256": bundle.config_sha256,
-        "candidate_manifest": str(bundle.manifest_path.relative_to(REPOSITORY_ROOT)),
+        "candidate_manifest": (
+            None
+            if bundle.manifest_path is None
+            else str(bundle.manifest_path.relative_to(REPOSITORY_ROOT))
+        ),
         "candidate_manifest_sha256": bundle.manifest_sha256,
         "seed": seed,
         "experiment_name": experiment_name,
@@ -328,5 +581,5 @@ def manifest_records(path: Path | str = DEFAULT_MANIFEST_PATH) -> dict[str, Any]
     with Path(path).open(encoding="utf-8") as handle:
         payload = json.load(handle)
     if payload.get("bundle_name") != "phase2_empirical_baseline":
-        raise ValueError("Unexpected Tranche A manifest bundle name.")
+        raise ValueError("Unexpected parameter-adoption manifest bundle name.")
     return payload

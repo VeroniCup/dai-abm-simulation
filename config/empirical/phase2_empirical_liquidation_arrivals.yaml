@@ -6,7 +6,7 @@
 bundle_name: phase2_empirical_liquidation_arrivals
 mode: empirical_tranche_d
 description: "Opt-in Tranche D empirical liquidation-arrival demand under Tranche C environment inputs."
-source_manifest: config/empirical/tranche_a_manifest.json
+source_manifest: data/protocol/provenance/parameter_adoption/manifest.json
 
 simulation:
   n_vaults: 500
@@ -35,7 +35,7 @@ vault_initialisation:
   mode: empirical_joint
   seed: 20260726
   regime: normal
-  pool_path: config/empirical/data/vault_initialisation_pools.csv
+  pool_path: data/vaults/model_inputs/initialisation/pool.csv
   pool_sha256: 5230a30aa2c2aebe69ef859ccdcbb785eb44f20a691b431f2fd01b0d16558892
   fallback: parametric_truncated
   by_ilk: true
@@ -67,7 +67,7 @@ vault_initialisation:
 
 market_process:
   mode: empirical_block_bootstrap
-  pool_path: config/empirical/data/market_gas_hourly_pool.csv
+  pool_path: data/market/model_inputs/environment_blocks/pool.csv
   pool_sha256: b69276801bacf789f8ae91789983cc98a8a6d42d0a992940c0bcfa109ca25b7d
   pool_label: all_calibration
   block_length_hours: 168
@@ -79,7 +79,7 @@ market_process:
 
 gas_process:
   mode: empirical_components
-  pool_path: config/empirical/data/liquidation_gas_pool.csv
+  pool_path: data/liquidations/model_inputs/keeper_gas/pool.csv
   pool_sha256: 37a5f49f4cc273b9d0d9526609be7f14b91b78939acf26e4dce00b66443e1594
   seed: 20260728
   alignment_mode: shared_market_gas
@@ -90,7 +90,7 @@ gas_process:
 
 liquidation_demand:
   mode: empirical_hurdle_count
-  pool_path: config/empirical/data/liquidation_arrival_hourly_pool.csv
+  pool_path: data/liquidations/model_inputs/arrival/hourly_pool.csv
   pool_sha256: cc29435bb0434237aba438ee98bded77f086704c7400bb5016e2b58703258c8a
   seed: 20260729
   hurdle_probability: 0.34782608695652173

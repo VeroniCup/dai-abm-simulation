@@ -1,0 +1,42 @@
+# Protocol, vault and liquidation empirical-data configuration.
+# Null values must be supplied for a real baseline run.
+
+output_mode: baseline
+manifest_path: data/provenance/manifests/data_manifest.csv
+collateral_mapping_path: config/protocol/collateral_types.csv
+processed_data_dir: data/processed
+vault_ratio_tolerance: 1.0e-6
+liquidation_summary_frequency: "1D"
+
+# Numeric columns require explicit source and target units. If they differ,
+# configure unit_conversion: {operation: multiply, factor: ...}.
+protocol_files:
+  - name: null
+    path: null
+    timestamp_column: null
+    source_timezone: null
+    collateral_type_column: null
+    duplicate_aggregation: null
+    resample_frequency: null
+    resample_aggregation: null
+    columns: {}
+
+vault_files:
+  - name: null
+    path: null
+    timestamp_column: null
+    source_timezone: null
+    collateral_type_column: null
+    record_id_column: null
+    columns: {}
+
+liquidation_files:
+  - name: null
+    path: null
+    timestamp_column: null
+    source_timezone: null
+    collateral_type_column: null
+    record_id_column: null
+    vault_id_column: null
+    successful_column: null
+    columns: {}

@@ -15,7 +15,7 @@
   ],
   "event_type": "clean_successful_take_transaction",
   "notes": "Primary pool excludes four observed zero gas-price/cost transactions; zero-inclusive sensitivity retains them.",
-  "output_path": "config/empirical/data/liquidation_gas_pool.csv",
+  "output_path": "data/liquidations/model_inputs/keeper_gas/pool.csv",
   "output_sha256": "37a5f49f4cc273b9d0d9526609be7f14b91b78939acf26e4dce00b66443e1594",
   "primary_rows": 1283,
   "rows": 1287,

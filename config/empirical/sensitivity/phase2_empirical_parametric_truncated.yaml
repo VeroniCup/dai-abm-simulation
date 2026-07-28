@@ -3,7 +3,7 @@
 bundle_name: phase2_empirical_parametric_truncated
 mode: empirical_tranche_b
 description: "Tranche B bounded lognormal fallback for vault initialisation."
-source_manifest: config/empirical/tranche_a_manifest.json
+source_manifest: data/protocol/provenance/parameter_adoption/manifest.json
 
 simulation:
   n_vaults: 500

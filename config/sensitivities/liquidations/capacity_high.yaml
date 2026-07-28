@@ -1,0 +1,7 @@
+sensitivity_name: liquidation_capacity_high
+description: "Raise keeper throughput to twenty liquidations per step."
+source_path: config/empirical/sensitivity/phase2_empirical_liquidation_arrivals_capacity_upper.yaml
+source_sha256: 638bff4bbd5a706dfd6d0ee967423ea77291d867af02229e8d51e7b408b4f367
+overrides:
+  liquidation:
+    max_liquidations_per_step: 20

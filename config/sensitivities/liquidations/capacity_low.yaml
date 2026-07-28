@@ -1,0 +1,7 @@
+sensitivity_name: liquidation_capacity_low
+description: "Constrain keeper throughput to five liquidations per step."
+source_path: config/empirical/sensitivity/phase2_empirical_liquidation_arrivals_capacity_lower.yaml
+source_sha256: 33c525e675cf8a17485605c2f5dd932faf1b34e43d9c97aa0f8dd3b4bffccf36
+overrides:
+  liquidation:
+    max_liquidations_per_step: 5

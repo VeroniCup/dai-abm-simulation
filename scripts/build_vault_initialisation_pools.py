@@ -19,14 +19,20 @@ import pandas as pd
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT = (
-    REPOSITORY_ROOT / "config" / "empirical" / "data" / "vault_initialisation_pools.csv"
+    REPOSITORY_ROOT
+    / "data"
+    / "vaults"
+    / "model_inputs"
+    / "initialisation"
+    / "pool.csv"
 )
 DEFAULT_METADATA = (
     REPOSITORY_ROOT
-    / "config"
-    / "empirical"
     / "data"
-    / "vault_initialisation_pools_manifest.json"
+    / "vaults"
+    / "model_inputs"
+    / "initialisation"
+    / "manifest.json"
 )
 DEFAULT_AUDIT = (
     REPOSITORY_ROOT

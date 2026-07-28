@@ -5,7 +5,7 @@
   "sensitivity_scope_note": "The low/high sensitivity YAML files are bounded population-and-debt-share sensitivity bundles only. Confidence-threshold sensitivity remains deferred because the candidate audit did not establish complete numerical ranges for those fields.",
   "normal_liquidatable_share_note": "max_normal_liquidatable_share remains 0.0. Future sensitivity must check its interaction with n_vaults because the smallest positive observed share is 1 / n_vaults.",
   "source_commit": "13e4560e09e50549ed92fc1b8db99abf0e598c56",
-  "legacy_default_preservation": "Legacy configuration files, default experiment factories and Experiments 1-5 remain unchanged. The empirical bundle is selected only by explicitly loading config/empirical/phase2_empirical_baseline.yaml.",
+  "legacy_default_preservation": "Default experiment factories and Experiments 1-5 remain unchanged. The empirical profile is selected only by explicitly loading config/profiles/empirical.yaml.",
   "candidate_registry_checksums": {
     "data/processed/estimation/adoption_review/parameter_adoption_matrix.csv": "a78a3824c967de1cf794c4128115d67b461d7c207f94ea6b4a44acfc535b44ed",
     "data/processed/estimation/adoption_review/configuration_ready_candidates.csv": "71e60ba546d860c10d3de0a1e91b016117432f1510b0fd425b2b799219e0dd02",

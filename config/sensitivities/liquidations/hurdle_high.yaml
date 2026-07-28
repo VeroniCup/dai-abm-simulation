@@ -1,0 +1,7 @@
+sensitivity_name: liquidation_hurdle_high
+description: "Use the upper observed liquidation-initiation hurdle probability."
+source_path: config/empirical/sensitivity/phase2_empirical_liquidation_arrivals_hurdle_upper.yaml
+source_sha256: 593bb13829ead56cd45122f09055310fdd405ffa30254b4c7073ab6b5e7fd504
+overrides:
+  liquidation_demand:
+    hurdle_probability: 0.43478260869565216

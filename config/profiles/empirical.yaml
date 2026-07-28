@@ -1,0 +1,137 @@
+# Complete semantic profile for the cumulative adopted empirical configuration.
+# It is materialised and runnable without loading another profile.
+
+bundle_name: empirical
+mode: empirical
+description: "Adopted empirical vault, market, gas and liquidation-demand inputs."
+source_manifest: data/protocol/provenance/parameter_adoption/manifest.json
+
+simulation:
+  n_steps: 200
+  n_vaults: 500
+  initial_eth_price: 2000.0
+  liquidation_ratio: 1.5
+  oracle_delay_steps: 0
+  debt_mean: 5000.0
+  debt_std: 1000.0
+  collateral_ratio_mean: 2.0
+  collateral_ratio_std: 0.25
+  random_seed: 42
+
+collateral_portfolio:
+  name: empirical_eth_wbtc
+  target_debt_shares:
+    ETH: 0.8483941126796408
+    BTC: 0.1516058873203592
+  compatibility_defaults:
+    initial_prices:
+      ETH: 2000.0
+      BTC: 30000.0
+
+liquidation:
+  liquidation_penalty: 0.13
+  gas_cost: 100.0
+  risk_cost_rate: 0.0
+  max_close_factor: 1.0
+  max_liquidations_per_step: null
+
+confidence:
+  normal_lower_price: 0.9992875
+  normal_upper_price: 1.0030259166666666
+  stress_lower_price: 0.9967380166666668
+  max_normal_liquidatable_share: 0.0
+  max_stress_liquidatable_share: 0.30
+  bad_debt_panic_threshold: 1000.0
+  normal_confidence: 1.0
+  stress_confidence: 0.5
+  panic_confidence: 0.1
+  panic_selling_multiplier: 2.0
+
+dai_market:
+  peg_price: 1.0
+  price_adjustment_speed: 0.02
+  arbitrage_strength: 1.0
+  above_peg_supply_strength: 1.0
+  panic_strength: 1.0
+  noise_std: 0.0005
+  min_price: 0.50
+  max_price: 1.50
+  enable_peg_recovery: false
+  arbitrage_recovery_strength: 0.0
+  policy_feedback_strength: 0.0
+  bad_debt_recovery_drag: 1.0
+  min_recovery_confidence: 0.0
+
+vault_initialisation:
+  mode: empirical_joint
+  seed: 20260726
+  regime: normal
+  pool_path: data/vaults/model_inputs/initialisation/pool.csv
+  pool_sha256: 5230a30aa2c2aebe69ef859ccdcbb785eb44f20a691b431f2fd01b0d16558892
+  fallback: parametric_truncated
+  by_ilk: true
+  minimum_exact_ilk_pool_size: 50
+  allow_initial_liquidatable: false
+  sample_with_replacement: true
+  max_sampling_attempts: 10000
+  parametric:
+    ETH:
+      debt_log_mean: 8.65354030935
+      debt_log_std: 3.53348308692
+      buffer_log_mean: 1.47052927003
+      buffer_log_std: 1.48950522112
+      liquidation_ratio: 1.45
+      minimum_debt: 1.0
+      maximum_debt: 150000000.0
+      minimum_buffer: 0.0
+      maximum_buffer: 4000.0
+    WBTC:
+      debt_log_mean: 10.8911793514
+      debt_log_std: 2.18504087003
+      buffer_log_mean: 0.57929751143
+      buffer_log_std: 0.902220725342
+      liquidation_ratio: 1.75
+      minimum_debt: 1.0
+      maximum_debt: 30000000.0
+      minimum_buffer: 0.0
+      maximum_buffer: 100.0
+
+market_process:
+  mode: empirical_block_bootstrap
+  pool_path: data/market/model_inputs/environment_blocks/pool.csv
+  pool_sha256: b69276801bacf789f8ae91789983cc98a8a6d42d0a992940c0bcfa109ca25b7d
+  pool_label: all_calibration
+  block_length_hours: 168
+  seed: 20260727
+  return_type: log_return
+  alignment_mode: shared_market_gas
+  withheld_period_policy: exclude_ftx
+  shock_overlay_enabled: false
+
+gas_process:
+  mode: empirical_components
+  pool_path: data/liquidations/model_inputs/keeper_gas/pool.csv
+  pool_sha256: 37a5f49f4cc273b9d0d9526609be7f14b91b78939acf26e4dce00b66443e1594
+  seed: 20260728
+  alignment_mode: shared_market_gas
+  zero_observation_policy: exclude_zero_primary
+  event_type: clean_successful_take_transaction
+  cost_currency: USD
+  network_gas_column: median_effective_gas_price_gwei
+
+liquidation_demand:
+  mode: empirical_hurdle_count
+  pool_path: data/liquidations/model_inputs/arrival/hourly_pool.csv
+  pool_sha256: cc29435bb0434237aba438ee98bded77f086704c7400bb5016e2b58703258c8a
+  seed: 20260729
+  hurdle_probability: 0.34782608695652173
+  hurdle_estimator: conditional_start_inventory_positive
+  positive_count_mode: empirical_positive_hour_counts
+  sequence_mode: none
+  inventory_conditioning: current_liquidatable_inventory_positive
+  count_truncation_policy: truncate_to_inventory_then_capacity
+
+provenance:
+  profile_role: adopted_empirical_configuration
+  historical_source: cumulative_empirical_liquidation_arrivals_bundle
+  ftx_used_for_calibration: false

@@ -1,0 +1,9 @@
+sensitivity_name: gas_zero_inclusive
+description: "Sample empirical total transaction cost and retain zero observations."
+source_path: config/empirical/sensitivity/phase2_empirical_market_gas_zero_inclusive.yaml
+source_sha256: f0b65fdf387c48b2ec92cd288bb8ff740243c8c17f9f8d584aa30add21fe9c65
+overrides:
+  gas_process:
+    mode: empirical_total_cost
+    alignment_mode: independent
+    zero_observation_policy: include_zero_sensitivity

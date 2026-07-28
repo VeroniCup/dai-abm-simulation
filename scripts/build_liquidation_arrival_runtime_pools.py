@@ -34,7 +34,9 @@ TERRA_DIR = (
 PHASE2C_DIR = (
     REPOSITORY_ROOT / "data" / "processed" / "estimation" / "phase2c_liquidations"
 )
-OUTPUT_DIR = REPOSITORY_ROOT / "config" / "empirical" / "data"
+OUTPUT_DIR = (
+    REPOSITORY_ROOT / "data" / "liquidations" / "model_inputs" / "arrival"
+)
 
 INPUTS = {
     "stress_tail_diagnostics": {
@@ -183,8 +185,8 @@ def main() -> None:
         raise RuntimeError("Hourly Bark/grab counts do not reproduce 649 matches.")
     sequence_pool = build_sequence_pool(sequences)
 
-    hourly_path = OUTPUT_DIR / "liquidation_arrival_hourly_pool.csv"
-    sequence_path = OUTPUT_DIR / "liquidation_sequence_pool.csv"
+    hourly_path = OUTPUT_DIR / "hourly_pool.csv"
+    sequence_path = OUTPUT_DIR / "sequence_pool.csv"
     hourly.to_csv(hourly_path, index=False, lineterminator="\n")
     sequence_pool.to_csv(sequence_path, index=False, lineterminator="\n")
 
@@ -224,7 +226,7 @@ def main() -> None:
             "raw_event_payload",
         ],
     }
-    manifest_path = OUTPUT_DIR / "liquidation_arrival_pools_manifest.json"
+    manifest_path = OUTPUT_DIR / "manifest.json"
     manifest_path.write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",

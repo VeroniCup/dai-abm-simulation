@@ -29,12 +29,12 @@
   ],
   "method": "Phase 2C runtime-pool construction only; no parameter estimation or data acquisition",
   "outputs": {
-    "config/empirical/data/liquidation_arrival_hourly_pool.csv": {
+    "data/liquidations/model_inputs/arrival/hourly_pool.csv": {
       "columns": 12,
       "rows": 1104,
       "sha256": "cc29435bb0434237aba438ee98bded77f086704c7400bb5016e2b58703258c8a"
     },
-    "config/empirical/data/liquidation_sequence_pool.csv": {
+    "data/liquidations/model_inputs/arrival/sequence_pool.csv": {
       "columns": 10,
       "rows": 54,
       "sha256": "9fdd5f3b5fb97e2dd41d0201bad34909ad05e423ad6b52f65219f49f02a1c7ed"

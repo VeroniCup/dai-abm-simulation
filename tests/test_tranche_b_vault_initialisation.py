@@ -55,10 +55,18 @@ def test_legacy_initialisation_matches_existing_create_initial_vaults() -> None:
 
 
 def test_tranche_a_configuration_values_are_unchanged() -> None:
-    bundle = load_empirical_configuration_bundle()
-    assert bundle.config_sha256 == "ba5b835065c7749650c24ecba85a993fdfc6f8ac2aa0960ce27e54817d13ed3e"
-    assert bundle.simulation_config.n_vaults == 500
-    assert bundle.liquidation_config.max_close_factor == 1.0
+    compatibility = load_empirical_configuration_bundle(
+        REPOSITORY_ROOT / "config/empirical/phase2_empirical_baseline.yaml"
+    )
+    semantic = load_empirical_configuration_bundle()
+    assert compatibility.simulation_config.n_vaults == semantic.simulation_config.n_vaults
+    assert (
+        compatibility.simulation_config.collateral_portfolio.collaterals
+        == semantic.simulation_config.collateral_portfolio.collaterals
+    )
+    assert compatibility.liquidation_config == semantic.liquidation_config
+    assert compatibility.confidence_config == semantic.confidence_config
+    assert compatibility.dai_market_config == semantic.dai_market_config
 
 
 def test_pool_schema_and_checksum() -> None:
@@ -124,7 +132,14 @@ def test_sampling_with_replacement_is_recorded() -> None:
 
 def test_parametric_truncated_sampling_is_positive_and_bounded() -> None:
     bundle = load_tranche_b_configuration(
-        REPOSITORY_ROOT / "config/empirical/sensitivity/phase2_empirical_parametric_truncated.yaml"
+        DEFAULT_TRANCHE_B_CONFIG_PATH,
+        sensitivity_paths=(
+            REPOSITORY_ROOT
+            / "config"
+            / "sensitivities"
+            / "vaults"
+            / "parametric_truncated.yaml",
+        ),
     )
     result = initialise_vaults(bundle.base_bundle.simulation_config, bundle.initialisation)
     rows = result.sampled_rows
@@ -248,7 +263,14 @@ def test_pool_builder_is_deterministic(tmp_path: Path) -> None:
 
 def test_tracked_pool_manifest_matches_file() -> None:
     manifest = yaml.safe_load(
-        (REPOSITORY_ROOT / "config/empirical/data/vault_initialisation_pools_manifest.json")
+        (
+            REPOSITORY_ROOT
+            / "data"
+            / "vaults"
+            / "model_inputs"
+            / "initialisation"
+            / "manifest.json"
+        )
         .read_text(encoding="utf-8")
     )
     assert manifest["output_sha256"] == sha256_file(DEFAULT_POOL_PATH)
