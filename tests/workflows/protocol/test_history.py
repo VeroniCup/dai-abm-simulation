@@ -373,7 +373,7 @@ def test_documented_stopped_defaults_keep_provenance():
     assert rows["state_source"].eq("contract_default").all()
     assert rows["is_observed_call"].eq(False).all()
     assert rows["evidence_reference"].str.endswith(
-        "phase1d_clipper_stopped_minimal_evidence.json"
+        "clipper_stopped_default_evidence.json"
     ).all()
 
 

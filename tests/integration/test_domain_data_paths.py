@@ -76,17 +76,25 @@ def _is_ignored(relative_path: str) -> bool:
 def test_domain_lifecycle_directories_are_populated_without_placeholders() -> None:
     for domain, expected in EXPECTED_LIFECYCLES.items():
         domain_root = DATA_ROOT / domain
-        actual = {
-            path.name
-            for path in domain_root.iterdir()
-            if path.is_dir() and path.name in {"raw", "processed", "model_inputs", "provenance"}
-        }
-        assert actual == expected
+        assert domain_root.is_dir()
         for lifecycle in expected:
-            assert any(
-                candidate.is_file()
-                for candidate in (domain_root / lifecycle).rglob("*")
-            )
+            lifecycle_path = domain_root / lifecycle
+            assert lifecycle_path == DATA_ROOT / domain / lifecycle
+            assert not (lifecycle_path / ".gitkeep").exists()
+            if lifecycle in {"raw", "processed"}:
+                assert _is_ignored(
+                    f"data/{domain}/{lifecycle}/generated.csv"
+                )
+            elif lifecycle == "provenance":
+                assert _is_ignored(
+                    f"data/{domain}/provenance/state/generated.json"
+                )
+            else:
+                assert lifecycle_path.is_dir()
+                assert any(
+                    candidate.is_file()
+                    for candidate in lifecycle_path.rglob("*")
+                )
 
 
 def test_old_active_domain_paths_are_absent() -> None:
@@ -100,10 +108,12 @@ def test_old_active_domain_paths_are_absent() -> None:
 
 
 def test_combined_market_gas_panel_is_market_owned() -> None:
-    assert (
-        DATA_ROOT
-        / "market/processed/combined/hourly_market_gas_panel.csv"
-    ).is_file()
+    canonical = "data/market/processed/combined/hourly_market_gas_panel.csv"
+    market_manifest = (
+        DATA_ROOT / "market/model_inputs/environment_blocks/manifest.json"
+    ).read_text(encoding="utf-8")
+    assert canonical in market_manifest
+    assert _is_ignored(canonical)
     assert not (DATA_ROOT / "processed/combined").exists()
 
 

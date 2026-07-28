@@ -24,7 +24,7 @@
   "return_type": "hourly_log_return",
   "rows": 27024,
   "source_checksums": {
-    "data/processed/combined/hourly_market_gas_panel.csv": "86ed2ac5a5d364cc57e8b41e137ef369a0fce7a393d386b4b38fc1ebd1be0545",
+    "data/market/processed/combined/hourly_market_gas_panel.csv": "86ed2ac5a5d364cc57e8b41e137ef369a0fce7a393d386b4b38fc1ebd1be0545",
     "outputs/diagnostics/calibration/market_gas_protocol/diagnostics/calibration_validation_split.csv": "e35852b25e09fe65347d341c4e6382d8973fa2b64b996f3af615a9d881d8a574",
     "outputs/diagnostics/calibration/market_gas_protocol/gas/gas_sampling_index.csv": "c722a29370672c26b10c90b951f2bac7510eee45d4e1902c6267e65417760524",
     "outputs/diagnostics/calibration/market_gas_protocol/liquidations/liquidation_transaction_gas.csv": "137a17b8752bc90b0ac83b2f9593684781d598d340bb6be65afcab6b624c03a0",

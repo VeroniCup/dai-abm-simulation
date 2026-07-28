@@ -42,6 +42,30 @@ data/*/processed/**
 data/provenance/*
 !data/provenance/index.json
 !data/provenance/data_manifest.csv
+!data/provenance/calibration/
+data/provenance/calibration/*
+!data/provenance/calibration/manifest.json
+!data/provenance/calibration/parameter_adoption/
+data/provenance/calibration/parameter_adoption/*
+!data/provenance/calibration/parameter_adoption/parameter_adoption_matrix.csv
+!data/provenance/calibration/parameter_adoption/configuration_ready_candidates.csv
+!data/provenance/calibration/parameter_adoption/candidate_consolidation.csv
+!data/provenance/calibration/parameter_adoption/model_interface_gaps.csv
+!data/provenance/calibration/parameter_adoption/proposed_implementation_tranches.csv
+!data/provenance/calibration/market_gas_protocol/
+data/provenance/calibration/market_gas_protocol/*
+!data/provenance/calibration/market_gas_protocol/candidate_parameters.json
+!data/provenance/calibration/market_gas_protocol/reviewed_candidates.json
+!data/provenance/calibration/market_gas_protocol/parameter_status.csv
+!data/provenance/calibration/vaults/
+data/provenance/calibration/vaults/*
+!data/provenance/calibration/vaults/candidate_parameters.json
+!data/provenance/calibration/liquidations/
+data/provenance/calibration/liquidations/*
+!data/provenance/calibration/liquidations/candidate_parameters.json
+!data/provenance/calibration/parameter_readiness/
+data/provenance/calibration/parameter_readiness/*
+!data/provenance/calibration/parameter_readiness/representative_vault_parameter_readiness.csv
 
 # Domain-owned provenance. Detailed operational records stay ignored; selected
 # durable entry points remain tracked.
@@ -52,6 +76,8 @@ data/*/provenance/**
 !data/liquidations/provenance/manifest.json
 !data/protocol/provenance/
 !data/protocol/provenance/manifest.json
+!data/protocol/provenance/clipper_stopped_default_evidence.json
+!data/protocol/provenance/clipper_stopped_default_states.csv
 !data/protocol/provenance/parameter_adoption/
 !data/protocol/provenance/parameter_adoption/manifest.json
 !data/vaults/provenance/

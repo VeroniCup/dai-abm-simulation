@@ -22,30 +22,24 @@ DEFAULT_OUTPUT = (
     PROJECT_ROOT / "outputs/diagnostics/calibration/parameter_adoption"
 )
 PARAMETER_PLAN = PROJECT_ROOT / "docs/calibration/parameter_estimation.md"
+CALIBRATION_EVIDENCE = PROJECT_ROOT / "data/provenance/calibration"
 PHASE2A_STATUS = (
-    PROJECT_ROOT
-    / "outputs/diagnostics/calibration/market_gas_protocol/parameter_status.csv"
+    CALIBRATION_EVIDENCE / "market_gas_protocol/parameter_status.csv"
 )
 REGISTRIES = {
     "phase2a": (
-        PROJECT_ROOT
-        / "outputs/diagnostics/calibration/market_gas_protocol/"
-        "phase2a_candidate_parameters.json"
+        CALIBRATION_EVIDENCE
+        / "market_gas_protocol/candidate_parameters.json"
     ),
     "phase2a_review": (
-        PROJECT_ROOT
-        / "outputs/diagnostics/calibration/market_gas_protocol/review/"
-        "phase2a_reviewed_candidates.json"
+        CALIBRATION_EVIDENCE
+        / "market_gas_protocol/reviewed_candidates.json"
     ),
     "phase2b": (
-        PROJECT_ROOT
-        / "outputs/diagnostics/calibration/vaults/"
-        "phase2b_parameter_candidates.json"
+        CALIBRATION_EVIDENCE / "vaults/candidate_parameters.json"
     ),
     "phase2c": (
-        PROJECT_ROOT
-        / "outputs/diagnostics/calibration/liquidations/"
-        "phase2c_parameter_candidates.json"
+        CALIBRATION_EVIDENCE / "liquidations/candidate_parameters.json"
     ),
 }
 PROTECTED = (

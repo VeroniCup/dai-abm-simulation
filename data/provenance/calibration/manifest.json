@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "purpose": "Tracked, compact calibration evidence required to reproduce the adopted empirical profiles and their validation in a tracked-only checkout.",
+  "ownership_policy": {
+    "snapshot": "Canonical, content-addressed evidence copied byte-for-byte from the reviewed local calibration output.",
+    "runtime_input": "Compact data consumed directly by a canonical runtime loader.",
+    "generated_diagnostic": "Human-readable or intermediate reports remain under ignored outputs/diagnostics and are not automatic runtime dependencies."
+  },
+  "artefacts": [
+    {
+      "semantic_name": "market_gas_protocol_candidate_parameters",
+      "path": "data/provenance/calibration/market_gas_protocol/candidate_parameters.json",
+      "producer": "dai_sim.calibration.market",
+      "source_snapshot": "outputs/diagnostics/calibration/market_gas_protocol/phase2a_candidate_parameters.json",
+      "sha256": "fae0583fd2dc8a477df49d5954c80c486a209f8d3df963d779e5fe289fa5972d",
+      "size_bytes": 69865,
+      "schema": "JSON object containing candidates, phase, random_seed, schema_version and withheld_validation_window",
+      "context": "Canonical Phase 2A candidate evidence; candidate values, thresholds, sample windows, statuses and JSON types are unchanged.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "market_gas_protocol_reviewed_candidates",
+      "path": "data/provenance/calibration/market_gas_protocol/reviewed_candidates.json",
+      "producer": "dai_sim.calibration.validation",
+      "source_snapshot": "outputs/diagnostics/calibration/market_gas_protocol/review/phase2a_reviewed_candidates.json",
+      "sha256": "5875728b0cfe260752dc2f1618a92a1c958145e5eaa82a91505356a064e10300",
+      "size_bytes": 124299,
+      "schema": "JSON object containing phase, reviewed_candidates, schema_version and source_registry_sha256",
+      "context": "Canonical reviewed Phase 2A candidate evidence used by parameter-adoption reconciliation.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "market_gas_protocol_parameter_status",
+      "path": "data/provenance/calibration/market_gas_protocol/parameter_status.csv",
+      "producer": "dai_sim.calibration.market",
+      "source_snapshot": "outputs/diagnostics/calibration/market_gas_protocol/parameter_status.csv",
+      "sha256": "314275a1ccb79d1813fa1bbbed66c963af404b19b472cf23750efbecc98c329d",
+      "size_bytes": 14689,
+      "dimensions": [56, 10],
+      "schema": ["parameter_subsection", "simulator_field", "provenance_class", "current_status", "source_dataset", "source_columns", "estimator", "output_artefact", "blocking_dependency", "notes"],
+      "context": "Canonical status mapping used to join documented simulator parameters to empirical evidence.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "vault_candidate_parameters",
+      "path": "data/provenance/calibration/vaults/candidate_parameters.json",
+      "producer": "dai_sim.calibration.vaults",
+      "source_snapshot": "outputs/diagnostics/calibration/vaults/phase2b_parameter_candidates.json",
+      "sha256": "f345ded318fe5fb18c36106e4812dff8e1d64edd1bba9fd9b2b090522d0f0049",
+      "size_bytes": 14768,
+      "schema": "JSON Phase 2B candidate registry",
+      "context": "Canonical representative-vault candidate evidence used by parameter-adoption reconciliation.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "liquidation_candidate_parameters",
+      "path": "data/provenance/calibration/liquidations/candidate_parameters.json",
+      "producer": "dai_sim.calibration.liquidations",
+      "source_snapshot": "outputs/diagnostics/calibration/liquidations/phase2c_parameter_candidates.json",
+      "sha256": "6487b22a7cbfa3acc6bcdd5e2df5cff6473431f247065f1d6c6e6495ccef067e",
+      "size_bytes": 8086,
+      "schema": "JSON Phase 2C candidate registry",
+      "context": "Canonical liquidation and stress-tail candidate evidence used by parameter-adoption reconciliation.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "parameter_adoption_matrix",
+      "path": "data/provenance/calibration/parameter_adoption/parameter_adoption_matrix.csv",
+      "producer": "dai_sim.calibration.adoption",
+      "source_snapshot": "outputs/diagnostics/calibration/parameter_adoption/parameter_adoption_matrix.csv",
+      "sha256": "a78a3824c967de1cf794c4128115d67b461d7c207f94ea6b4a44acfc535b44ed",
+      "size_bytes": 70741,
+      "dimensions": [56, 31],
+      "schema": "One authoritative row per documented simulator-parameter subsection, including candidate, compatibility and adoption-decision fields.",
+      "context": "Canonical adopted-parameter evidence. The ignored output copy remains a regenerable report.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "configuration_ready_candidates",
+      "path": "data/provenance/calibration/parameter_adoption/configuration_ready_candidates.csv",
+      "producer": "dai_sim.calibration.adoption",
+      "source_snapshot": "outputs/diagnostics/calibration/parameter_adoption/configuration_ready_candidates.csv",
+      "sha256": "71e60ba546d860c10d3de0a1e91b016117432f1510b0fd425b2b799219e0dd02",
+      "size_bytes": 9174,
+      "dimensions": [12, 17],
+      "schema": "Configuration-compatible subset of the adoption matrix.",
+      "context": "Canonical evidence consumed by empirical profile validation; no adoption decision or value changed.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "candidate_consolidation",
+      "path": "data/provenance/calibration/parameter_adoption/candidate_consolidation.csv",
+      "producer": "dai_sim.calibration.adoption",
+      "source_snapshot": "outputs/diagnostics/calibration/parameter_adoption/candidate_consolidation.csv",
+      "sha256": "c92986f5ac0975804b08c9d1a5fad69886be3fc07e5a8feae625971fc99ffd44",
+      "size_bytes": 75177,
+      "dimensions": [80, 24],
+      "schema": "Consolidated Phase 2A, Phase 2B and Phase 2C candidate evidence.",
+      "context": "Canonical audit evidence preserving candidate provenance and conflicts.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "model_interface_gaps",
+      "path": "data/provenance/calibration/parameter_adoption/model_interface_gaps.csv",
+      "producer": "dai_sim.calibration.adoption",
+      "source_snapshot": "outputs/diagnostics/calibration/parameter_adoption/model_interface_gaps.csv",
+      "sha256": "8a8c83ab731396c36697e987154f79536d2228df2707ea46ac3cbf6d922c93a3",
+      "size_bytes": 2682,
+      "dimensions": [10, 7],
+      "schema": "Interface gap, affected fields, required interface class, minimum design, implementation tranche and priority.",
+      "context": "Canonical adoption-review evidence, not a runtime configuration.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "proposed_implementation_tranches",
+      "path": "data/provenance/calibration/parameter_adoption/proposed_implementation_tranches.csv",
+      "producer": "dai_sim.calibration.adoption",
+      "source_snapshot": "outputs/diagnostics/calibration/parameter_adoption/proposed_implementation_tranches.csv",
+      "sha256": "b13cc33e38513bbfeb22aa70cd704d4ba3a88b43f4e6e484a69bf58bef0239de",
+      "size_bytes": 2118,
+      "dimensions": [5, 9],
+      "schema": "Reviewed implementation ordering and compatibility gates.",
+      "context": "Historical implementation-plan evidence retained for adoption traceability.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "representative_vault_parameter_readiness",
+      "path": "data/provenance/calibration/parameter_readiness/representative_vault_parameter_readiness.csv",
+      "producer": "workflows.vaults.acquire_representative",
+      "source_snapshot": "data/vaults/provenance/representative_regimes/parameter_evidence_readiness.csv",
+      "sha256": "c8782ca1d7ce17440dd7bc58faa6704f43f50a97edffc4ab183c907f35388d69",
+      "size_bytes": 5378,
+      "dimensions": [10, 14],
+      "schema": ["parameter", "required_variable", "quiet_mature_observation_count", "usdc_svb_observation_count", "total_usable_observations", "collateral_coverage", "opening_state_reconstruction_succeeded", "ownership_required", "proposed_estimator", "uncertainty_method", "minimum_sample_threshold", "status", "notes", "missingness"],
+      "context": "Canonical readiness evidence shared across representative vault windows.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "clipper_stopped_default_states",
+      "path": "data/protocol/provenance/clipper_stopped_default_states.csv",
+      "producer": "workflows.protocol.acquire",
+      "source_inputs": ["data/protocol/provenance/clipper_stopped_default_evidence.json", "data/protocol/provenance/manifest.json"],
+      "sha256": "615c26fdf3484c08972eef57705ff714af74cb5fa742ebaff004afdb2126ee85",
+      "size_bytes": 2281,
+      "dimensions": [6, 18],
+      "schema": "Documented default-state rows retaining state_source, is_observed_call and evidence_reference.",
+      "context": "Compact canonical protocol provenance required to reconstruct the stopped parameter without treating missing calls as zero.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "clipper_stopped_default_evidence",
+      "path": "data/protocol/provenance/clipper_stopped_default_evidence.json",
+      "producer": "workflows.protocol.acquire",
+      "source_inputs": ["data/protocol/provenance/archive/diagnostic/phase1d_clipper_stopped_minimal_diagnostic.csv", "sql/protocol/generated/history/clipper_stopped_minimal_diagnostic.sql", "verified Clipper source and Solidity default-storage semantics"],
+      "sha256": "7353ebff7cceb971adc0be6b324034fda49faa312fb57d4ba9c44039c382b5a5",
+      "size_bytes": 8741,
+      "schema": "JSON evidence record containing six contract creation records, explicit stopped-call reconciliation, verified source bindings and effective default-state boundaries.",
+      "context": "Canonical compact evidence supporting the six documented stopped=0 protocol states; the larger acquisition corpus remains ignored.",
+      "classification": "snapshot"
+    }
+  ]
+}

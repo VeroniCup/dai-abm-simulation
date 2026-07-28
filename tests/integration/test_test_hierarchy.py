@@ -115,6 +115,9 @@ STAGE11_MODULES = {
 POST_STAGE11_CORRECTION_MODULES = {
     "tests/workflows/test_semantic_output_paths.py",
 }
+CLEAN_CLONE_CORRECTION_MODULES = {
+    "tests/calibration/test_tracked_calibration_evidence.py",
+}
 EXPECTED_FIXTURES = {
     "tests/fixtures/market/empirical_market.csv": (
         "297ab396a003a48322dd624c276d3edac656b8d0ebc91ca29d2292cf3959cec2"
@@ -150,6 +153,7 @@ def test_pre_migration_mapping_is_complete_and_one_to_one() -> None:
         | STAGE10_MODULES
         | STAGE11_MODULES
         | POST_STAGE11_CORRECTION_MODULES
+        | CLEAN_CLONE_CORRECTION_MODULES
         == _relative_test_modules()
     )
     assert all(not (REPOSITORY_ROOT / old).exists() for old in EXPECTED_MAPPING)
@@ -177,7 +181,7 @@ def test_no_test_module_remains_at_suite_root() -> None:
 
 def test_no_placeholder_or_duplicate_test_module_exists() -> None:
     modules = sorted(TESTS_ROOT.rglob("test_*.py"))
-    assert len(modules) == 41
+    assert len(modules) == 42
     assert all(path.stat().st_size > 100 for path in modules)
     assert len({path.resolve() for path in modules}) == len(modules)
 

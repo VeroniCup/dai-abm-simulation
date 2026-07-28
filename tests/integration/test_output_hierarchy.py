@@ -192,12 +192,14 @@ def test_configuration_loads_same_moved_adoption_evidence() -> None:
     assert observed == configuration.EXPECTED_ADOPTION_REVIEW_CHECKSUMS
     assert configuration.CONFIGURATION_READY_CANDIDATES == (
         REPOSITORY_ROOT
-        / "outputs/diagnostics/calibration/parameter_adoption/"
+        / "data/provenance/calibration/parameter_adoption/"
         "configuration_ready_candidates.csv"
     )
 
 
-def test_market_input_builder_reads_moved_evidence_without_output_change() -> None:
+def test_market_input_builder_reads_moved_evidence_without_output_change(
+    tmp_path: Path,
+) -> None:
     namespace = runpy.run_path(
         str(REPOSITORY_ROOT / "workflows/market/build_inputs.py")
     )
@@ -205,13 +207,135 @@ def test_market_input_builder_reads_moved_evidence_without_output_change() -> No
         REPOSITORY_ROOT
         / "outputs/diagnostics/input_construction/market_gas"
     )
-    assert namespace["verify_source_checksums"]() == namespace["SOURCE_CHECKSUMS"]
+    module_globals = namespace["build_market_gas_pool"].__globals__
+    module_globals["REPOSITORY_ROOT"] = tmp_path
+    paths = {
+        "data/market/processed/combined/hourly_market_gas_panel.csv": (
+            tmp_path
+            / "data/market/processed/combined/hourly_market_gas_panel.csv"
+        ),
+        "outputs/diagnostics/calibration/market_gas_protocol/gas/gas_sampling_index.csv": (
+            tmp_path
+            / "outputs/diagnostics/calibration/market_gas_protocol/gas/"
+            "gas_sampling_index.csv"
+        ),
+        "outputs/diagnostics/calibration/market_gas_protocol/diagnostics/calibration_validation_split.csv": (
+            tmp_path
+            / "outputs/diagnostics/calibration/market_gas_protocol/diagnostics/"
+            "calibration_validation_split.csv"
+        ),
+        "outputs/diagnostics/calibration/market_gas_protocol/liquidations/liquidation_transaction_gas.csv": (
+            tmp_path
+            / "outputs/diagnostics/calibration/market_gas_protocol/liquidations/"
+            "liquidation_transaction_gas.csv"
+        ),
+        "outputs/diagnostics/calibration/market_gas_protocol/review/gas_cost_sensitivity.csv": (
+            tmp_path
+            / "outputs/diagnostics/calibration/market_gas_protocol/review/"
+            "gas_cost_sensitivity.csv"
+        ),
+    }
+    for path in paths.values():
+        path.parent.mkdir(parents=True, exist_ok=True)
 
-    market, _market_audit = namespace["build_market_gas_pool"]()
-    liquidation, _liquidation_audit = namespace["build_liquidation_gas_pool"]()
-    assert market.to_csv(index=False).encode() == (
-        REPOSITORY_ROOT / "data/market/model_inputs/environment_blocks/pool.csv"
-    ).read_bytes()
-    assert liquidation.to_csv(index=False).encode() == (
-        REPOSITORY_ROOT / "data/liquidations/model_inputs/keeper_gas/pool.csv"
-    ).read_bytes()
+    timestamps = pd.date_range(
+        "2022-10-31T00:00:00Z", periods=3, freq="h"
+    )
+    pd.DataFrame(
+        {
+            "timestamp_utc": timestamps,
+            "eth_price_usd": [1500.0, 1490.0, 1510.0],
+            "wbtc_price_usd": [20000.0, 19900.0, 20100.0],
+            "eth_log_return": [0.0, -0.01, 0.02],
+            "wbtc_log_return": [0.0, -0.005, 0.01],
+            "median_effective_gas_price_gwei": [10.0, 20.0, 30.0],
+            "p90_effective_gas_price_gwei": [15.0, 25.0, 35.0],
+            "p99_effective_gas_price_gwei": [20.0, 30.0, 40.0],
+            "target_normalised_block_utilisation": [0.8, 1.0, 1.2],
+        }
+    ).to_csv(paths[next(iter(paths))], index=False, lineterminator="\n")
+    pd.DataFrame(
+        {
+            "source_row": [0, 1, 2],
+            "timestamp_utc": timestamps,
+            "is_calibration": [True, True, True],
+            "is_validation": [False, False, False],
+            "regime": ["normal", "stress", "extreme"],
+        }
+    ).to_csv(
+        paths[
+            "outputs/diagnostics/calibration/market_gas_protocol/gas/gas_sampling_index.csv"
+        ],
+        index=False,
+        lineterminator="\n",
+    )
+    pd.DataFrame(
+        {
+            "sample": ["withheld_validation_ftx"],
+            "start_utc": ["2022-10-31T01:00:00Z"],
+            "end_utc": ["2022-10-31T01:00:00Z"],
+        }
+    ).to_csv(
+        paths[
+            "outputs/diagnostics/calibration/market_gas_protocol/diagnostics/calibration_validation_split.csv"
+        ],
+        index=False,
+        lineterminator="\n",
+    )
+    pd.DataFrame(
+        {
+            "take_transaction_class": [
+                "clean_single_take_single_auction",
+                "clean_single_take_single_auction",
+            ],
+            "is_calibration": [True, True],
+            "timestamp_utc": timestamps[:2],
+            "block_number": [1, 2],
+            "transaction_index": [0, 1],
+            "gas_used": [100000, 200000],
+            "effective_gas_price_gwei": [10.0, 0.0],
+            "eth_price_usd": [1500.0, 1490.0],
+            "transaction_gas_cost_eth": [0.001, 0.0],
+            "transaction_gas_cost_usd": [1.5, 0.0],
+            "regime": ["normal", "stress"],
+        }
+    ).to_csv(
+        paths[
+            "outputs/diagnostics/calibration/market_gas_protocol/liquidations/liquidation_transaction_gas.csv"
+        ],
+        index=False,
+        lineterminator="\n",
+    )
+    pd.DataFrame({"policy": ["fixture"]}).to_csv(
+        paths[
+            "outputs/diagnostics/calibration/market_gas_protocol/review/gas_cost_sensitivity.csv"
+        ],
+        index=False,
+        lineterminator="\n",
+    )
+    module_globals["SOURCE_CHECKSUMS"] = {
+        relative: namespace["sha256_file"](path)
+        for relative, path in paths.items()
+    }
+
+    assert namespace["verify_source_checksums"]() == module_globals[
+        "SOURCE_CHECKSUMS"
+    ]
+    first_market, first_market_audit = namespace["build_market_gas_pool"]()
+    first_liquidation, first_liquidation_audit = namespace[
+        "build_liquidation_gas_pool"
+    ]()
+    second_market, second_market_audit = namespace["build_market_gas_pool"]()
+    second_liquidation, second_liquidation_audit = namespace[
+        "build_liquidation_gas_pool"
+    ]()
+    pd.testing.assert_frame_equal(first_market, second_market)
+    pd.testing.assert_frame_equal(first_market_audit, second_market_audit)
+    pd.testing.assert_frame_equal(first_liquidation, second_liquidation)
+    pd.testing.assert_frame_equal(
+        first_liquidation_audit, second_liquidation_audit
+    )
+    assert len(first_market) == 3
+    assert int(first_market["is_withheld_ftx"].sum()) == 1
+    assert len(first_liquidation) == 2
+    assert int(first_liquidation["is_zero_gas_observation"].sum()) == 1

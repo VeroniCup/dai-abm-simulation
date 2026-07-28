@@ -82,8 +82,9 @@ def test_market_and_gas_calibration_journey() -> None:
 def test_data_provenance_journey() -> None:
     assert_paths(
         "docs/data/provenance.md",
-        "data/provenance",
-        "data/market/provenance",
+        "data/provenance/index.json",
+        "data/provenance/calibration/manifest.json",
+        "data/market/raw/README.md",
         "sql/market/templates/hourly_prices.sql",
         "workflows/market/acquire.py",
     )

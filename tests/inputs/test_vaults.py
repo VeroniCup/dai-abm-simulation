@@ -256,10 +256,56 @@ def test_loader_rejects_unknown_initialisation_field(tmp_path: Path) -> None:
 def test_pool_builder_is_deterministic(tmp_path: Path) -> None:
     from workflows.vaults import build_inputs as builder
 
-    first_pool, first_audit = builder.build_pool()
-    second_pool, second_audit = builder.build_pool()
+    sources = []
+    for index, (window, regime) in enumerate(
+        (
+            ("quiet_mature", "normal"),
+            ("usdc_svb", "moderate_stress"),
+            ("terra_cefi", "severe_stress"),
+        ),
+        start=1,
+    ):
+        path = tmp_path / f"{window}.csv"
+        pd.DataFrame(
+            [
+                {
+                    "window": window,
+                    "state_label": "opening",
+                    "timestamp_utc": f"2024-01-0{index}T00:00:00Z",
+                    "ilk": "ETH-A",
+                    "debt_dai": 1000.0 + index,
+                    "collateral_ratio": 1.8,
+                    "liquidation_ratio": 1.45,
+                    "active": True,
+                },
+                {
+                    "window": window,
+                    "state_label": "opening",
+                    "timestamp_utc": f"2024-01-0{index}T00:00:00Z",
+                    "ilk": "WBTC-A",
+                    "debt_dai": 2000.0 + index,
+                    "collateral_ratio": 2.0,
+                    "liquidation_ratio": 1.75,
+                    "active": True,
+                },
+            ]
+        ).to_csv(path, index=False, lineterminator="\n")
+        sources.append(
+            builder.PoolSource(
+                window=window,
+                regime_label=regime,
+                source_window=window,
+                path=path,
+                sha256=builder.sha256_file(path),
+            )
+        )
+
+    explicit_sources = tuple(sources)
+    first_pool, first_audit = builder.build_pool(explicit_sources)
+    second_pool, second_audit = builder.build_pool(explicit_sources)
     pd.testing.assert_frame_equal(first_pool, second_pool)
     pd.testing.assert_frame_equal(first_audit, second_audit)
+    assert len(first_pool) == 6
 
 
 def test_tracked_pool_manifest_matches_file() -> None:

@@ -1,0 +1,353 @@
+{
+  "authorised_parameters": [
+    "n_vaults",
+    "target_debt_share",
+    "debt_mean",
+    "debt_std",
+    "collateral_ratio_mean",
+    "collateral_ratio_std",
+    "min_collateral_ratio_buffer",
+    "max_normal_liquidatable_share",
+    "max_stress_liquidatable_share"
+  ],
+  "bootstrap_replications": 400,
+  "candidate_status": "review_only_not_adopted",
+  "candidates": [
+    {
+      "boundary_or_temporal_scope": "four validated boundaries",
+      "collateral_scope": "six target ilks mapped to ETH and BTC",
+      "estimate": 500,
+      "estimator": "Computational scaling choice informed by observed active counts; not a direct historical-count estimate",
+      "input_columns": [
+        "active",
+        "ilk",
+        "urn"
+      ],
+      "input_dataset": "quiet and USDC/SVB opening/closing vault-state CSVs",
+      "model_interface_compatibility": "direct scalar support",
+      "notes": "Representative windows are regime-conditional and purposive; candidate is not an unconditional historical frequency.",
+      "parameter_name": "n_vaults",
+      "regime": "cross-regime scaling choice",
+      "representation": "single computational sample size",
+      "resampling_unit": "not applicable; convergence sensitivity required",
+      "review_requirement": "Require multi-size convergence before adoption",
+      "sample_size": 3296,
+      "sensitivity_alternatives": {
+        "observed_active_range": [
+          3258,
+          3381
+        ],
+        "quiet_opening_scaling_factor": 6.592,
+        "simulation_sizes": [
+          100,
+          250,
+          500,
+          1000
+        ]
+      },
+      "simulator_field": "SimulationConfig.n_vaults",
+      "uncertainty_interval": {
+        "lower": 100,
+        "type": "sensitivity_range",
+        "upper": 1000
+      },
+      "units": "synthetic vaults",
+      "validation_status": "provisional_scaling_choice"
+    },
+    {
+      "boundary_or_temporal_scope": "opening boundary",
+      "collateral_scope": "ETH and BTC families; exact ilks retained",
+      "estimate": {
+        "BTC": 0.1516058873203592,
+        "ETH": 0.8483941126796408
+      },
+      "estimator": "Direct active-debt share by collateral family",
+      "input_columns": [
+        "ilk",
+        "active",
+        "debt_dai"
+      ],
+      "input_dataset": "quiet and USDC/SVB opening/closing vault-state CSVs",
+      "model_interface_compatibility": "Direct collateral-specific scalar support; no STABLE candidate from the six-ilk evidence",
+      "notes": "Representative windows are regime-conditional and purposive; candidate is not an unconditional historical frequency.",
+      "parameter_name": "target_debt_share",
+      "regime": "quiet_mature",
+      "representation": "collateral-specific static scalar shares",
+      "resampling_unit": "urn bootstrap",
+      "review_requirement": "Review whether baseline should represent quiet opening or a declared scenario composition",
+      "sample_size": 1886,
+      "sensitivity_alternatives": "Quiet closing and USDC/SVB opening/closing shares; exact-ilk shares in target_debt_share_estimates.csv",
+      "simulator_field": "CollateralConfig.target_debt_share",
+      "uncertainty_interval": {
+        "BTC": [
+          0.08485334085946024,
+          0.2451900989821847
+        ],
+        "ETH": [
+          0.7324089774246498,
+          0.9119418233850346
+        ]
+      },
+      "units": "share of six-ilk active DAI debt",
+      "validation_status": "ready_for_review"
+    },
+    {
+      "boundary_or_temporal_scope": "opening boundary",
+      "collateral_scope": "six target ilks pooled for current global scalar",
+      "estimate": 468757.69960311166,
+      "estimator": "Unweighted cross-sectional arithmetic mean",
+      "input_columns": [
+        "active",
+        "debt_dai",
+        "urn",
+        "owner_or_proxy"
+      ],
+      "input_dataset": "quiet and USDC/SVB opening/closing vault-state CSVs",
+      "model_interface_compatibility": "Scalar supported; empirical distribution and collateral-specific moments are not",
+      "notes": "Representative windows are regime-conditional and purposive; candidate is not an unconditional historical frequency.",
+      "parameter_name": "debt_mean",
+      "regime": "quiet_mature",
+      "representation": "raw arithmetic mean",
+      "resampling_unit": "urn bootstrap; owner-proxy sensitivity",
+      "review_requirement": "Raw debt is heavy-tailed; review Gaussian moment loss before adoption",
+      "sample_size": 1886,
+      "sensitivity_alternatives": {
+        "log_mean": 9.046254266358591,
+        "median": 20158.220211181553,
+        "winsorised_q99_mean": 212692.81791221185
+      },
+      "simulator_field": "SimulationConfig.debt_mean",
+      "uncertainty_interval": [
+        304867.26935673,
+        673545.8994049379
+      ],
+      "units": "DAI per active indebted vault",
+      "validation_status": "provisional_distribution_choice"
+    },
+    {
+      "boundary_or_temporal_scope": "opening boundary",
+      "collateral_scope": "six target ilks pooled for current global scalar",
+      "estimate": 4401408.323422565,
+      "estimator": "Unweighted cross-sectional sample standard deviation",
+      "input_columns": [
+        "active",
+        "debt_dai",
+        "urn",
+        "owner_or_proxy"
+      ],
+      "input_dataset": "quiet and USDC/SVB opening/closing vault-state CSVs",
+      "model_interface_compatibility": "Scalar supported; empirical distribution and collateral-specific dispersion are not",
+      "notes": "Representative windows are regime-conditional and purposive; candidate is not an unconditional historical frequency.",
+      "parameter_name": "debt_std",
+      "regime": "quiet_mature",
+      "representation": "raw sample standard deviation",
+      "resampling_unit": "urn bootstrap; owner-proxy sensitivity",
+      "review_requirement": "Review heavy-tail sensitivity and realised Gaussian clipping",
+      "sample_size": 1886,
+      "sensitivity_alternatives": {
+        "interquartile_range": 91399.58045306828,
+        "log_std": 3.4429402579338264,
+        "winsorised_q99_std": 730049.0902411457
+      },
+      "simulator_field": "SimulationConfig.debt_std",
+      "uncertainty_interval": [
+        2070966.7925030058,
+        6481807.442729119
+      ],
+      "units": "DAI per active indebted vault",
+      "validation_status": "provisional_distribution_choice"
+    },
+    {
+      "boundary_or_temporal_scope": "opening boundary",
+      "collateral_scope": "six target ilks pooled for current global scalar",
+      "estimate": 15.160134900552466,
+      "estimator": "Mean among active indebted vaults with valid ratios",
+      "input_columns": [
+        "collateral_value_usd",
+        "debt_dai",
+        "liquidation_ratio",
+        "urn"
+      ],
+      "input_dataset": "quiet and USDC/SVB opening/closing vault-state CSVs",
+      "model_interface_compatibility": "Global scalar supported; exact-ilk distributions are not",
+      "notes": "Representative windows are regime-conditional and purposive; candidate is not an unconditional historical frequency.",
+      "parameter_name": "collateral_ratio_mean",
+      "regime": "quiet_mature",
+      "representation": "raw arithmetic mean",
+      "resampling_unit": "urn bootstrap; owner-proxy sensitivity",
+      "review_requirement": "Review upper-tail influence and liquidation-ratio heterogeneity",
+      "sample_size": 1886,
+      "sensitivity_alternatives": {
+        "log_mean": 1.8389113086348199,
+        "median": 4.455996923360745,
+        "winsorised_q99_mean": 11.536018781777084
+      },
+      "simulator_field": "SimulationConfig.collateral_ratio_mean",
+      "uncertainty_interval": [
+        11.858675148244732,
+        19.562662480878174
+      ],
+      "units": "dimensionless collateral-value/debt multiple",
+      "validation_status": "provisional_distribution_choice"
+    },
+    {
+      "boundary_or_temporal_scope": "opening boundary",
+      "collateral_scope": "six target ilks pooled for current global scalar",
+      "estimate": 91.15871291040759,
+      "estimator": "Sample standard deviation among valid ratios",
+      "input_columns": [
+        "collateral_value_usd",
+        "debt_dai",
+        "liquidation_ratio",
+        "urn"
+      ],
+      "input_dataset": "quiet and USDC/SVB opening/closing vault-state CSVs",
+      "model_interface_compatibility": "Global scalar supported; exact-ilk distributions are not",
+      "notes": "Representative windows are regime-conditional and purposive; candidate is not an unconditional historical frequency.",
+      "parameter_name": "collateral_ratio_std",
+      "regime": "quiet_mature",
+      "representation": "raw sample standard deviation",
+      "resampling_unit": "urn bootstrap; owner-proxy sensitivity",
+      "review_requirement": "Review upper-tail sensitivity and lower-tail fit after generator clipping",
+      "sample_size": 1886,
+      "sensitivity_alternatives": {
+        "interquartile_range": 10.142708424783745,
+        "log_std": 1.0416364811994756,
+        "winsorised_q99_std": 16.668528065185914
+      },
+      "simulator_field": "SimulationConfig.collateral_ratio_std",
+      "uncertainty_interval": [
+        20.676341317140803,
+        144.28163188155492
+      ],
+      "units": "dimensionless collateral-value/debt multiple",
+      "validation_status": "provisional_distribution_choice"
+    },
+    {
+      "boundary_or_temporal_scope": "opening boundary",
+      "collateral_scope": "six target ilks normalised by exact threshold",
+      "estimate": 0.4927578319238673,
+      "estimator": "Empirical lower-tail q05, not literal sample minimum",
+      "input_columns": [
+        "collateral_ratio",
+        "liquidation_ratio",
+        "urn"
+      ],
+      "input_dataset": "quiet and USDC/SVB opening/closing vault-state CSVs",
+      "model_interface_compatibility": "Global absolute scalar supported; collateral-specific and relative buffers are not",
+      "notes": "Representative windows are regime-conditional and purposive; candidate is not an unconditional historical frequency. The field is a simulator safeguard, not the protocol liquidation ratio.",
+      "parameter_name": "min_collateral_ratio_buffer",
+      "regime": "quiet_mature",
+      "representation": "fifth percentile absolute buffer",
+      "resampling_unit": "urn bootstrap",
+      "review_requirement": "Bootstrap the q05 itself and review exact-ilk alternatives before adoption",
+      "sample_size": 1886,
+      "sensitivity_alternatives": {
+        "q01": 0.19071164996105142,
+        "q10": 0.6848860308224369,
+        "relative_q05": 0.31596227969327667,
+        "sample_minimum": 0.06540720304908132
+      },
+      "simulator_field": "generate_*_vaults(min_collateral_ratio_buffer)",
+      "uncertainty_interval": [
+        0.422144732390789,
+        0.5318617044495484
+      ],
+      "units": "absolute dimensionless ratio above liquidation threshold",
+      "validation_status": "provisional_distribution_choice"
+    },
+    {
+      "boundary_or_temporal_scope": "all 696 hourly snapshots",
+      "collateral_scope": "six target ilks",
+      "estimate": 0.0,
+      "estimator": "Ninety-fifth percentile of reconstructed hourly share",
+      "input_columns": [
+        "ink_raw",
+        "art_raw",
+        "rate_raw_ray",
+        "collateral price",
+        "liquidation_ratio"
+      ],
+      "input_dataset": "opening state, in-window mutations, sparse rates, Phase 1A prices and Phase 1D liquidation ratios",
+      "model_interface_compatibility": "direct global scalar support",
+      "notes": "Representative windows are regime-conditional and purposive; candidate is not an unconditional historical frequency. Liquidatable state is distinct from Bark or grab execution.",
+      "parameter_name": "max_normal_liquidatable_share",
+      "regime": "quiet_mature",
+      "representation": "quiet-window hourly q95",
+      "resampling_unit": "24-hour moving-block bootstrap",
+      "review_requirement": "Validate classification sensitivity outside the quiet window",
+      "sample_size": 696,
+      "sensitivity_alternatives": {
+        "active_indebted_denominator_maximum": 0.0,
+        "maximum": 0.0,
+        "q90": 0.0,
+        "q99": 0.0
+      },
+      "simulator_field": "ConfidenceConfig.max_normal_liquidatable_share",
+      "uncertainty_interval": [
+        0.0,
+        0.0
+      ],
+      "units": "share of all active vaults",
+      "validation_status": "ready_for_review"
+    },
+    {
+      "boundary_or_temporal_scope": "Phase 2A classifier-stress hours within USDC/SVB",
+      "collateral_scope": "six target ilks",
+      "estimate": 0.0005775460206379942,
+      "estimator": "Ninety-fifth percentile of reconstructed hourly share, constrained not below the normal candidate",
+      "input_columns": [
+        "ink_raw",
+        "art_raw",
+        "rate_raw_ray",
+        "collateral price",
+        "liquidation_ratio",
+        "regime"
+      ],
+      "input_dataset": "opening state, in-window mutations, sparse rates, Phase 1A prices, Phase 1D ratios and frozen Phase 2A classifier",
+      "model_interface_compatibility": "direct global scalar support",
+      "notes": "Representative windows are regime-conditional and purposive; candidate is not an unconditional historical frequency. The FTX interval was not used. Liquidatable state is distinct from observed liquidation execution.",
+      "parameter_name": "max_stress_liquidatable_share",
+      "regime": "stress",
+      "representation": "USDC/SVB classifier-stress hourly q95",
+      "resampling_unit": "24-hour moving-block bootstrap",
+      "review_requirement": "Terra/CeFi stress-tail validation remains required before adoption",
+      "sample_size": 42,
+      "sensitivity_alternatives": {
+        "classifier_stress_maximum": 0.0011855364552459987,
+        "classifier_stress_q99": 0.0010638030014861334,
+        "full_named_window_q95": 0.0,
+        "unconstrained_classifier_stress_q95": 0.0005775460206379942
+      },
+      "simulator_field": "ConfidenceConfig.max_stress_liquidatable_share",
+      "uncertainty_interval": [
+        0.0,
+        0.0008886255924170616
+      ],
+      "units": "share of all active vaults",
+      "validation_status": "ready_for_review"
+    }
+  ],
+  "excluded_parameter": {
+    "estimate": null,
+    "parameter_name": "max_close_factor",
+    "status": "insufficient_evidence"
+  },
+  "phase": "2B",
+  "random_seed": 20260726,
+  "representative_windows": [
+    {
+      "end_exclusive_utc": "2024-03-01T00:00:00+00:00",
+      "key": "quiet_mature",
+      "role": "normal",
+      "start_utc": "2024-02-01T00:00:00+00:00"
+    },
+    {
+      "end_exclusive_utc": "2023-03-20T00:00:00+00:00",
+      "key": "usdc_svb",
+      "role": "stress",
+      "start_utc": "2023-03-06T00:00:00+00:00"
+    }
+  ],
+  "schema_version": 1
+}

@@ -3,7 +3,8 @@
 ## Ownership
 
 `data/provenance/` is the cross-domain index. It contains the authoritative
-data manifest and links into domain provenance. Each domain owns its query,
+data manifest, links into domain provenance, and compact canonical calibration
+evidence under `data/provenance/calibration/`. Each domain owns its query,
 execution, acquisition, processing and validation records under
 `data/<domain>/provenance/`.
 
@@ -33,10 +34,13 @@ production costs.
 ## Tracked and ignored material
 
 Tracked provenance includes the cross-domain manifest, compact runtime-input
-manifests, selected source identifiers and checksums needed to identify ignored
-data. Detailed result payloads, partial files, transient states, local
-validation outputs and machine-specific paths remain ignored unless a durable
-record is required for an irreproducible execution.
+manifests, adopted-parameter evidence, reviewed candidate registries, readiness
+decisions, selected source identifiers and checksums needed to identify ignored
+data. Generated human-readable diagnostics remain under `outputs/` and are not
+automatic dependencies of canonical loaders. Detailed result payloads, partial
+files, transient states, local validation outputs and machine-specific paths
+remain ignored unless a durable record is required for an irreproducible
+execution.
 
 Credentials, `.env` files and Dune API keys never belong in provenance.
 

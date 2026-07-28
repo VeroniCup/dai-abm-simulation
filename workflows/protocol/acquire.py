@@ -155,7 +155,7 @@ CLIPPER_STOPPED_MINIMAL_VALIDATION_PATH = (
     DIAGNOSTIC_DIR / "phase1d_clipper_stopped_minimal_validation.json"
 )
 CLIPPER_STOPPED_EVIDENCE_PATH = (
-    DIAGNOSTIC_DIR / "phase1d_clipper_stopped_minimal_evidence.json"
+    PROVENANCE_DIR / "clipper_stopped_default_evidence.json"
 )
 CLIPPER_STOPPED_DEFAULTS_PATH = (
     PROVENANCE_DIR / "clipper_stopped_default_states.csv"

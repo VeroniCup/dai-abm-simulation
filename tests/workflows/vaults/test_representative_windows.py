@@ -982,10 +982,7 @@ def test_local_rate_audit_distinguishes_duty_from_accumulated_rate():
 
 
 def test_parameter_readiness_schema_is_stable():
-    path = (
-        representative.PROVENANCE_ROOT
-        / "parameter_evidence_readiness.csv"
-    )
+    path = representative.CALIBRATION_READINESS_PATH
     rows = representative.load_csv(path)
     assert len(rows) == 10
     assert {

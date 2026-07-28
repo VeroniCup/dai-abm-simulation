@@ -35,9 +35,11 @@ OLD_ACTIVE_PREFIXES = (
 DURABLE_PROVENANCE = (
     "data/provenance/data_manifest.csv",
     "data/provenance/index.json",
+    "data/provenance/calibration/manifest.json",
     "data/gas/provenance/dune_ethereum_hourly_gas_chunk_ledger.json",
     "data/liquidations/provenance/manifest.json",
     "data/protocol/provenance/manifest.json",
+    "data/protocol/provenance/clipper_stopped_default_states.csv",
     "data/protocol/provenance/parameter_adoption/manifest.json",
     "data/vaults/provenance/discovery_manifest.json",
     "data/vaults/provenance/manifest.json",
@@ -59,7 +61,7 @@ def test_root_provenance_contains_only_cross_domain_entry_points() -> None:
         for path in (DATA_ROOT / "provenance").iterdir()
         if path.name != ".DS_Store"
     }
-    assert entries == {"data_manifest.csv", "index.json"}
+    assert entries == {"calibration", "data_manifest.csv", "index.json"}
 
 
 def test_provenance_index_uses_resolvable_domain_first_paths() -> None:
@@ -68,13 +70,12 @@ def test_provenance_index_uses_resolvable_domain_first_paths() -> None:
     )
     assert len(payload["categories"]) == 5
     for category in payload["categories"]:
-        for key in (
-            "authoritative_manifest",
-            "raw_source_location",
-            "processed_output_location",
-        ):
-            path = REPOSITORY_ROOT / category[key]
-            assert path.exists(), (category["category"], key, path)
+        manifest = REPOSITORY_ROOT / category["authoritative_manifest"]
+        assert manifest.is_file(), (category["category"], manifest)
+        for key in ("raw_source_location", "processed_output_location"):
+            relative = category[key]
+            assert relative.startswith("data/")
+            assert _is_ignored(f"{relative.rstrip('/')}/generated.csv")
 
 
 def test_cross_domain_manifest_active_paths_resolve() -> None:
@@ -91,7 +92,11 @@ def test_cross_domain_manifest_active_paths_resolve() -> None:
                 "sql_file_path",
                 "processing_script_path",
             }:
-                assert (REPOSITORY_ROOT / value).exists(), (key, value)
+                path = REPOSITORY_ROOT / value
+                if path.exists():
+                    continue
+                assert value.startswith("data/"), (key, value)
+                assert _is_ignored(value), (key, value)
 
 
 def test_active_provenance_has_no_old_domain_paths() -> None:

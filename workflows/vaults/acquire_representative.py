@@ -44,6 +44,14 @@ PROCESSED_ROOT = (
 PROVENANCE_ROOT = (
     ROOT / "data" / "vaults" / "provenance" / "representative_regimes"
 )
+CALIBRATION_READINESS_PATH = (
+    ROOT
+    / "data"
+    / "provenance"
+    / "calibration"
+    / "parameter_readiness"
+    / "representative_vault_parameter_readiness.csv"
+)
 SQL_ROOT = (
     ROOT / "sql" / "vaults" / "generated" / "representative_regimes"
 )
@@ -3122,7 +3130,7 @@ def write_parameter_readiness(
     opening_rows: list[dict[str, Any]],
     event_rows: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
-    source_path = PROVENANCE_ROOT / "parameter_evidence_readiness.csv"
+    source_path = CALIBRATION_READINESS_PATH
     rows = load_csv(source_path)
     active = sum(bool(row["active"]) for row in opening_rows)
     indebted = sum(Decimal(row["debt_dai"]) > 0 for row in opening_rows)

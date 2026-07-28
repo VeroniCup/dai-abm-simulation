@@ -198,7 +198,10 @@
     "creation_record_count": 6,
     "explicit_stopped_call_count": 0,
     "observed_credit_delta": 1.379,
-    "evidence_path": "data/protocol/provenance/archive/diagnostic/phase1d_clipper_stopped_minimal_evidence.json",
+    "evidence_path": "data/protocol/provenance/clipper_stopped_default_evidence.json",
+    "evidence_sha256": "7353ebff7cceb971adc0be6b324034fda49faa312fb57d4ba9c44039c382b5a5",
+    "default_states_path": "data/protocol/provenance/clipper_stopped_default_states.csv",
+    "default_states_sha256": "615c26fdf3484c08972eef57705ff714af74cb5fa742ebaff004afdb2126ee85",
     "classification": "six explicit zero initial states from verified source and creation evidence",
     "synthetic_default_rows_created": 6,
     "raw_clipper_csv_modified": false
