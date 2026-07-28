@@ -39,7 +39,7 @@ TERRA_PROVENANCE = (
 PHASE1C_ACTIONS = (
     PROJECT_ROOT
     / "data/liquidations/processed/"
-    "phase1c_liquidation_actions_2021-06-01_2024-06-30.csv"
+    "liquidation_actions_2021-06-01_2024-06-30.csv"
 )
 MARKET_PANEL = (
     PROJECT_ROOT
@@ -47,7 +47,7 @@ MARKET_PANEL = (
 )
 PROTOCOL_PANEL = (
     PROJECT_ROOT
-    / "data/protocol/processed/phase1d_protocol_parameters_hourly.csv"
+    / "data/protocol/processed/hourly_protocol_parameters.csv"
 )
 PHASE2A_REGIMES = (
     PROJECT_ROOT
@@ -385,7 +385,7 @@ def _manifest_and_checksums() -> tuple[dict[str, Any], list[dict[str, Any]]]:
         "reconstructed_vault_events.csv",
         "reconstructed_vault_snapshots.csv",
         "reconstruction_validation.csv",
-        "phase1c_liquidation_auctions.csv",
+        "liquidation_auctions.csv",
     ):
         path = PROJECT_ROOT / outputs[name]["path"]
         actual = sha256_file(path)
@@ -1375,7 +1375,7 @@ def run_phase2c(config: Phase2CConfig = Phase2CConfig()) -> dict[str, Any]:
         close, config.sequence_gap_seconds
     )
     actions = pd.read_csv(PHASE1C_ACTIONS, low_memory=False)
-    auctions = pd.read_csv(TERRA_DIR / "phase1c_liquidation_auctions.csv")
+    auctions = pd.read_csv(TERRA_DIR / "liquidation_auctions.csv")
     auction_estimates = auction_execution_fractions(actions, auctions)
     sequence_estimates = _sequence_estimates(
         close,

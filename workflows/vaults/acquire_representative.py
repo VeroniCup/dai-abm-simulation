@@ -47,29 +47,29 @@ PROVENANCE_ROOT = (
 SQL_ROOT = (
     ROOT / "sql" / "vaults" / "generated" / "representative_regimes"
 )
-TRANCHE_MANIFEST = PROVENANCE_ROOT / "tranche_01_manifest.json"
+TRANCHE_MANIFEST = PROVENANCE_ROOT / "representative_windows_manifest.json"
 MARKET_PATH = (
     ROOT / "data" / "market" / "processed"
     / "dune_hourly_market_prices_processed.csv"
 )
 PROTOCOL_PATH = (
     ROOT / "data" / "protocol" / "processed"
-    / "phase1d_protocol_parameters_hourly.csv"
+    / "hourly_protocol_parameters.csv"
 )
 LIQUIDATION_ACTIONS_PATH = (
     ROOT / "data" / "liquidations" / "processed"
-    / "phase1c_liquidation_actions_2021-06-01_2024-06-30.csv"
+    / "liquidation_actions_2021-06-01_2024-06-30.csv"
 )
 LIQUIDATION_AUCTIONS_PATH = (
     ROOT / "data" / "liquidations" / "processed"
-    / "phase1c_liquidation_auctions_2021-06-01_2024-06-30.csv"
+    / "liquidation_auctions_2021-06-01_2024-06-30.csv"
 )
 LIQUIDATION_TRANSACTIONS_PATH = (
     ROOT / "data" / "liquidations" / "processed"
-    / "phase1c_liquidation_transactions_2021-06-01_2024-06-30.csv"
+    / "liquidation_transactions_2021-06-01_2024-06-30.csv"
 )
 PHASE2B_CANDIDATES_PATH = (
-    ROOT / "data" / "processed" / "estimation" / "phase2b_vaults"
+    ROOT / "outputs" / "diagnostics" / "calibration" / "vaults"
     / "phase2b_parameter_candidates.json"
 )
 
@@ -3122,7 +3122,7 @@ def write_parameter_readiness(
     opening_rows: list[dict[str, Any]],
     event_rows: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
-    source_path = PROVENANCE_ROOT / "tranche_01_parameter_evidence_readiness.csv"
+    source_path = PROVENANCE_ROOT / "parameter_evidence_readiness.csv"
     rows = load_csv(source_path)
     active = sum(bool(row["active"]) for row in opening_rows)
     indebted = sum(Decimal(row["debt_dai"]) > 0 for row in opening_rows)
@@ -3607,7 +3607,7 @@ def reconstruct_window(window: RepresentativeWindow) -> dict[str, Any]:
     phase1c_auctions = extract_phase1c_auctions(window)
     if phase1c_auctions:
         write_csv_atomic(
-            processed / "phase1c_liquidation_auctions.csv",
+            processed / "liquidation_auctions.csv",
             tuple(phase1c_auctions[0]),
             phase1c_auctions,
         )
@@ -4067,7 +4067,7 @@ def reconstruct_window(window: RepresentativeWindow) -> dict[str, Any]:
             "size_bytes": path.stat().st_size,
             "sha256": sha256_file(path),
         }
-    phase1c_auction_extract = processed / "phase1c_liquidation_auctions.csv"
+    phase1c_auction_extract = processed / "liquidation_auctions.csv"
     if phase1c_auction_extract.exists():
         with phase1c_auction_extract.open(
             newline="", encoding="utf-8"

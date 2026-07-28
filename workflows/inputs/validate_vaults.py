@@ -46,7 +46,9 @@ from dai_sim.model.simulation import run_simulation_with_collateral_metrics
 from dai_sim.model.vault import vaults_to_dataframe
 
 
-OUTPUT_DIR = REPOSITORY_ROOT / "data" / "processed" / "estimation" / "tranche_b"
+OUTPUT_DIR = (
+    REPOSITORY_ROOT / "outputs" / "diagnostics" / "input_construction" / "vaults"
+)
 SMOKE_CONFIGS = {
     "legacy_gaussian": None,
     "tranche_a_configuration_only": (),
@@ -238,7 +240,11 @@ def main() -> None:
     convergence = _population_convergence()
     zero_threshold = _zero_threshold()
 
-    smoke.to_csv(OUTPUT_DIR / "tranche_b_smoke_results.csv", index=False, lineterminator="\n")
+    smoke.to_csv(
+        OUTPUT_DIR / "vault_initialisation_smoke_results.csv",
+        index=False,
+        lineterminator="\n",
+    )
     validation.to_csv(OUTPUT_DIR / "sampling_validation.csv", index=False, lineterminator="\n")
     comparison.to_csv(OUTPUT_DIR / "distribution_comparison.csv", index=False, lineterminator="\n")
     convergence.to_csv(OUTPUT_DIR / "population_convergence.csv", index=False, lineterminator="\n")
@@ -268,7 +274,7 @@ def main() -> None:
         "tranche_a_values_changed": False,
         "notes": "Diagnostics are bounded smoke and initialisation checks only.",
     }
-    (OUTPUT_DIR / "tranche_b_run_metadata.json").write_text(
+    (OUTPUT_DIR / "vault_initialisation_metadata.json").write_text(
         json.dumps(metadata, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )

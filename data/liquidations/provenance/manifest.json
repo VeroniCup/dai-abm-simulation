@@ -16,19 +16,19 @@
   ],
   "combined_datasets_created": false,
   "combined_outputs": {
-    "data/liquidations/processed/phase1c_liquidation_actions_2021-06-01_2024-06-30.csv": {
+    "data/liquidations/processed/liquidation_actions_2021-06-01_2024-06-30.csv": {
       "sha256": "3e90f564ca55b4c6c33fe3d8106a3c2a72983853bdd2d370b9b8aefdd34361dd",
       "size_bytes": 4814640
     },
-    "data/liquidations/processed/phase1c_liquidation_auctions_2021-06-01_2024-06-30.csv": {
+    "data/liquidations/processed/liquidation_auctions_2021-06-01_2024-06-30.csv": {
       "sha256": "3d3d049f40f48f7043a9be64a2388ab460692a0380a999281880b5b3c24056b7",
       "size_bytes": 659126
     },
-    "data/liquidations/processed/phase1c_liquidation_hourly_by_ilk_2021-06-01_2024-06-30.csv": {
+    "data/liquidations/processed/liquidation_hourly_by_ilk_2021-06-01_2024-06-30.csv": {
       "sha256": "8a0f38d09d5bab50f6434e3190c9dc7e8f8d88ac1f738e2b3b45f332b5016f3e",
       "size_bytes": 23418739
     },
-    "data/liquidations/processed/phase1c_liquidation_transactions_2021-06-01_2024-06-30.csv": {
+    "data/liquidations/processed/liquidation_transactions_2021-06-01_2024-06-30.csv": {
       "sha256": "6b86dc3086d49611c49f5a658b12a383a3d71158a0bf961a7a3cf13e0ed13a60",
       "size_bytes": 675291
     }

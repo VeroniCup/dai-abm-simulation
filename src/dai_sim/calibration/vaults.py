@@ -44,7 +44,7 @@ FTX_END_EXCLUSIVE = pd.Timestamp("2022-11-21T00:00:00Z")
 DEFAULT_OUTPUT = PROJECT_ROOT / "outputs/diagnostics/calibration/vaults"
 PROTOCOL_PATH = (
     PROJECT_ROOT / "data/protocol/processed/"
-    "phase1d_protocol_parameters_hourly.csv"
+    "hourly_protocol_parameters.csv"
 )
 MARKET_PATH = (
     PROJECT_ROOT / "data/market/processed/"

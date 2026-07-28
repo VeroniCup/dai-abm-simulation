@@ -48,7 +48,13 @@ from dai_sim.model.simulation import run_simulation_with_price_path
 from dai_sim.model.vault import Vault
 
 
-OUTPUT_DIR = REPOSITORY_ROOT / "data" / "processed" / "estimation" / "tranche_d"
+OUTPUT_DIR = (
+    REPOSITORY_ROOT
+    / "outputs"
+    / "diagnostics"
+    / "input_construction"
+    / "liquidations"
+)
 
 
 def _summary(values: pd.Series | np.ndarray) -> dict[str, float]:
@@ -253,7 +259,7 @@ def build_diagnostics() -> dict[str, Path]:
         "sequence_distribution": OUTPUT_DIR / "sequence_distribution.csv",
         "arrival_process_validation": OUTPUT_DIR / "arrival_process_validation.csv",
         "capacity_separation_validation": OUTPUT_DIR / "capacity_separation_validation.csv",
-        "tranche_d_smoke_results": OUTPUT_DIR / "tranche_d_smoke_results.csv",
+        "tranche_d_smoke_results": OUTPUT_DIR / "liquidation_input_smoke_results.csv",
     }
     frames = {
         "liquidation_arrival_runtime_pool_audit": audit,
@@ -285,7 +291,7 @@ def build_diagnostics() -> dict[str, Path]:
             for path in sorted(paths.values())
         },
     }
-    metadata_path = OUTPUT_DIR / "tranche_d_run_metadata.json"
+    metadata_path = OUTPUT_DIR / "liquidation_input_metadata.json"
     metadata_path.write_text(
         json.dumps(metadata, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",

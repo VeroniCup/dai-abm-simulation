@@ -201,22 +201,22 @@ def _liquidation_specs() -> list[InputSpec]:
         ).read_text(encoding="utf-8")
     )
     known = {
-        "phase1c_liquidation_actions_2021-06-01_2024-06-30.csv": (
+        "liquidation_actions_2021-06-01_2024-06-30.csv": (
             "liquidation_actions",
             7_997,
             48,
         ),
-        "phase1c_liquidation_transactions_2021-06-01_2024-06-30.csv": (
+        "liquidation_transactions_2021-06-01_2024-06-30.csv": (
             "liquidation_transactions",
             2_485,
             15,
         ),
-        "phase1c_liquidation_auctions_2021-06-01_2024-06-30.csv": (
+        "liquidation_auctions_2021-06-01_2024-06-30.csv": (
             "liquidation_auctions",
             1_157,
             33,
         ),
-        "phase1c_liquidation_hourly_by_ilk_2021-06-01_2024-06-30.csv": (
+        "liquidation_hourly_by_ilk_2021-06-01_2024-06-30.csv": (
             "liquidation_hourly",
             162_144,
             26,

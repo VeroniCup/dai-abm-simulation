@@ -13,7 +13,7 @@
     "name": "Representative calibration acquisition",
     "status": "quiet_mature_usdc_svb_and_terra_cefi_complete_validated",
     "strategy_path": "docs/phase1e_representative_calibration_strategy.md",
-    "tranche_01_manifest_path": "data/vaults/provenance/representative_regimes/tranche_01_manifest.json",
+    "tranche_01_manifest_path": "data/vaults/provenance/representative_regimes/representative_windows_manifest.json",
     "tranche_01_report_path": "docs/phase1e_b_tranche1_acquisition_report.md",
     "quiet_mature_status": "complete_reconstructed_validated",
     "usdc_svb_status": "complete_reconstructed_validated",

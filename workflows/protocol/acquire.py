@@ -76,7 +76,7 @@ class ModuleSpec:
 
     @property
     def stem(self) -> str:
-        return f"phase1d_{self.name.lower()}_parameters"
+        return f"{self.name.lower()}_parameter_history"
 
     @property
     def raw_path(self) -> Path:
@@ -119,9 +119,9 @@ MODULES = {
     )),
 }
 
-LEDGER_PATH = PROCESSED_DIR / "phase1d_protocol_parameter_changes.csv"
-INTERVAL_PATH = PROCESSED_DIR / "phase1d_protocol_parameter_intervals.csv"
-HOURLY_PATH = PROCESSED_DIR / "phase1d_protocol_parameters_hourly.csv"
+LEDGER_PATH = PROCESSED_DIR / "protocol_parameter_changes.csv"
+INTERVAL_PATH = PROCESSED_DIR / "protocol_parameter_intervals.csv"
+HOURLY_PATH = PROCESSED_DIR / "hourly_protocol_parameters.csv"
 METADATA_PATH = PROVENANCE_DIR / "metadata.json"
 VALIDATION_PATH = PROVENANCE_DIR / "validation.json"
 MANIFEST_PATH = PROVENANCE_DIR / "manifest.json"
@@ -158,7 +158,7 @@ CLIPPER_STOPPED_EVIDENCE_PATH = (
     DIAGNOSTIC_DIR / "phase1d_clipper_stopped_minimal_evidence.json"
 )
 CLIPPER_STOPPED_DEFAULTS_PATH = (
-    PROVENANCE_DIR / "phase1d_clipper_stopped_documented_defaults.csv"
+    PROVENANCE_DIR / "clipper_stopped_default_states.csv"
 )
 DERIVED_PROVENANCE_COLUMNS = (
     "state_source", "is_observed_call", "evidence_reference",

@@ -50,7 +50,13 @@ from dai_sim.model.liquidation import LiquidationConfig
 from dai_sim.model.simulation import run_simulation_with_collateral_metrics
 
 
-OUTPUT_DIR = REPOSITORY_ROOT / "data" / "processed" / "estimation" / "tranche_c"
+OUTPUT_DIR = (
+    REPOSITORY_ROOT
+    / "outputs"
+    / "diagnostics"
+    / "input_construction"
+    / "market_gas"
+)
 PRIMARY_CONFIG = REPOSITORY_ROOT / "config/profiles/empirical.yaml"
 CONFIGS = {
     "primary_168_component_gas": (),
@@ -399,7 +405,11 @@ def main() -> None:
         index=False,
         lineterminator="\n",
     )
-    smoke.to_csv(OUTPUT_DIR / "tranche_c_smoke_results.csv", index=False, lineterminator="\n")
+    smoke.to_csv(
+        OUTPUT_DIR / "market_gas_smoke_results.csv",
+        index=False,
+        lineterminator="\n",
+    )
     ftx.to_csv(OUTPUT_DIR / "ftx_directional_validation.csv", index=False, lineterminator="\n")
 
     metadata = {
@@ -426,7 +436,7 @@ def main() -> None:
             for path in sorted(OUTPUT_DIR.glob("*.csv"))
         },
     }
-    (OUTPUT_DIR / "tranche_c_run_metadata.json").write_text(
+    (OUTPUT_DIR / "market_gas_metadata.json").write_text(
         json.dumps(metadata, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )

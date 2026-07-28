@@ -12,6 +12,7 @@ import sys
 
 from tests.integration.test_test_hierarchy import (
     EXPECTED_MAPPING,
+    POST_STAGE11_CORRECTION_MODULES,
     STAGE11_MODULES,
     STAGE9_MODULES,
     STAGE10_MODULES,
@@ -83,7 +84,12 @@ def _baseline_nodeids(nodeids: list[str]) -> list[str]:
         nodeid
         for nodeid in nodeids
         if nodeid.split("::", 1)[0]
-        not in STAGE9_MODULES | STAGE10_MODULES | STAGE11_MODULES
+        not in (
+            STAGE9_MODULES
+            | STAGE10_MODULES
+            | STAGE11_MODULES
+            | POST_STAGE11_CORRECTION_MODULES
+        )
     )
 
 
@@ -187,7 +193,12 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
     assert additions
     assert all(
         nodeid.split("::", 1)[0]
-        in STAGE9_MODULES | STAGE10_MODULES | STAGE11_MODULES
+        in (
+            STAGE9_MODULES
+            | STAGE10_MODULES
+            | STAGE11_MODULES
+            | POST_STAGE11_CORRECTION_MODULES
+        )
         for nodeid in additions
     )
     counts = Counter(nodeid.split("::", 1)[0] for nodeid in additions)
@@ -198,5 +209,6 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
         "tests/integration/test_test_hierarchy.py": 7,
         "tests/integration/test_compatibility_removal.py": 9,
         "tests/workflows/test_canonical_commands.py": 21,
+        "tests/workflows/test_semantic_output_paths.py": 5,
     }
     assert len(nodeids) == 419 + len(additions)
