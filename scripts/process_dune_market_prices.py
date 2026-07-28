@@ -35,14 +35,14 @@ EXPECTED_RAW_SHA256 = (
     "99487a45d4e56cd27ee8f108413f0677af0e87efc4d2af3e071fe80d89e524d5"
 )
 DEFAULT_INPUT = Path(
-    "data/raw/market/dune_prices_hourly_2021-06-01_2024-06-30.csv"
+    "data/market/raw/dune_prices_hourly_2021-06-01_2024-06-30.csv"
 )
 DEFAULT_RAW_VALIDATION = Path(
-    "data/provenance/market/dune_prices_hourly_2021-06-01_2024-06-30.validation.json"
+    "data/market/provenance/dune_prices_hourly_2021-06-01_2024-06-30.validation.json"
 )
-DEFAULT_OUTPUT_DIRECTORY = Path("data/processed/market")
-DEFAULT_PROVENANCE_DIRECTORY = Path("data/provenance/market")
-DEFAULT_MANIFEST = Path("data/provenance/manifests/data_manifest.csv")
+DEFAULT_OUTPUT_DIRECTORY = Path("data/market/processed")
+DEFAULT_PROVENANCE_DIRECTORY = Path("data/market/provenance")
+DEFAULT_MANIFEST = Path("data/provenance/data_manifest.csv")
 DEFAULT_START = pd.Timestamp("2021-06-01T00:00:00Z")
 DEFAULT_END_EXCLUSIVE = pd.Timestamp("2024-07-01T00:00:00Z")
 ASSET_PRICE_COLUMNS = {

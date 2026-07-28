@@ -30,37 +30,36 @@ results/
 figures/
 logs/
 
-# Data: retain directory documentation and selected manifest entry points;
-# ignore generated source payloads, analytical datasets and operational records.
-data/raw/market/*
-!data/raw/market/README.md
-data/raw/gas/*
-!data/raw/gas/README.md
-data/raw/protocol/*
-!data/raw/protocol/README.md
-data/raw/vaults/*
-!data/raw/vaults/README.md
-data/raw/liquidations/*
-!data/raw/liquidations/README.md
+# Data: retain domain documentation, runtime model inputs and selected manifest
+# entry points; ignore generated source payloads, analytical datasets and
+# operational records.
+data/*/raw/**
+!data/*/raw/README.md
+data/*/processed/**
+
+# Temporary Stage 10 diagnostics exception.
 data/processed/*
 !data/processed/README.md
+
+# Cross-domain provenance entry points.
 data/provenance/*
-!data/provenance/manifests/
-!data/provenance/manifests/index.json
-!data/provenance/manifests/data_manifest.csv
-!data/provenance/gas/
-data/provenance/gas/*
-!data/provenance/gas/dune_ethereum_hourly_gas_chunk_ledger.json
-!data/provenance/liquidations/
-data/provenance/liquidations/*
-!data/provenance/liquidations/manifest.json
-!data/provenance/protocol/
-data/provenance/protocol/*
-!data/provenance/protocol/manifest.json
-!data/provenance/vaults/
-data/provenance/vaults/*
-!data/provenance/vaults/manifest.json
-!data/provenance/vaults/discovery_manifest.json
+!data/provenance/index.json
+!data/provenance/data_manifest.csv
+
+# Domain-owned provenance. Detailed operational records stay ignored; selected
+# durable entry points remain tracked.
+data/*/provenance/**
+!data/gas/provenance/
+!data/gas/provenance/dune_ethereum_hourly_gas_chunk_ledger.json
+!data/liquidations/provenance/
+!data/liquidations/provenance/manifest.json
+!data/protocol/provenance/
+!data/protocol/provenance/manifest.json
+!data/protocol/provenance/parameter_adoption/
+!data/protocol/provenance/parameter_adoption/manifest.json
+!data/vaults/provenance/
+!data/vaults/provenance/manifest.json
+!data/vaults/provenance/discovery_manifest.json
 
 # Python packaging
 build/

@@ -21,7 +21,7 @@ from typing import Any, Callable
 
 ROOT = Path(__file__).resolve().parents[1]
 DISCOVERY_DIR = (
-    ROOT / "data" / "provenance" / "vaults" / "archive" / "discovery"
+    ROOT / "data" / "vaults" / "provenance" / "archive" / "discovery"
 )
 CANONICAL_VAT = "0x35d1b3f3d7966a1dfe207aa4514c12a259a0492b"
 CANONICAL_MANAGER = "0x5ef30b9986345249bc32d8928b7ee64de9435e39"

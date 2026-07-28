@@ -6,17 +6,23 @@ volatility and regimes remain in `src/empirical_data.py`. Each source is
 declared under `input_files` in `config/empirical.yaml`. Paths are resolved
 relative to the repository root.
 
-Raw files belong under:
+Empirical data use a domain-first hierarchy under `data/market/`, `data/gas/`,
+`data/vaults/`, `data/liquidations/` and `data/protocol/`. Each populated
+domain owns the relevant lifecycle directories:
 
-- `data/raw/market/`;
-- `data/raw/gas/`;
-- `data/raw/protocol/`;
-- `data/raw/vaults/`;
-- `data/raw/liquidations/`.
+- `raw/` for read-only acquisition artefacts;
+- `processed/` for reproducible analytical datasets;
+- `model_inputs/` for compact tracked runtime inputs;
+- `provenance/` for domain-owned manifests, validation and acquisition records.
 
-They are read-only pipeline inputs and are never overwritten. Standardised
-source files and the aligned panel from a baseline run are written under
-`data/processed/`, which is excluded from Git apart from its documentation.
+Raw and processed payloads and detailed provenance are ignored by Git. Their
+tracked READMEs, selected durable provenance entry points and compact
+`model_inputs/` remain version controlled. The narrow `data/provenance/` root
+contains only the cross-domain data manifest and provenance index.
+
+The generated `data/processed/estimation/` diagnostics tree remains temporarily
+in the old lifecycle-first hierarchy until Stage 10. No other empirical data
+should be added to a lifecycle-first location.
 
 ## Dune hourly market-price acquisition
 
@@ -39,9 +45,9 @@ python scripts/acquire_dune_market_prices.py \
 
 The script polls one execution, stops without retrying on failure or timeout,
 and fetches each CSV result page at most once. Raw output is written to
-`data/raw/market/` without imputation, sorting or value transformation. It also
+`data/market/raw/` without imputation, sorting or value transformation. It also
 records the query ID, execution ID, UTC acquisition time, coverage, row count
-and SHA-256 checksum in an execution sidecar and `data/provenance/manifests/data_manifest.csv`.
+and SHA-256 checksum in an execution sidecar and `data/provenance/data_manifest.csv`.
 If polling times out, resume the same execution rather than paying for another:
 
 ```bash
@@ -66,8 +72,8 @@ Validate the untouched result locally with:
 
 ```bash
 python scripts/validate_dune_market_prices.py \
-  data/raw/market/dune_prices_hourly_2021-06-01_2024-06-30.csv \
-  --report data/provenance/market/dune_prices_hourly_2021-06-01_2024-06-30.validation.json
+  data/market/raw/dune_prices_hourly_2021-06-01_2024-06-30.csv \
+  --report data/market/provenance/dune_prices_hourly_2021-06-01_2024-06-30.validation.json
 ```
 
 Validation checks the requested UTC boundaries, identifiers, row counts,
@@ -82,23 +88,23 @@ structural validation have passed:
 
 ```bash
 python scripts/process_dune_market_prices.py \
-  --input data/raw/market/dune_prices_hourly_2021-06-01_2024-06-30.csv
+  --input data/market/raw/dune_prices_hourly_2021-06-01_2024-06-30.csv
 ```
 
 The command is deterministic apart from recorded creation timestamps and has
 no network or Dune API path. It writes generated analytical CSVs under
-`data/processed/market/` and their provenance sidecars under
-`data/provenance/market/`:
+`data/market/processed/` and their provenance sidecars under
+`data/market/provenance/`:
 
 - `dune_hourly_market_prices_processed.csv` — one row per UTC hour with the
   exact raw prices, hourly log returns, DAI and USDC peg measures and source
   provenance;
 - `stablecoin_extreme_review.csv` — every DAI or USDC observation meeting the
   documented price, peg-deviation or centred rolling-median review criteria;
-- `data/provenance/market/dune_hourly_market_prices_processing_metadata.json`
+- `data/market/provenance/dune_hourly_market_prices_processing_metadata.json`
   — input/output checksums, dimensions, transformation definitions and
   descriptive review;
-- `data/provenance/market/dune_hourly_market_prices_processed_validation.json`
+- `data/market/provenance/dune_hourly_market_prices_processed_validation.json`
   — formula, timestamp, provenance and exact raw-price reconciliation checks.
 
 Log returns are `log(price_t) - log(price_t-1)`, with the first observation
@@ -123,26 +129,26 @@ fixed, contiguous half-open chunks covering 2021-06-01 through 2024-07-01.
 `scripts/acquire_dune_hourly_gas.py` is the local persistence and validation
 state machine used with Dune MCP. It has no network or API-key path. Query and
 execution identifiers are atomically recorded under
-`data/provenance/gas/state/` before result retrieval. Retrieved MCP results are
+`data/gas/provenance/state/` before result retrieval. Retrieved MCP results are
 written to a filesystem `.partial.json`; the script serialises result rows to a
 flushed `.partial.csv`, parses and structurally validates that file, and then
 uses an atomic rename for the final chunk CSV. Retrieval, persistence and
 validation are separate durable states. Completed chunks cannot be replaced,
 and failed or incomplete chunks require explicit replacement authorisation.
 
-The 13 original chunk CSVs remain under `data/raw/gas/chunks/`. After all chunks
+The 13 original chunk CSVs remain under `data/gas/raw/chunks/`. After all chunks
 passed, they were sorted and concatenated locally without deduplication or
 value changes into:
 
 ```text
-data/processed/gas/dune_ethereum_hourly_gas_assembled_2021-06-01_2024-06-30.csv
+data/gas/processed/dune_ethereum_hourly_gas_assembled_2021-06-01_2024-06-30.csv
 ```
 
 The combined panel contains 27,024 UTC hours and 20 columns. Its SHA-256 is
 `694a901ba6cf2a60a95014398900ab77508a9ce8218cb05acd6424fa23637541`.
 Chunk query/execution IDs, checksums, validation results, credit readings and
 the excluded aborted attempt are recorded in the acquisition ledger, metadata,
-validation and aborted-attempt files under `data/provenance/gas/`. The
+validation and aborted-attempt files under `data/gas/provenance/`. The
 manifest retains the combined provenance even though generated raw files are
 excluded from Git.
 
@@ -168,13 +174,13 @@ checksums have passed:
 
 ```bash
 python scripts/process_dune_hourly_gas.py \
-  --gas-input data/processed/gas/dune_ethereum_hourly_gas_assembled_2021-06-01_2024-06-30.csv \
-  --market-input data/processed/market/dune_hourly_market_prices_processed.csv
+  --gas-input data/gas/processed/dune_ethereum_hourly_gas_assembled_2021-06-01_2024-06-30.csv \
+  --market-input data/market/processed/dune_hourly_market_prices_processed.csv
 ```
 
 The processor has no Dune, API or network path. It writes generated,
-Git-ignored artefacts under `data/processed/gas/` and
-`data/processed/combined/`:
+Git-ignored artefacts under `data/gas/processed/` and
+`data/market/processed/combined/`:
 
 - `dune_ethereum_hourly_gas_processed.csv` — 27,024 rows and 41 columns,
   preserving all 20 raw gas fields and adding explicit spreads, ratios, fee
@@ -184,9 +190,9 @@ Git-ignored artefacts under `data/processed/gas/` and
 - `gas_extreme_review.csv` — the 3,939-hour union of the documented full-sample
   percentile and absolute log-change review triggers, with deterministic
   consecutive-run fields and market context;
-- descriptive statistics under `data/processed/gas/`; processing metadata and
+- descriptive statistics under `data/gas/processed/`; processing metadata and
   separate processed-gas and joined-panel validation JSON files under
-  `data/provenance/gas/`.
+  `data/gas/provenance/`.
 
 The validated checksums are:
 
@@ -245,7 +251,7 @@ Column mappings point from canonical names to source column names. For example:
 ```yaml
 input_files:
   - name: combined_market_data
-    path: data/raw/market/combined_market_data.csv
+    path: data/market/raw/combined_market_data.csv
     timestamp_column: observed_at
     source_timezone: UTC
     duplicate_aggregation: null
@@ -283,7 +289,7 @@ calculated across gaps.
 
 ## Data manifest
 
-`data/provenance/manifests/data_manifest.csv` contains one provenance record for every configured
+`data/provenance/data_manifest.csv` contains one provenance record for every configured
 source and canonical model variable. Its fields are:
 
 - `series_name`, `model_variable`, `source_name`, `source_reference`;
@@ -362,7 +368,7 @@ configured tolerance. If recomputation is impossible, a supplied ratio is used
 and labelled as such; otherwise the derived fields remain unavailable.
 
 For a real run, each configured file needs a complete record in
-`data/provenance/manifests/data_manifest.csv` whose `source_name` and `raw_filename` match the source
+`data/provenance/data_manifest.csv` whose `source_name` and `raw_filename` match the source
 configuration. Run:
 
 ```bash

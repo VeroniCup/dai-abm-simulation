@@ -30,9 +30,9 @@ import pandas as pd
 
 
 ROOT = Path(__file__).resolve().parents[1]
-RAW_DIR = ROOT / "data" / "raw" / "protocol"
-PROCESSED_DIR = ROOT / "data" / "processed" / "protocol"
-PROVENANCE_DIR = ROOT / "data" / "provenance" / "protocol"
+RAW_DIR = ROOT / "data" / "protocol" / "raw"
+PROCESSED_DIR = ROOT / "data" / "protocol" / "processed"
+PROVENANCE_DIR = ROOT / "data" / "protocol" / "provenance"
 MODULE_PROVENANCE_DIR = PROVENANCE_DIR / "modules"
 DIAGNOSTIC_DIR = PROVENANCE_DIR / "archive" / "diagnostic"
 INGRESS_DIR = PROVENANCE_DIR / "ingress"

@@ -1122,7 +1122,7 @@ def create_synthetic_fixture_config() -> ProtocolDataConfig:
     )
     return ProtocolDataConfig(
         output_mode="synthetic_validation",
-        manifest_path=REPOSITORY_ROOT / "data/provenance/manifests/data_manifest.csv",
+        manifest_path=REPOSITORY_ROOT / "data/provenance/data_manifest.csv",
         collateral_mapping_path=fixture_dir / "collateral_mapping_fixture.csv",
         processed_data_dir=REPOSITORY_ROOT / "data/processed",
         protocol_sources=(protocol_source,),

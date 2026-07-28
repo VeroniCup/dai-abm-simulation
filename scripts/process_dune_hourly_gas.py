@@ -42,18 +42,18 @@ except ImportError:  # pragma: no cover - package-style imports in tests
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RAW_GAS = Path(
-    "data/processed/gas/dune_ethereum_hourly_gas_assembled_2021-06-01_2024-06-30.csv"
+    "data/gas/processed/dune_ethereum_hourly_gas_assembled_2021-06-01_2024-06-30.csv"
 )
 DEFAULT_RAW_GAS_VALIDATION = Path(
-    "data/provenance/gas/dune_ethereum_hourly_gas_validation.json"
+    "data/gas/provenance/dune_ethereum_hourly_gas_validation.json"
 )
 DEFAULT_MARKET = Path(
-    "data/processed/market/dune_hourly_market_prices_processed.csv"
+    "data/market/processed/dune_hourly_market_prices_processed.csv"
 )
-DEFAULT_MANIFEST = Path("data/provenance/manifests/data_manifest.csv")
-DEFAULT_GAS_OUTPUT_DIR = Path("data/processed/gas")
-DEFAULT_JOINED_OUTPUT_DIR = Path("data/processed/combined")
-DEFAULT_PROVENANCE_DIR = Path("data/provenance/gas")
+DEFAULT_MANIFEST = Path("data/provenance/data_manifest.csv")
+DEFAULT_GAS_OUTPUT_DIR = Path("data/gas/processed")
+DEFAULT_JOINED_OUTPUT_DIR = Path("data/market/processed/combined")
+DEFAULT_PROVENANCE_DIR = Path("data/gas/provenance")
 EXPECTED_RAW_GAS_SHA256 = (
     "694a901ba6cf2a60a95014398900ab77508a9ce8218cb05acd6424fa23637541"
 )

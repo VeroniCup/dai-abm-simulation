@@ -158,7 +158,7 @@ def csv_dimensions(path: Path) -> tuple[int, int]:
 
 def _market_and_gas_specs() -> list[InputSpec]:
     manifest_path = (
-        PROJECT_ROOT / "data/provenance/manifests/data_manifest.csv"
+        PROJECT_ROOT / "data/provenance/data_manifest.csv"
     )
     with manifest_path.open("r", encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
@@ -197,7 +197,7 @@ def _market_and_gas_specs() -> list[InputSpec]:
 def _liquidation_specs() -> list[InputSpec]:
     manifest = json.loads(
         (
-            PROJECT_ROOT / "data/provenance/liquidations/manifest.json"
+            PROJECT_ROOT / "data/liquidations/provenance/manifest.json"
         ).read_text(encoding="utf-8")
     )
     known = {
@@ -240,7 +240,7 @@ def _liquidation_specs() -> list[InputSpec]:
 def _protocol_specs() -> list[InputSpec]:
     manifest = json.loads(
         (
-            PROJECT_ROOT / "data/provenance/protocol/manifest.json"
+            PROJECT_ROOT / "data/protocol/provenance/manifest.json"
         ).read_text(encoding="utf-8")
     )
     reconstruction = manifest["local_reconstruction"]

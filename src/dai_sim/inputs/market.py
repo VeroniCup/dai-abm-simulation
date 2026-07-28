@@ -37,7 +37,7 @@ from .sources import (
 
 PROJECT_ROOT = REPOSITORY_ROOT
 DEFAULT_CONFIG_PATH = PROJECT_ROOT / "config" / "empirical.yaml"
-DEFAULT_PROCESSED_DATA_DIR = PROJECT_ROOT / "data" / "processed"
+DEFAULT_PROCESSED_DATA_DIR = PROJECT_ROOT / "data" / "market" / "processed"
 
 DEFAULT_MARKET_GAS_POOL_PATH = (
     REPOSITORY_ROOT

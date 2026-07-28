@@ -30,10 +30,10 @@ except ModuleNotFoundError:  # Supports imports through the scripts namespace.
 
 API_ROOT = "https://api.dune.com/api/v1"
 DEFAULT_OUTPUT = Path(
-    "data/raw/market/dune_prices_hourly_2021-06-01_2024-06-30.csv"
+    "data/market/raw/dune_prices_hourly_2021-06-01_2024-06-30.csv"
 )
-DEFAULT_MANIFEST = Path("data/provenance/manifests/data_manifest.csv")
-DEFAULT_PROVENANCE_DIRECTORY = Path("data/provenance/market")
+DEFAULT_MANIFEST = Path("data/provenance/data_manifest.csv")
+DEFAULT_PROVENANCE_DIRECTORY = Path("data/market/provenance")
 DEFAULT_SQL_FILE = Path("sql/dune_hourly_market_prices.sql")
 REQUESTED_START = "2021-06-01 00:00:00 UTC"
 REQUESTED_END = "2024-07-01 00:00:00 UTC"

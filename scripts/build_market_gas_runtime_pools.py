@@ -30,7 +30,7 @@ LIQUIDATION_GAS_OUTPUT = LIQUIDATION_OUTPUT_DIR / "pool.csv"
 LIQUIDATION_GAS_MANIFEST = LIQUIDATION_OUTPUT_DIR / "manifest.json"
 
 SOURCE_CHECKSUMS = {
-    "data/processed/combined/hourly_market_gas_panel.csv": (
+    "data/market/processed/combined/hourly_market_gas_panel.csv": (
         "86ed2ac5a5d364cc57e8b41e137ef369a0fce7a393d386b4b38fc1ebd1be0545"
     ),
     "data/processed/estimation/phase2a/gas/gas_sampling_index.csv": (
@@ -112,7 +112,7 @@ def _to_utc_z(series: pd.Series) -> pd.Series:
 
 def build_market_gas_pool() -> tuple[pd.DataFrame, pd.DataFrame]:
     """Build the compact hourly market/gas runtime pool and audit."""
-    panel = pd.read_csv(REPOSITORY_ROOT / "data/processed/combined/hourly_market_gas_panel.csv")
+    panel = pd.read_csv(REPOSITORY_ROOT / "data/market/processed/combined/hourly_market_gas_panel.csv")
     gas_index = pd.read_csv(
         REPOSITORY_ROOT / "data/processed/estimation/phase2a/gas/gas_sampling_index.csv"
     )

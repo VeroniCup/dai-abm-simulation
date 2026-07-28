@@ -62,7 +62,7 @@ POOL_SOURCES = (
         source_window="quiet_mature_2024-02-01_2024-03-01",
         path=(
             REPOSITORY_ROOT
-            / "data/processed/vaults/representative_regimes/"
+            / "data/vaults/processed/representative_regimes/"
             / "quiet_mature_2024-02-01_2024-03-01/opening_vault_state.csv"
         ),
         sha256="5bb240cfa175339887c9e4254bc5edcdca469f349baa35bc5da43e1514f42ebe",
@@ -73,7 +73,7 @@ POOL_SOURCES = (
         source_window="usdc_svb_2023-03-06_2023-03-20",
         path=(
             REPOSITORY_ROOT
-            / "data/processed/vaults/representative_regimes/"
+            / "data/vaults/processed/representative_regimes/"
             / "usdc_svb_2023-03-06_2023-03-20/opening_vault_state.csv"
         ),
         sha256="35e34954d2916b4829798547bc7a62e249329777fe961719421567d24ce67bac",
@@ -84,7 +84,7 @@ POOL_SOURCES = (
         source_window="terra_cefi_2022-05-05_2022-06-20",
         path=(
             REPOSITORY_ROOT
-            / "data/processed/vaults/representative_regimes/"
+            / "data/vaults/processed/representative_regimes/"
             / "terra_cefi_2022-05-05_2022-06-20/opening_vault_state.csv"
         ),
         sha256="d0a956716525e9db0493e30f91e2d66ee39147c40ccd1abcfac3c33086993c2f",

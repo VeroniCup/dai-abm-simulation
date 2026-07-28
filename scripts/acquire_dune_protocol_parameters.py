@@ -22,7 +22,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 SQL_PATH = ROOT / "sql" / "dune_phase1d_eth_a_debt_ceiling_diagnostic.sql"
 DIAGNOSTIC_DIR = (
-    ROOT / "data" / "provenance" / "protocol" / "archive" / "diagnostic"
+    ROOT / "data" / "protocol" / "provenance" / "archive" / "diagnostic"
 )
 STATE_PATH = DIAGNOSTIC_DIR / "phase1d_eth_a_debt_ceiling_attempt2_state.json"
 PAYLOAD_PATH = DIAGNOSTIC_DIR / ".phase1d_eth_a_debt_ceiling_attempt2.partial.json"

@@ -5,7 +5,7 @@
     "auction_id"
   ],
   "chunk_18_recovery_outcome": "FAILED: Query execution timed out after 2 minutes; no result requested",
-  "chunk_18_recovery_state_path": "data/provenance/liquidations/archive/chunk_18/chunk_18_2022_11_transaction.recovery.state.json",
+  "chunk_18_recovery_state_path": "data/liquidations/provenance/archive/chunk_18/chunk_18_2022_11_transaction.recovery.state.json",
   "chunk_18_replacement_compute_credits": 0.111,
   "chunk_18_replacement_execution_id": "01KY3HNWXKZR3EN9CRE350HZFZ",
   "chunk_18_replacement_execution_state": "COMPLETED",
@@ -16,19 +16,19 @@
   ],
   "combined_datasets_created": false,
   "combined_outputs": {
-    "data/processed/liquidations/phase1c_liquidation_actions_2021-06-01_2024-06-30.csv": {
+    "data/liquidations/processed/phase1c_liquidation_actions_2021-06-01_2024-06-30.csv": {
       "sha256": "3e90f564ca55b4c6c33fe3d8106a3c2a72983853bdd2d370b9b8aefdd34361dd",
       "size_bytes": 4814640
     },
-    "data/processed/liquidations/phase1c_liquidation_auctions_2021-06-01_2024-06-30.csv": {
+    "data/liquidations/processed/phase1c_liquidation_auctions_2021-06-01_2024-06-30.csv": {
       "sha256": "3d3d049f40f48f7043a9be64a2388ab460692a0380a999281880b5b3c24056b7",
       "size_bytes": 659126
     },
-    "data/processed/liquidations/phase1c_liquidation_hourly_by_ilk_2021-06-01_2024-06-30.csv": {
+    "data/liquidations/processed/phase1c_liquidation_hourly_by_ilk_2021-06-01_2024-06-30.csv": {
       "sha256": "8a0f38d09d5bab50f6434e3190c9dc7e8f8d88ac1f738e2b3b45f332b5016f3e",
       "size_bytes": 23418739
     },
-    "data/processed/liquidations/phase1c_liquidation_transactions_2021-06-01_2024-06-30.csv": {
+    "data/liquidations/processed/phase1c_liquidation_transactions_2021-06-01_2024-06-30.csv": {
       "sha256": "6b86dc3086d49611c49f5a658b12a383a3d71158a0bf961a7a3cf13e0ed13a60",
       "size_bytes": 675291
     }
@@ -59,9 +59,9 @@
   "failed_execution_id": "01KY3G6JYY6FN17K9SBT2QV2PF",
   "failed_kind": "transaction",
   "failed_query_id": 8061091,
-  "final_metadata_path": "data/provenance/liquidations/metadata.json",
+  "final_metadata_path": "data/liquidations/provenance/metadata.json",
   "final_metadata_sha256": "705ba2f6ddd0b20a9f431b3029b844b3ed287f36486a2ae793a762053cf5c1c3",
-  "final_validation_path": "data/provenance/liquidations/validation.json",
+  "final_validation_path": "data/liquidations/provenance/validation.json",
   "final_validation_sha256": "ff0f4357786db53390d0a4e8254ceb6b153aa1d04579825113a3347621fa03b0",
   "halted_at_utc": "2026-07-21T23:35:27.613344+00:00",
   "legacy_activity_count": 0,
@@ -70,7 +70,7 @@
   "legacy_check_execution_state": "FAILED",
   "legacy_check_failure": "line 20:10: Table 'delta_prod.maker_ethereum.flipper_evt_kick' does not exist at line 20, position 10 [Execution ID: 01KY3JK78XN4RRN1GA6P6YB99Z]",
   "legacy_check_query_id": 8061556,
-  "legacy_check_state_path": "data/provenance/liquidations/archive/legacy/phase1c_legacy_check_state.json",
+  "legacy_check_state_path": "data/liquidations/provenance/archive/legacy/phase1c_legacy_check_state.json",
   "legacy_gate_passed": true,
   "next_chunk_not_started": "19_2022_12",
   "next_chunks_executed": false,
@@ -94,7 +94,7 @@
       "query_id": 8060977,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8060977",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_01_2021_06/chunk_01_2021_06_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_01_2021_06/chunk_01_2021_06_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "80a50da85498ca7e85293ead1da2b05b3900284aabc2187185223312dc6a0325",
       "raw_file_size_bytes": 278945,
@@ -110,7 +110,7 @@
       "usage_before_production": 308.157,
       "usage_before_query": 308.157,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_01_2021_06/chunk_01_2021_06_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_01_2021_06/chunk_01_2021_06_action.validation.json"
     },
     {
       "chunk_id": "01_2021_06",
@@ -129,7 +129,7 @@
       "query_id": 8060986,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8060986",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_01_2021_06/chunk_01_2021_06_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_01_2021_06/chunk_01_2021_06_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "b7357781ec6d6abb31e6779894a474e789ae0fe0f31091fc4654473c114bfe63",
       "raw_file_size_bytes": 51523,
@@ -143,7 +143,7 @@
       "state": "complete",
       "updated_at_utc": "2026-07-21T23:21:39.739679+00:00",
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_01_2021_06/chunk_01_2021_06_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_01_2021_06/chunk_01_2021_06_transaction.validation.json"
     },
     {
       "chunk_id": "02_2021_07",
@@ -162,7 +162,7 @@
       "query_id": 8060995,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8060995",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_02_2021_07/chunk_02_2021_07_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_02_2021_07/chunk_02_2021_07_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "eaa0a7e06a4db1a2e7a74d4dde4b857a15f9c0d071f638b06ca3be129dad2c7e",
       "raw_file_size_bytes": 51382,
@@ -178,7 +178,7 @@
       "usage_after_chunk": 309.44,
       "usage_before_query": 308.764,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_02_2021_07/chunk_02_2021_07_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_02_2021_07/chunk_02_2021_07_action.validation.json"
     },
     {
       "chunk_id": "02_2021_07",
@@ -197,7 +197,7 @@
       "query_id": 8060997,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8060997",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_02_2021_07/chunk_02_2021_07_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_02_2021_07/chunk_02_2021_07_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "3e047bcd2d01715a51194d977f888cdaed7f6f4b611d4ea60aaf2cceafcca138",
       "raw_file_size_bytes": 12072,
@@ -213,7 +213,7 @@
       "usage_after_chunk": 309.44,
       "usage_before_query": 308.764,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_02_2021_07/chunk_02_2021_07_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_02_2021_07/chunk_02_2021_07_transaction.validation.json"
     },
     {
       "chunk_id": "03_2021_08",
@@ -232,7 +232,7 @@
       "query_id": 8061000,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061000",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_03_2021_08/chunk_03_2021_08_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_03_2021_08/chunk_03_2021_08_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "818dcccb5a9b7ad60c1a9387e74f4b52345194e0606ccc31f4b45020d050d2aa",
       "raw_file_size_bytes": 22689,
@@ -248,7 +248,7 @@
       "usage_after_chunk": 310.065,
       "usage_before_query": 309.44,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_03_2021_08/chunk_03_2021_08_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_03_2021_08/chunk_03_2021_08_action.validation.json"
     },
     {
       "chunk_id": "03_2021_08",
@@ -267,7 +267,7 @@
       "query_id": 8061002,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061002",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_03_2021_08/chunk_03_2021_08_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_03_2021_08/chunk_03_2021_08_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "8369827a8837fc5c9aabbe63e2b06a52a1e376eda268da087d40d1a2094b7d02",
       "raw_file_size_bytes": 4305,
@@ -283,7 +283,7 @@
       "usage_after_chunk": 310.065,
       "usage_before_query": 309.44,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_03_2021_08/chunk_03_2021_08_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_03_2021_08/chunk_03_2021_08_transaction.validation.json"
     },
     {
       "chunk_id": "04_2021_09",
@@ -302,7 +302,7 @@
       "query_id": 8061003,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061003",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_04_2021_09/chunk_04_2021_09_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_04_2021_09/chunk_04_2021_09_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "c232592ce70cc4e0e4b4cb3782396876511d00059c63170864ba939ef124e260",
       "raw_file_size_bytes": 88257,
@@ -318,7 +318,7 @@
       "usage_after_chunk": 310.79,
       "usage_before_query": 310.065,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_04_2021_09/chunk_04_2021_09_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_04_2021_09/chunk_04_2021_09_action.validation.json"
     },
     {
       "chunk_id": "04_2021_09",
@@ -337,7 +337,7 @@
       "query_id": 8061006,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061006",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_04_2021_09/chunk_04_2021_09_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_04_2021_09/chunk_04_2021_09_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "b1f94a04aca583fc49fba67fc4f2a28c74945593e4d024af85f6da206e81c095",
       "raw_file_size_bytes": 18198,
@@ -353,7 +353,7 @@
       "usage_after_chunk": 310.79,
       "usage_before_query": 310.065,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_04_2021_09/chunk_04_2021_09_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_04_2021_09/chunk_04_2021_09_transaction.validation.json"
     },
     {
       "chunk_id": "05_2021_10",
@@ -372,7 +372,7 @@
       "query_id": 8061007,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061007",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_05_2021_10/chunk_05_2021_10_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_05_2021_10/chunk_05_2021_10_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "2270793be860efdf41c9882ccec97c7b7306042bbec7c5841082571c2fbb1356",
       "raw_file_size_bytes": 24662,
@@ -388,7 +388,7 @@
       "usage_after_chunk": 311.812,
       "usage_before_query": 310.79,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_05_2021_10/chunk_05_2021_10_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_05_2021_10/chunk_05_2021_10_action.validation.json"
     },
     {
       "chunk_id": "05_2021_10",
@@ -407,7 +407,7 @@
       "query_id": 8061009,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061009",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_05_2021_10/chunk_05_2021_10_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_05_2021_10/chunk_05_2021_10_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "29a0695861a3438f37e6ad167cc8fc2ff47acd429b17afe97f2bd14d1f0967d0",
       "raw_file_size_bytes": 4713,
@@ -423,7 +423,7 @@
       "usage_after_chunk": 311.812,
       "usage_before_query": 310.79,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_05_2021_10/chunk_05_2021_10_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_05_2021_10/chunk_05_2021_10_transaction.validation.json"
     },
     {
       "chunk_id": "06_2021_11",
@@ -442,7 +442,7 @@
       "query_id": 8061012,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061012",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_06_2021_11/chunk_06_2021_11_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_06_2021_11/chunk_06_2021_11_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "901ec401aa297207cb4744c04a7a97b036e9fe4214feaf9c6bd1dafceb694994",
       "raw_file_size_bytes": 33896,
@@ -458,7 +458,7 @@
       "usage_after_chunk": 312.32,
       "usage_before_query": 311.812,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_06_2021_11/chunk_06_2021_11_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_06_2021_11/chunk_06_2021_11_action.validation.json"
     },
     {
       "chunk_id": "06_2021_11",
@@ -477,7 +477,7 @@
       "query_id": 8061015,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061015",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_06_2021_11/chunk_06_2021_11_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_06_2021_11/chunk_06_2021_11_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "002c731aa212d665522b7668b629cd6fd47292835c347cbded61d4d3802253c4",
       "raw_file_size_bytes": 6869,
@@ -493,7 +493,7 @@
       "usage_after_chunk": 312.32,
       "usage_before_query": 311.812,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_06_2021_11/chunk_06_2021_11_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_06_2021_11/chunk_06_2021_11_transaction.validation.json"
     },
     {
       "chunk_id": "07_2021_12",
@@ -512,7 +512,7 @@
       "query_id": 8061016,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061016",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_07_2021_12/chunk_07_2021_12_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_07_2021_12/chunk_07_2021_12_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "6680eb9cd07924a933e0e98bbf05e31922e9664237195d76e73a61ec1b3b41ca",
       "raw_file_size_bytes": 139475,
@@ -528,7 +528,7 @@
       "usage_after_chunk": 313.323,
       "usage_before_query": 312.32,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_07_2021_12/chunk_07_2021_12_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_07_2021_12/chunk_07_2021_12_action.validation.json"
     },
     {
       "chunk_id": "07_2021_12",
@@ -547,7 +547,7 @@
       "query_id": 8061017,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061017",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_07_2021_12/chunk_07_2021_12_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_07_2021_12/chunk_07_2021_12_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "45cf6ee3571d7bd859b88b41b80bb65b8d9637c9f7298a72b0f5d67aeebf9885",
       "raw_file_size_bytes": 32072,
@@ -563,7 +563,7 @@
       "usage_after_chunk": 313.323,
       "usage_before_query": 312.32,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_07_2021_12/chunk_07_2021_12_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_07_2021_12/chunk_07_2021_12_transaction.validation.json"
     },
     {
       "chunk_id": "08_2022_01",
@@ -582,7 +582,7 @@
       "query_id": 8061023,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061023",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_08_2022_01/chunk_08_2022_01_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_08_2022_01/chunk_08_2022_01_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "80ba6fc5bbde062d9b7fdde2efc98cf688acbe241b9ba887edeae93b9957157e",
       "raw_file_size_bytes": 1018827,
@@ -598,7 +598,7 @@
       "usage_after_chunk": 313.996,
       "usage_before_query": 313.323,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_08_2022_01/chunk_08_2022_01_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_08_2022_01/chunk_08_2022_01_action.validation.json"
     },
     {
       "chunk_id": "08_2022_01",
@@ -617,7 +617,7 @@
       "query_id": 8061025,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061025",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_08_2022_01/chunk_08_2022_01_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_08_2022_01/chunk_08_2022_01_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "962623b00adf04e466c971f7b252c80278038ed4f7909ee6a59a1dde2c4859de",
       "raw_file_size_bytes": 169786,
@@ -633,7 +633,7 @@
       "usage_after_chunk": 313.996,
       "usage_before_query": 313.323,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_08_2022_01/chunk_08_2022_01_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_08_2022_01/chunk_08_2022_01_transaction.validation.json"
     },
     {
       "chunk_id": "09_2022_02",
@@ -652,7 +652,7 @@
       "query_id": 8061028,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061028",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_09_2022_02/chunk_09_2022_02_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_09_2022_02/chunk_09_2022_02_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "5e9d06764955ac325e23a909afab2aa5f8bb016cf416b24037a717ceb4ab010c",
       "raw_file_size_bytes": 40288,
@@ -668,7 +668,7 @@
       "usage_after_chunk": 314.565,
       "usage_before_query": 313.996,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_09_2022_02/chunk_09_2022_02_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_09_2022_02/chunk_09_2022_02_action.validation.json"
     },
     {
       "chunk_id": "09_2022_02",
@@ -687,7 +687,7 @@
       "query_id": 8061031,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061031",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_09_2022_02/chunk_09_2022_02_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_09_2022_02/chunk_09_2022_02_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "6e2297ed6f9e0e29d683961aea62bc69a35028a633cf02bab8a46ad17e77fcdf",
       "raw_file_size_bytes": 7129,
@@ -703,7 +703,7 @@
       "usage_after_chunk": 314.565,
       "usage_before_query": 313.996,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_09_2022_02/chunk_09_2022_02_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_09_2022_02/chunk_09_2022_02_transaction.validation.json"
     },
     {
       "chunk_id": "10_2022_03",
@@ -722,7 +722,7 @@
       "query_id": 8061033,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061033",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_10_2022_03/chunk_10_2022_03_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_10_2022_03/chunk_10_2022_03_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "3880511531a0ae74dab2cbf3403415937bec6778421a92b6f511bc256b565889",
       "raw_file_size_bytes": 11588,
@@ -738,7 +738,7 @@
       "usage_after_chunk": 315.047,
       "usage_before_query": 314.565,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_10_2022_03/chunk_10_2022_03_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_10_2022_03/chunk_10_2022_03_action.validation.json"
     },
     {
       "chunk_id": "10_2022_03",
@@ -757,7 +757,7 @@
       "query_id": 8061036,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061036",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_10_2022_03/chunk_10_2022_03_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_10_2022_03/chunk_10_2022_03_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "134b4dc2509a6ae13c5e45a0db29b95531a803f5614e608da43f0f897f15f825",
       "raw_file_size_bytes": 2576,
@@ -773,7 +773,7 @@
       "usage_after_chunk": 315.047,
       "usage_before_query": 314.565,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_10_2022_03/chunk_10_2022_03_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_10_2022_03/chunk_10_2022_03_transaction.validation.json"
     },
     {
       "chunk_id": "11_2022_04",
@@ -792,7 +792,7 @@
       "query_id": 8061053,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061053",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_11_2022_04/chunk_11_2022_04_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_11_2022_04/chunk_11_2022_04_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "d1fcdc15ff8c0cdc5693f476e5596575402ce118fe848ae15817c4c2d0f50be8",
       "raw_file_size_bytes": 32388,
@@ -808,7 +808,7 @@
       "usage_after_chunk": 315.851,
       "usage_before_query": 315.047,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_11_2022_04/chunk_11_2022_04_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_11_2022_04/chunk_11_2022_04_action.validation.json"
     },
     {
       "chunk_id": "11_2022_04",
@@ -827,7 +827,7 @@
       "query_id": 8061057,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061057",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_11_2022_04/chunk_11_2022_04_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_11_2022_04/chunk_11_2022_04_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "6249b456637a781c4d747f593a1137e52532abc606cf261b441fe321d59ee388",
       "raw_file_size_bytes": 6746,
@@ -843,7 +843,7 @@
       "usage_after_chunk": 315.851,
       "usage_before_query": 315.047,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_11_2022_04/chunk_11_2022_04_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_11_2022_04/chunk_11_2022_04_transaction.validation.json"
     },
     {
       "chunk_id": "12_2022_05",
@@ -862,7 +862,7 @@
       "query_id": 8061059,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061059",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_12_2022_05/chunk_12_2022_05_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_12_2022_05/chunk_12_2022_05_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "07edcf44263f6c3b6f961a0c4d496d692e0893e6a2490e491fc66d20da224d07",
       "raw_file_size_bytes": 798885,
@@ -878,7 +878,7 @@
       "usage_after_chunk": 316.904,
       "usage_before_query": 315.851,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_12_2022_05/chunk_12_2022_05_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_12_2022_05/chunk_12_2022_05_action.validation.json"
     },
     {
       "chunk_id": "12_2022_05",
@@ -897,7 +897,7 @@
       "query_id": 8061064,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061064",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_12_2022_05/chunk_12_2022_05_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_12_2022_05/chunk_12_2022_05_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "3037a9ae74058e732495ad8610387e6d9a0527b89ff7250fd2bd8dcb2bbb1ecd",
       "raw_file_size_bytes": 102621,
@@ -913,7 +913,7 @@
       "usage_after_chunk": 316.904,
       "usage_before_query": 315.851,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_12_2022_05/chunk_12_2022_05_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_12_2022_05/chunk_12_2022_05_transaction.validation.json"
     },
     {
       "chunk_id": "13_2022_06",
@@ -932,7 +932,7 @@
       "query_id": 8061068,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061068",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_13_2022_06/chunk_13_2022_06_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_13_2022_06/chunk_13_2022_06_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "0737fb7708b9194039d0f46dd3a49e4f1de5dc06223c523c4ada170cc41623bf",
       "raw_file_size_bytes": 1516254,
@@ -948,7 +948,7 @@
       "usage_after_chunk": 317.497,
       "usage_before_query": 316.904,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_13_2022_06/chunk_13_2022_06_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_13_2022_06/chunk_13_2022_06_action.validation.json"
     },
     {
       "chunk_id": "13_2022_06",
@@ -967,7 +967,7 @@
       "query_id": 8061070,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061070",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_13_2022_06/chunk_13_2022_06_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_13_2022_06/chunk_13_2022_06_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "a0ee78283a04efc3c45af894b5ebec2456cd0b867684e0b7bdeadf3ac9ca6c24",
       "raw_file_size_bytes": 197191,
@@ -983,7 +983,7 @@
       "usage_after_chunk": 317.497,
       "usage_before_query": 316.904,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_13_2022_06/chunk_13_2022_06_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_13_2022_06/chunk_13_2022_06_transaction.validation.json"
     },
     {
       "chunk_id": "14_2022_07",
@@ -1002,7 +1002,7 @@
       "query_id": 8061071,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061071",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_14_2022_07/chunk_14_2022_07_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_14_2022_07/chunk_14_2022_07_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "c48f73c8d3f7e17082cf60dd21e2db2df70d33897ad75e48450392fa24e2c208",
       "raw_file_size_bytes": 424,
@@ -1018,7 +1018,7 @@
       "usage_after_chunk": 318.099,
       "usage_before_query": 317.497,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_14_2022_07/chunk_14_2022_07_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_14_2022_07/chunk_14_2022_07_action.validation.json"
     },
     {
       "chunk_id": "14_2022_07",
@@ -1037,7 +1037,7 @@
       "query_id": 8061074,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061074",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_14_2022_07/chunk_14_2022_07_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_14_2022_07/chunk_14_2022_07_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "4f7389c95f14d9ad41720297a8aad429792750c2ec217657b032934909fe0e5f",
       "raw_file_size_bytes": 201,
@@ -1053,7 +1053,7 @@
       "usage_after_chunk": 318.099,
       "usage_before_query": 317.497,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_14_2022_07/chunk_14_2022_07_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_14_2022_07/chunk_14_2022_07_transaction.validation.json"
     },
     {
       "chunk_id": "15_2022_08",
@@ -1072,7 +1072,7 @@
       "query_id": 8061077,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061077",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_15_2022_08/chunk_15_2022_08_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_15_2022_08/chunk_15_2022_08_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "b73ce808e6a26c412e5a86fc748cd700b3d8594dcbf7415d1222d2c1b4d232ec",
       "raw_file_size_bytes": 9564,
@@ -1088,7 +1088,7 @@
       "usage_after_chunk": 319.817,
       "usage_before_query": 318.099,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_15_2022_08/chunk_15_2022_08_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_15_2022_08/chunk_15_2022_08_action.validation.json"
     },
     {
       "chunk_id": "15_2022_08",
@@ -1107,7 +1107,7 @@
       "query_id": 8061081,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061081",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_15_2022_08/chunk_15_2022_08_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_15_2022_08/chunk_15_2022_08_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "b9e1a7958bdd856bef93dafa00dcabda4475a83f0eb53341391b66361ce99ddd",
       "raw_file_size_bytes": 2337,
@@ -1123,7 +1123,7 @@
       "usage_after_chunk": 319.817,
       "usage_before_query": 318.099,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_15_2022_08/chunk_15_2022_08_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_15_2022_08/chunk_15_2022_08_transaction.validation.json"
     },
     {
       "chunk_id": "16_2022_09",
@@ -1142,7 +1142,7 @@
       "query_id": 8061082,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061082",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_16_2022_09/chunk_16_2022_09_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_16_2022_09/chunk_16_2022_09_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "862ef7c65471ba0681b61ea1c92b647008686dde3edd379950a2759332cc3161",
       "raw_file_size_bytes": 21969,
@@ -1158,7 +1158,7 @@
       "usage_after_chunk": 320.296,
       "usage_before_query": 319.817,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_16_2022_09/chunk_16_2022_09_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_16_2022_09/chunk_16_2022_09_action.validation.json"
     },
     {
       "chunk_id": "16_2022_09",
@@ -1177,7 +1177,7 @@
       "query_id": 8061083,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061083",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_16_2022_09/chunk_16_2022_09_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_16_2022_09/chunk_16_2022_09_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "84937b415a7f983cd4354ca33b7eb28df2463cb900cce684ea6ef3ef33482d2f",
       "raw_file_size_bytes": 4055,
@@ -1193,7 +1193,7 @@
       "usage_after_chunk": 320.296,
       "usage_before_query": 319.817,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_16_2022_09/chunk_16_2022_09_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_16_2022_09/chunk_16_2022_09_transaction.validation.json"
     },
     {
       "chunk_id": "17_2022_10",
@@ -1212,7 +1212,7 @@
       "query_id": 8061085,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061085",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_17_2022_10/chunk_17_2022_10_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_17_2022_10/chunk_17_2022_10_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "e079b158f1108abbdb319224eca5b0c79555471f36c709a64350c8f0c85aae7f",
       "raw_file_size_bytes": 4171,
@@ -1228,7 +1228,7 @@
       "usage_after_chunk": 320.8,
       "usage_before_query": 320.296,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_17_2022_10/chunk_17_2022_10_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_17_2022_10/chunk_17_2022_10_action.validation.json"
     },
     {
       "chunk_id": "17_2022_10",
@@ -1247,7 +1247,7 @@
       "query_id": 8061088,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061088",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_17_2022_10/chunk_17_2022_10_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_17_2022_10/chunk_17_2022_10_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "8f8a8e37900a8b051cc2e55adc6545fd0203238417cd62bce3e0d952596a9be0",
       "raw_file_size_bytes": 979,
@@ -1263,7 +1263,7 @@
       "usage_after_chunk": 320.8,
       "usage_before_query": 320.296,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_17_2022_10/chunk_17_2022_10_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_17_2022_10/chunk_17_2022_10_transaction.validation.json"
     },
     {
       "chunk_id": "18_2022_11",
@@ -1282,7 +1282,7 @@
       "query_id": 8061090,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061090",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_18_2022_11/chunk_18_2022_11_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_18_2022_11/chunk_18_2022_11_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "bb12774a2187b917613c1d6df69f5199cf5a6a46edf48da3473830d591b6b229",
       "raw_file_size_bytes": 92105,
@@ -1297,7 +1297,7 @@
       "updated_at_utc": "2026-07-21T23:29:27.135093+00:00",
       "usage_before_query": 320.8,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_18_2022_11/chunk_18_2022_11_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_18_2022_11/chunk_18_2022_11_action.validation.json"
     },
     {
       "automatic_retry_attempted": false,
@@ -1312,7 +1312,7 @@
       "execution_id": "01KY3G6JYY6FN17K9SBT2QV2PF",
       "execution_state": "PENDING",
       "execution_submitted_at_utc": "2026-07-21T23:29:28.584665+00:00",
-      "failed_payload_path": "data/provenance/liquidations/archive/chunk_18/.chunk_18_2022_11_transaction.mcp_ingress.json",
+      "failed_payload_path": "data/liquidations/provenance/archive/chunk_18/.chunk_18_2022_11_transaction.mcp_ingress.json",
       "failed_payload_sha256": "cc5ebfd850df6b43efdb7203168b5a7da9b3c546c9ebfc7d422bd7aa67edba22",
       "failure": "getExecutionResults timed out after 300 seconds; execution final state was not returned",
       "failure_stage": "execution-result wait/retrieval",
@@ -1325,7 +1325,7 @@
       "query_id": 8061091,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061091",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_18_2022_11/chunk_18_2022_11_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_18_2022_11/chunk_18_2022_11_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "638a03207e379ee960c9b3658c874778c77238ddf0994b5336c0b23e1ae41635",
       "raw_file_size_bytes": 11453,
@@ -1338,7 +1338,7 @@
       "recovery_usage_before": 332.232,
       "recovery_usage_delta": 0.0,
       "replacement_execution_id": "01KY3HNWXKZR3EN9CRE350HZFZ",
-      "replacement_state_path": "data/provenance/liquidations/archive/chunk_18/chunk_18_2022_11_transaction.replacement.state.json",
+      "replacement_state_path": "data/liquidations/provenance/archive/chunk_18/chunk_18_2022_11_transaction.replacement.state.json",
       "requested_end_exclusive_utc": "2022-12-01T00:00:00+00:00",
       "requested_start_utc": "2022-11-01T00:00:00+00:00",
       "result_retrieved": true,
@@ -1353,7 +1353,7 @@
       "usage_after_failure": 332.232,
       "usage_before_query": 320.8,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_18_2022_11/chunk_18_2022_11_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_18_2022_11/chunk_18_2022_11_transaction.validation.json"
     },
     {
       "chunk_id": "19_2022_12",
@@ -1372,7 +1372,7 @@
       "query_id": 8061425,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061425",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_19_2022_12/chunk_19_2022_12_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_19_2022_12/chunk_19_2022_12_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "d8493655625bf4e3241321a5cd481fb02cfce219cc633d20418cb594b62db31c",
       "raw_file_size_bytes": 3592,
@@ -1388,7 +1388,7 @@
       "usage_after_retrieval": 332.942,
       "usage_before_query": 332.343,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_19_2022_12/chunk_19_2022_12_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_19_2022_12/chunk_19_2022_12_action.validation.json"
     },
     {
       "chunk_id": "19_2022_12",
@@ -1407,7 +1407,7 @@
       "query_id": 8061431,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061431",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_19_2022_12/chunk_19_2022_12_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_19_2022_12/chunk_19_2022_12_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "e869b19ae4a371e59e8ce90dfcd4dda05e8b90e58fab281b0a95df5c76736e5b",
       "raw_file_size_bytes": 744,
@@ -1423,7 +1423,7 @@
       "usage_after_retrieval": 333.019,
       "usage_before_query": 332.942,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_19_2022_12/chunk_19_2022_12_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_19_2022_12/chunk_19_2022_12_transaction.validation.json"
     },
     {
       "chunk_id": "20_2023_01",
@@ -1442,7 +1442,7 @@
       "query_id": 8061432,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061432",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_20_2023_01/chunk_20_2023_01_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_20_2023_01/chunk_20_2023_01_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "c48f73c8d3f7e17082cf60dd21e2db2df70d33897ad75e48450392fa24e2c208",
       "raw_file_size_bytes": 424,
@@ -1458,7 +1458,7 @@
       "usage_after_retrieval": 333.655,
       "usage_before_query": 333.019,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_20_2023_01/chunk_20_2023_01_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_20_2023_01/chunk_20_2023_01_action.validation.json"
     },
     {
       "chunk_id": "20_2023_01",
@@ -1477,7 +1477,7 @@
       "query_id": 8061435,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061435",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_20_2023_01/chunk_20_2023_01_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_20_2023_01/chunk_20_2023_01_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "4f7389c95f14d9ad41720297a8aad429792750c2ec217657b032934909fe0e5f",
       "raw_file_size_bytes": 201,
@@ -1493,7 +1493,7 @@
       "usage_after_retrieval": 333.663,
       "usage_before_query": 333.655,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_20_2023_01/chunk_20_2023_01_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_20_2023_01/chunk_20_2023_01_transaction.validation.json"
     },
     {
       "chunk_id": "21_2023_02",
@@ -1512,7 +1512,7 @@
       "query_id": 8061437,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061437",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_21_2023_02/chunk_21_2023_02_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_21_2023_02/chunk_21_2023_02_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "5a5ed09eebb017fb194831c1285fcc77e4391c91fb96dd9032db33ecb156cefb",
       "raw_file_size_bytes": 3600,
@@ -1528,7 +1528,7 @@
       "usage_after_retrieval": 334.303,
       "usage_before_query": 333.663,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_21_2023_02/chunk_21_2023_02_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_21_2023_02/chunk_21_2023_02_action.validation.json"
     },
     {
       "chunk_id": "21_2023_02",
@@ -1547,7 +1547,7 @@
       "query_id": 8061439,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061439",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_21_2023_02/chunk_21_2023_02_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_21_2023_02/chunk_21_2023_02_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "652c1ebbe6257e99bf66a42912ef02b1a1af805b4ba0c87e49e4f348b030b7df",
       "raw_file_size_bytes": 691,
@@ -1563,7 +1563,7 @@
       "usage_after_retrieval": 334.658,
       "usage_before_query": 334.303,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_21_2023_02/chunk_21_2023_02_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_21_2023_02/chunk_21_2023_02_transaction.validation.json"
     },
     {
       "chunk_id": "22_2023_03",
@@ -1582,7 +1582,7 @@
       "query_id": 8061442,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061442",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_22_2023_03/chunk_22_2023_03_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_22_2023_03/chunk_22_2023_03_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "5a0c641f780f97f78319f40f120950de6a58af0a322a15cf5e1a36a5d35d81f2",
       "raw_file_size_bytes": 7490,
@@ -1598,7 +1598,7 @@
       "usage_after_retrieval": 335.95,
       "usage_before_query": 334.658,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_22_2023_03/chunk_22_2023_03_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_22_2023_03/chunk_22_2023_03_action.validation.json"
     },
     {
       "chunk_id": "22_2023_03",
@@ -1617,7 +1617,7 @@
       "query_id": 8061444,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061444",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_22_2023_03/chunk_22_2023_03_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_22_2023_03/chunk_22_2023_03_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "6c868e3d14cfcc0e03016d0ae34b1ae127445008856ee8459862cfc1819c8951",
       "raw_file_size_bytes": 1520,
@@ -1633,7 +1633,7 @@
       "usage_after_retrieval": 336.037,
       "usage_before_query": 335.95,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_22_2023_03/chunk_22_2023_03_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_22_2023_03/chunk_22_2023_03_transaction.validation.json"
     },
     {
       "chunk_id": "23_2023_04",
@@ -1652,7 +1652,7 @@
       "query_id": 8061448,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061448",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_23_2023_04/chunk_23_2023_04_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_23_2023_04/chunk_23_2023_04_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "c48f73c8d3f7e17082cf60dd21e2db2df70d33897ad75e48450392fa24e2c208",
       "raw_file_size_bytes": 424,
@@ -1668,7 +1668,7 @@
       "usage_after_retrieval": 336.709,
       "usage_before_query": 336.037,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_23_2023_04/chunk_23_2023_04_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_23_2023_04/chunk_23_2023_04_action.validation.json"
     },
     {
       "chunk_id": "23_2023_04",
@@ -1687,7 +1687,7 @@
       "query_id": 8061452,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061452",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_23_2023_04/chunk_23_2023_04_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_23_2023_04/chunk_23_2023_04_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "4f7389c95f14d9ad41720297a8aad429792750c2ec217657b032934909fe0e5f",
       "raw_file_size_bytes": 201,
@@ -1703,7 +1703,7 @@
       "usage_after_retrieval": 336.717,
       "usage_before_query": 336.709,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_23_2023_04/chunk_23_2023_04_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_23_2023_04/chunk_23_2023_04_transaction.validation.json"
     },
     {
       "chunk_id": "24_2023_05",
@@ -1722,7 +1722,7 @@
       "query_id": 8061457,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061457",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_24_2023_05/chunk_24_2023_05_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_24_2023_05/chunk_24_2023_05_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "09ca0970605b915919417a9157d7f3893ce2b37dfe388161b7c5620b0ff44bca",
       "raw_file_size_bytes": 6914,
@@ -1738,7 +1738,7 @@
       "usage_after_retrieval": 337.138,
       "usage_before_query": 336.717,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_24_2023_05/chunk_24_2023_05_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_24_2023_05/chunk_24_2023_05_action.validation.json"
     },
     {
       "chunk_id": "24_2023_05",
@@ -1757,7 +1757,7 @@
       "query_id": 8061459,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061459",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_24_2023_05/chunk_24_2023_05_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_24_2023_05/chunk_24_2023_05_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "105e2b4c1322682e90f140e9ceb4c1234392becb26b1a8944a8ec1315fe2309c",
       "raw_file_size_bytes": 1216,
@@ -1773,7 +1773,7 @@
       "usage_after_retrieval": 337.244,
       "usage_before_query": 337.138,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_24_2023_05/chunk_24_2023_05_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_24_2023_05/chunk_24_2023_05_transaction.validation.json"
     },
     {
       "chunk_id": "25_2023_06",
@@ -1792,7 +1792,7 @@
       "query_id": 8061463,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061463",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_25_2023_06/chunk_25_2023_06_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_25_2023_06/chunk_25_2023_06_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "fb76310b6dc889f1f742e73ca1fd847eacabf8c8fe9694ebd550d7b8fdc42c84",
       "raw_file_size_bytes": 4189,
@@ -1808,7 +1808,7 @@
       "usage_after_retrieval": 337.956,
       "usage_before_query": 337.244,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_25_2023_06/chunk_25_2023_06_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_25_2023_06/chunk_25_2023_06_action.validation.json"
     },
     {
       "chunk_id": "25_2023_06",
@@ -1827,7 +1827,7 @@
       "query_id": 8061469,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061469",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_25_2023_06/chunk_25_2023_06_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_25_2023_06/chunk_25_2023_06_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "11c9fc47c60bea5f39afda5ec1f7954a8febf85546e52a159890bc65027de1d8",
       "raw_file_size_bytes": 1015,
@@ -1843,7 +1843,7 @@
       "usage_after_retrieval": 338.056,
       "usage_before_query": 337.956,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_25_2023_06/chunk_25_2023_06_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_25_2023_06/chunk_25_2023_06_transaction.validation.json"
     },
     {
       "chunk_id": "26_2023_07",
@@ -1862,7 +1862,7 @@
       "query_id": 8061473,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061473",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_26_2023_07/chunk_26_2023_07_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_26_2023_07/chunk_26_2023_07_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "a3b9139f276dc1aa79c856197e59694f47bf8bb5c213b90ce4683595628b8902",
       "raw_file_size_bytes": 3601,
@@ -1878,7 +1878,7 @@
       "usage_after_retrieval": 338.841,
       "usage_before_query": 338.056,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_26_2023_07/chunk_26_2023_07_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_26_2023_07/chunk_26_2023_07_action.validation.json"
     },
     {
       "chunk_id": "26_2023_07",
@@ -1897,7 +1897,7 @@
       "query_id": 8061477,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061477",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_26_2023_07/chunk_26_2023_07_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_26_2023_07/chunk_26_2023_07_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "92a522a16740564977b9f98a87bae6bc63c86003a1a380ad8c5e4820e38249c3",
       "raw_file_size_bytes": 708,
@@ -1913,7 +1913,7 @@
       "usage_after_retrieval": 338.924,
       "usage_before_query": 338.841,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_26_2023_07/chunk_26_2023_07_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_26_2023_07/chunk_26_2023_07_transaction.validation.json"
     },
     {
       "chunk_id": "27_2023_08",
@@ -1932,7 +1932,7 @@
       "query_id": 8061480,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061480",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_27_2023_08/chunk_27_2023_08_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_27_2023_08/chunk_27_2023_08_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "9bcc169c18c274a62f1c62062443641fa8ed51e49f11e021dbebcff5d1b737ca",
       "raw_file_size_bytes": 33724,
@@ -1948,7 +1948,7 @@
       "usage_after_retrieval": 339.42,
       "usage_before_query": 338.924,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_27_2023_08/chunk_27_2023_08_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_27_2023_08/chunk_27_2023_08_action.validation.json"
     },
     {
       "chunk_id": "27_2023_08",
@@ -1967,7 +1967,7 @@
       "query_id": 8061482,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061482",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_27_2023_08/chunk_27_2023_08_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_27_2023_08/chunk_27_2023_08_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "67836a9c705d06ca6ae317a3925fd6cc58dd6d9631be59e0a5797f716ef5a516",
       "raw_file_size_bytes": 4247,
@@ -1983,7 +1983,7 @@
       "usage_after_retrieval": 339.523,
       "usage_before_query": 339.42,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_27_2023_08/chunk_27_2023_08_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_27_2023_08/chunk_27_2023_08_transaction.validation.json"
     },
     {
       "chunk_id": "28_2023_09",
@@ -2002,7 +2002,7 @@
       "query_id": 8061486,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061486",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_28_2023_09/chunk_28_2023_09_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_28_2023_09/chunk_28_2023_09_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "87fd66ff0389328ac85aa07e92b96711b1e96e7e5cc672dad06bdd5a32010571",
       "raw_file_size_bytes": 6963,
@@ -2018,7 +2018,7 @@
       "usage_after_retrieval": 339.967,
       "usage_before_query": 339.523,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_28_2023_09/chunk_28_2023_09_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_28_2023_09/chunk_28_2023_09_action.validation.json"
     },
     {
       "chunk_id": "28_2023_09",
@@ -2037,7 +2037,7 @@
       "query_id": 8061489,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061489",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_28_2023_09/chunk_28_2023_09_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_28_2023_09/chunk_28_2023_09_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "de44d359ad3e2e3cd4d62719ed1dbe31e23c8c4394b6ef3606c0d5cfcdccfc3a",
       "raw_file_size_bytes": 946,
@@ -2053,7 +2053,7 @@
       "usage_after_retrieval": 340.071,
       "usage_before_query": 339.967,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_28_2023_09/chunk_28_2023_09_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_28_2023_09/chunk_28_2023_09_transaction.validation.json"
     },
     {
       "chunk_id": "29_2023_10",
@@ -2072,7 +2072,7 @@
       "query_id": 8061496,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061496",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_29_2023_10/chunk_29_2023_10_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_29_2023_10/chunk_29_2023_10_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "c48f73c8d3f7e17082cf60dd21e2db2df70d33897ad75e48450392fa24e2c208",
       "raw_file_size_bytes": 424,
@@ -2088,7 +2088,7 @@
       "usage_after_retrieval": 340.998,
       "usage_before_query": 340.071,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_29_2023_10/chunk_29_2023_10_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_29_2023_10/chunk_29_2023_10_action.validation.json"
     },
     {
       "chunk_id": "29_2023_10",
@@ -2107,7 +2107,7 @@
       "query_id": 8061500,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061500",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_29_2023_10/chunk_29_2023_10_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_29_2023_10/chunk_29_2023_10_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "4f7389c95f14d9ad41720297a8aad429792750c2ec217657b032934909fe0e5f",
       "raw_file_size_bytes": 201,
@@ -2123,7 +2123,7 @@
       "usage_after_retrieval": 341.006,
       "usage_before_query": 340.998,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_29_2023_10/chunk_29_2023_10_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_29_2023_10/chunk_29_2023_10_transaction.validation.json"
     },
     {
       "chunk_id": "30_2023_11",
@@ -2142,7 +2142,7 @@
       "query_id": 8061501,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061501",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_30_2023_11/chunk_30_2023_11_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_30_2023_11/chunk_30_2023_11_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "9ab5b80cecb9fa02d10a1045ac4d292515676d716cc4148e2787ca2ba28ad7c4",
       "raw_file_size_bytes": 4161,
@@ -2158,7 +2158,7 @@
       "usage_after_retrieval": 341.748,
       "usage_before_query": 341.006,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_30_2023_11/chunk_30_2023_11_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_30_2023_11/chunk_30_2023_11_action.validation.json"
     },
     {
       "chunk_id": "30_2023_11",
@@ -2177,7 +2177,7 @@
       "query_id": 8061508,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061508",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_30_2023_11/chunk_30_2023_11_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_30_2023_11/chunk_30_2023_11_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "4979b4b0b95fe3cfbe1cb811fd88a5550ed919d418629a3874b1e15d54505028",
       "raw_file_size_bytes": 983,
@@ -2193,7 +2193,7 @@
       "usage_after_retrieval": 342.076,
       "usage_before_query": 341.748,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_30_2023_11/chunk_30_2023_11_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_30_2023_11/chunk_30_2023_11_transaction.validation.json"
     },
     {
       "chunk_id": "31_2023_12",
@@ -2212,7 +2212,7 @@
       "query_id": 8061511,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061511",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_31_2023_12/chunk_31_2023_12_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_31_2023_12/chunk_31_2023_12_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "c48f73c8d3f7e17082cf60dd21e2db2df70d33897ad75e48450392fa24e2c208",
       "raw_file_size_bytes": 424,
@@ -2228,7 +2228,7 @@
       "usage_after_retrieval": 342.78,
       "usage_before_query": 342.076,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_31_2023_12/chunk_31_2023_12_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_31_2023_12/chunk_31_2023_12_action.validation.json"
     },
     {
       "chunk_id": "31_2023_12",
@@ -2247,7 +2247,7 @@
       "query_id": 8061513,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061513",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_31_2023_12/chunk_31_2023_12_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_31_2023_12/chunk_31_2023_12_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "4f7389c95f14d9ad41720297a8aad429792750c2ec217657b032934909fe0e5f",
       "raw_file_size_bytes": 201,
@@ -2263,7 +2263,7 @@
       "usage_after_retrieval": 342.788,
       "usage_before_query": 342.78,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_31_2023_12/chunk_31_2023_12_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_31_2023_12/chunk_31_2023_12_transaction.validation.json"
     },
     {
       "chunk_id": "32_2024_01",
@@ -2282,7 +2282,7 @@
       "query_id": 8061514,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061514",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_32_2024_01/chunk_32_2024_01_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_32_2024_01/chunk_32_2024_01_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "6f7d462d66f1cadd16a977eb19d7ffca3e906a0d335e5b2a346fb0c7ad3e159d",
       "raw_file_size_bytes": 3655,
@@ -2298,7 +2298,7 @@
       "usage_after_retrieval": 343.409,
       "usage_before_query": 342.788,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_32_2024_01/chunk_32_2024_01_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_32_2024_01/chunk_32_2024_01_action.validation.json"
     },
     {
       "chunk_id": "32_2024_01",
@@ -2317,7 +2317,7 @@
       "query_id": 8061516,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061516",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_32_2024_01/chunk_32_2024_01_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_32_2024_01/chunk_32_2024_01_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "aaffd32885e4bd5b7b05a76316bac13f89eb0f9c12a30a92d2139f27efc1ce04",
       "raw_file_size_bytes": 743,
@@ -2333,7 +2333,7 @@
       "usage_after_retrieval": 343.614,
       "usage_before_query": 343.409,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_32_2024_01/chunk_32_2024_01_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_32_2024_01/chunk_32_2024_01_transaction.validation.json"
     },
     {
       "chunk_id": "33_2024_02",
@@ -2352,7 +2352,7 @@
       "query_id": 8061520,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061520",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_33_2024_02/chunk_33_2024_02_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_33_2024_02/chunk_33_2024_02_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "c48f73c8d3f7e17082cf60dd21e2db2df70d33897ad75e48450392fa24e2c208",
       "raw_file_size_bytes": 424,
@@ -2368,7 +2368,7 @@
       "usage_after_retrieval": 344.3,
       "usage_before_query": 343.614,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_33_2024_02/chunk_33_2024_02_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_33_2024_02/chunk_33_2024_02_action.validation.json"
     },
     {
       "chunk_id": "33_2024_02",
@@ -2387,7 +2387,7 @@
       "query_id": 8061524,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061524",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_33_2024_02/chunk_33_2024_02_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_33_2024_02/chunk_33_2024_02_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "4f7389c95f14d9ad41720297a8aad429792750c2ec217657b032934909fe0e5f",
       "raw_file_size_bytes": 201,
@@ -2403,7 +2403,7 @@
       "usage_after_retrieval": 344.309,
       "usage_before_query": 344.3,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_33_2024_02/chunk_33_2024_02_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_33_2024_02/chunk_33_2024_02_transaction.validation.json"
     },
     {
       "chunk_id": "34_2024_03",
@@ -2422,7 +2422,7 @@
       "query_id": 8061525,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061525",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_34_2024_03/chunk_34_2024_03_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_34_2024_03/chunk_34_2024_03_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "d26611c0055e6d5917e1a81c4b66598e10a214e73fae1d2095f0645a57f222cb",
       "raw_file_size_bytes": 3649,
@@ -2438,7 +2438,7 @@
       "usage_after_retrieval": 344.957,
       "usage_before_query": 344.309,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_34_2024_03/chunk_34_2024_03_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_34_2024_03/chunk_34_2024_03_action.validation.json"
     },
     {
       "chunk_id": "34_2024_03",
@@ -2457,7 +2457,7 @@
       "query_id": 8061527,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061527",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_34_2024_03/chunk_34_2024_03_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_34_2024_03/chunk_34_2024_03_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "264d3cccf5503500db9f01ab8d603ea446f0bf380faf5679c8092bc88977e426",
       "raw_file_size_bytes": 711,
@@ -2473,7 +2473,7 @@
       "usage_after_retrieval": 345.086,
       "usage_before_query": 344.957,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_34_2024_03/chunk_34_2024_03_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_34_2024_03/chunk_34_2024_03_transaction.validation.json"
     },
     {
       "chunk_id": "35_2024_04",
@@ -2492,7 +2492,7 @@
       "query_id": 8061529,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061529",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_35_2024_04/chunk_35_2024_04_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_35_2024_04/chunk_35_2024_04_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "9f312d53e7fb3ef11a627d720e6576fd2203987a81c86d22bde0a24716097931",
       "raw_file_size_bytes": 30208,
@@ -2508,7 +2508,7 @@
       "usage_after_retrieval": 345.934,
       "usage_before_query": 345.086,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_35_2024_04/chunk_35_2024_04_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_35_2024_04/chunk_35_2024_04_action.validation.json"
     },
     {
       "chunk_id": "35_2024_04",
@@ -2527,7 +2527,7 @@
       "query_id": 8061533,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061533",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_35_2024_04/chunk_35_2024_04_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_35_2024_04/chunk_35_2024_04_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "7ce7a4defbc3779af018abfb5df16afe6d25c70dfbb727a2c4306a946a93884e",
       "raw_file_size_bytes": 3866,
@@ -2543,7 +2543,7 @@
       "usage_after_retrieval": 346.007,
       "usage_before_query": 345.934,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_35_2024_04/chunk_35_2024_04_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_35_2024_04/chunk_35_2024_04_transaction.validation.json"
     },
     {
       "chunk_id": "36_2024_05",
@@ -2562,7 +2562,7 @@
       "query_id": 8061535,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061535",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_36_2024_05/chunk_36_2024_05_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_36_2024_05/chunk_36_2024_05_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "c97f6320ac1f959ec3a149b610566bd2bca8eb98873d73c99e22b62f8eee4e6b",
       "raw_file_size_bytes": 13155,
@@ -2578,7 +2578,7 @@
       "usage_after_retrieval": 346.496,
       "usage_before_query": 346.007,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_36_2024_05/chunk_36_2024_05_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_36_2024_05/chunk_36_2024_05_action.validation.json"
     },
     {
       "chunk_id": "36_2024_05",
@@ -2597,7 +2597,7 @@
       "query_id": 8061536,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061536",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_36_2024_05/chunk_36_2024_05_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_36_2024_05/chunk_36_2024_05_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "7f5035cc74b24a7215da67855583c8a2f5597956923f89973b9eeac77942c58e",
       "raw_file_size_bytes": 1760,
@@ -2613,7 +2613,7 @@
       "usage_after_retrieval": 346.569,
       "usage_before_query": 346.496,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_36_2024_05/chunk_36_2024_05_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_36_2024_05/chunk_36_2024_05_transaction.validation.json"
     },
     {
       "chunk_id": "37_2024_06",
@@ -2632,7 +2632,7 @@
       "query_id": 8061537,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061537",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_37_2024_06/chunk_37_2024_06_action.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_37_2024_06/chunk_37_2024_06_action.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "c48f73c8d3f7e17082cf60dd21e2db2df70d33897ad75e48450392fa24e2c208",
       "raw_file_size_bytes": 424,
@@ -2648,7 +2648,7 @@
       "usage_after_retrieval": 347.316,
       "usage_before_query": 346.569,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_37_2024_06/chunk_37_2024_06_action.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_37_2024_06/chunk_37_2024_06_action.validation.json"
     },
     {
       "chunk_id": "37_2024_06",
@@ -2667,7 +2667,7 @@
       "query_id": 8061543,
       "query_type": "private temporary bounded monthly production",
       "query_url": "https://dune.com/queries/8061543",
-      "raw_file_path": "data/raw/liquidations/chunks/chunk_37_2024_06/chunk_37_2024_06_transaction.csv",
+      "raw_file_path": "data/liquidations/raw/chunks/chunk_37_2024_06/chunk_37_2024_06_transaction.csv",
       "raw_file_persisted": true,
       "raw_file_sha256": "4f7389c95f14d9ad41720297a8aad429792750c2ec217657b032934909fe0e5f",
       "raw_file_size_bytes": 201,
@@ -2683,7 +2683,7 @@
       "usage_after_retrieval": 347.332,
       "usage_before_query": 347.316,
       "validation_passed": true,
-      "validation_path": "data/provenance/liquidations/chunks/chunk_37_2024_06/chunk_37_2024_06_transaction.validation.json"
+      "validation_path": "data/liquidations/provenance/chunks/chunk_37_2024_06/chunk_37_2024_06_transaction.validation.json"
     }
   ],
   "requested_end_exclusive_utc": "2024-07-01T00:00:00+00:00",

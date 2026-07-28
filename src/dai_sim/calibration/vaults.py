@@ -43,11 +43,11 @@ FTX_START = pd.Timestamp("2022-11-01T00:00:00Z")
 FTX_END_EXCLUSIVE = pd.Timestamp("2022-11-21T00:00:00Z")
 DEFAULT_OUTPUT = PROJECT_ROOT / "data/processed/estimation/phase2b_vaults"
 PROTOCOL_PATH = (
-    PROJECT_ROOT / "data/processed/protocol/"
+    PROJECT_ROOT / "data/protocol/processed/"
     "phase1d_protocol_parameters_hourly.csv"
 )
 MARKET_PATH = (
-    PROJECT_ROOT / "data/processed/market/"
+    PROJECT_ROOT / "data/market/processed/"
     "dune_hourly_market_prices_processed.csv"
 )
 REGIME_PATH = (
@@ -78,12 +78,12 @@ WINDOWS = (
         role="normal",
         directory=(
             PROJECT_ROOT
-            / "data/processed/vaults/representative_regimes/"
+            / "data/vaults/processed/representative_regimes/"
             "quiet_mature_2024-02-01_2024-03-01"
         ),
         provenance=(
             PROJECT_ROOT
-            / "data/provenance/vaults/representative_regimes/"
+            / "data/vaults/provenance/representative_regimes/"
             "quiet_mature_2024-02-01_2024-03-01"
         ),
     ),
@@ -95,12 +95,12 @@ WINDOWS = (
         role="stress",
         directory=(
             PROJECT_ROOT
-            / "data/processed/vaults/representative_regimes/"
+            / "data/vaults/processed/representative_regimes/"
             "usdc_svb_2023-03-06_2023-03-20"
         ),
         provenance=(
             PROJECT_ROOT
-            / "data/provenance/vaults/representative_regimes/"
+            / "data/vaults/provenance/representative_regimes/"
             "usdc_svb_2023-03-06_2023-03-20"
         ),
     ),

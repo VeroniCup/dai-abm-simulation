@@ -36,9 +36,9 @@ from scripts.acquire_dune_liquidation_diagnostic_attempt3 import (
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DIAGNOSTIC_SQL = PROJECT_ROOT / "sql" / "dune_phase1c_liquidation_actions_diagnostic.sql"
-RAW_ROOT = PROJECT_ROOT / "data" / "raw" / "liquidations"
-PROCESSED_ROOT = PROJECT_ROOT / "data" / "processed" / "liquidations"
-PROVENANCE_ROOT = PROJECT_ROOT / "data" / "provenance" / "liquidations"
+RAW_ROOT = PROJECT_ROOT / "data" / "liquidations" / "raw"
+PROCESSED_ROOT = PROJECT_ROOT / "data" / "liquidations" / "processed"
+PROVENANCE_ROOT = PROJECT_ROOT / "data" / "liquidations" / "provenance"
 CHUNK_ROOT = RAW_ROOT / "chunks"
 CHUNK_VALIDATION_ROOT = PROVENANCE_ROOT / "chunks"
 STATE_ROOT = PROVENANCE_ROOT / "state"
@@ -63,8 +63,8 @@ CHUNK_18_REPLACEMENT_PAYLOAD = PROVENANCE_ROOT / "archive" / "chunk_18" / ".chun
 CHUNK_18_COMPLETED_RECOVERY_STATE = (
     STATE_ROOT / "chunk_18_2022_11_transaction.completed_result_recovery.state.json"
 )
-MARKET_PANEL = PROJECT_ROOT / "data" / "processed" / "market" / "dune_hourly_market_prices_processed.csv"
-GAS_PANEL = PROJECT_ROOT / "data" / "processed" / "gas" / "dune_ethereum_hourly_gas_processed.csv"
+MARKET_PANEL = PROJECT_ROOT / "data" / "market" / "processed" / "dune_hourly_market_prices_processed.csv"
+GAS_PANEL = PROJECT_ROOT / "data" / "gas" / "processed" / "dune_ethereum_hourly_gas_processed.csv"
 
 FULL_START = pd.Timestamp("2021-06-01T00:00:00Z")
 FULL_END = pd.Timestamp("2024-07-01T00:00:00Z")

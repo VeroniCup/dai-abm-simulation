@@ -21,7 +21,7 @@ from typing import Any, Iterable
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SQL = PROJECT_ROOT / "sql" / "dune_phase1c_liquidation_diagnostic.sql"
 DEFAULT_DIR = (
-    PROJECT_ROOT / "data" / "provenance" / "liquidations" / "archive" / "diagnostic"
+    PROJECT_ROOT / "data" / "liquidations" / "provenance" / "archive" / "diagnostic"
 )
 ORIGINAL_FAILED_STATE = DEFAULT_DIR / "phase1c_liquidation_diagnostic_metadata.json"
 ORIGINAL_FAILED_PAYLOAD = DEFAULT_DIR / ".phase1c_liquidation_diagnostic.partial.json"

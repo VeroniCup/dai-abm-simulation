@@ -24,9 +24,9 @@ import pandas as pd
 
 
 ROOT = Path(__file__).resolve().parents[1]
-RAW_ROOT = ROOT / "data" / "raw" / "vaults"
-PROCESSED_ROOT = ROOT / "data" / "processed" / "vaults"
-PROVENANCE_ROOT = ROOT / "data" / "provenance" / "vaults"
+RAW_ROOT = ROOT / "data" / "vaults" / "raw"
+PROCESSED_ROOT = ROOT / "data" / "vaults" / "processed"
+PROVENANCE_ROOT = ROOT / "data" / "vaults" / "provenance"
 RAW_CHUNK_ROOT = RAW_ROOT / "chunks"
 PROCESSED_CHUNK_ROOT = PROCESSED_ROOT / "chunks"
 PROVENANCE_CHUNK_ROOT = PROVENANCE_ROOT / "chunks"

@@ -26,26 +26,26 @@ TERRA_END = pd.Timestamp("2022-06-20T00:00:00Z")
 DEFAULT_OUTPUT = PROJECT_ROOT / "data/processed/estimation/phase2c_liquidations"
 TERRA_DIR = (
     PROJECT_ROOT
-    / "data/processed/vaults/representative_regimes/"
+    / "data/vaults/processed/representative_regimes/"
     "terra_cefi_2022-05-05_2022-06-20"
 )
 TERRA_PROVENANCE = (
     PROJECT_ROOT
-    / "data/provenance/vaults/representative_regimes/"
+    / "data/vaults/provenance/representative_regimes/"
     "terra_cefi_2022-05-05_2022-06-20"
 )
 PHASE1C_ACTIONS = (
     PROJECT_ROOT
-    / "data/processed/liquidations/"
+    / "data/liquidations/processed/"
     "phase1c_liquidation_actions_2021-06-01_2024-06-30.csv"
 )
 MARKET_PANEL = (
     PROJECT_ROOT
-    / "data/processed/market/dune_hourly_market_prices_processed.csv"
+    / "data/market/processed/dune_hourly_market_prices_processed.csv"
 )
 PROTOCOL_PANEL = (
     PROJECT_ROOT
-    / "data/processed/protocol/phase1d_protocol_parameters_hourly.csv"
+    / "data/protocol/processed/phase1d_protocol_parameters_hourly.csv"
 )
 PHASE2A_REGIMES = (
     PROJECT_ROOT

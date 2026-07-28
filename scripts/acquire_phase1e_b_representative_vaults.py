@@ -32,35 +32,35 @@ from scripts import acquire_dune_vaults as phase1e
 getcontext().prec = 80
 
 ROOT = Path(__file__).resolve().parents[1]
-RAW_ROOT = ROOT / "data" / "raw" / "vaults" / "chunks"
+RAW_ROOT = ROOT / "data" / "vaults" / "raw" / "chunks"
 PROCESSED_ROOT = (
-    ROOT / "data" / "processed" / "vaults" / "representative_regimes"
+    ROOT / "data" / "vaults" / "processed" / "representative_regimes"
 )
 PROVENANCE_ROOT = (
-    ROOT / "data" / "provenance" / "vaults" / "representative_regimes"
+    ROOT / "data" / "vaults" / "provenance" / "representative_regimes"
 )
 SQL_ROOT = (
     ROOT / "sql" / "vaults" / "generated" / "representative_regimes"
 )
 TRANCHE_MANIFEST = PROVENANCE_ROOT / "tranche_01_manifest.json"
 MARKET_PATH = (
-    ROOT / "data" / "processed" / "market"
+    ROOT / "data" / "market" / "processed"
     / "dune_hourly_market_prices_processed.csv"
 )
 PROTOCOL_PATH = (
-    ROOT / "data" / "processed" / "protocol"
+    ROOT / "data" / "protocol" / "processed"
     / "phase1d_protocol_parameters_hourly.csv"
 )
 LIQUIDATION_ACTIONS_PATH = (
-    ROOT / "data" / "processed" / "liquidations"
+    ROOT / "data" / "liquidations" / "processed"
     / "phase1c_liquidation_actions_2021-06-01_2024-06-30.csv"
 )
 LIQUIDATION_AUCTIONS_PATH = (
-    ROOT / "data" / "processed" / "liquidations"
+    ROOT / "data" / "liquidations" / "processed"
     / "phase1c_liquidation_auctions_2021-06-01_2024-06-30.csv"
 )
 LIQUIDATION_TRANSACTIONS_PATH = (
-    ROOT / "data" / "processed" / "liquidations"
+    ROOT / "data" / "liquidations" / "processed"
     / "phase1c_liquidation_transactions_2021-06-01_2024-06-30.csv"
 )
 PHASE2B_CANDIDATES_PATH = (

@@ -26,8 +26,8 @@ from empirical_config import sha256_file  # noqa: E402
 TERRA_DIR = (
     REPOSITORY_ROOT
     / "data"
-    / "processed"
     / "vaults"
+    / "processed"
     / "representative_regimes"
     / "terra_cefi_2022-05-05_2022-06-20"
 )

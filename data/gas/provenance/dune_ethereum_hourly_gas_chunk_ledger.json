@@ -14,7 +14,7 @@
       "observed_credit_delta": 0.07499999999998863,
       "query_id": 8047036,
       "query_url": "https://dune.com/queries/8047036",
-      "raw_file_path": "data/raw/gas/chunks/chunk_01_2021-06-01_2021-07-01.csv",
+      "raw_file_path": "data/gas/raw/chunks/chunk_01_2021-06-01_2021-07-01.csv",
       "raw_file_persisted": true,
       "raw_file_persisted_at_utc": "2026-07-21T00:15:28.440074+00:00",
       "raw_file_sha256": "5cbc7de2fe046b6950a083e47721336b0a1794792b419a9c5f21939fc1f9f056",
@@ -31,7 +31,7 @@
       "usage_before": 301.166,
       "validated_at_utc": "2026-07-21T00:15:28.454514+00:00",
       "validation_passed": true,
-      "validation_path": "data/provenance/gas/chunks/chunk_01_2021-06-01_2021-07-01.validation.json"
+      "validation_path": "data/gas/provenance/chunks/chunk_01_2021-06-01_2021-07-01.validation.json"
     },
     {
       "chunk_number": 2,
@@ -47,7 +47,7 @@
       "observed_credit_delta": 0.0,
       "query_id": 8047051,
       "query_url": "https://dune.com/queries/8047051",
-      "raw_file_path": "data/raw/gas/chunks/chunk_02_2021-07-01_2021-10-01.csv",
+      "raw_file_path": "data/gas/raw/chunks/chunk_02_2021-07-01_2021-10-01.csv",
       "raw_file_persisted": true,
       "raw_file_persisted_at_utc": "2026-07-21T00:17:02.854136+00:00",
       "raw_file_sha256": "1a30a1921a15cc13955fbeeaaee26df675e5fc25e0fe57d1620ccc22e8082fb1",
@@ -64,7 +64,7 @@
       "usage_before": 301.241,
       "validated_at_utc": "2026-07-21T00:17:02.884983+00:00",
       "validation_passed": true,
-      "validation_path": "data/provenance/gas/chunks/chunk_02_2021-07-01_2021-10-01.validation.json"
+      "validation_path": "data/gas/provenance/chunks/chunk_02_2021-07-01_2021-10-01.validation.json"
     },
     {
       "chunk_number": 3,
@@ -80,7 +80,7 @@
       "observed_credit_delta": 0.367999999999995,
       "query_id": 8047058,
       "query_url": "https://dune.com/queries/8047058",
-      "raw_file_path": "data/raw/gas/chunks/chunk_03_2021-10-01_2022-01-01.csv",
+      "raw_file_path": "data/gas/raw/chunks/chunk_03_2021-10-01_2022-01-01.csv",
       "raw_file_persisted": true,
       "raw_file_persisted_at_utc": "2026-07-21T00:17:20.340904+00:00",
       "raw_file_sha256": "e3ff705dcc668e63515aac4f023e5d9973543c4790b600a94bb7a3c73e2529a9",
@@ -97,7 +97,7 @@
       "usage_before": 301.564,
       "validated_at_utc": "2026-07-21T00:17:20.375666+00:00",
       "validation_passed": true,
-      "validation_path": "data/provenance/gas/chunks/chunk_03_2021-10-01_2022-01-01.validation.json"
+      "validation_path": "data/gas/provenance/chunks/chunk_03_2021-10-01_2022-01-01.validation.json"
     },
     {
       "chunk_number": 4,
@@ -113,7 +113,7 @@
       "observed_credit_delta": 0.0,
       "query_id": 8047064,
       "query_url": "https://dune.com/queries/8047064",
-      "raw_file_path": "data/raw/gas/chunks/chunk_04_2022-01-01_2022-04-01.csv",
+      "raw_file_path": "data/gas/raw/chunks/chunk_04_2022-01-01_2022-04-01.csv",
       "raw_file_persisted": true,
       "raw_file_persisted_at_utc": "2026-07-21T00:17:39.822259+00:00",
       "raw_file_sha256": "bf840d19c241352c3acbbf9e8e8de20bfb7ded5fb1b0e3d2a1681129d89e8bda",
@@ -130,7 +130,7 @@
       "usage_before": 301.932,
       "validated_at_utc": "2026-07-21T00:17:39.853862+00:00",
       "validation_passed": true,
-      "validation_path": "data/provenance/gas/chunks/chunk_04_2022-01-01_2022-04-01.validation.json"
+      "validation_path": "data/gas/provenance/chunks/chunk_04_2022-01-01_2022-04-01.validation.json"
     },
     {
       "chunk_number": 5,
@@ -146,7 +146,7 @@
       "observed_credit_delta": 0.6539999999999964,
       "query_id": 8047068,
       "query_url": "https://dune.com/queries/8047068",
-      "raw_file_path": "data/raw/gas/chunks/chunk_05_2022-04-01_2022-07-01.csv",
+      "raw_file_path": "data/gas/raw/chunks/chunk_05_2022-04-01_2022-07-01.csv",
       "raw_file_persisted": true,
       "raw_file_persisted_at_utc": "2026-07-21T00:17:57.385817+00:00",
       "raw_file_sha256": "679a61ff38ad490d54eb980ebc5b259dc8fb54ae8b388197e33463ad63b88fec",
@@ -163,7 +163,7 @@
       "usage_before": 301.932,
       "validated_at_utc": "2026-07-21T00:17:57.417508+00:00",
       "validation_passed": true,
-      "validation_path": "data/provenance/gas/chunks/chunk_05_2022-04-01_2022-07-01.validation.json"
+      "validation_path": "data/gas/provenance/chunks/chunk_05_2022-04-01_2022-07-01.validation.json"
     },
     {
       "chunk_number": 6,
@@ -179,7 +179,7 @@
       "observed_credit_delta": 0.0,
       "query_id": 8047071,
       "query_url": "https://dune.com/queries/8047071",
-      "raw_file_path": "data/raw/gas/chunks/chunk_06_2022-07-01_2022-10-01.csv",
+      "raw_file_path": "data/gas/raw/chunks/chunk_06_2022-07-01_2022-10-01.csv",
       "raw_file_persisted": true,
       "raw_file_persisted_at_utc": "2026-07-21T00:18:16.773738+00:00",
       "raw_file_sha256": "a2021c8b4310ccb400ef58cd0ccdb7badf527cc762eb6987bb7bfc4942c741ee",
@@ -196,7 +196,7 @@
       "usage_before": 302.586,
       "validated_at_utc": "2026-07-21T00:18:16.806623+00:00",
       "validation_passed": true,
-      "validation_path": "data/provenance/gas/chunks/chunk_06_2022-07-01_2022-10-01.validation.json"
+      "validation_path": "data/gas/provenance/chunks/chunk_06_2022-07-01_2022-10-01.validation.json"
     },
     {
       "chunk_number": 7,
@@ -212,7 +212,7 @@
       "observed_credit_delta": 0.6659999999999968,
       "query_id": 8047075,
       "query_url": "https://dune.com/queries/8047075",
-      "raw_file_path": "data/raw/gas/chunks/chunk_07_2022-10-01_2023-01-01.csv",
+      "raw_file_path": "data/gas/raw/chunks/chunk_07_2022-10-01_2023-01-01.csv",
       "raw_file_persisted": true,
       "raw_file_persisted_at_utc": "2026-07-21T00:18:34.359158+00:00",
       "raw_file_sha256": "cc03b4c066ad5a76c8abf46adcc227856dd5df92ba1e8e5275b1ef021e34aa72",
@@ -229,7 +229,7 @@
       "usage_before": 302.586,
       "validated_at_utc": "2026-07-21T00:18:34.394512+00:00",
       "validation_passed": true,
-      "validation_path": "data/provenance/gas/chunks/chunk_07_2022-10-01_2023-01-01.validation.json"
+      "validation_path": "data/gas/provenance/chunks/chunk_07_2022-10-01_2023-01-01.validation.json"
     },
     {
       "chunk_number": 8,
@@ -245,7 +245,7 @@
       "observed_credit_delta": 0.3149999999999977,
       "query_id": 8047077,
       "query_url": "https://dune.com/queries/8047077",
-      "raw_file_path": "data/raw/gas/chunks/chunk_08_2023-01-01_2023-04-01.csv",
+      "raw_file_path": "data/gas/raw/chunks/chunk_08_2023-01-01_2023-04-01.csv",
       "raw_file_persisted": true,
       "raw_file_persisted_at_utc": "2026-07-21T00:18:51.895449+00:00",
       "raw_file_sha256": "576469377b7a973bb950263b7660e1386b3681034eb5c47e5ce1e3c3ac5470f5",
@@ -262,7 +262,7 @@
       "usage_before": 303.252,
       "validated_at_utc": "2026-07-21T00:18:51.927126+00:00",
       "validation_passed": true,
-      "validation_path": "data/provenance/gas/chunks/chunk_08_2023-01-01_2023-04-01.validation.json"
+      "validation_path": "data/gas/provenance/chunks/chunk_08_2023-01-01_2023-04-01.validation.json"
     },
     {
       "chunk_number": 9,
@@ -278,7 +278,7 @@
       "observed_credit_delta": 0.35199999999997544,
       "query_id": 8047080,
       "query_url": "https://dune.com/queries/8047080",
-      "raw_file_path": "data/raw/gas/chunks/chunk_09_2023-04-01_2023-07-01.csv",
+      "raw_file_path": "data/gas/raw/chunks/chunk_09_2023-04-01_2023-07-01.csv",
       "raw_file_persisted": true,
       "raw_file_persisted_at_utc": "2026-07-21T00:19:17.537575+00:00",
       "raw_file_sha256": "a5043bcef9b0b0a6a6a23f43ae43eba396c87e064e7933de09322ea69d76dd27",
@@ -295,7 +295,7 @@
       "usage_before": 303.567,
       "validated_at_utc": "2026-07-21T00:19:17.569713+00:00",
       "validation_passed": true,
-      "validation_path": "data/provenance/gas/chunks/chunk_09_2023-04-01_2023-07-01.validation.json"
+      "validation_path": "data/gas/provenance/chunks/chunk_09_2023-04-01_2023-07-01.validation.json"
     },
     {
       "chunk_number": 10,
@@ -311,7 +311,7 @@
       "observed_credit_delta": 0.37000000000000455,
       "query_id": 8047081,
       "query_url": "https://dune.com/queries/8047081",
-      "raw_file_path": "data/raw/gas/chunks/chunk_10_2023-07-01_2023-10-01.csv",
+      "raw_file_path": "data/gas/raw/chunks/chunk_10_2023-07-01_2023-10-01.csv",
       "raw_file_persisted": true,
       "raw_file_persisted_at_utc": "2026-07-21T00:19:47.312370+00:00",
       "raw_file_sha256": "3e7b442ebbcf7e905e9cca7f324d1f6c690edd821161c7b4d6226af70e1a33aa",
@@ -328,7 +328,7 @@
       "usage_before": 303.919,
       "validated_at_utc": "2026-07-21T00:19:47.342848+00:00",
       "validation_passed": true,
-      "validation_path": "data/provenance/gas/chunks/chunk_10_2023-07-01_2023-10-01.validation.json"
+      "validation_path": "data/gas/provenance/chunks/chunk_10_2023-07-01_2023-10-01.validation.json"
     },
     {
       "chunk_number": 11,
@@ -344,7 +344,7 @@
       "observed_credit_delta": 0.40500000000002956,
       "query_id": 8047084,
       "query_url": "https://dune.com/queries/8047084",
-      "raw_file_path": "data/raw/gas/chunks/chunk_11_2023-10-01_2024-01-01.csv",
+      "raw_file_path": "data/gas/raw/chunks/chunk_11_2023-10-01_2024-01-01.csv",
       "raw_file_persisted": true,
       "raw_file_persisted_at_utc": "2026-07-21T00:20:20.720494+00:00",
       "raw_file_sha256": "f1958aa32c724d933a7f11faa161dbbd0a15a24038b0f644344b6b2ff33815d7",
@@ -361,7 +361,7 @@
       "usage_before": 304.289,
       "validated_at_utc": "2026-07-21T00:20:20.754500+00:00",
       "validation_passed": true,
-      "validation_path": "data/provenance/gas/chunks/chunk_11_2023-10-01_2024-01-01.validation.json"
+      "validation_path": "data/gas/provenance/chunks/chunk_11_2023-10-01_2024-01-01.validation.json"
     },
     {
       "chunk_number": 12,
@@ -377,7 +377,7 @@
       "observed_credit_delta": 0.43899999999996453,
       "query_id": 8047088,
       "query_url": "https://dune.com/queries/8047088",
-      "raw_file_path": "data/raw/gas/chunks/chunk_12_2024-01-01_2024-04-01.csv",
+      "raw_file_path": "data/gas/raw/chunks/chunk_12_2024-01-01_2024-04-01.csv",
       "raw_file_persisted": true,
       "raw_file_persisted_at_utc": "2026-07-21T00:20:54.330597+00:00",
       "raw_file_sha256": "199e33d64837456ef8313adbcebba4a3073e4568cd2d1f0a73e6ab6875d58bc9",
@@ -394,7 +394,7 @@
       "usage_before": 304.694,
       "validated_at_utc": "2026-07-21T00:20:54.365088+00:00",
       "validation_passed": true,
-      "validation_path": "data/provenance/gas/chunks/chunk_12_2024-01-01_2024-04-01.validation.json"
+      "validation_path": "data/gas/provenance/chunks/chunk_12_2024-01-01_2024-04-01.validation.json"
     },
     {
       "chunk_number": 13,
@@ -410,7 +410,7 @@
       "observed_credit_delta": 0.41200000000003456,
       "query_id": 8047094,
       "query_url": "https://dune.com/queries/8047094",
-      "raw_file_path": "data/raw/gas/chunks/chunk_13_2024-04-01_2024-07-01.csv",
+      "raw_file_path": "data/gas/raw/chunks/chunk_13_2024-04-01_2024-07-01.csv",
       "raw_file_persisted": true,
       "raw_file_persisted_at_utc": "2026-07-21T00:21:17.931085+00:00",
       "raw_file_sha256": "49671bb85c9d8f164e74230fa4b047742a24f31518928157887eed32798f0d82",
@@ -427,7 +427,7 @@
       "usage_before": 305.133,
       "validated_at_utc": "2026-07-21T00:21:17.962913+00:00",
       "validation_passed": true,
-      "validation_path": "data/provenance/gas/chunks/chunk_13_2024-04-01_2024-07-01.validation.json"
+      "validation_path": "data/gas/provenance/chunks/chunk_13_2024-04-01_2024-07-01.validation.json"
     }
   ],
   "engine": "small",

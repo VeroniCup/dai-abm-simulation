@@ -6,8 +6,8 @@
 output_mode: baseline
 output_timezone: UTC
 simulation_frequency: "1h"
-manifest_path: data/provenance/manifests/data_manifest.csv
-processed_data_dir: data/processed
+manifest_path: data/provenance/data_manifest.csv
+processed_data_dir: data/market/processed
 
 calibration_period:
   start: null

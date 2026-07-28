@@ -24,15 +24,15 @@ ROOT = Path(__file__).resolve().parents[1]
 WINDOW = representative.WINDOWS["quiet_mature"]
 WINDOW_SLUG = representative.window_slug(WINDOW)
 RAW_DIR = (
-    ROOT / "data" / "raw" / "vaults" / "chunks" / WINDOW_SLUG
+    ROOT / "data" / "vaults" / "raw" / "chunks" / WINDOW_SLUG
     / "effective_rates"
 )
 PROCESSED_DIR = (
-    ROOT / "data" / "processed" / "vaults" / "representative_regimes"
+    ROOT / "data" / "vaults" / "processed" / "representative_regimes"
     / WINDOW_SLUG
 )
 PROVENANCE_DIR = (
-    ROOT / "data" / "provenance" / "vaults" / "representative_regimes"
+    ROOT / "data" / "vaults" / "provenance" / "representative_regimes"
     / WINDOW_SLUG / "effective_rates"
 )
 SQL_PATH = (
@@ -48,21 +48,21 @@ VALIDATION_PATH = PROVENANCE_DIR / "validation.json"
 SOURCE_AUDIT_PATH = PROVENANCE_DIR / "source_audit.json"
 
 BOUNDARY_PATH = (
-    ROOT / "data" / "raw" / "vaults" / "chunks" / WINDOW_SLUG
+    ROOT / "data" / "vaults" / "raw" / "chunks" / WINDOW_SLUG
     / "boundary_states" / "boundary_states.csv"
 )
-PHASE1D_JUG = ROOT / "data" / "raw" / "protocol" / "phase1d_jug_parameters.csv"
-PHASE1D_VAT = ROOT / "data" / "raw" / "protocol" / "phase1d_vat_parameters.csv"
+PHASE1D_JUG = ROOT / "data" / "protocol" / "raw" / "phase1d_jug_parameters.csv"
+PHASE1D_VAT = ROOT / "data" / "protocol" / "raw" / "phase1d_vat_parameters.csv"
 PHASE1D_LEDGER = (
-    ROOT / "data" / "processed" / "protocol"
+    ROOT / "data" / "protocol" / "processed"
     / "phase1d_protocol_parameter_changes.csv"
 )
 PHASE1D_INTERVALS = (
-    ROOT / "data" / "processed" / "protocol"
+    ROOT / "data" / "protocol" / "processed"
     / "phase1d_protocol_parameter_intervals.csv"
 )
 PHASE1D_HOURLY = (
-    ROOT / "data" / "processed" / "protocol"
+    ROOT / "data" / "protocol" / "processed"
     / "phase1d_protocol_parameters_hourly.csv"
 )
 

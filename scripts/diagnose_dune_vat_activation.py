@@ -27,7 +27,7 @@ from urllib.request import Request, urlopen
 ROOT = Path(__file__).resolve().parents[1]
 SQL_PATH = ROOT / "sql" / "dune_phase1d_vat_wbtc_activation_diagnostic.sql"
 OUTPUT_DIR = (
-    ROOT / "data" / "provenance" / "protocol" / "archive" / "diagnostic"
+    ROOT / "data" / "protocol" / "provenance" / "archive" / "diagnostic"
 )
 RAW_PATH = OUTPUT_DIR / "phase1d_vat_wbtc_activation_diagnostic.csv"
 STATE_PATH = OUTPUT_DIR / "phase1d_vat_wbtc_activation_diagnostic_state.json"

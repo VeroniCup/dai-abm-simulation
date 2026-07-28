@@ -1,5 +1,6 @@
-# Processed empirical data
+# Temporary estimation diagnostics
 
-Baseline runs may write standardised source files and an aligned market-time
-panel here. Generated data files are ignored by Git and can be rebuilt from the
-raw inputs, configuration and manifest.
+Only the generated `estimation/` diagnostics tree remains here during the
+repository transition. Domain-owned analytical datasets now live under
+`data/<domain>/processed/`. The ignored diagnostics will move to
+`outputs/diagnostics/` in Stage 10.

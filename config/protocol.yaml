@@ -2,9 +2,9 @@
 # config/protocol/parameters.yaml is authoritative.
 
 output_mode: baseline
-manifest_path: data/provenance/manifests/data_manifest.csv
+manifest_path: data/provenance/data_manifest.csv
 collateral_mapping_path: config/protocol/collateral_types.csv
-processed_data_dir: data/processed
+processed_data_dir: data/market/processed
 vault_ratio_tolerance: 1.0e-6
 liquidation_summary_frequency: "1D"
 

@@ -40,7 +40,7 @@ from scripts.acquire_dune_liquidation_diagnostic import (
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 ACTION_SQL = PROJECT_ROOT / "sql" / "dune_phase1c_liquidation_actions_diagnostic.sql"
 DIAGNOSTIC_DIR = (
-    PROJECT_ROOT / "data" / "provenance" / "liquidations" / "archive" / "diagnostic"
+    PROJECT_ROOT / "data" / "liquidations" / "provenance" / "archive" / "diagnostic"
 )
 ACTION_RAW = DIAGNOSTIC_DIR / "phase1c_liquidation_actions_attempt3.csv"
 TRANSACTION_RAW = DIAGNOSTIC_DIR / "phase1c_liquidation_transactions_attempt3.csv"
@@ -67,11 +67,11 @@ RECOVERY_METADATA = DIAGNOSTIC_DIR / "phase1c_liquidation_attempt3_recovery_meta
 RECOVERY_VALIDATION = DIAGNOSTIC_DIR / "phase1c_liquidation_attempt3_recovery_validation.json"
 RECOVERY_SUMMARY = DIAGNOSTIC_DIR / "phase1c_liquidation_attempt3_summary.json"
 MARKET_PANEL = (
-    PROJECT_ROOT / "data" / "processed" / "market"
+    PROJECT_ROOT / "data" / "market" / "processed"
     / "dune_hourly_market_prices_processed.csv"
 )
 GAS_PANEL = (
-    PROJECT_ROOT / "data" / "processed" / "gas"
+    PROJECT_ROOT / "data" / "gas" / "processed"
     / "dune_ethereum_hourly_gas_processed.csv"
 )
 

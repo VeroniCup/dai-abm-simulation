@@ -23,7 +23,7 @@
       "columns": 21,
       "sql_path": "sql/dune_phase1e_vat_frob_diagnostic.sql",
       "sql_sha256": "bace00ff49fa631d996e61078420bc6dbadae60b011048efc4f2e73fd38ed19c",
-      "csv_path": "data/provenance/vaults/archive/discovery/phase1e_vat_frob_diagnostic.csv",
+      "csv_path": "data/vaults/provenance/archive/discovery/phase1e_vat_frob_diagnostic.csv",
       "csv_sha256": "b165699e35edde1e06425603bd57cc8cfe2fb3b741a297a615c51c547800a27a",
       "csv_size_bytes": 58754,
       "compute_credits": 0.031,
@@ -40,7 +40,7 @@
       "columns": 31,
       "sql_path": "sql/dune_phase1e_liquidation_linkage_diagnostic.sql",
       "sql_sha256": "ef191edf60ae63070553fc415f8a303ff0c298a696d8e0115df533cdc3e0b831",
-      "csv_path": "data/provenance/vaults/archive/discovery/phase1e_liquidation_linkage_diagnostic.csv",
+      "csv_path": "data/vaults/provenance/archive/discovery/phase1e_liquidation_linkage_diagnostic.csv",
       "csv_sha256": "aadd1e62f82f1c2292ad43319e0b2839496db566ffbc973cec1660d1e689b9fd",
       "csv_size_bytes": 1106,
       "compute_credits": 0.39,
@@ -57,7 +57,7 @@
       "columns": 24,
       "sql_path": "sql/dune_phase1e_owner_mapping_diagnostic.sql",
       "sql_sha256": "ab44cb628910f663feb812cfcd481138a1a96d8f324b470b250f5914595c8ea0",
-      "csv_path": "data/provenance/vaults/archive/discovery/phase1e_owner_mapping_diagnostic.csv",
+      "csv_path": "data/vaults/provenance/archive/discovery/phase1e_owner_mapping_diagnostic.csv",
       "csv_sha256": "dcc97d905dadff6c3a79285c3e849b0ec5d231b33de7458f0efcf572ad1b0868",
       "csv_size_bytes": 2073,
       "compute_credits": 0.609,
@@ -67,10 +67,10 @@
     }
   },
   "deliverables": {
-    "notes": "data/provenance/vaults/archive/discovery/phase1e_vault_discovery_notes.md",
-    "schema_discovery": "data/provenance/vaults/archive/discovery/phase1e_vault_schema_discovery.json",
-    "event_ledger_schema": "data/provenance/vaults/archive/discovery/phase1e_vault_event_ledger_schema.csv",
-    "reconstruction_schema": "data/provenance/vaults/archive/discovery/phase1e_vault_reconstruction_schema.csv"
+    "notes": "data/vaults/provenance/archive/discovery/phase1e_vault_discovery_notes.md",
+    "schema_discovery": "data/vaults/provenance/archive/discovery/phase1e_vault_schema_discovery.json",
+    "event_ledger_schema": "data/vaults/provenance/archive/discovery/phase1e_vault_event_ledger_schema.csv",
+    "reconstruction_schema": "data/vaults/provenance/archive/discovery/phase1e_vault_reconstruction_schema.csv"
   },
   "main_data_manifest_updated": false,
   "production_ready": true,

@@ -26,9 +26,9 @@ import pandas as pd
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_TEMPLATE = PROJECT_ROOT / "sql" / "dune_ethereum_hourly_gas.sql"
-DEFAULT_RAW_DIR = PROJECT_ROOT / "data" / "raw" / "gas"
+DEFAULT_RAW_DIR = PROJECT_ROOT / "data" / "gas" / "raw"
 DEFAULT_CHUNK_DIR = DEFAULT_RAW_DIR / "chunks"
-DEFAULT_PROVENANCE_DIR = PROJECT_ROOT / "data" / "provenance" / "gas"
+DEFAULT_PROVENANCE_DIR = PROJECT_ROOT / "data" / "gas" / "provenance"
 DEFAULT_STATE_DIR = DEFAULT_PROVENANCE_DIR / "state"
 DEFAULT_CHUNK_VALIDATION_DIR = DEFAULT_PROVENANCE_DIR / "chunks"
 DEFAULT_LEDGER = DEFAULT_PROVENANCE_DIR / "dune_ethereum_hourly_gas_chunk_ledger.json"
@@ -38,8 +38,8 @@ DEFAULT_ABORTED_ATTEMPTS = (
 DEFAULT_COMBINED = (
     PROJECT_ROOT
     / "data"
-    / "processed"
     / "gas"
+    / "processed"
     / "dune_ethereum_hourly_gas_assembled_2021-06-01_2024-06-30.csv"
 )
 DEFAULT_METADATA = DEFAULT_PROVENANCE_DIR / "dune_ethereum_hourly_gas_acquisition.json"

@@ -4,11 +4,11 @@ Place unmodified protocol-time observations, such as liquidation volume, here.
 Protocol inputs are optional for the first market panel but must be documented
 in the data manifest when configured. Raw files are ignored by Git.
 
-Phase 1D raw module observations are stored directly in `data/raw/protocol/`.
+Phase 1D raw module observations are stored directly in `data/protocol/raw/`.
 Discovery records, parameter-source mappings, diagnostic state and validation,
-and production manifests are stored under `data/provenance/protocol/`. Derived
+and production manifests are stored under `data/protocol/provenance/`. Derived
 change ledgers, intervals and hourly panels are under
-`data/processed/protocol/`. These generated artefacts remain ignored;
+`data/protocol/processed/`. These generated artefacts remain ignored;
 the durable diagnostic SQL is
 `sql/dune_phase1d_eth_a_debt_ceiling_diagnostic.sql` and the local validation
 implementation is `scripts/acquire_dune_protocol_parameters.py`.
