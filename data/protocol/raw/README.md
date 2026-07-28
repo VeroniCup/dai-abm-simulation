@@ -11,7 +11,7 @@ change ledgers, intervals and hourly panels are under
 `data/protocol/processed/`. These generated artefacts remain ignored;
 the durable diagnostic SQL is
 `sql/dune_phase1d_eth_a_debt_ceiling_diagnostic.sql` and the local validation
-implementation is `scripts/acquire_dune_protocol_parameters.py`.
+implementation is `workflows/maintenance/archive/debt_ceiling_diagnostic.py`.
 
 The Phase 1D diagnostic does not constitute production acquisition and does not
 change any simulator parameter. Protocol settings are reconstructed as

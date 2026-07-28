@@ -144,7 +144,7 @@ def test_authoritative_code_and_scripts_have_no_old_data_path_fallback() -> None
     )
     paths = [
         *sorted((REPOSITORY_ROOT / "src").rglob("*.py")),
-        *sorted((REPOSITORY_ROOT / "scripts").rglob("*.py")),
+        *sorted((REPOSITORY_ROOT / "workflows").rglob("*.py")),
     ]
     for path in paths:
         text = path.read_text(encoding="utf-8")

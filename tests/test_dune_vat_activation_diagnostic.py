@@ -1,7 +1,13 @@
 from decimal import Decimal
 import json
+from pathlib import Path
+import sys
 
-from scripts import diagnose_dune_vat_activation as activation
+REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
+
+from workflows.maintenance.archive import diagnose_vat_activation as activation
 
 
 def _row(ilk, call_type, key, time, position, raw=None):

@@ -2478,7 +2478,7 @@ def _write_figures(
 def _code_version() -> str:
     digest = hashlib.sha256()
     paths = sorted((PROJECT_ROOT / "src/estimation").glob("*.py"))
-    paths.append(PROJECT_ROOT / "scripts/run_phase2a_parameter_estimation.py")
+    paths.append(PROJECT_ROOT / "workflows/calibration/market_gas_protocol.py")
     for path in paths:
         if path.exists():
             digest.update(path.relative_to(PROJECT_ROOT).as_posix().encode())

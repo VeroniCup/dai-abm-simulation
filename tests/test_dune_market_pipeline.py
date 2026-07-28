@@ -12,11 +12,11 @@ import pandas as pd
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
-SCRIPTS_DIRECTORY = REPOSITORY_ROOT / "scripts"
-sys.path.insert(0, str(SCRIPTS_DIRECTORY))
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
 
-import acquire_dune_market_prices as acquisition  # noqa: E402
-import validate_dune_market_prices as validation  # noqa: E402
+from workflows.market import acquire as acquisition
+from workflows.market import validate as validation
 
 
 class AcquisitionTests(unittest.TestCase):

@@ -15,8 +15,11 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts import acquire_dune_liquidation_diagnostic_attempt3 as attempt3
-from scripts.acquire_dune_liquidation_diagnostic import LiquidationDiagnosticError, write_json_atomic
+from workflows.maintenance.archive import liquidation_diagnostic_attempt3 as attempt3
+from workflows.maintenance.archive.liquidation_diagnostic import (
+    LiquidationDiagnosticError,
+    write_json_atomic,
+)
 
 
 def row(record_type: str, **updates: object) -> dict[str, object]:

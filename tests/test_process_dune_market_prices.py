@@ -15,7 +15,7 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 
-from scripts.process_dune_market_prices import (  # noqa: E402
+from workflows.market.process import (
     ASSET_PRICE_COLUMNS,
     ProcessingError,
     build_processed_panel,

@@ -4,7 +4,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from scripts import discover_dune_vault_events as vaults
+from workflows.maintenance.archive import discover_vault_events as vaults
 
 
 def frob_row(index: int, dink: int, dart: int) -> dict[str, str]:

@@ -253,7 +253,7 @@ def test_loader_rejects_unknown_initialisation_field(tmp_path: Path) -> None:
 
 
 def test_pool_builder_is_deterministic(tmp_path: Path) -> None:
-    from scripts import build_vault_initialisation_pools as builder
+    from workflows.vaults import build_inputs as builder
 
     first_pool, first_audit = builder.build_pool()
     second_pool, second_audit = builder.build_pool()

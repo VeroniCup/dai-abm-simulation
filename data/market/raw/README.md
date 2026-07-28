@@ -15,7 +15,7 @@ execution ID, SQL checksum and raw-file checksum committed in
 Run the local validation without modifying the raw result:
 
 ```bash
-python scripts/validate_dune_market_prices.py \
+python workflows/market/validate.py \
   data/market/raw/dune_prices_hourly_2021-06-01_2024-06-30.csv
 ```
 

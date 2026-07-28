@@ -5,12 +5,17 @@ from __future__ import annotations
 import json
 from decimal import Decimal
 from pathlib import Path
+import sys
 import tempfile
 
 import pytest
 
-from scripts import acquire_dune_liquidations as production
-from scripts.acquire_dune_liquidation_diagnostic import write_json_atomic
+REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
+
+from workflows.liquidations import acquire as production
+from workflows.maintenance.archive.liquidation_diagnostic import write_json_atomic
 
 
 def test_monthly_plan_is_exact_and_contiguous() -> None:

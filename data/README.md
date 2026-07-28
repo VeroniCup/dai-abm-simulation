@@ -38,7 +38,7 @@ a query and never prints the `DUNE_API_KEY`:
 
 ```bash
 export DUNE_API_KEY='set-outside-version-control'
-python scripts/acquire_dune_market_prices.py \
+python workflows/market/acquire.py \
   --mode saved-query \
   --query-id QUERY_ID
 ```
@@ -51,7 +51,7 @@ and SHA-256 checksum in an execution sidecar and `data/provenance/data_manifest.
 If polling times out, resume the same execution rather than paying for another:
 
 ```bash
-python scripts/acquire_dune_market_prices.py \
+python workflows/market/acquire.py \
   --mode saved-query \
   --query-id QUERY_ID \
   --resume-execution-id EXECUTION_ID
@@ -62,7 +62,7 @@ use `--mode temporary-query` together with both returned identifiers. This mode
 never submits another execution:
 
 ```bash
-python scripts/acquire_dune_market_prices.py \
+python workflows/market/acquire.py \
   --mode temporary-query \
   --query-id TEMPORARY_QUERY_ID \
   --execution-id EXECUTION_ID
@@ -71,7 +71,7 @@ python scripts/acquire_dune_market_prices.py \
 Validate the untouched result locally with:
 
 ```bash
-python scripts/validate_dune_market_prices.py \
+python workflows/market/validate.py \
   data/market/raw/dune_prices_hourly_2021-06-01_2024-06-30.csv \
   --report data/market/provenance/dune_prices_hourly_2021-06-01_2024-06-30.validation.json
 ```
@@ -87,7 +87,7 @@ Construct the source-specific wide panel only after the raw checksum and
 structural validation have passed:
 
 ```bash
-python scripts/process_dune_market_prices.py \
+python workflows/market/process.py \
   --input data/market/raw/dune_prices_hourly_2021-06-01_2024-06-30.csv
 ```
 
@@ -126,7 +126,7 @@ gas-price percentiles use Dune's approximate percentile aggregation. The
 template uses matching partition and timestamp filters and is rendered into 13
 fixed, contiguous half-open chunks covering 2021-06-01 through 2024-07-01.
 
-`scripts/acquire_dune_hourly_gas.py` is the local persistence and validation
+`workflows/gas/acquire.py` is the local persistence and validation
 state machine used with Dune MCP. It has no network or API-key path. Query and
 execution identifiers are atomically recorded under
 `data/gas/provenance/state/` before result retrieval. Retrieved MCP results are
@@ -173,7 +173,7 @@ Run the entirely local processor only after the raw gas and Phase 1A market
 checksums have passed:
 
 ```bash
-python scripts/process_dune_hourly_gas.py \
+python workflows/gas/process.py \
   --gas-input data/gas/processed/dune_ethereum_hourly_gas_assembled_2021-06-01_2024-06-30.csv \
   --market-input data/market/processed/dune_hourly_market_prices_processed.csv
 ```

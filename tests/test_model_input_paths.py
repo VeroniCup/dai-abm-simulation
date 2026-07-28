@@ -20,11 +20,9 @@ from dai_sim.inputs.gas import DEFAULT_LIQUIDATION_GAS_POOL_PATH
 from dai_sim.inputs.liquidations import DEFAULT_LIQUIDATION_ARRIVAL_POOL_PATH
 from dai_sim.inputs.market import DEFAULT_MARKET_GAS_POOL_PATH
 from dai_sim.inputs.vaults import DEFAULT_POOL_MANIFEST, DEFAULT_POOL_PATH
-from scripts import (
-    build_liquidation_arrival_runtime_pools as arrival_builder,
-    build_market_gas_runtime_pools as environment_builder,
-    build_vault_initialisation_pools as vault_builder,
-)
+from workflows.liquidations import build_inputs as arrival_builder
+from workflows.market import build_inputs as environment_builder
+from workflows.vaults import build_inputs as vault_builder
 
 
 EXPECTED = {

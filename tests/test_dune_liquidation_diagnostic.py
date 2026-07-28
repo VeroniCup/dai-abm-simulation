@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts import acquire_dune_liquidation_diagnostic as diagnostic
+from workflows.maintenance.archive import liquidation_diagnostic as diagnostic
 
 
 def base_row(**changes: object) -> dict[str, object]:

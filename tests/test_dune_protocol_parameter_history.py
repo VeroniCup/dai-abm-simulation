@@ -1,10 +1,16 @@
 from decimal import Decimal
 import json
+from pathlib import Path
+import sys
 
 import pandas as pd
 import pytest
 
-from scripts import acquire_dune_protocol_parameter_history as history
+REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
+
+from workflows.protocol import acquire as history
 
 
 def _rows(spec, parameters, ilks=history.TARGET_ILKS):

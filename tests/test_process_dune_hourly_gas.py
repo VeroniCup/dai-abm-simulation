@@ -16,8 +16,8 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 
-from scripts import acquire_dune_hourly_gas as acquisition
-from scripts import process_dune_hourly_gas as processing
+from workflows.gas import acquire as acquisition
+from workflows.gas import process as processing
 
 
 def gas_fixture() -> pd.DataFrame:

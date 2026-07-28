@@ -2,10 +2,15 @@ import csv
 from decimal import Decimal
 import json
 from pathlib import Path
+import sys
 
 import pytest
 
-from scripts import acquire_dune_protocol_parameters as protocol
+REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
+
+from workflows.maintenance.archive import debt_ceiling_diagnostic as protocol
 
 
 def diagnostic_rows(row_count=protocol.EXPECTED_ROWS):

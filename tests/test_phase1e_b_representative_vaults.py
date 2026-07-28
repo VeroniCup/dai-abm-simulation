@@ -9,8 +9,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from scripts import acquire_phase1e_b_representative_vaults as representative
-from scripts import repair_phase1e_b_quiet_rates as rate_repair
+from workflows.maintenance.archive import repair_quiet_rates as rate_repair
+from workflows.vaults import acquire_representative as representative
 
 
 def _synthetic_mutation_row(

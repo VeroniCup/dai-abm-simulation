@@ -17,7 +17,7 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 
-from scripts import acquire_dune_hourly_gas as gas
+from workflows.gas import acquire as gas
 
 
 def make_row(timestamp: pd.Timestamp) -> dict[str, object]:

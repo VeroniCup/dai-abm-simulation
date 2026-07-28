@@ -6,8 +6,8 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from scripts import acquire_dune_vaults as vaults
-from scripts import retrieve_dune_execution_page as retrieval
+from workflows.maintenance import retrieve_result as retrieval
+from workflows.vaults import acquire as vaults
 
 
 def mutation_row(call_type="frob"):
