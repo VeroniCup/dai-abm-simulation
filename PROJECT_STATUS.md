@@ -95,7 +95,19 @@ review reproduced all of them without changing executable behaviour.
 
 ## Next research work
 
-The remaining empirical task is adoption and validation of defensible
+The behavioural-confidence calibration planning pass is complete. It audits
+the current confidence and DAI-response mechanism, records the empirical
+identification limits and defines the calibration, validation and stress-test
+split in the [confidence and behavioural calibration
+plan](docs/calibration/confidence_and_behaviour.md). Executable implementation
+is not yet authorised, and no behavioural values have been adopted.
+
+The next model-development milestone is the bounded resolution of the plan's
+unresolved choices, followed by explicitly authorised estimation and
+implementation of confidence, behavioural DAI demand and peg recovery.
+
+The remaining empirical work is adoption and validation of defensible
 parameter candidates, followed by calibrated counterfactual experiments.
 Changes to auction execution, confidence mechanics, stable-depeg transmission
-or keeper-capacity allocation require separate modelling decisions.
+or keeper-capacity allocation require separate modelling decisions and
+authorisation.
