@@ -733,15 +733,15 @@ def _existing_tests(code: str) -> str:
         ),
         "2": (
             "vault.py/simulation.py smoke checks; "
-            "tests/test_phase2b_vault_estimation.py"
+            "tests/calibration/test_vaults.py"
         ),
         "3": (
-            "price_process.py smoke checks; tests/test_phase2a_estimation.py; "
-            "tests/test_phase2a_candidate_review.py"
+            "price_process.py smoke checks; tests/calibration/test_market_gas_protocol.py; "
+            "tests/calibration/test_validation.py"
         ),
         "4": (
-            "liquidation.py smoke checks; tests/test_phase2a_estimation.py; "
-            "tests/test_phase2c_liquidation_estimation.py"
+            "liquidation.py smoke checks; tests/calibration/test_market_gas_protocol.py; "
+            "tests/calibration/test_liquidations.py"
         ),
         "5": (
             "confidence.py validation/smoke checks and Phase 2A threshold diagnostics; "

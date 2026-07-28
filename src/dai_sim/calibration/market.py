@@ -97,7 +97,7 @@ BASELINE_OUTPUT_DIR = EMPIRICAL_OUTPUT_DIR / "baseline"
 DEFAULT_OUTPUT_DIR = SYNTHETIC_OUTPUT_DIR
 DEFAULT_PROCESSED_DATA_DIR = PROJECT_ROOT / "data" / "market" / "processed"
 SYNTHETIC_FIXTURE_PATH = (
-    PROJECT_ROOT / "tests" / "fixtures" / "empirical_market_fixture.csv"
+    PROJECT_ROOT / "tests" / "fixtures" / "market" / "empirical_market.csv"
 )
 
 POOL_COLUMNS = (
