@@ -165,7 +165,11 @@ def test_pyproject_metadata_and_discovery_are_bounded() -> None:
     assert discovery == {"where": ["src"], "include": ["dai_sim*"]}
     assert "scripts" not in payload["project"]
     assert "pytest" not in payload.get("tool", {})
-    assert find_packages(where=SRC_ROOT, include=["dai_sim*"]) == [
+    assert sorted(find_packages(where=SRC_ROOT, include=["dai_sim*"])) == [
         "dai_sim",
+        "dai_sim.calibration",
         "dai_sim.common",
+        "dai_sim.experiments",
+        "dai_sim.inputs",
+        "dai_sim.model",
     ]
