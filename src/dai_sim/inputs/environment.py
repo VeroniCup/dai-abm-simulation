@@ -213,21 +213,6 @@ def _parse_liquidation_demand(raw: dict[str, Any] | None) -> LiquidationDemandCo
     return config
 
 
-def _deep_merge(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
-    """Recursively merge Tranche D sensitivity overrides into a base payload."""
-    result = dict(base)
-    for key, value in override.items():
-        if (
-            key in result
-            and isinstance(result[key], dict)
-            and isinstance(value, dict)
-        ):
-            result[key] = _deep_merge(result[key], value)
-        else:
-            result[key] = value
-    return result
-
-
 def load_tranche_c_configuration(
     path: Path | str = DEFAULT_TRANCHE_C_CONFIG_PATH,
     *,
@@ -238,11 +223,10 @@ def load_tranche_c_configuration(
     raw = load_configuration_payload(config_path, sensitivity_paths)
     if not isinstance(raw, dict):
         raise ValueError("Tranche C configuration must be a mapping.")
-    if raw.get("mode") not in {"empirical_tranche_c"} | VALID_SEMANTIC_PROFILE_MODES:
-        raise ValueError("Tranche C mode must be semantic or empirical_tranche_c.")
+    if raw.get("mode") not in VALID_SEMANTIC_PROFILE_MODES:
+        raise ValueError("Tranche C mode must be a semantic profile mode.")
 
     base_payload = dict(raw)
-    base_payload["mode"] = "empirical_tranche_b"
     base_payload.pop("market_process", None)
     base_payload.pop("gas_process", None)
     base_payload.pop("liquidation_demand", None)
@@ -274,21 +258,10 @@ def load_tranche_d_configuration(
     raw = load_configuration_payload(config_path, sensitivity_paths)
     if not isinstance(raw, dict):
         raise ValueError("Tranche D configuration must be a mapping.")
-    if "base_config" in raw:
-        base_path = _root_path(str(raw["base_config"]))
-        if base_path is None:
-            raise ValueError("Tranche D base_config must not be empty.")
-        base_raw = yaml.safe_load(base_path.read_text(encoding="utf-8")) or {}
-        if not isinstance(base_raw, dict):
-            raise ValueError("Tranche D base configuration must be a mapping.")
-        override = dict(raw)
-        override.pop("base_config")
-        raw = _deep_merge(base_raw, override)
-    if raw.get("mode") not in {"empirical_tranche_d"} | VALID_SEMANTIC_PROFILE_MODES:
-        raise ValueError("Tranche D mode must be semantic or empirical_tranche_d.")
+    if raw.get("mode") not in VALID_SEMANTIC_PROFILE_MODES:
+        raise ValueError("Tranche D mode must be a semantic profile mode.")
 
     base_payload = dict(raw)
-    base_payload["mode"] = "empirical_tranche_c"
     base_payload.pop("liquidation_demand", None)
     temporary = config_path.with_suffix(".base_for_validation.yaml")
     try:

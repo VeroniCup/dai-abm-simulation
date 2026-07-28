@@ -559,8 +559,7 @@ def summarise_liquidations(liquidation_df: pd.DataFrame) -> dict:
 
 
 if __name__ == "__main__":
-    # Quick smoke test. Run:
-    # python src/liquidation.py
+    # Quick smoke test: PYTHONPATH=src python -m dai_sim.model.liquidation
 
     from .vault import generate_random_vaults, vaults_to_dataframe
 

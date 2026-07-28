@@ -728,8 +728,7 @@ def vaults_to_dataframe(
 
 
 if __name__ == "__main__":
-    # Quick smoke test. Run:
-    # python src/vault.py
+    # Quick smoke test: PYTHONPATH=src python -m dai_sim.model.vault
 
     initial_prices = 2_000.0
     shocked_prices = 1_140.0

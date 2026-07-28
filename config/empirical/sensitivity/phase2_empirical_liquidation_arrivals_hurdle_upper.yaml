@@ -1,8 +1,0 @@
-# Tranche D sensitivity: upper empirical hurdle probability.
-base_config: config/empirical/phase2_empirical_liquidation_arrivals.yaml
-bundle_name: phase2_empirical_liquidation_arrivals_hurdle_upper
-description: "Tranche D upper-hurdle sensitivity under the empirical market/gas environment."
-liquidation_demand:
-  hurdle_probability: 0.43478260869565216
-provenance:
-  sensitivity_role: upper_hurdle_probability

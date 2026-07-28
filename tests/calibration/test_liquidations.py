@@ -15,7 +15,7 @@ from tests.support import REPOSITORY_ROOT
 if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 
-from src.estimation import phase2c_liquidations as phase2c
+from dai_sim.calibration import liquidations as phase2c
 
 
 def test_simulator_field_semantic_extraction() -> None:

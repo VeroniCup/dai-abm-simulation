@@ -395,8 +395,7 @@ def build_and_save_clean_summary(
 
 
 if __name__ == "__main__":
-    # Run:
-    # python src/metrics.py
+    # Run: PYTHONPATH=src python -m dai_sim.model.metrics
 
     clean_summary, save_path = build_and_save_clean_summary(
         experiment_name="baseline",

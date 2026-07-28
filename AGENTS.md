@@ -195,10 +195,10 @@ numerical tolerance.
 
 ### Target architecture status
 
-The domain-first repository architecture is the approved target. Stages 2–8
-have implemented the package, configuration, data, workflow, SQL and
-documentation layers. Test and output migration, compatibility removal and
-final review remain later authorised stages. Current implemented paths remain
+The domain-first repository architecture is the approved target. Stages 2–11
+have implemented the package, configuration, data, workflow, SQL,
+documentation, test and output layers and removed temporary compatibility
+interfaces. Stage 12 final review remains. Current implemented paths are
 authoritative.
 
 The full implementation specification, file-level path map, compatibility
@@ -287,7 +287,7 @@ outputs/{experiments,diagnostics,figures,tables}/
 
 ### Remaining transition rule
 
-Until the remaining migration stages are implemented:
+Until the Stage 12 final review is implemented:
 
 * use current paths where required;
 * do not create ad hoc hybrid folders;

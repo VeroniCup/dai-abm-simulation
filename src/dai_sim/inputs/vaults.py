@@ -253,16 +253,10 @@ def load_tranche_b_configuration(
     raw = load_configuration_payload(config_path, sensitivity_paths)
     if not isinstance(raw, dict):
         raise ValueError("Tranche B configuration must be a mapping.")
-    if raw.get("mode") not in {
-        "empirical_tranche_b",
-        "legacy",
-        "empirical",
-        "empirical_stress",
-    }:
-        raise ValueError("Tranche B mode must be semantic or empirical_tranche_b.")
+    if raw.get("mode") not in {"legacy", "empirical", "empirical_stress"}:
+        raise ValueError("Tranche B mode must be a semantic profile mode.")
 
     base_payload = dict(raw)
-    base_payload["mode"] = "empirical_tranche_a"
     base_payload.pop("vault_initialisation", None)
     base_payload.pop("market_process", None)
     base_payload.pop("gas_process", None)

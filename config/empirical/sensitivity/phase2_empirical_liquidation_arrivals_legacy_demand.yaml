@@ -1,9 +1,0 @@
-# Tranche D sensitivity: Tranche C environment with legacy liquidation demand.
-base_config: config/empirical/phase2_empirical_liquidation_arrivals.yaml
-bundle_name: phase2_empirical_liquidation_arrivals_legacy_demand
-description: "Tranche C empirical market/gas inputs with legacy all-eligible liquidation demand."
-liquidation_demand:
-  mode: legacy_all_eligible
-  hurdle_probability: null
-provenance:
-  sensitivity_role: legacy_liquidation_demand_under_tranche_c_environment

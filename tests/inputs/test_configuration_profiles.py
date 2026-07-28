@@ -96,16 +96,10 @@ def test_legacy_profile_matches_executable_defaults() -> None:
     assert bundle.liquidation_demand.mode == "legacy_all_eligible"
 
 
-def test_empirical_profile_is_behaviourally_equivalent_to_compatibility_bundle() -> None:
+def test_empirical_profile_behaviour_is_frozen() -> None:
     semantic = load_configuration_profile(EMPIRICAL)
-    compatibility = load_tranche_d_configuration(
-        ROOT / "config/empirical/phase2_empirical_liquidation_arrivals.yaml"
-    )
-    assert configuration_behaviour_payload(semantic) == configuration_behaviour_payload(
-        compatibility
-    )
-    assert configuration_behaviour_sha256(semantic) == configuration_behaviour_sha256(
-        compatibility
+    assert configuration_behaviour_sha256(semantic) == (
+        "8f5c7864ad03fd7d4e24e41f79c1511024459e4b67d8d2e81ef0f653188498e9"
     )
 
 
@@ -216,8 +210,8 @@ def test_explicit_sensitivity_application_runs_final_validation(tmp_path: Path) 
             (
                 "sensitivity_name: invalid",
                 "description: invalid close factor",
-                "source_path: config/empirical/phase2_empirical_baseline.yaml",
-                "source_sha256: ba5b835065c7749650c24ecba85a993fdfc6f8ac2aa0960ce27e54817d13ed3e",
+                "source_path: config/profiles/empirical.yaml",
+                "source_sha256: 31bcc1f038311e2de2355114adbcc599f257105fe5bef3a0181e7b0e95b8f6fc",
                 "overrides:",
                 "  liquidation:",
                 "    max_close_factor: 2.0",

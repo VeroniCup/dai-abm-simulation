@@ -12,6 +12,7 @@ import sys
 
 from tests.integration.test_test_hierarchy import (
     EXPECTED_MAPPING,
+    STAGE11_MODULES,
     STAGE9_MODULES,
     STAGE10_MODULES,
 )
@@ -19,13 +20,13 @@ from tests.support import REPOSITORY_ROOT
 
 
 EXPECTED_CASE_DIGEST = (
-    "d6130220e85bca93f7463a36cf326b787183326ef68004c9bd371f7c72067d21"
+    "6e0ede732d7f2895999c539f69365888bf196021259fa578390ee1c138afddf9"
 )
 EXPECTED_DECORATOR_DIGEST = (
-    "d020744b4fd16b1c5b7df51e11ae4ee4693c531c433267d75697efa05aae8cfb"
+    "dcb42096ef2c6384b876a3b5408a44733b0bd477beb72d2f2406c1229bc5a300"
 )
 EXPECTED_MONKEYPATCH_DIGEST = (
-    "ab4dd01aafb3912a97c25c7d99dbab33876de72fb1d5d79ad3287143307e05b8"
+    "19d7b650cf2fe8cff524a23ed9b19bb3401dc272d3bd584b12871ee7e5942d32"
 )
 EXPECTED_CASE_COUNTS = {
     "tests/calibration/test_adoption.py": 13,
@@ -45,7 +46,6 @@ EXPECTED_CASE_COUNTS = {
     "tests/integration/test_domain_data_paths.py": 6,
     "tests/integration/test_package_and_paths.py": 16,
     "tests/integration/test_provenance_paths.py": 6,
-    "tests/integration/test_source_compatibility.py": 6,
     "tests/integration/test_source_package_migration.py": 4,
     "tests/integration/test_sql_hierarchy.py": 6,
     "tests/integration/test_sql_integrity.py": 4,
@@ -59,7 +59,6 @@ EXPECTED_CASE_COUNTS = {
     "tests/workflows/protocol/test_acquisition.py": 4,
     "tests/workflows/protocol/test_activation.py": 7,
     "tests/workflows/protocol/test_history.py": 19,
-    "tests/workflows/test_compatibility.py": 49,
     "tests/workflows/test_migration.py": 8,
     "tests/workflows/vaults/test_acquisition.py": 19,
     "tests/workflows/vaults/test_discovery.py": 8,
@@ -83,7 +82,8 @@ def _baseline_nodeids(nodeids: list[str]) -> list[str]:
     return sorted(
         nodeid
         for nodeid in nodeids
-        if nodeid.split("::", 1)[0] not in STAGE9_MODULES | STAGE10_MODULES
+        if nodeid.split("::", 1)[0]
+        not in STAGE9_MODULES | STAGE10_MODULES | STAGE11_MODULES
     )
 
 
@@ -139,9 +139,9 @@ def _json_digest(value: object) -> str:
     return sha256(serialised.encode("utf-8")).hexdigest()
 
 
-def test_all_474_pre_migration_logical_cases_are_preserved() -> None:
+def test_all_419_retained_pre_migration_logical_cases_are_preserved() -> None:
     baseline = _baseline_nodeids(_collect_nodeids())
-    assert len(baseline) == 474
+    assert len(baseline) == 419
     assert len(set(baseline)) == len(baseline)
     assert _digest_lines(baseline) == EXPECTED_CASE_DIGEST
 
@@ -155,13 +155,13 @@ def test_pre_migration_case_counts_are_preserved_by_module() -> None:
 
 def test_parametrisation_and_marker_decorators_are_preserved() -> None:
     records = _decorator_records()
-    assert len(records) == 415
+    assert len(records) == 404
     assert _json_digest(records) == EXPECTED_DECORATOR_DIGEST
 
 
 def test_monkeypatch_targets_and_arguments_are_preserved() -> None:
     records = _monkeypatch_records()
-    assert len(records) == 51
+    assert len(records) == 50
     assert _json_digest(records) == EXPECTED_MONKEYPATCH_DIGEST
 
 
@@ -180,13 +180,14 @@ def test_existing_suite_defines_no_fixture_with_changed_scope() -> None:
     assert fixture_decorators == []
 
 
-def test_stage9_cases_are_the_only_collection_additions() -> None:
+def test_restructuring_cases_are_the_only_collection_additions() -> None:
     nodeids = _collect_nodeids()
     baseline = _baseline_nodeids(nodeids)
     additions = sorted(set(nodeids) - set(baseline))
     assert additions
     assert all(
-        nodeid.split("::", 1)[0] in STAGE9_MODULES | STAGE10_MODULES
+        nodeid.split("::", 1)[0]
+        in STAGE9_MODULES | STAGE10_MODULES | STAGE11_MODULES
         for nodeid in additions
     )
     counts = Counter(nodeid.split("::", 1)[0] for nodeid in additions)
@@ -195,5 +196,7 @@ def test_stage9_cases_are_the_only_collection_additions() -> None:
         "tests/integration/test_output_hierarchy.py": 12,
         "tests/integration/test_test_collection_integrity.py": 6,
         "tests/integration/test_test_hierarchy.py": 7,
+        "tests/integration/test_compatibility_removal.py": 9,
+        "tests/workflows/test_canonical_commands.py": 21,
     }
-    assert len(nodeids) == 474 + len(additions)
+    assert len(nodeids) == 419 + len(additions)

@@ -946,8 +946,7 @@ def run_shock_recovery_simulation(
 
 
 if __name__ == "__main__":
-    # Quick smoke test. Run:
-    # python src/simulation.py
+    # Quick smoke test: PYTHONPATH=src python -m dai_sim.model.simulation
 
     sim_config = SimulationConfig(
         n_steps=100,

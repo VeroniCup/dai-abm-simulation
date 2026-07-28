@@ -132,12 +132,6 @@ SUPPORTED_DAI_MARKET_KEYS = {
     "min_recovery_confidence",
 }
 SEMANTIC_PROFILE_MODES = {"legacy", "empirical", "empirical_stress"}
-COMPATIBILITY_PROFILE_MODES = {
-    "empirical_tranche_a",
-    "empirical_tranche_b",
-    "empirical_tranche_c",
-    "empirical_tranche_d",
-}
 SENSITIVITY_METADATA_KEYS = {
     "sensitivity_name",
     "description",
@@ -506,7 +500,7 @@ def load_empirical_configuration_bundle(
 
     bundle_name = str(raw.get("bundle_name", "")).strip()
     mode = str(raw.get("mode", "")).strip()
-    if mode not in SEMANTIC_PROFILE_MODES | COMPATIBILITY_PROFILE_MODES:
+    if mode not in SEMANTIC_PROFILE_MODES:
         raise ValueError(f"Unsupported configuration profile mode: {mode}.")
     if not bundle_name:
         raise ValueError("Configuration bundle_name must not be empty.")

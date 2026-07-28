@@ -14,7 +14,7 @@ from tests.support import REPOSITORY_ROOT
 if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 
-from src.estimation import phase2b_vaults as phase2b
+from dai_sim.calibration import vaults as phase2b
 
 
 def state_fixture() -> pd.DataFrame:

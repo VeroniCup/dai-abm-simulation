@@ -1,8 +1,0 @@
-# Tranche D sensitivity: higher keeper capacity.
-base_config: config/empirical/phase2_empirical_liquidation_arrivals.yaml
-bundle_name: phase2_empirical_liquidation_arrivals_capacity_upper
-description: "Tranche D higher-capacity sensitivity under the empirical arrival layer."
-liquidation:
-  max_liquidations_per_step: 20
-provenance:
-  sensitivity_role: higher_keeper_capacity

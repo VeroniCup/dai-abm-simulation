@@ -1853,8 +1853,7 @@ def create_all_experiment_figures(
 
 
 if __name__ == "__main__":
-    # Run:
-    # python src/plot_results.py
+    # Run: PYTHONPATH=src python -m dai_sim.experiments.plots
 
     paths = create_all_experiment_figures(
         shock_time=30,

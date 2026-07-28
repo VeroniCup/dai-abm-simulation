@@ -15,20 +15,20 @@ from tests.support import REPOSITORY_ROOT
 if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 
-from src.estimation.data_loading import (
+from dai_sim.calibration.data_loading import (
     InputSpec,
     load_inputs,
     require_hourly_index,
     validate_protocol_intervals,
 )
-from src.estimation.phase2a import (
+from dai_sim.calibration.market import (
     REQUIRED_CANDIDATE_FIELDS,
     aggregate_liquidation_volume,
     build_parameter_status,
-    calculate_transaction_gas_cost,
     validate_candidate_registry,
 )
-from src.estimation.statistics import (
+from dai_sim.calibration.gas import calculate_transaction_gas_cost
+from dai_sim.calibration.statistics import (
     aligned_dependence,
     calculate_log_returns,
     classify_regimes,

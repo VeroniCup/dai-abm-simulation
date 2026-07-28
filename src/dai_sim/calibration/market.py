@@ -7,7 +7,7 @@ work without changing any simulation parameter or economic equation.
 
 Run the executable synthetic validation with:
 
-    python src/empirical_data.py
+    PYTHONPATH=src python -m dai_sim.calibration.market
 
 The bundled fixture is synthetic and must not be interpreted as an empirical
 result.
@@ -2480,7 +2480,7 @@ def _write_figures(
 
 def _code_version() -> str:
     digest = hashlib.sha256()
-    paths = sorted((PROJECT_ROOT / "src/estimation").glob("*.py"))
+    paths = sorted((PROJECT_ROOT / "src/dai_sim/calibration").glob("*.py"))
     paths.append(PROJECT_ROOT / "workflows/calibration/market_gas_protocol.py")
     for path in paths:
         if path.exists():

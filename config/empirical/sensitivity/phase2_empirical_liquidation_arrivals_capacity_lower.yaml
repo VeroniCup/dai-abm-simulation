@@ -1,8 +1,0 @@
-# Tranche D sensitivity: constrained keeper capacity.
-base_config: config/empirical/phase2_empirical_liquidation_arrivals.yaml
-bundle_name: phase2_empirical_liquidation_arrivals_capacity_lower
-description: "Tranche D lower-capacity sensitivity under the empirical arrival layer."
-liquidation:
-  max_liquidations_per_step: 5
-provenance:
-  sensitivity_role: lower_keeper_capacity

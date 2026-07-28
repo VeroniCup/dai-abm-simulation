@@ -14,8 +14,8 @@ from tests.support import REPOSITORY_ROOT
 if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 
-from src.estimation.data_loading import validate_protocol_intervals  # noqa: E402
-from src.estimation.phase2a_review import (  # noqa: E402
+from dai_sim.calibration.data_loading import validate_protocol_intervals  # noqa: E402
+from dai_sim.calibration.validation import (  # noqa: E402
     REVIEW_FIELDS,
     REVIEW_STATUSES,
     _block_length_sensitivity,
@@ -28,7 +28,7 @@ from src.estimation.phase2a_review import (  # noqa: E402
     hurdle_summary,
     validate_reviewed_registry,
 )
-from src.estimation.statistics import estimate_regime_thresholds  # noqa: E402
+from dai_sim.calibration.statistics import estimate_regime_thresholds  # noqa: E402
 
 
 def _candidate(

@@ -18,11 +18,14 @@ for path in (REPOSITORY_ROOT, SRC_ROOT):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-import experiments  # noqa: E402
-from empirical_config import load_empirical_configuration_bundle, sha256_file  # noqa: E402
-from simulation import create_initial_vaults, run_simulation_with_collateral_metrics  # noqa: E402
-from vault import vaults_to_dataframe  # noqa: E402
-from vault_initialisation import (  # noqa: E402
+from dai_sim.experiments import runner as experiments  # noqa: E402
+from dai_sim.inputs.configuration import sha256_file  # noqa: E402
+from dai_sim.model.simulation import (  # noqa: E402
+    create_initial_vaults,
+    run_simulation_with_collateral_metrics,
+)
+from dai_sim.model.vault import vaults_to_dataframe  # noqa: E402
+from dai_sim.inputs.vaults import (  # noqa: E402
     DEFAULT_POOL_PATH,
     DEFAULT_TRANCHE_B_CONFIG_PATH,
     ParametricFamilyConfig,
@@ -54,19 +57,17 @@ def test_legacy_initialisation_matches_existing_create_initial_vaults() -> None:
     pd.testing.assert_frame_equal(result_frame, legacy_frame)
 
 
-def test_tranche_a_configuration_values_are_unchanged() -> None:
-    compatibility = load_empirical_configuration_bundle(
-        REPOSITORY_ROOT / "config/empirical/phase2_empirical_baseline.yaml"
+def test_empirical_profile_base_configuration_values_are_unchanged() -> None:
+    semantic = load_tranche_b_configuration().base_bundle
+    assert semantic.simulation_config.n_vaults == 500
+    assert semantic.simulation_config.collateral_portfolio.collateral_names == (
+        "ETH",
+        "BTC",
     )
-    semantic = load_empirical_configuration_bundle()
-    assert compatibility.simulation_config.n_vaults == semantic.simulation_config.n_vaults
-    assert (
-        compatibility.simulation_config.collateral_portfolio.collaterals
-        == semantic.simulation_config.collateral_portfolio.collaterals
+    assert semantic.liquidation_config.max_close_factor == 1.0
+    assert semantic.confidence_config.normal_lower_price == pytest.approx(
+        0.9992875
     )
-    assert compatibility.liquidation_config == semantic.liquidation_config
-    assert compatibility.confidence_config == semantic.confidence_config
-    assert compatibility.dai_market_config == semantic.dai_market_config
 
 
 def test_pool_schema_and_checksum() -> None:

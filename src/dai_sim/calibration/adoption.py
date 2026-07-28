@@ -439,12 +439,15 @@ def authoritative_parameter_headings(
 def discover_dataclass_fields() -> set[str]:
     """Read implemented configuration fields directly from source ASTs."""
     targets = {
-        "src/simulation.py": {"SimulationConfig"},
-        "src/collateral.py": {"CollateralConfig", "CollateralPortfolioConfig"},
-        "src/liquidation.py": {"LiquidationConfig"},
-        "src/confidence.py": {"ConfidenceConfig"},
-        "src/dai_market.py": {"DAIMarketConfig"},
-        "src/price_process.py": {"PriceProcessConfig"},
+        "src/dai_sim/model/simulation.py": {"SimulationConfig"},
+        "src/dai_sim/model/collateral.py": {
+            "CollateralConfig",
+            "CollateralPortfolioConfig",
+        },
+        "src/dai_sim/model/liquidation.py": {"LiquidationConfig"},
+        "src/dai_sim/model/confidence.py": {"ConfidenceConfig"},
+        "src/dai_sim/model/market.py": {"DAIMarketConfig"},
+        "src/dai_sim/model/collateral_prices.py": {"PriceProcessConfig"},
     }
     fields: set[str] = set()
     for relative_path, classes in targets.items():

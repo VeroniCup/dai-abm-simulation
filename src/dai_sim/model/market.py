@@ -315,8 +315,7 @@ def update_dai_price(
 
 
 if __name__ == "__main__":
-    # Quick smoke test. Run:
-    # python src/dai_market.py
+    # Quick smoke test: PYTHONPATH=src python -m dai_sim.model.market
 
     market_config = DAIMarketConfig()
     rng = np.random.default_rng(42)

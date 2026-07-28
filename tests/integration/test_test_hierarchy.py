@@ -88,9 +88,6 @@ EXPECTED_MAPPING = {
     "tests/test_provenance_paths.py": (
         "tests/integration/test_provenance_paths.py"
     ),
-    "tests/test_source_compatibility.py": (
-        "tests/integration/test_source_compatibility.py"
-    ),
     "tests/test_source_package_migration.py": (
         "tests/integration/test_source_package_migration.py"
     ),
@@ -101,9 +98,6 @@ EXPECTED_MAPPING = {
     "tests/test_tranche_d_liquidation_demand.py": (
         "tests/inputs/test_liquidations.py"
     ),
-    "tests/test_workflow_compatibility.py": (
-        "tests/workflows/test_compatibility.py"
-    ),
     "tests/test_workflow_migration.py": "tests/workflows/test_migration.py",
 }
 STAGE9_MODULES = {
@@ -113,6 +107,10 @@ STAGE9_MODULES = {
 STAGE10_MODULES = {
     "tests/integration/test_ignore_rules.py",
     "tests/integration/test_output_hierarchy.py",
+}
+STAGE11_MODULES = {
+    "tests/integration/test_compatibility_removal.py",
+    "tests/workflows/test_canonical_commands.py",
 }
 EXPECTED_FIXTURES = {
     "tests/fixtures/market/empirical_market.csv": (
@@ -141,12 +139,13 @@ def _relative_test_modules() -> set[str]:
 
 
 def test_pre_migration_mapping_is_complete_and_one_to_one() -> None:
-    assert len(EXPECTED_MAPPING) == 36
+    assert len(EXPECTED_MAPPING) == 34
     assert len(set(EXPECTED_MAPPING.values())) == len(EXPECTED_MAPPING)
     assert (
         set(EXPECTED_MAPPING.values())
         | STAGE9_MODULES
         | STAGE10_MODULES
+        | STAGE11_MODULES
         == _relative_test_modules()
     )
     assert all(not (REPOSITORY_ROOT / old).exists() for old in EXPECTED_MAPPING)
@@ -208,15 +207,15 @@ def test_market_fixture_move_preserves_shape_and_old_path_is_absent() -> None:
     ).exists()
 
 
-def test_compatibility_coverage_remains_explicit() -> None:
+def test_stage11_final_state_coverage_is_explicit() -> None:
     required = {
-        "tests/integration/test_source_compatibility.py": (
-            "src.estimation",
-            "ESTIMATION_MODULES",
+        "tests/integration/test_compatibility_removal.py": (
+            "REMOVED_FLAT_MODULES",
+            "REMOVED_ESTIMATION_MODULES",
         ),
-        "tests/workflows/test_compatibility.py": (
-            "scripts.",
-            "WORKFLOW_MAPPING",
+        "tests/workflows/test_canonical_commands.py": (
+            "CLI_WORKFLOWS",
+            "REMOVED_WRAPPERS",
         ),
     }
     for relative, terms in required.items():

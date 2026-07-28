@@ -17,22 +17,22 @@ for path in (REPOSITORY_ROOT, SRC_ROOT):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-from empirical_config import sha256_file  # noqa: E402
-from environment_inputs import (  # noqa: E402
+from dai_sim.inputs.configuration import sha256_file  # noqa: E402
+from dai_sim.inputs.environment import (  # noqa: E402
     DEFAULT_TRANCHE_C_CONFIG_PATH,
     generate_environment_inputs,
     load_tranche_c_configuration,
 )
-from experiments import create_base_simulation_config  # noqa: E402
-from gas_process import (  # noqa: E402
+from dai_sim.experiments.runner import create_base_simulation_config  # noqa: E402
+from dai_sim.inputs.gas import (  # noqa: E402
     DEFAULT_LIQUIDATION_GAS_POOL_PATH,
     GasProcessConfig,
     component_gas_costs,
     load_liquidation_gas_pool,
     sample_total_gas_costs,
 )
-from liquidation import LiquidationConfig  # noqa: E402
-from market_bootstrap import (  # noqa: E402
+from dai_sim.model.liquidation import LiquidationConfig  # noqa: E402
+from dai_sim.inputs.market import (  # noqa: E402
     DEFAULT_MARKET_GAS_POOL_PATH,
     MarketProcessConfig,
     generate_empirical_price_paths,
@@ -40,8 +40,11 @@ from market_bootstrap import (  # noqa: E402
     sample_market_gas_blocks,
     valid_block_starts,
 )
-from price_process import PriceProcessConfig, generate_gbm_price_path  # noqa: E402
-from simulation import run_simulation_with_price_path  # noqa: E402
+from dai_sim.model.collateral_prices import (  # noqa: E402
+    PriceProcessConfig,
+    generate_gbm_price_path,
+)
+from dai_sim.model.simulation import run_simulation_with_price_path  # noqa: E402
 
 
 MARKET_POOL_SHA = "b69276801bacf789f8ae91789983cc98a8a6d42d0a992940c0bcfa109ca25b7d"

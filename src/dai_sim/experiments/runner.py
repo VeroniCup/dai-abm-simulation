@@ -1424,8 +1424,7 @@ def run_multicollateral_diagnostics(
 
 
 if __name__ == "__main__":
-    # Run:
-    # python src/experiments.py
+    # Run: PYTHONPATH=src python -m dai_sim.experiments.runner
     diagnostic_results = run_multicollateral_diagnostics()
 
     first_liquidatable = diagnostic_results[

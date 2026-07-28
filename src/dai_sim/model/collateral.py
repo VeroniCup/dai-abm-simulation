@@ -479,8 +479,7 @@ def create_default_multicollateral_portfolios(
 
 
 if __name__ == "__main__":
-    # Run:
-    # python src/collateral.py
+    # Run: PYTHONPATH=src python -m dai_sim.model.collateral
 
     portfolios = create_default_multicollateral_portfolios()
 

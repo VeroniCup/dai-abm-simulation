@@ -18,19 +18,20 @@ for path in (REPOSITORY_ROOT, SRC_ROOT):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-import empirical_config as tranche_a  # noqa: E402
-import experiments  # noqa: E402
-from simulation import run_simulation_with_collateral_metrics  # noqa: E402
+from dai_sim.experiments import runner as experiments  # noqa: E402
+from dai_sim.inputs import configuration as tranche_a  # noqa: E402
+from dai_sim.inputs.environment import load_configuration_profile  # noqa: E402
+from dai_sim.model.simulation import run_simulation_with_collateral_metrics  # noqa: E402
 
 
-PRIMARY_CONFIG = REPOSITORY_ROOT / "config/empirical/phase2_empirical_baseline.yaml"
+PRIMARY_CONFIG = REPOSITORY_ROOT / "config/profiles/empirical.yaml"
 LOW_CONFIG = (
     REPOSITORY_ROOT
-    / "config/empirical/sensitivity/phase2_empirical_low_sensitivity.yaml"
+    / "config/sensitivities/vaults/population_100.yaml"
 )
 HIGH_CONFIG = (
     REPOSITORY_ROOT
-    / "config/empirical/sensitivity/phase2_empirical_high_sensitivity.yaml"
+    / "config/sensitivities/vaults/population_1000.yaml"
 )
 MANIFEST = (
     REPOSITORY_ROOT
@@ -50,7 +51,7 @@ def test_adoption_review_input_checksums_match_manifest() -> None:
 
 def test_primary_empirical_configuration_parses_to_existing_dataclasses() -> None:
     bundle = tranche_a.load_empirical_configuration_bundle(PRIMARY_CONFIG)
-    assert bundle.bundle_name == "phase2_empirical_baseline"
+    assert bundle.bundle_name == "empirical"
     assert bundle.simulation_config.n_vaults == 500
     assert bundle.liquidation_config.max_close_factor == 1.0
     assert bundle.confidence_config.normal_lower_price == pytest.approx(0.9992875)
@@ -79,7 +80,10 @@ def test_sensitivity_configurations_parse(
     expected_vaults: int,
     expected_btc_share: float,
 ) -> None:
-    bundle = tranche_a.load_empirical_configuration_bundle(path)
+    bundle = (
+        load_configuration_profile(PRIMARY_CONFIG, sensitivity_paths=(path,))
+        .tranche_c_bundle.tranche_b_bundle.base_bundle
+    )
     shares = bundle.simulation_config.collateral_portfolio.target_debt_shares
     assert bundle.simulation_config.n_vaults == expected_vaults
     assert shares["BTC"] == pytest.approx(expected_btc_share)
@@ -150,7 +154,7 @@ def test_legacy_default_factories_remain_unchanged() -> None:
 def test_empirical_bundle_is_opt_in_only() -> None:
     source = Path(experiments.__file__).read_text(encoding="utf-8")
     assert "load_empirical_configuration_bundle" not in source
-    assert "phase2_empirical_baseline" not in source
+    assert "config/profiles/empirical.yaml" not in source
 
 
 def test_empirical_smoke_run_completes_with_provenance() -> None:
@@ -177,5 +181,5 @@ def test_empirical_smoke_run_completes_with_provenance() -> None:
         experiment_name="tranche_a_smoke",
     )
     assert provenance["mode"] == "empirical_tranche_a"
-    assert provenance["configuration_bundle_name"] == "phase2_empirical_baseline"
+    assert provenance["configuration_bundle_name"] == "empirical"
     assert provenance["configuration_sha256"] == bundle.config_sha256

@@ -295,8 +295,7 @@ def get_confidence_state(
 
 
 if __name__ == "__main__":
-    # Quick smoke test. Run:
-    # python src/confidence.py
+    # Quick smoke test: PYTHONPATH=src python -m dai_sim.model.confidence
 
     config = ConfidenceConfig()
 

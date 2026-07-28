@@ -13,7 +13,7 @@ from tests.support import REPOSITORY_ROOT
 if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 
-from src.estimation import adoption_review as review
+from dai_sim.calibration import adoption as review
 
 
 def test_authoritative_parameter_count_reconciles_to_56() -> None:

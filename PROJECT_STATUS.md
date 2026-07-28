@@ -53,17 +53,18 @@ Completed structural stages:
 4. semantic profiles and runtime inputs;
 5. domain-first data and provenance;
 6. domain workflows;
-7. domain SQL hierarchy.
+7. domain SQL hierarchy;
+8. documentation consolidation;
+9. semantic test hierarchy;
+10. semantic output hierarchy;
+11. removal of temporary compatibility interfaces.
 
-This working tree implements Stage 8 documentation consolidation. Stages 9–12
-remain: semantic test migration, output and ignore-rule migration,
-compatibility removal, and final review. The historical baseline remains
-unchanged under `docs/repository_restructuring_baseline.md`.
+Stage 12 final review remains. The historical baseline remains unchanged under
+`docs/repository_restructuring_baseline.md`.
 
 ## Regression status
 
-Before this documentation migration, `449` tests passed. The frozen smoke and
-Experiments 1–5 checksums are recorded in
+The frozen smoke and Experiments 1–5 checksums are recorded in
 [the regression guide](docs/validation/regression.md) and the
 [Stage 1 baseline](docs/repository_restructuring_baseline.md).
 
@@ -76,8 +77,6 @@ Experiments 1–5 checksums are recorded in
 - Behavioural confidence parameters remain incompletely identified.
 - Representative vault windows do not identify unconditional event
   probabilities.
-- Compatibility shims, cumulative historical configurations and generated
-  diagnostic output paths remain until later restructuring stages.
 - Current results use a limited seed design and are preliminary dissertation
   evidence rather than final conclusions.
 

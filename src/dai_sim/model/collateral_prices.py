@@ -694,8 +694,7 @@ def add_oracle_price(
 
 
 if __name__ == "__main__":
-    # Quick smoke test. Run:
-    # python src/price_process.py
+    # Quick smoke test: PYTHONPATH=src python -m dai_sim.model.collateral_prices
     config = PriceProcessConfig(n_steps=100, initial_price=2_000, random_seed=42)
 
     constant = generate_constant_price_path(config)

@@ -17,24 +17,27 @@ for path in (REPOSITORY_ROOT, SRC_ROOT):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-from empirical_config import sha256_file  # noqa: E402
-from environment_inputs import (  # noqa: E402
+from dai_sim.inputs.configuration import sha256_file  # noqa: E402
+from dai_sim.inputs.environment import (  # noqa: E402
     DEFAULT_TRANCHE_D_CONFIG_PATH,
     generate_environment_inputs,
     load_tranche_d_configuration,
 )
-from experiments import create_base_simulation_config  # noqa: E402
-from liquidation import LiquidationConfig, liquidate_vaults  # noqa: E402
-from liquidation_demand import (  # noqa: E402
+from dai_sim.experiments.runner import create_base_simulation_config  # noqa: E402
+from dai_sim.model.liquidation import LiquidationConfig, liquidate_vaults  # noqa: E402
+from dai_sim.inputs.liquidations import (  # noqa: E402
     DEFAULT_LIQUIDATION_ARRIVAL_POOL_PATH,
     LiquidationDemandConfig,
     LiquidationDemandProcess,
     arrival_pool_statistics,
     load_liquidation_arrival_pool,
 )
-from price_process import PriceProcessConfig, generate_constant_price_path  # noqa: E402
-from simulation import run_simulation_with_price_path  # noqa: E402
-from vault import Vault  # noqa: E402
+from dai_sim.model.collateral_prices import (  # noqa: E402
+    PriceProcessConfig,
+    generate_constant_price_path,
+)
+from dai_sim.model.simulation import run_simulation_with_price_path  # noqa: E402
+from dai_sim.model.vault import Vault  # noqa: E402
 
 
 ARRIVAL_POOL_SHA = "cc29435bb0434237aba438ee98bded77f086704c7400bb5016e2b58703258c8a"
@@ -348,7 +351,7 @@ def test_tranche_d_configuration_loads_and_preserves_tranche_c_pools() -> None:
     assert generated.provenance["liquidation_demand"]["positive_count_pool_size"] == 65
 
 
-def test_tranche_d_sensitivity_base_config_overrides() -> None:
+def test_semantic_liquidation_sensitivity_overrides() -> None:
     lower = load_tranche_d_configuration(
         DEFAULT_TRANCHE_D_CONFIG_PATH,
         sensitivity_paths=(

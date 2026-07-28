@@ -74,28 +74,22 @@ def _tree(path: Path) -> ast.Module:
     return ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
 
 
-def test_exactly_27_unique_authoritative_workflows_and_wrappers_exist() -> None:
+def test_exactly_27_unique_authoritative_workflows_exist() -> None:
     assert len(WORKFLOW_MAPPING) == 27
     assert len(set(WORKFLOW_MAPPING.values())) == 27
-    assert {
-        path.name for path in (ROOT / "scripts").glob("*.py")
-    } == set(WORKFLOW_MAPPING)
-    for wrapper, target in WORKFLOW_MAPPING.items():
-        assert (ROOT / "scripts" / wrapper).is_file()
+    assert not (ROOT / "scripts").exists()
+    for target in WORKFLOW_MAPPING.values():
         assert (ROOT / "workflows" / target).is_file()
 
 
-def test_corrected_protocol_and_vault_mappings_remain_distinct() -> None:
-    assert WORKFLOW_MAPPING["acquire_dune_protocol_parameter_history.py"] == (
-        "protocol/acquire.py"
-    )
-    assert WORKFLOW_MAPPING["acquire_dune_protocol_parameters.py"] == (
-        "maintenance/archive/debt_ceiling_diagnostic.py"
-    )
-    assert WORKFLOW_MAPPING["acquire_dune_vaults.py"] == "vaults/acquire.py"
-    assert WORKFLOW_MAPPING["acquire_phase1e_b_representative_vaults.py"] == (
-        "vaults/acquire_representative.py"
-    )
+def test_protocol_and_vault_workflow_responsibilities_remain_distinct() -> None:
+    expected = {
+        "protocol/acquire.py",
+        "maintenance/archive/debt_ceiling_diagnostic.py",
+        "vaults/acquire.py",
+        "vaults/acquire_representative.py",
+    }
+    assert expected <= set(WORKFLOW_MAPPING.values())
 
 
 def test_only_real_populated_categories_exist() -> None:

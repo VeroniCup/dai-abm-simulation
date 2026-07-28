@@ -107,17 +107,12 @@ def test_protocol_configuration_is_semantically_migrated() -> None:
     authoritative = yaml.safe_load(
         (ROOT / "config/protocol/parameters.yaml").read_text(encoding="utf-8")
     )
-    compatibility = yaml.safe_load(
-        (ROOT / "config/protocol.yaml").read_text(encoding="utf-8")
-    )
-    assert authoritative == compatibility
     assert authoritative["collateral_mapping_path"] == (
         "config/protocol/collateral_types.csv"
     )
-    assert (
-        (ROOT / "config/protocol/collateral_types.csv").read_bytes()
-        == (ROOT / "config/collateral_mapping.csv").read_bytes()
-    )
+    assert (ROOT / "config/protocol/collateral_types.csv").is_file()
+    assert not (ROOT / "config/protocol.yaml").exists()
+    assert not (ROOT / "config/collateral_mapping.csv").exists()
 
 
 def test_parameter_adoption_manifest_has_semantic_profile_reference() -> None:
