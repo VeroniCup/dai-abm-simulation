@@ -6,6 +6,9 @@ These documents explain the repository from a reader's perspective:
   profiles, workflows, data and SQL live.
 - [Architecture](architecture.md) — the implemented package structure and
   dependency flow.
+- [Repository restructuring final review](../validation/repository_restructuring.md)
+  — closure evidence for the domain-first migration and tracked-only
+  reproducibility boundary.
 - [Research design](research_design.md) — the empirical questions,
   identification strategy, experiments and validation logic.
 

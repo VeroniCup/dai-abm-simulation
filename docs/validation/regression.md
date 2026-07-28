@@ -73,7 +73,9 @@ auction execution remain explicit modelling uncertainties.
 
 ## Current test gate
 
-Stage 7 completed with `449` passing tests and no skips. Documentation
-restructuring must add its own focused tests without weakening the existing
-suite. Subsequent structural stages must reproduce the same runtime inputs,
-smokes and experiment results.
+The Stage 12 final review collected and passed `491` tests in both the working
+repository and a tracked-only checkout, with no failures, skips or warnings.
+It also reproduced the runtime inputs, smoke checks and Experiments 1–5
+without changing assertions, expected values or tolerances. The complete
+structural evidence is recorded in the
+[repository restructuring final review](repository_restructuring.md).

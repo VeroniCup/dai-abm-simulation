@@ -45,7 +45,8 @@ Detailed current guidance:
 
 ## Repository restructuring
 
-Completed structural stages:
+The domain-first repository structure is now authoritative. Completed
+structural stages:
 
 1. pre-migration baseline;
 2. package and path infrastructure;
@@ -57,16 +58,28 @@ Completed structural stages:
 8. documentation consolidation;
 9. semantic test hierarchy;
 10. semantic output hierarchy;
-11. removal of temporary compatibility interfaces.
+11. removal of temporary compatibility interfaces;
+12. final review and closure.
 
-Stage 12 final review remains. The historical baseline remains unchanged under
-`docs/repository_restructuring_baseline.md`.
+The bounded post-Stage-11 semantic-output correction and tracked-clone
+self-containment correction are also complete. Temporary compatibility
+interfaces have been removed. The current full suite and the tracked-only
+checkout each pass 491 tests; runtime inputs, empirical payloads, SQL,
+generated outputs, smoke checks and Experiments 1–5 retain their frozen
+integrity evidence.
+
+Repository restructuring is closed. The
+[final restructuring review](docs/validation/repository_restructuring.md)
+records the architecture, 13-commit migration sequence, reproducibility
+boundary and remaining limitations. The historical baseline remains unchanged
+under `docs/repository_restructuring_baseline.md`.
 
 ## Regression status
 
 The frozen smoke and Experiments 1–5 checksums are recorded in
 [the regression guide](docs/validation/regression.md) and the
-[Stage 1 baseline](docs/repository_restructuring_baseline.md).
+[Stage 1 baseline](docs/repository_restructuring_baseline.md). The Stage 12
+review reproduced all of them without changing executable behaviour.
 
 ## Known limitations
 
