@@ -30,8 +30,10 @@ from .statistics import (
 )
 
 
-PHASE2A_DIR = PROJECT_ROOT / "data/processed/estimation/phase2a"
-DEFAULT_REVIEW_DIR = PROJECT_ROOT / "data/processed/estimation/phase2a_review"
+PHASE2A_DIR = (
+    PROJECT_ROOT / "outputs/diagnostics/calibration/market_gas_protocol"
+)
+DEFAULT_REVIEW_DIR = PHASE2A_DIR / "review"
 DEFAULT_REPORT = PROJECT_ROOT / "docs/phase2a_candidate_review.md"
 ORIGINAL_METADATA_SHA256 = (
     "eb1b5bd46f806c1ef68824bfcff37776ce99165750c1726a473cbf3aca4faa80"

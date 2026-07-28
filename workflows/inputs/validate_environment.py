@@ -379,7 +379,11 @@ def main() -> None:
     gas = _gas_validation()
     market_gas_dependence = _market_gas_dependence()
     smoke = _run_smoke()
-    ftx_source = REPOSITORY_ROOT / "data/processed/estimation/phase2a_review/ftx_validation_diagnostics.csv"
+    ftx_source = (
+        REPOSITORY_ROOT
+        / "outputs/diagnostics/calibration/market_gas_protocol/review/"
+        "ftx_validation_diagnostics.csv"
+    )
     ftx = pd.read_csv(ftx_source)
     ftx["tranche_c_note"] = "validation_only_existing_artefact_not_used_for_calibration"
 

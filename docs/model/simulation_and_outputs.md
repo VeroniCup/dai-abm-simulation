@@ -38,9 +38,10 @@ Core outcomes include:
 - expected and realised keeper profit;
 - confidence and panic state.
 
-Generated results currently live under `outputs/results/` and figures under
-`outputs/figures/`. Their migration is deferred to the output restructuring
-stage. Figures must not be mixed into result directories.
+Generated detailed results live under `outputs/experiments/`, figures under
+`outputs/figures/`, diagnostics under `outputs/diagnostics/`, and compact
+reporting tables under `outputs/tables/`. Figures and summary tables must not
+be mixed into detailed experiment directories.
 
 ## Determinism
 

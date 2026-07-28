@@ -10,7 +10,11 @@ from pathlib import Path
 import subprocess
 import sys
 
-from tests.integration.test_test_hierarchy import EXPECTED_MAPPING, STAGE9_MODULES
+from tests.integration.test_test_hierarchy import (
+    EXPECTED_MAPPING,
+    STAGE9_MODULES,
+    STAGE10_MODULES,
+)
 from tests.support import REPOSITORY_ROOT
 
 
@@ -79,7 +83,7 @@ def _baseline_nodeids(nodeids: list[str]) -> list[str]:
     return sorted(
         nodeid
         for nodeid in nodeids
-        if nodeid.split("::", 1)[0] not in STAGE9_MODULES
+        if nodeid.split("::", 1)[0] not in STAGE9_MODULES | STAGE10_MODULES
     )
 
 
@@ -181,5 +185,15 @@ def test_stage9_cases_are_the_only_collection_additions() -> None:
     baseline = _baseline_nodeids(nodeids)
     additions = sorted(set(nodeids) - set(baseline))
     assert additions
-    assert all(nodeid.split("::", 1)[0] in STAGE9_MODULES for nodeid in additions)
+    assert all(
+        nodeid.split("::", 1)[0] in STAGE9_MODULES | STAGE10_MODULES
+        for nodeid in additions
+    )
+    counts = Counter(nodeid.split("::", 1)[0] for nodeid in additions)
+    assert counts == {
+        "tests/integration/test_ignore_rules.py": 6,
+        "tests/integration/test_output_hierarchy.py": 12,
+        "tests/integration/test_test_collection_integrity.py": 6,
+        "tests/integration/test_test_hierarchy.py": 7,
+    }
     assert len(nodeids) == 474 + len(additions)

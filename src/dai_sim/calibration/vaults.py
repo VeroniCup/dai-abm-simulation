@@ -41,7 +41,7 @@ PARAMETERS = (
 MAX_CLOSE_FACTOR = "max_close_factor"
 FTX_START = pd.Timestamp("2022-11-01T00:00:00Z")
 FTX_END_EXCLUSIVE = pd.Timestamp("2022-11-21T00:00:00Z")
-DEFAULT_OUTPUT = PROJECT_ROOT / "data/processed/estimation/phase2b_vaults"
+DEFAULT_OUTPUT = PROJECT_ROOT / "outputs/diagnostics/calibration/vaults"
 PROTOCOL_PATH = (
     PROJECT_ROOT / "data/protocol/processed/"
     "phase1d_protocol_parameters_hourly.csv"
@@ -51,7 +51,7 @@ MARKET_PATH = (
     "dune_hourly_market_prices_processed.csv"
 )
 REGIME_PATH = (
-    PROJECT_ROOT / "data/processed/estimation/phase2a/"
+    PROJECT_ROOT / "outputs/diagnostics/calibration/market_gas_protocol/"
     "regimes/hourly_regimes.csv"
 )
 

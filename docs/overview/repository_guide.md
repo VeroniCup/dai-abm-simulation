@@ -41,9 +41,10 @@ from dai_sim.experiments.runner import run_all_scenarios
 results, summary = run_all_scenarios()
 ```
 
-The runner writes established experiment results beneath `outputs/results/`.
-Use a temporary working copy or an explicitly chosen temporary output path
-when validating code so established outputs are not overwritten.
+The runner writes detailed experiment results beneath `outputs/experiments/`
+and summary tables beneath `outputs/tables/`; plotting utilities write beneath
+`outputs/figures/`. Use explicitly chosen temporary paths when validating code
+so established local outputs are not overwritten.
 
 The semantic experiment functions are:
 

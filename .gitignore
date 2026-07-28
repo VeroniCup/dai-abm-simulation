@@ -24,10 +24,11 @@ dai-sim/
 .env
 *.env
 
-# Generated outputs
-outputs/
-results/
-figures/
+# Generated outputs: ordinary runs, figures, diagnostics and reporting tables.
+outputs/experiments/**
+outputs/figures/**
+outputs/diagnostics/**
+outputs/tables/**
 logs/
 
 # Data: retain domain documentation, runtime model inputs and selected manifest
@@ -36,10 +37,6 @@ logs/
 data/*/raw/**
 !data/*/raw/README.md
 data/*/processed/**
-
-# Temporary Stage 10 diagnostics exception.
-data/processed/*
-!data/processed/README.md
 
 # Cross-domain provenance entry points.
 data/provenance/*

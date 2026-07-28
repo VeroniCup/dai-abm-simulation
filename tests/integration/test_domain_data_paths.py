@@ -96,7 +96,7 @@ def test_old_active_domain_paths_are_absent() -> None:
         for path in (DATA_ROOT / "processed").iterdir()
         if path.name != ".DS_Store"
     }
-    assert temporary_entries == {"README.md", "estimation"}
+    assert temporary_entries == {"README.md"}
 
 
 def test_combined_market_gas_panel_is_market_owned() -> None:
@@ -127,7 +127,9 @@ def test_domain_ignore_policy_preserves_model_inputs_and_documentation() -> None
         assert _is_ignored(f"data/{domain}/raw/generated.csv")
         assert _is_ignored(f"data/{domain}/processed/generated.csv")
     assert _is_ignored("data/vaults/provenance/state/generated.json")
-    assert _is_ignored("data/processed/estimation/generated.json")
+    assert _is_ignored(
+        "outputs/diagnostics/calibration/generated.json"
+    )
 
     assert not _is_ignored("data/market/raw/README.md")
     assert not _is_ignored("data/market/model_inputs/environment_blocks/pool.csv")

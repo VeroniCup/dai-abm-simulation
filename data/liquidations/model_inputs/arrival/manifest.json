@@ -46,7 +46,7 @@
     "reason": "The 54 transaction-time sequences are retained as diagnostics, but Tranche D only activates the primary independent hurdle-count mode."
   },
   "source_checksums": {
-    "data/processed/estimation/phase2c_liquidations/liquidation_sequence_estimates.csv": "8812a42ae6b4942acf2590d2608b426815aea0cef7ffa38375d6aebddba144c2",
+    "outputs/diagnostics/calibration/liquidations/liquidation_sequence_estimates.csv": "8812a42ae6b4942acf2590d2608b426815aea0cef7ffa38375d6aebddba144c2",
     "data/processed/vaults/representative_regimes/terra_cefi_2022-05-05_2022-06-20/bark_grab_linkage.csv": "e852969ccb4ae1ec9488e9aa1b75953cfcea090af9514ffc51d39c1339007734",
     "data/processed/vaults/representative_regimes/terra_cefi_2022-05-05_2022-06-20/liquidation_sequence_summary.csv": "afba1e9d5d5b49e375efb52b5c3835a0bdd84fb0fa89dafb6e18be3eef43660d",
     "data/processed/vaults/representative_regimes/terra_cefi_2022-05-05_2022-06-20/stress_tail_diagnostics.csv": "d83c82ddda0e7dfe46849b75206f85a1587896355ffde75264566e60e2b8356b"

@@ -1141,11 +1141,14 @@ def _sha256(path: Path) -> str:
 
 def _protected_output_checksums() -> dict[Path, str]:
     protected_roots = (
-        REPOSITORY_ROOT / "outputs/results/06_multicollateral",
-        REPOSITORY_ROOT / "outputs/empirical/baseline",
-        REPOSITORY_ROOT / "outputs/empirical/synthetic_validation",
+        REPOSITORY_ROOT / "outputs/experiments/multi_collateral",
+        REPOSITORY_ROOT / "outputs/diagnostics/market/baseline",
+        REPOSITORY_ROOT / "outputs/diagnostics/market/synthetic_validation",
     )
-    protocol_output = REPOSITORY_ROOT / "outputs/empirical/synthetic_validation/protocol"
+    protocol_output = (
+        REPOSITORY_ROOT
+        / "outputs/diagnostics/protocol/synthetic_validation"
+    )
     checksums = {}
     for root in protected_roots:
         if not root.exists():
@@ -1237,7 +1240,11 @@ def run_synthetic_validation(write_outputs: bool = True) -> ProtocolPipelineResu
     _expect_value_error(lambda: load_protocol_config(), "missing baseline configuration and files")
 
     if write_outputs:
-        write_protocol_outputs(results, REPOSITORY_ROOT / "outputs/empirical/synthetic_validation/protocol")
+        write_protocol_outputs(
+            results,
+            REPOSITORY_ROOT
+            / "outputs/diagnostics/protocol/synthetic_validation",
+        )
     assert raw_before == {path: _sha256(path) for path in raw_paths}
     assert protected_before == _protected_output_checksums()
     return results
@@ -1249,7 +1256,10 @@ def run_baseline_protocol_pipeline(
     """Run a configured real baseline and write only Milestone 9 outputs."""
     config = load_protocol_config(config_path)
     results = run_protocol_pipeline(config, allow_unmapped=False)
-    write_protocol_outputs(results, REPOSITORY_ROOT / "outputs/empirical/baseline")
+    write_protocol_outputs(
+        results,
+        REPOSITORY_ROOT / "outputs/diagnostics/protocol/baseline",
+    )
     config.processed_data_dir.mkdir(parents=True, exist_ok=True)
     results.protocol_panel.to_csv(config.processed_data_dir / "protocol_time_panel.csv", index=False)
     results.vault_panel.to_csv(config.processed_data_dir / "vault_snapshot_panel.csv", index=False)

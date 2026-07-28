@@ -8,13 +8,8 @@ metrics for reporting and dissertation tables.
 
 Output organisation
 -------------------
-outputs/results/
-    01_baseline_scenarios/
-    02_oracle_delay/
-    03_shock_severity/
-    04_confidence_sensitivity/
-    05_peg_recovery/
-    06_multicollateral/
+outputs/experiments/<experiment>/
+outputs/tables/<experiment>/
 """
 
 from __future__ import annotations
@@ -26,14 +21,15 @@ import pandas as pd
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 OUTPUTS_DIR = PROJECT_ROOT / "outputs"
-RESULTS_DIR = OUTPUTS_DIR / "results"
+RESULTS_DIR = OUTPUTS_DIR / "experiments"
+TABLES_DIR = OUTPUTS_DIR / "tables"
 
-BASELINE_RESULTS_DIR = RESULTS_DIR / "01_baseline_scenarios"
-ORACLE_DELAY_RESULTS_DIR = RESULTS_DIR / "02_oracle_delay"
-SHOCK_SEVERITY_RESULTS_DIR = RESULTS_DIR / "03_shock_severity"
-CONFIDENCE_RESULTS_DIR = RESULTS_DIR / "04_confidence_sensitivity"
-PEG_RECOVERY_RESULTS_DIR = RESULTS_DIR / "05_peg_recovery"
-MULTICOLLATERAL_RESULTS_DIR = RESULTS_DIR / "06_multicollateral"
+BASELINE_RESULTS_DIR = RESULTS_DIR / "baseline"
+ORACLE_DELAY_RESULTS_DIR = RESULTS_DIR / "oracle_delay"
+SHOCK_SEVERITY_RESULTS_DIR = RESULTS_DIR / "shock_severity"
+CONFIDENCE_RESULTS_DIR = RESULTS_DIR / "confidence"
+PEG_RECOVERY_RESULTS_DIR = RESULTS_DIR / "peg_recovery"
+MULTICOLLATERAL_RESULTS_DIR = RESULTS_DIR / "multi_collateral"
 
 
 EXPERIMENT_DIRS = {
@@ -43,6 +39,15 @@ EXPERIMENT_DIRS = {
     "confidence_sensitivity": CONFIDENCE_RESULTS_DIR,
     "peg_recovery": PEG_RECOVERY_RESULTS_DIR,
     "multicollateral": MULTICOLLATERAL_RESULTS_DIR,
+}
+
+EXPERIMENT_TABLE_DIRS = {
+    "baseline": TABLES_DIR / "baseline",
+    "oracle_delay": TABLES_DIR / "oracle_delay",
+    "shock_severity": TABLES_DIR / "shock_severity",
+    "confidence_sensitivity": TABLES_DIR / "confidence",
+    "peg_recovery": TABLES_DIR / "peg_recovery",
+    "multicollateral": TABLES_DIR / "multi_collateral",
 }
 
 
@@ -349,10 +354,11 @@ def save_clean_summary(
         Save path.
     """
     if path is None:
-        experiment_dir = get_experiment_results_dir(
-            experiment_name
+        get_experiment_results_dir(experiment_name)
+        path = (
+            EXPERIMENT_TABLE_DIRS[experiment_name]
+            / "summary_clean.csv"
         )
-        path = experiment_dir / "summary_clean.csv"
 
     path.parent.mkdir(parents=True, exist_ok=True)
     summary_df.to_csv(path, index=False)

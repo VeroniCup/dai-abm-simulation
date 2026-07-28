@@ -29,7 +29,13 @@ MARKET_OUTPUT_DIR = (
 LIQUIDATION_OUTPUT_DIR = (
     REPOSITORY_ROOT / "data" / "liquidations" / "model_inputs" / "keeper_gas"
 )
-AUDIT_DIR = REPOSITORY_ROOT / "data" / "processed" / "estimation" / "tranche_c"
+AUDIT_DIR = (
+    REPOSITORY_ROOT
+    / "outputs"
+    / "diagnostics"
+    / "input_construction"
+    / "market_gas"
+)
 
 MARKET_GAS_OUTPUT = MARKET_OUTPUT_DIR / "pool.csv"
 MARKET_GAS_MANIFEST = MARKET_OUTPUT_DIR / "manifest.json"
@@ -40,16 +46,16 @@ SOURCE_CHECKSUMS = {
     "data/market/processed/combined/hourly_market_gas_panel.csv": (
         "86ed2ac5a5d364cc57e8b41e137ef369a0fce7a393d386b4b38fc1ebd1be0545"
     ),
-    "data/processed/estimation/phase2a/gas/gas_sampling_index.csv": (
+    "outputs/diagnostics/calibration/market_gas_protocol/gas/gas_sampling_index.csv": (
         "c722a29370672c26b10c90b951f2bac7510eee45d4e1902c6267e65417760524"
     ),
-    "data/processed/estimation/phase2a/diagnostics/calibration_validation_split.csv": (
+    "outputs/diagnostics/calibration/market_gas_protocol/diagnostics/calibration_validation_split.csv": (
         "e35852b25e09fe65347d341c4e6382d8973fa2b64b996f3af615a9d881d8a574"
     ),
-    "data/processed/estimation/phase2a/liquidations/liquidation_transaction_gas.csv": (
+    "outputs/diagnostics/calibration/market_gas_protocol/liquidations/liquidation_transaction_gas.csv": (
         "137a17b8752bc90b0ac83b2f9593684781d598d340bb6be65afcab6b624c03a0"
     ),
-    "data/processed/estimation/phase2a_review/gas_cost_sensitivity.csv": (
+    "outputs/diagnostics/calibration/market_gas_protocol/review/gas_cost_sensitivity.csv": (
         "456a2c5e3308690456a69127235a0dc786edf01189eb355159788a9bdc65042d"
     ),
 }
@@ -121,11 +127,14 @@ def build_market_gas_pool() -> tuple[pd.DataFrame, pd.DataFrame]:
     """Build the compact hourly market/gas runtime pool and audit."""
     panel = pd.read_csv(REPOSITORY_ROOT / "data/market/processed/combined/hourly_market_gas_panel.csv")
     gas_index = pd.read_csv(
-        REPOSITORY_ROOT / "data/processed/estimation/phase2a/gas/gas_sampling_index.csv"
+        REPOSITORY_ROOT
+        / "outputs/diagnostics/calibration/market_gas_protocol/"
+        "gas/gas_sampling_index.csv"
     )
     split = pd.read_csv(
         REPOSITORY_ROOT
-        / "data/processed/estimation/phase2a/diagnostics/calibration_validation_split.csv"
+        / "outputs/diagnostics/calibration/market_gas_protocol/"
+        "diagnostics/calibration_validation_split.csv"
     )
 
     panel["timestamp_utc"] = _to_utc_z(panel["timestamp_utc"])
@@ -213,7 +222,8 @@ def build_liquidation_gas_pool() -> tuple[pd.DataFrame, pd.DataFrame]:
     """Build the compact clean-Take gas runtime pool and audit."""
     source = pd.read_csv(
         REPOSITORY_ROOT
-        / "data/processed/estimation/phase2a/liquidations/liquidation_transaction_gas.csv"
+        / "outputs/diagnostics/calibration/market_gas_protocol/"
+        "liquidations/liquidation_transaction_gas.csv"
     )
     clean = source.loc[
         source["take_transaction_class"].eq("clean_single_take_single_auction")

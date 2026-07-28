@@ -171,7 +171,8 @@ def test_workflow_targets_retain_sql_and_output_references() -> None:
         for relative in WORKFLOW_MAPPING.values()
     )
     assert "sql/" in combined or ' / "sql"' in combined
-    assert "data/processed/estimation" in combined
+    assert "outputs/diagnostics" in combined
+    assert "data/processed/estimation" not in combined
     assert "data/raw/" not in combined
     assert "data/processed/market/" not in combined
 

@@ -91,7 +91,7 @@ from .statistics import (
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_CONFIG_PATH = PROJECT_ROOT / "config" / "empirical.yaml"
-EMPIRICAL_OUTPUT_DIR = PROJECT_ROOT / "outputs" / "empirical"
+EMPIRICAL_OUTPUT_DIR = PROJECT_ROOT / "outputs" / "diagnostics" / "market"
 SYNTHETIC_OUTPUT_DIR = EMPIRICAL_OUTPUT_DIR / "synthetic_validation"
 BASELINE_OUTPUT_DIR = EMPIRICAL_OUTPUT_DIR / "baseline"
 DEFAULT_OUTPUT_DIR = SYNTHETIC_OUTPUT_DIR
@@ -1267,10 +1267,13 @@ FTX_VALIDATION_START = pd.Timestamp("2022-11-01T00:00:00Z")
 FTX_VALIDATION_END_EXCLUSIVE = pd.Timestamp("2022-11-21T00:00:00Z")
 
 DEFAULT_OUTPUT = (
-    PROJECT_ROOT / "data/processed/estimation/phase2a"
+    PROJECT_ROOT / "outputs/diagnostics/calibration/market_gas_protocol"
 )
 
-DEFAULT_FIGURES = PROJECT_ROOT / "outputs/estimation/phase2a"
+DEFAULT_FIGURES = (
+    PROJECT_ROOT
+    / "outputs/diagnostics/calibration/market_gas_protocol/figures"
+)
 
 DEFAULT_REPORT = PROJECT_ROOT / "docs/phase2a_parameter_estimation_report.md"
 

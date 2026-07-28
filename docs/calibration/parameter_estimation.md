@@ -41,8 +41,8 @@ This document deliberately does not:
 
 The bounded Phase 2A tranche has implemented the parts of this plan that are
 identifiable from validated Phase 1A--1D data. Its generated candidate bundle
-is under `data/processed/estimation/phase2a/`, and its concise technical record
-is the
+is under `outputs/diagnostics/calibration/market_gas_protocol/`, and its
+concise technical record is the
 [market, gas and protocol estimation report](../archive/phase_reports/phase2a_parameter_estimation_report.md).
 No candidate has been written into simulator configuration.
 
@@ -92,7 +92,7 @@ do not themselves estimate or adopt any simulator value.
 The bounded Phase 2B tranche has now estimated the nine authorised
 vault-population candidates supported by the quiet-mature and USDC/SVB
 reconstructions. The generated registry and diagnostics are under
-`data/processed/estimation/phase2b_vaults/`, and the methods and results are
+`outputs/diagnostics/calibration/vaults/`, and the methods and results are
 documented in the
 [vault-parameter estimation report](../archive/phase_reports/phase2b_vault_parameter_estimation_report.md).
 No estimate has been adopted. Raw debt and collateral-ratio moments remain

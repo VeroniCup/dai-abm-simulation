@@ -41,29 +41,29 @@ DEFAULT_MANIFEST_PATH = (
 )
 
 EXPECTED_ADOPTION_REVIEW_CHECKSUMS = {
-    "data/processed/estimation/adoption_review/parameter_adoption_matrix.csv": (
+    "outputs/diagnostics/calibration/parameter_adoption/parameter_adoption_matrix.csv": (
         "a78a3824c967de1cf794c4128115d67b461d7c207f94ea6b4a44acfc535b44ed"
     ),
-    "data/processed/estimation/adoption_review/configuration_ready_candidates.csv": (
+    "outputs/diagnostics/calibration/parameter_adoption/configuration_ready_candidates.csv": (
         "71e60ba546d860c10d3de0a1e91b016117432f1510b0fd425b2b799219e0dd02"
     ),
-    "data/processed/estimation/adoption_review/candidate_consolidation.csv": (
+    "outputs/diagnostics/calibration/parameter_adoption/candidate_consolidation.csv": (
         "c92986f5ac0975804b08c9d1a5fad69886be3fc07e5a8feae625971fc99ffd44"
     ),
-    "data/processed/estimation/adoption_review/model_interface_gaps.csv": (
+    "outputs/diagnostics/calibration/parameter_adoption/model_interface_gaps.csv": (
         "8a8c83ab731396c36697e987154f79536d2228df2707ea46ac3cbf6d922c93a3"
     ),
-    "data/processed/estimation/adoption_review/proposed_implementation_tranches.csv": (
+    "outputs/diagnostics/calibration/parameter_adoption/proposed_implementation_tranches.csv": (
         "b13cc33e38513bbfeb22aa70cd704d4ba3a88b43f4e6e484a69bf58bef0239de"
     ),
 }
 
 CONFIGURATION_READY_CANDIDATES = (
     REPOSITORY_ROOT
-    / "data"
-    / "processed"
-    / "estimation"
-    / "adoption_review"
+    / "outputs"
+    / "diagnostics"
+    / "calibration"
+    / "parameter_adoption"
     / "configuration_ready_candidates.csv"
 )
 

@@ -71,12 +71,12 @@ Protocol processing constructs sparse setting changes, effective-dated
 intervals and hourly ilk state. Values are null before activation; observed
 calls and documented contract defaults remain distinguishable.
 
-## Temporary generated diagnostics
+## Generated diagnostics
 
-The generated `data/processed/estimation/` tree remains temporarily at its
-historical lifecycle-first path until the output migration stage. It contains
-diagnostics and candidate-estimation artefacts, not authoritative model input
-pools. New domain data must not be added there.
+Generated calibration and input-construction diagnostics live under
+`outputs/diagnostics/`. They are reproducible outputs, not authoritative
+empirical panels or compact runtime model inputs. New domain data must remain
+under the owning `data/<domain>/` lifecycle.
 
 ## Determinism
 

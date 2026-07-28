@@ -7,13 +7,10 @@ This module creates dissertation-ready figures from saved experiment outputs.
 
 Output organisation
 -------------------
-    figures/
-        01_baseline_scenarios/
-        02_oracle_delay/
-        03_shock_severity/
-        04_confidence_sensitivity/
-        05_peg_recovery/
-        06_multicollateral/
+    outputs/
+        experiments/<experiment>/
+        figures/<experiment>/
+        tables/<experiment>/
 """
 
 from __future__ import annotations
@@ -28,48 +25,62 @@ import pandas as pd
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 OUTPUTS_DIR = PROJECT_ROOT / "outputs"
 
-RESULTS_DIR = OUTPUTS_DIR / "results"
+RESULTS_DIR = OUTPUTS_DIR / "experiments"
 FIGURES_DIR = OUTPUTS_DIR / "figures"
+TABLES_DIR = OUTPUTS_DIR / "tables"
 
-BASELINE_RESULTS_DIR = RESULTS_DIR / "01_baseline_scenarios"
-ORACLE_DELAY_RESULTS_DIR = RESULTS_DIR / "02_oracle_delay"
-SHOCK_SEVERITY_RESULTS_DIR = RESULTS_DIR / "03_shock_severity"
-CONFIDENCE_RESULTS_DIR = RESULTS_DIR / "04_confidence_sensitivity"
-PEG_RECOVERY_RESULTS_DIR = RESULTS_DIR / "05_peg_recovery"
-MULTICOLLATERAL_RESULTS_DIR = RESULTS_DIR / "06_multicollateral"
+BASELINE_RESULTS_DIR = RESULTS_DIR / "baseline"
+ORACLE_DELAY_RESULTS_DIR = RESULTS_DIR / "oracle_delay"
+SHOCK_SEVERITY_RESULTS_DIR = RESULTS_DIR / "shock_severity"
+CONFIDENCE_RESULTS_DIR = RESULTS_DIR / "confidence"
+PEG_RECOVERY_RESULTS_DIR = RESULTS_DIR / "peg_recovery"
+MULTICOLLATERAL_RESULTS_DIR = RESULTS_DIR / "multi_collateral"
 
-BASELINE_FIGURES_DIR = FIGURES_DIR / "01_baseline_scenarios"
-ORACLE_DELAY_FIGURES_DIR = FIGURES_DIR / "02_oracle_delay"
-SHOCK_SEVERITY_FIGURES_DIR = FIGURES_DIR / "03_shock_severity"
-CONFIDENCE_FIGURES_DIR = FIGURES_DIR / "04_confidence_sensitivity"
-PEG_RECOVERY_FIGURES_DIR = FIGURES_DIR / "05_peg_recovery"
-MULTICOLLATERAL_FIGURES_DIR = FIGURES_DIR / "06_multicollateral"
+BASELINE_FIGURES_DIR = FIGURES_DIR / "baseline"
+ORACLE_DELAY_FIGURES_DIR = FIGURES_DIR / "oracle_delay"
+SHOCK_SEVERITY_FIGURES_DIR = FIGURES_DIR / "shock_severity"
+CONFIDENCE_FIGURES_DIR = FIGURES_DIR / "confidence"
+PEG_RECOVERY_FIGURES_DIR = FIGURES_DIR / "peg_recovery"
+MULTICOLLATERAL_FIGURES_DIR = FIGURES_DIR / "multi_collateral"
+
+BASELINE_TABLES_DIR = TABLES_DIR / "baseline"
+ORACLE_DELAY_TABLES_DIR = TABLES_DIR / "oracle_delay"
+SHOCK_SEVERITY_TABLES_DIR = TABLES_DIR / "shock_severity"
+CONFIDENCE_TABLES_DIR = TABLES_DIR / "confidence"
+PEG_RECOVERY_TABLES_DIR = TABLES_DIR / "peg_recovery"
+MULTICOLLATERAL_TABLES_DIR = TABLES_DIR / "multi_collateral"
 
 
 EXPERIMENT_DIRS = {
     "baseline": {
         "results": BASELINE_RESULTS_DIR,
         "figures": BASELINE_FIGURES_DIR,
+        "tables": BASELINE_TABLES_DIR,
     },
     "oracle_delay": {
         "results": ORACLE_DELAY_RESULTS_DIR,
         "figures": ORACLE_DELAY_FIGURES_DIR,
+        "tables": ORACLE_DELAY_TABLES_DIR,
     },
     "shock_severity": {
         "results": SHOCK_SEVERITY_RESULTS_DIR,
         "figures": SHOCK_SEVERITY_FIGURES_DIR,
+        "tables": SHOCK_SEVERITY_TABLES_DIR,
     },
     "confidence_sensitivity": {
         "results": CONFIDENCE_RESULTS_DIR,
         "figures": CONFIDENCE_FIGURES_DIR,
+        "tables": CONFIDENCE_TABLES_DIR,
     },
     "peg_recovery": {
         "results": PEG_RECOVERY_RESULTS_DIR,
         "figures": PEG_RECOVERY_FIGURES_DIR,
+        "tables": PEG_RECOVERY_TABLES_DIR,
     },
     "multicollateral": {
         "results": MULTICOLLATERAL_RESULTS_DIR,
         "figures": MULTICOLLATERAL_FIGURES_DIR,
+        "tables": MULTICOLLATERAL_TABLES_DIR,
     },
 }
 
@@ -99,7 +110,7 @@ def get_experiment_dir(
     experiment_name:
         Experiment key.
     directory_type:
-        Either "results" or "figures".
+        One of "results", "figures" or "tables".
     """
     if experiment_name not in EXPERIMENT_DIRS:
         valid_names = ", ".join(EXPERIMENT_DIRS)
@@ -109,9 +120,9 @@ def get_experiment_dir(
             f"Valid names are: {valid_names}."
         )
 
-    if directory_type not in {"results", "figures"}:
+    if directory_type not in {"results", "figures", "tables"}:
         raise ValueError(
-            "directory_type must be either 'results' or 'figures'."
+            "directory_type must be 'results', 'figures' or 'tables'."
         )
 
     return EXPERIMENT_DIRS[experiment_name][directory_type]
@@ -126,11 +137,11 @@ def load_experiment_results(
     Load a results file for one experiment.
     """
     if path is None:
-        results_dir = get_experiment_dir(
+        tables_dir = get_experiment_dir(
             experiment_name,
-            directory_type="results",
+            directory_type="tables",
         )
-        path = results_dir / filename
+        path = tables_dir / filename
 
     if not path.exists():
         raise FileNotFoundError(

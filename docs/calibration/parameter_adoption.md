@@ -494,7 +494,7 @@ seeds, small-pool fallback and exact ETH-only equivalence.
 Implementation note: Tranche B is now implemented as an opt-in
 distribution-aware initialisation path. The runtime pool and configuration are
 under `config/profiles/`, while historical diagnostic outputs remain under the ignored
-`data/processed/estimation/tranche_b/` directory, and the implementation
+`outputs/diagnostics/input_construction/vaults/` directory, and the implementation
 report is
 [implementation report](../archive/tranche_reports/tranche_b_distributional_vault_initialisation_report.md).
 The legacy
@@ -564,7 +564,7 @@ after using FTX, or a scalar reduction hides a material distributional result.
 ## Reproducibility outputs
 
 Generated audit artefacts are under
-`data/processed/estimation/adoption_review/`:
+`outputs/diagnostics/calibration/parameter_adoption/`:
 
 - `parameter_adoption_matrix.csv`;
 - `candidate_consolidation.csv`;

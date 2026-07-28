@@ -118,27 +118,20 @@ results rather than hard-coded asset columns.
 
 ## Output structure
 
-Results and figures must remain separate.
+Generated results, figures, diagnostics and reporting tables must remain
+separate.
 
     outputs/
-    ├── results/
-    │   ├── 01_baseline_scenarios/
-    │   ├── 02_oracle_delay/
-    │   ├── 03_shock_severity/
-    │   ├── 04_confidence_sensitivity/
-    │   ├── 05_peg_recovery/
-    │   └── 06_multicollateral/
-    └── figures/
-        ├── 01_baseline_scenarios/
-        ├── 02_oracle_delay/
-        ├── 03_shock_severity/
-        ├── 04_confidence_sensitivity/
-        ├── 05_peg_recovery/
-        └── 06_multicollateral/
+    ├── experiments/<experiment>/
+    ├── figures/<experiment>/
+    ├── diagnostics/<domain-or-workflow>/
+    └── tables/<study-or-experiment>/
 
-Do not place figures inside outputs/results/.
+Do not place figures, diagnostics or summary tables inside detailed experiment
+result directories.
 
-CSV files should be written directly under each one without subdirectories.
+Experiment result CSV files should be written directly under their semantic
+experiment directory without extra nesting.
 
 ## Economic invariants
 

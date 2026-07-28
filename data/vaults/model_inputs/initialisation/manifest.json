@@ -1,6 +1,6 @@
 {
   "artefact": "vault_initialisation_pools",
-  "audit_path": "data/processed/estimation/tranche_b/vault_initialisation_pool_audit.csv",
+  "audit_path": "outputs/diagnostics/input_construction/vaults/vault_initialisation_pool_audit.csv",
   "audit_sha256": "a9ecf7d560da8cb50be99be8d50c806c4205f3d152a371a55f82b8ac5e67627e",
   "columns": [
     "pool_row_id",

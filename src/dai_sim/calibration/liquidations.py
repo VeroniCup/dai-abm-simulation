@@ -23,7 +23,9 @@ getcontext().prec = 80
 TARGET_ILKS = ("ETH-A", "ETH-B", "ETH-C", "WBTC-A", "WBTC-B", "WBTC-C")
 TERRA_START = pd.Timestamp("2022-05-05T00:00:00Z")
 TERRA_END = pd.Timestamp("2022-06-20T00:00:00Z")
-DEFAULT_OUTPUT = PROJECT_ROOT / "data/processed/estimation/phase2c_liquidations"
+DEFAULT_OUTPUT = (
+    PROJECT_ROOT / "outputs/diagnostics/calibration/liquidations"
+)
 TERRA_DIR = (
     PROJECT_ROOT
     / "data/vaults/processed/representative_regimes/"
@@ -49,11 +51,12 @@ PROTOCOL_PANEL = (
 )
 PHASE2A_REGIMES = (
     PROJECT_ROOT
-    / "data/processed/estimation/phase2a/regimes/hourly_regimes.csv"
+    / "outputs/diagnostics/calibration/market_gas_protocol/"
+    "regimes/hourly_regimes.csv"
 )
 PHASE2B_CANDIDATES = (
     PROJECT_ROOT
-    / "data/processed/estimation/phase2b_vaults/"
+    / "outputs/diagnostics/calibration/vaults/"
     "phase2b_parameter_candidates.json"
 )
 PROTECTED_PATHS = (

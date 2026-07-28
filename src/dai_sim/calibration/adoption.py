@@ -18,29 +18,33 @@ import pandas as pd
 from .data_loading import PROJECT_ROOT, sha256_file
 
 
-DEFAULT_OUTPUT = PROJECT_ROOT / "data/processed/estimation/adoption_review"
+DEFAULT_OUTPUT = (
+    PROJECT_ROOT / "outputs/diagnostics/calibration/parameter_adoption"
+)
 PARAMETER_PLAN = PROJECT_ROOT / "docs/calibration/parameter_estimation.md"
 PHASE2A_STATUS = (
-    PROJECT_ROOT / "data/processed/estimation/phase2a/parameter_status.csv"
+    PROJECT_ROOT
+    / "outputs/diagnostics/calibration/market_gas_protocol/parameter_status.csv"
 )
 REGISTRIES = {
     "phase2a": (
         PROJECT_ROOT
-        / "data/processed/estimation/phase2a/phase2a_candidate_parameters.json"
+        / "outputs/diagnostics/calibration/market_gas_protocol/"
+        "phase2a_candidate_parameters.json"
     ),
     "phase2a_review": (
         PROJECT_ROOT
-        / "data/processed/estimation/phase2a_review/"
+        / "outputs/diagnostics/calibration/market_gas_protocol/review/"
         "phase2a_reviewed_candidates.json"
     ),
     "phase2b": (
         PROJECT_ROOT
-        / "data/processed/estimation/phase2b_vaults/"
+        / "outputs/diagnostics/calibration/vaults/"
         "phase2b_parameter_candidates.json"
     ),
     "phase2c": (
         PROJECT_ROOT
-        / "data/processed/estimation/phase2c_liquidations/"
+        / "outputs/diagnostics/calibration/liquidations/"
         "phase2c_parameter_candidates.json"
     ),
 }

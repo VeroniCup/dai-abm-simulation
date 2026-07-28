@@ -23,8 +23,9 @@ from dai_sim.experiments.runner import run_all_scenarios
 results, summary = run_all_scenarios()
 ```
 
-The function writes scenario, combined and summary CSVs under the current
-`outputs/results/` interface.
+The function writes detailed scenario and combined CSVs under
+`outputs/experiments/baseline/` and summary CSVs under
+`outputs/tables/baseline/`.
 
 ## Interpretation and limitations
 

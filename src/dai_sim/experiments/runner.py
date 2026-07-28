@@ -77,12 +77,28 @@ from .summaries import (
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-RESULTS_DIR = PROJECT_ROOT / "outputs" / "results"
+EXPERIMENTS_DIR = PROJECT_ROOT / "outputs" / "experiments"
+TABLES_DIR = PROJECT_ROOT / "outputs" / "tables"
 FIGURES_DIR = PROJECT_ROOT / "outputs" / "figures"
-MULTICOLLATERAL_RESULTS_DIR = RESULTS_DIR / "06_multicollateral"
-MULTICOLLATERAL_FIGURES_DIR = FIGURES_DIR / "06_multicollateral"
+RESULTS_DIR = EXPERIMENTS_DIR / "baseline"
+BASELINE_TABLES_DIR = TABLES_DIR / "baseline"
+ORACLE_DELAY_RESULTS_DIR = EXPERIMENTS_DIR / "oracle_delay"
+ORACLE_DELAY_TABLES_DIR = TABLES_DIR / "oracle_delay"
+SHOCK_SEVERITY_RESULTS_DIR = EXPERIMENTS_DIR / "shock_severity"
+SHOCK_SEVERITY_TABLES_DIR = TABLES_DIR / "shock_severity"
+CONFIDENCE_RESULTS_DIR = EXPERIMENTS_DIR / "confidence"
+CONFIDENCE_TABLES_DIR = TABLES_DIR / "confidence"
+PEG_RECOVERY_RESULTS_DIR = EXPERIMENTS_DIR / "peg_recovery"
+PEG_RECOVERY_TABLES_DIR = TABLES_DIR / "peg_recovery"
+MULTICOLLATERAL_RESULTS_DIR = EXPERIMENTS_DIR / "multi_collateral"
+MULTICOLLATERAL_TABLES_DIR = TABLES_DIR / "multi_collateral"
+MULTICOLLATERAL_FIGURES_DIR = FIGURES_DIR / "multi_collateral"
 MULTICOLLATERAL_DIAGNOSTICS_DIR = (
-    MULTICOLLATERAL_RESULTS_DIR / "diagnostics"
+    PROJECT_ROOT
+    / "outputs"
+    / "diagnostics"
+    / "regression_validation"
+    / "multi_collateral"
 )
 
 
@@ -131,6 +147,7 @@ def run_all_scenarios(
         Combined time-series results and scenario summary results.
     """
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    BASELINE_TABLES_DIR.mkdir(parents=True, exist_ok=True)
 
     sim_config = create_base_simulation_config(
         oracle_delay_steps=0,
@@ -171,7 +188,7 @@ def run_all_scenarios(
     summary_df = pd.DataFrame(summary_records)
 
     combined_results_path = RESULTS_DIR / "combined_results.csv"
-    summary_path = RESULTS_DIR / "scenario_summary.csv"
+    summary_path = BASELINE_TABLES_DIR / "scenario_summary.csv"
 
     combined_results.to_csv(combined_results_path, index=False)
     summary_df.to_csv(summary_path, index=False)
@@ -210,7 +227,8 @@ def run_oracle_delay_experiment(
     if delay_values is None:
         delay_values = [0, 1, 3, 5, 10]
 
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    ORACLE_DELAY_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    ORACLE_DELAY_TABLES_DIR.mkdir(parents=True, exist_ok=True)
 
     base_confidence = create_base_confidence_config()
     base_market = create_base_dai_market_config()
@@ -250,7 +268,7 @@ def run_oracle_delay_experiment(
         results.insert(0, "scenario", scenario_name)
         results.insert(1, "oracle_delay_steps_experiment", delay)
 
-        scenario_path = RESULTS_DIR / f"{scenario_name}_results.csv"
+        scenario_path = ORACLE_DELAY_RESULTS_DIR / f"{scenario_name}_results.csv"
         results.to_csv(scenario_path, index=False)
 
         all_results.append(results)
@@ -264,8 +282,8 @@ def run_oracle_delay_experiment(
     combined_results = pd.concat(all_results, ignore_index=True)
     summary_df = pd.DataFrame(summary_records)
 
-    combined_path = RESULTS_DIR / "oracle_delay_combined_results.csv"
-    summary_path = RESULTS_DIR / "oracle_delay_summary.csv"
+    combined_path = ORACLE_DELAY_RESULTS_DIR / "oracle_delay_combined_results.csv"
+    summary_path = ORACLE_DELAY_TABLES_DIR / "oracle_delay_summary.csv"
 
     combined_results.to_csv(combined_path, index=False)
     summary_df.to_csv(summary_path, index=False)
@@ -287,7 +305,8 @@ def run_shock_severity_experiment(
     if shock_values is None:
         shock_values = [-0.20, -0.35, -0.43, -0.55, -0.70]
 
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    SHOCK_SEVERITY_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    SHOCK_SEVERITY_TABLES_DIR.mkdir(parents=True, exist_ok=True)
 
     all_results = []
     summary_records = []
@@ -326,7 +345,7 @@ def run_shock_severity_experiment(
         results["scenario"] = scenario_name
         results["shock_size_experiment"] = shock_size
 
-        scenario_path = RESULTS_DIR / f"{scenario_name}_results.csv"
+        scenario_path = SHOCK_SEVERITY_RESULTS_DIR / f"{scenario_name}_results.csv"
         results.to_csv(scenario_path, index=False)
 
         all_results.append(results)
@@ -340,8 +359,8 @@ def run_shock_severity_experiment(
     combined_results = pd.concat(all_results, ignore_index=True)
     summary = pd.DataFrame(summary_records)
 
-    combined_path = RESULTS_DIR / "shock_severity_combined_results.csv"
-    summary_path = RESULTS_DIR / "shock_severity_summary.csv"
+    combined_path = SHOCK_SEVERITY_RESULTS_DIR / "shock_severity_combined_results.csv"
+    summary_path = SHOCK_SEVERITY_TABLES_DIR / "shock_severity_summary.csv"
 
     combined_results.to_csv(combined_path, index=False)
     summary.to_csv(summary_path, index=False)
@@ -360,7 +379,8 @@ def run_confidence_sensitivity_experiment(
     The collateral shock and liquidation setting are fixed. Only the confidence
     and DAI market response parameters vary across scenarios.
     """
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    CONFIDENCE_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    CONFIDENCE_TABLES_DIR.mkdir(parents=True, exist_ok=True)
 
     all_results = []
     summary_records = []
@@ -394,7 +414,7 @@ def run_confidence_sensitivity_experiment(
         results["scenario"] = scenario_name
         results["confidence_scenario"] = scenario_name
 
-        scenario_path = RESULTS_DIR / f"{scenario_name}_confidence_results.csv"
+        scenario_path = CONFIDENCE_RESULTS_DIR / f"{scenario_name}_confidence_results.csv"
         results.to_csv(scenario_path, index=False)
 
         all_results.append(results)
@@ -409,8 +429,8 @@ def run_confidence_sensitivity_experiment(
     combined_results = pd.concat(all_results, ignore_index=True)
     summary = pd.DataFrame(summary_records)
 
-    combined_path = RESULTS_DIR / "confidence_sensitivity_combined_results.csv"
-    summary_path = RESULTS_DIR / "confidence_sensitivity_summary.csv"
+    combined_path = CONFIDENCE_RESULTS_DIR / "confidence_sensitivity_combined_results.csv"
+    summary_path = CONFIDENCE_TABLES_DIR / "confidence_sensitivity_summary.csv"
 
     combined_results.to_csv(combined_path, index=False)
     summary.to_csv(summary_path, index=False)
@@ -435,7 +455,8 @@ def run_peg_recovery_experiment(
     if recovery_fractions is None:
         recovery_fractions = [0.0, 0.25, 0.50, 0.75, 1.0]
 
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    PEG_RECOVERY_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    PEG_RECOVERY_TABLES_DIR.mkdir(parents=True, exist_ok=True)
 
     all_results = []
     summary_records = []
@@ -475,7 +496,7 @@ def run_peg_recovery_experiment(
         results["scenario"] = scenario_name
         results["recovery_fraction_experiment"] = recovery_fraction
 
-        scenario_path = RESULTS_DIR / f"{scenario_name}_results.csv"
+        scenario_path = PEG_RECOVERY_RESULTS_DIR / f"{scenario_name}_results.csv"
         results.to_csv(scenario_path, index=False)
 
         all_results.append(results)
@@ -490,8 +511,8 @@ def run_peg_recovery_experiment(
     combined_results = pd.concat(all_results, ignore_index=True)
     summary = pd.DataFrame(summary_records)
 
-    combined_path = RESULTS_DIR / "peg_recovery_combined_results.csv"
-    summary_path = RESULTS_DIR / "peg_recovery_summary.csv"
+    combined_path = PEG_RECOVERY_RESULTS_DIR / "peg_recovery_combined_results.csv"
+    summary_path = PEG_RECOVERY_TABLES_DIR / "peg_recovery_summary.csv"
 
     combined_results.to_csv(combined_path, index=False)
     summary.to_csv(summary_path, index=False)
@@ -510,12 +531,17 @@ def save_multicollateral_outputs(
     collateral_summary: pd.DataFrame,
     output_dir: Path = MULTICOLLATERAL_RESULTS_DIR,
 ) -> dict[str, Path]:
-    """Save Experiment 06 tables directly in the results directory."""
+    """Save detailed results and summary tables to semantic output paths."""
+    summary_dir = (
+        MULTICOLLATERAL_TABLES_DIR
+        if output_dir == MULTICOLLATERAL_RESULTS_DIR
+        else output_dir
+    )
     paths = {
         "system_results": output_dir / "system_results.csv",
         "collateral_results": output_dir / "collateral_results.csv",
-        "system_summary": output_dir / "system_summary.csv",
-        "collateral_summary": output_dir / "collateral_summary.csv",
+        "system_summary": summary_dir / "system_summary.csv",
+        "collateral_summary": summary_dir / "collateral_summary.csv",
     }
     frames = {
         "system_results": system_results,
