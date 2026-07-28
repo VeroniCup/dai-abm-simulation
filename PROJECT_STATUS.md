@@ -1,300 +1,89 @@
-# Project Status
+# Project status
 
-## Current branch
+## Current implementation
 
-- Branch: `feature/multi-collateral`
-- Multi-collateral implementation is complete through Experiment 06.
-- Empirical infrastructure is complete through Milestone 9 software validation;
-  market, gas, liquidation and protocol evidence has been acquired, while vault
-  calibration awaits the planned representative-window sample.
-- Changes remain uncommitted unless stated otherwise.
+The simplified DAI model supports:
 
-## Completed implementation milestones
+- ETH, BTC and stable collateral classes with one collateral type per vault;
+- collateral-specific market and oracle paths;
+- heterogeneous vault populations and target debt-share portfolios;
+- collateral-specific liquidation ratios, penalties and close factors;
+- profitability-gated liquidations under shared keeper capacity;
+- gas costs, bad debt, confidence regimes, panic pressure and peg recovery;
+- system-level and long-format collateral-level results.
 
-### Milestone 1 — Vault and liquidation migration
+Experiments 1–5 remain established ETH-only baselines. The multi-collateral
+portfolio and shock experiment is implemented in
+`src/dai_sim/experiments/runner.py`.
 
-- Canonical fields: `collateral_amount`, `collateral_type`.
-- Scalar and mapped collateral prices supported.
-- ETH-only outputs preserved.
+## Empirical inputs and calibration
 
-### Milestone 2 — Multi-asset price infrastructure
+Continuous market, gas, liquidation and protocol evidence has been acquired
+and validated. Vault evidence uses representative ordinary and stress windows
+rather than an exhaustive historical mutation census. Quiet-mature, USDC/SVB
+and Terra/CeFi windows are complete, and the earlier continuous-acquisition
+chunks remain preserved as methodology validation.
 
-- Canonical `CollateralPricePaths`.
-- Market and oracle paths per collateral.
-- Legacy ETH path inputs remain supported.
+The repository contains reviewed candidates for market, gas, protocol, vault
+and liquidation inputs. The opt-in empirical profile now supports:
 
-### Milestone 3 — Heterogeneous vault populations
+- joint representative vault initialisation;
+- empirical market-return blocks;
+- component gas inputs;
+- empirical liquidation-arrival demand separated from keeper throughput.
 
-- ETH, BTC, and STABLE may coexist.
-- Portfolio allocation uses target debt shares.
-- Long-format collateral-level results added.
+Legacy initialisation, market, gas and liquidation-demand behaviour remain the
+defaults. Candidate estimation does not itself adopt values or authorise new
+mechanics.
 
-### Milestone 4 — Collateral-specific risk parameters
+Detailed current guidance:
 
-- Liquidation ratio.
-- Liquidation penalty.
-- Maximum close factor.
-- Shared keeper capacity retained.
+- [Empirical framework](empirical.md)
+- [Parameter methodology](parameters.md)
+- [Calibration documentation](docs/calibration/README.md)
+- [Historical empirical reports](docs/archive/README.md)
 
-### Milestone 5 — Experiment 06
+## Repository restructuring
 
-Portfolios:
+Completed structural stages:
 
-- `eth_only`
-- `crypto_diversified`
-- `balanced`
-- `stable_heavy`
-- `btc_concentrated`
+1. pre-migration baseline;
+2. package and path infrastructure;
+3. semantic source package;
+4. semantic profiles and runtime inputs;
+5. domain-first data and provenance;
+6. domain workflows;
+7. domain SQL hierarchy.
 
-Shocks:
+This working tree implements Stage 8 documentation consolidation. Stages 9–12
+remain: semantic test migration, output and ignore-rule migration,
+compatibility removal, and final review. The historical baseline remains
+unchanged under `docs/repository_restructuring_baseline.md`.
 
-- `eth_specific_crash`
-- `btc_specific_crash`
-- `correlated_crypto_crash`
-- `stable_depeg`
-- `systemic_shock`
+## Regression status
 
-### Milestones 7–8 — Market empirical infrastructure
-
-- Configuration-driven UTC source adaptation and explicit unit conversion.
-- Aligned market-time panels, calibration/validation samples and stress regimes.
-- Transition matrices, empirical pools, overlap reports and descriptive summaries.
-- Synthetic validation outputs are separated from real baseline outputs.
-
-### Milestone 9 — Protocol, vault and liquidation empirical panels
-
-- Effective-dated, explicit mapping from source collateral identifiers to ETH,
-  BTC and STABLE model classes.
-- Long-format protocol-time, vault-snapshot and liquidation-event panels.
-- Separate quality reports and descriptive collateral, vault and liquidation
-  summaries.
-- Real baseline execution remains disabled until source files, mappings and
-  complete manifest records are supplied.
-
-## Empirical acquisition status
-
-### Phase 1E-A — Methodology validation
-
-**Status: Complete**
-
-- Authoritative Vat mutation, liquidation-annotation and ownership sources were
-  identified and validated.
-- Signed mutation values, numeric trace ordering, root traces, deterministic
-  source keys, pagination, atomic persistence and resumability were tested.
-- Five monthly Vat-mutation chunks from November 2019 through March 2020 were
-  validated and retained with their provenance and checksums.
-- The work establishes that the acquisition and reconstruction method is
-  technically reproducible.
-
-### Phase 1E-B — Representative calibration acquisition
-
-**Status: Quiet-mature, USDC/SVB and Terra/CeFi windows complete**
-
-Continuous reconstruction of every mutation through June 2024 has been
-intentionally superseded. The remaining vault-data task is to acquire
-representative ordinary, bull-market, crypto-stress, stablecoin-depeg and quiet
-mature windows, with one stress window withheld for validation.
-
-The first bounded tranche completed the quiet-mature window. The second
-authorised acquisition completed the USDC/SVB window
-`[2023-03-06, 2023-03-20)`. Both have authoritative boundary states, canonical
-mutations, targeted manager ownership history, sparse accumulated-rate streams
-and exact independently reconciled replay. The USDC/SVB acquisition used four
-Small executions plus a local Bark extract, consumed 90.800 observed credits
-and left 1,482.655 credits. It contains no Bark or grab, so close-factor
-identification still relies on complementary liquidation evidence. See
-`docs/phase1e_b_tranche1_acquisition_report.md` and
-`docs/phase1e_b_usdc_svb_acquisition_report.md`.
-
-The Terra/CeFi window `[2022-05-05, 2022-06-20)` is also complete. Exact
-replay reconciles all 5,111 boundary rows; all 649 Barks match canonical grabs
-without ambiguity; and 649 simulator-aligned debt close fractions are now
-available for Phase 2C review. No parameter has been adopted. See
-`docs/phase1e_b_terra_cefi_acquisition_report.md`.
-
-This is a methodological change rather than an incomplete or failed
-acquisition. The revised design estimates conditional vault behaviour at a
-substantially higher information-to-credit ratio while continuous Phase 1A,
-Phase 1B and Phase 1C panels continue to identify market regimes, gas
-conditions and liquidation arrival frequencies.
-
-### Phase 2A — Bounded Phase 1A--1D parameter estimation
-
-**Status: Complete**
-
-- All 56 numbered parameter-plan subsections were audited against the current
-  simulator interface; the earlier working brief referred to 55.
-- Hourly market returns, the two-state market regime, gas conditions,
-  liquidation activity, clean Take-transaction costs and effective-dated
-  protocol settings were estimated or extracted from validated Phase 1A--1D
-  artefacts.
-- The FTX interval from 1 November to 21 November 2022 was withheld from every
-  calibration threshold and candidate estimate.
-- Generated estimates, diagnostics and the 64-entry candidate registry are
-  under `data/processed/estimation/phase2a/`; the working report is
-  `docs/phase2a_parameter_estimation_report.md`.
-- No candidate value has been adopted in simulator configuration. The nine
-  vault parameters supported by the completed Phase 1E-B windows have now
-  advanced to the separate Phase 2B candidate-estimation review.
-
-### Phase 2A-R — Candidate hardening review
-
-**Status: Complete**
-
-- All 64 candidates were reviewed without changing the original registry:
-  12 are ready for later timestamp-selected adoption, 14 require sensitivity
-  review, 12 are descriptive only and 26 are blocked by current model mapping.
-- Four pre-London successful-Take transactions retain an explicit zero source
-  gas price but lack a defensible alternative fee field. The primary later
-  estimator should exclude them or mark them missing without imputation, with
-  retain-all reported as sensitivity.
-- Sparse liquidation activity is represented as an arrival probability plus
-  conditional positive severity. Implementing an exogenous hurdle mechanism
-  would require separate authorisation because current liquidations are
-  endogenous to vault state.
-- The two-state classifier detects the withheld FTX disturbance without using
-  its label for fitting, but remains provisional under nearby specifications.
-- The 168-hour empirical block remains the default candidate, with 72--336
-  hours retained as a sensitivity range.
-- Review outputs are under `data/processed/estimation/phase2a_review/`; the
-  technical report is `docs/phase2a_candidate_review.md`.
-
-### Phase 2B — Representative vault-parameter estimation
-
-**Status: Candidate estimation complete; adoption review pending**
-
-- Nine authorised vault-population candidates were estimated from the
-  validated quiet-mature and USDC/SVB windows without using the withheld FTX
-  interval or changing simulator configuration.
-- Debt and collateral-ratio evidence is strongly right-skewed, so the current
-  global Gaussian inputs remain provisional distribution choices rather than
-  adopted values.
-- Debt composition and the normal/stress liquidatable-share thresholds are
-  ready for review; the simulation population remains a provisional scaling
-  choice.
-- Terra/CeFi supplies 649 exactly linked full-closure grabs, so
-  `max_close_factor` is methodologically ready for Phase 2C estimation and
-  review. The existing Phase 2B registry remains unchanged.
-- Bull expansion remains useful for leverage and composition sensitivity, but
-  is no longer required to resolve the close-factor evidence blocker.
-- Reproducible outputs are under
-  `data/processed/estimation/phase2b_vaults/`; see
-  `docs/phase2b_vault_parameter_estimation_report.md`.
-
-### Phase 2C — Liquidation and stress-tail review
-
-**Status: Candidate review complete; model-design decision pending**
-
-- The simulator's `max_close_factor` is a per-vault debt-close fraction, not
-  keeper throughput. All 649 exact Terra/CeFi Bark–grab matches close the full
-  unsafe urn position, supporting `1.0` as a protocol-level review candidate.
-- Clipper Take fractions, liquidation sequences and throughput remain distinct
-  empirical quantities. Auction execution and a hurdle arrival process would
-  require new optional interfaces and have not been implemented.
-- The Phase 2B USDC/SVB stress-share value is retained as moderate-stress
-  evidence; Terra/CeFi adds a severe-window q95 and maximum without pooling the
-  regimes.
-- No candidate has been adopted and no simulator configuration or mechanics
-  have changed. See
-  `docs/phase2c_liquidation_parameter_estimation_report.md`.
-
-### Parameter-adoption and model-interface review
-
-**Status: Tranches A, B, C and D complete**
-
-- All 56 authoritative parameter subsections and the pre-Tranche-D
-  configuration/runtime interface review are mapped to one primary adoption
-  class, with the new Tranche D demand fields documented as a separate opt-in
-  extension.
-- The review preserves 80 Phase 2A–2C candidate records without pooling
-  conflicting regimes, collaterals or semantic stages.
-- The separate configuration-only empirical bundle has been implemented as an
-  explicit opt-in path. It retains all legacy defaults and established
-  experiments.
-- Distribution-aware vault initialisation has also been implemented as a
-  separate opt-in Tranche B path using compact representative-regime sampling
-  pools. It does not change the legacy default generator or Tranche A
-  configuration-only behaviour.
-- Empirical market-return block bootstrapping and empirical gas-input
-  generation have been implemented as a separate opt-in Tranche C path. Legacy
-  GBM and scalar gas remain the defaults.
-- Empirical liquidation-arrival demand and keeper-throughput separation have
-  been implemented as a separate opt-in Tranche D path. Legacy liquidation
-  demand remains the default, and keeper-profit, close-factor, auction and
-  confidence mechanics are unchanged.
-- Regime switching and behavioural changes remain later, separately gated
-  tranches. See
-  `docs/parameter_adoption_and_model_interface_plan.md` and
-  `docs/tranche_a_empirical_configuration_report.md` and
-  `docs/tranche_b_distributional_vault_initialisation_report.md` and
-  `docs/tranche_c_empirical_market_and_gas_report.md` and
-  `docs/tranche_d_liquidation_arrival_and_capacity_report.md`.
-
-## Current outputs
-
-Results:
-
-`outputs/results/06_multicollateral/`
-
-Figures:
-
-`outputs/figures/06_multicollateral/`
-
-Experiment 06 produces:
-
-- `system_results.csv`
-- `collateral_results.csv`
-- `system_summary.csv`
-- `collateral_summary.csv`
-
-## Preliminary findings
-
-- Balanced and stable-heavy portfolios reduce systemic bad debt relative to
-  ETH-only.
-- Diversification between ETH and BTC provides limited protection under
-  correlated crypto shocks.
-- Stable-heavy currently appears most resilient.
-- The current stable-depeg scenario generates no liquidation or bad debt.
-- `systemic_shock` currently produces the same outcomes as
-  `correlated_crypto_crash`, indicating that the STABLE component is not
-  materially binding under the present assumptions.
-
-These are preliminary stylised findings and are not yet final dissertation
-conclusions.
+Before this documentation migration, `449` tests passed. The frozen smoke and
+Experiments 1–5 checksums are recorded in
+[the regression guide](docs/validation/regression.md) and the
+[Stage 1 baseline](docs/repository_restructuring_baseline.md).
 
 ## Known limitations
 
-- Shock magnitudes are not yet empirically calibrated.
-- Results currently rely on a limited seed configuration.
-- Stable collateral has no direct confidence or DAI-demand transmission channel.
+- The simulator is not a full Maker auction engine.
+- Stable collateral has no direct confidence or DAI-demand transmission
+  channel.
 - One oracle delay applies to all collateral paths.
-- Stable-depeg resilience may reflect the current collateral-ratio distribution
-  rather than a generally robust economic conclusion.
-- Existing ETH-specific system columns are retained for backward compatibility.
+- Behavioural confidence parameters remain incompletely identified.
+- Representative vault windows do not identify unconditional event
+  probabilities.
+- Compatibility shims, cumulative historical configurations and generated
+  diagnostic output paths remain until later restructuring stages.
+- Current results use a limited seed design and are preliminary dissertation
+  evidence rather than final conclusions.
 
-## Next research stage
+## Next research work
 
-Research question: **How do collateral composition, cross-asset dependence
-and liquidation frictions jointly affect DAI
-solvency and peg resilience under market stress?**
-
-Sequence:
-
-* next empirical-interface tranche, subject to explicit authorisation and the
-  gates in `docs/parameter_adoption_and_model_interface_plan.md`;
-* Milestone 11 — model calibration and withheld-window validation;
-* Milestone 12 — empirically calibrated counterfactual experiments.
-
-## Research decisions reserved for the user
-
-Codex must not decide these silently:
-
-- final collateral parameter calibration;
-- final shock magnitudes;
-- whether stable depegs directly affect confidence or DAI demand;
-- whether oracle delay should vary by collateral;
-- changes to realised bad-debt accounting;
-- adoption of the opt-in Tranche D liquidation-demand path as a dissertation
-  baseline rather than a sensitivity interface;
-- changes to keeper-capacity measurement beyond the current explicit
-  throughput cap.
+The remaining empirical task is adoption and validation of defensible
+parameter candidates, followed by calibrated counterfactual experiments.
+Changes to auction execution, confidence mechanics, stable-depeg transmission
+or keeper-capacity allocation require separate modelling decisions.

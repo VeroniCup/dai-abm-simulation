@@ -2,6 +2,9 @@
 
 # Data Acquisition Plan
 
+Before using "dynamic workflows", "ultra code" or any harness feature that immediately
+spawns a large swarm of subagents, always explain the tradeoffs and ask the user for explicit approval.
+
 ## Purpose
 
 This document defines the data acquisition strategy for the empirical calibration of the DAI multi-collateral simulation.

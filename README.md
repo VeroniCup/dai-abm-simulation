@@ -1,44 +1,65 @@
-# DAI ABM Simulation
+# DAI ABM simulation
 
-This project develops a simplified agent-based simulation of DAI stability under stress. The aim is to investigate how the DAI peg may be affected by ETH collateral shocks when liquidation frictions, keeper incentives, and state-dependent market confidence are explicitly represented in a computational model.
+This repository contains an interpretable agent-based simulation of DAI
+stability under market stress. It studies collateral shocks, vault leverage,
+oracle delay, liquidation frictions, keeper incentives and capacity, gas
+costs, bad debt, confidence and DAI peg recovery. ETH, BTC and stable
+collateral classes can coexist, while the established ETH-only model remains
+the default compatibility path.
 
-The project does not attempt to reproduce the full MakerDAO protocol. It focuses on a simplified but interpretable simulation framework that captures the key mechanisms most relevant to DAI peg stability.
+The model is a dissertation research framework, not a full implementation of
+MakerDAO and not financial advice.
 
-## Project Motivation
+## Repository map
 
-DAI is designed to maintain a stable value close to 1 USD through over-collateralised vaults, liquidation mechanisms, and market incentives. However, under stressed market conditions, several frictions may weaken this stabilising mechanism. These include sharp ETH price declines, delayed or inefficient liquidations, high gas costs, limited keeper participation, and changes in market confidence.
+- [Repository guide](docs/overview/repository_guide.md)
+- [Architecture](docs/overview/architecture.md)
+- [Model mechanics](docs/model/README.md)
+- [Empirical research design](empirical.md)
+- [Parameter methodology](parameters.md)
+- [Calibration documentation](docs/calibration/README.md)
+- [Experiment documentation](docs/experiments/README.md)
+- [Data acquisition and provenance](docs/data/acquisition.md)
+- [Validation and regression baselines](docs/validation/regression.md)
+- [Current project status](PROJECT_STATUS.md)
 
-This simulation explores how these factors may interact and whether liquidation efficiency and market confidence can stabilise or destabilise the DAI peg during stress scenarios.
+The authoritative Python package is `src/dai_sim/`. User-facing profiles are
+under `config/profiles/`; domain workflows are under `workflows/`; empirical
+data are owned by `data/market/`, `data/gas/`, `data/vaults/`,
+`data/liquidations/` and `data/protocol/`; SQL is organised under the same
+domains.
 
-## Key Mechanisms
+## Installation
 
-The model currently focuses on the following mechanisms:
+From the repository root, using Python 3.11–3.13:
 
-- collateralised minting of DAI;
-- ETH price shocks;
-- vault collateral ratios;
-- liquidation thresholds;
-- keeper and liquidator profitability;
-- gas costs;
-- belief-driven DAI demand;
-- DAI price adjustment under supply-demand imbalance.
+```bash
+python -m pip install -e .
+```
 
-## Current Scope
+## Running
 
-This is an early-stage research simulation. The model is intentionally simplified and is designed for interpretability rather than full protocol replication. It should be understood as an experimental framework for analysing stabilisation and destabilisation channels in DAI-like collateralised stablecoin systems.
+The supported simulation interface is the Python API:
 
-## Planned Extensions
+```python
+from dai_sim.experiments.runner import run_all_scenarios
 
-Potential future extensions include:
+results, summary = run_all_scenarios()
+```
 
-- more heterogeneous vault owner behaviour;
-- more detailed keeper competition;
-- auction delay and partial liquidation mechanics;
-- oracle lag and price update frictions;
-- scenario-based stress testing;
-- systematic sensitivity analysis;
-- visualisation of peg deviation, liquidation volume, bad debt, and vault survival.
+Established scenarios and experiment-specific functions are documented in
+[the experiment guide](docs/experiments/README.md). The repository does not
+currently provide an installed console command or a separate experiment
+workflow directory.
 
-## Disclaimer
+## Profiles and empirical inputs
 
-This project is for academic and research purposes only. It is not financial advice and should not be used for trading, investment, or risk-management decisions.
+`config/profiles/legacy.yaml` preserves established defaults.
+`config/profiles/empirical.yaml` enables the complete opt-in empirical bundle,
+and `config/profiles/empirical_stress.yaml` selects documented stress inputs.
+Raw and processed data are generated locally and ignored by Git; compact
+runtime pools and durable provenance are tracked.
+
+Live acquisition may require a Dune API key and consumes external credits.
+Local processing, model-input validation and simulation do not require Dune.
+See the [data guide](docs/data/acquisition.md) for reproducibility boundaries.

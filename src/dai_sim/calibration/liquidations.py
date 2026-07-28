@@ -58,7 +58,7 @@ PHASE2B_CANDIDATES = (
 )
 PROTECTED_PATHS = (
     PROJECT_ROOT / "AGENTS.md",
-    PROJECT_ROOT / "data/DATA_ACQUISITION_PLAN.md",
+    PROJECT_ROOT / "docs/archive/historical_plans/DATA_ACQUISITION_PLAN.md",
 )
 ALLOWED_STATUSES = {
     "ready_for_review",

@@ -1,19 +1,14 @@
 # Raw protocol data
 
-Place unmodified protocol-time observations, such as liquidation volume, here.
-Protocol inputs are optional for the first market panel but must be documented
-in the data manifest when configured. Raw files are ignored by Git.
+Raw Vat, Spot, Jug, Dog and Clipper setting histories live here. Generated
+change ledgers, intervals and hourly panels live under
+`data/protocol/processed/`; query, execution, activation, default-state and
+validation evidence lives under `data/protocol/provenance/`.
 
-Phase 1D raw module observations are stored directly in `data/protocol/raw/`.
-Discovery records, parameter-source mappings, diagnostic state and validation,
-and production manifests are stored under `data/protocol/provenance/`. Derived
-change ledgers, intervals and hourly panels are under
-`data/protocol/processed/`. These generated artefacts remain ignored;
-the durable diagnostic SQL is
-`sql/protocol/generated/history/eth_a_debt_ceiling_diagnostic.sql` and the local validation
-implementation is `workflows/maintenance/archive/debt_ceiling_diagnostic.py`.
+Protocol settings use the latest valid pre-sample state or a documented
+activation boundary. They are not inferred from liquidation outcomes or
+opportunistic getter calls. Historical diagnostic SQL is preserved under
+`sql/protocol/generated/history/`; active module templates are under
+`sql/protocol/templates/`.
 
-The Phase 1D diagnostic does not constitute production acquisition and does not
-change any simulator parameter. Protocol settings are reconstructed as
-effective-dated change records with an explicit pre-sample initial state; they
-must not be inferred from liquidation outcomes.
+See [protocol reconstruction](../../../docs/calibration/protocol.md).

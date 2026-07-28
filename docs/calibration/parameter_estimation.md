@@ -1,4 +1,4 @@
-# Phase 2 Parameter Estimation Plan
+# Parameter estimation
 
 ## 1. Purpose
 
@@ -15,9 +15,9 @@ The governing sequence is:
 > configuration**
 
 This sequence is consistent with the
-[empirical framework](../empirical.md), the
-[parameter acquisition plan](../parameters.md) and the
-[representative Phase 1E strategy](phase1e_representative_calibration_strategy.md).
+[empirical framework](../../empirical.md), the
+[parameter methodology](../../parameters.md) and the
+[representative vault strategy](vaults.md).
 It does not replace those documents. It turns their data and source decisions
 into a reproducible Phase 2 estimation procedure.
 
@@ -37,12 +37,13 @@ This document deliberately does not:
 - describe a protocol setting, literature assumption or experimental choice
   as an empirical estimate.
 
-### Phase 2A implementation record
+### Market, gas and protocol implementation record
 
 The bounded Phase 2A tranche has implemented the parts of this plan that are
 identifiable from validated Phase 1A--1D data. Its generated candidate bundle
 is under `data/processed/estimation/phase2a/`, and its concise technical record
-is the [Phase 2A parameter-estimation report](phase2a_parameter_estimation_report.md).
+is the
+[market, gas and protocol estimation report](../archive/phase_reports/phase2a_parameter_estimation_report.md).
 No candidate has been written into simulator configuration.
 
 Phase 2A does not supersede the Phase 1E-B dependency recorded below.
@@ -55,19 +56,19 @@ pre-grab states. Phase 2C has now used them to produce a protocol-level
 
 The separate Tranche A empirical configuration bundle now documents the first
 configuration-only adoption step in
-[the Tranche A empirical configuration report](tranche_a_empirical_configuration_report.md).
+[the empirical configuration implementation report](../archive/tranche_reports/tranche_a_empirical_configuration_report.md).
 It is opt-in only and does not change the methodological classification below.
 
 The subsequent Tranche B implementation introduces the optional
 distribution-aware vault-initialisation interface described in
-[the Tranche B distribution-aware initialisation report](tranche_b_distributional_vault_initialisation_report.md).
+[the distribution-aware initialisation report](../archive/tranche_reports/tranche_b_distributional_vault_initialisation_report.md).
 It provides a runtime bridge for paired empirical debt and collateral-ratio
 evidence, while preserving the distinction between candidate estimation and
 parameter adoption.
 
 Tranche C extends that bridge to empirical market and gas inputs. The opt-in
 implementation is documented in
-[the Tranche C empirical market and gas report](tranche_c_empirical_market_and_gas_report.md).
+[the empirical market and gas implementation report](../archive/tranche_reports/tranche_c_empirical_market_and_gas_report.md).
 It consumes validated hourly return and gas artefacts without re-estimating
 parameters or changing the equations that consume prices and gas costs.
 
@@ -76,24 +77,24 @@ and keeper-throughput separation. It uses the Phase 2C Terra/CeFi
 Bark--grab/hourly evidence to sample a hurdle-count demand process before the
 existing keeper-profit and capacity rules are applied. The implementation is
 documented in
-[the Tranche D liquidation-arrival and capacity report](tranche_d_liquidation_arrival_and_capacity_report.md).
+[the liquidation-arrival and capacity report](../archive/tranche_reports/tranche_d_liquidation_arrival_and_capacity_report.md).
 
 The first Phase 1E-B tranche is documented in the
-[tranche 1 acquisition report](phase1e_b_tranche1_acquisition_report.md).
+[quiet-mature acquisition report](../archive/phase_reports/phase1e_b_tranche1_acquisition_report.md).
 Its quiet-mature reconstruction is complete after the bounded Method B rate
 repair. The separately authorised
-[USDC/SVB window](phase1e_b_usdc_svb_acquisition_report.md) also passes exact
+[USDC/SVB window](../archive/phase_reports/phase1e_b_usdc_svb_acquisition_report.md) also passes exact
 opening-to-closing replay. These results establish estimation readiness; they
 do not themselves estimate or adopt any simulator value.
 
-### Phase 2B implementation record
+### Representative vault implementation record
 
 The bounded Phase 2B tranche has now estimated the nine authorised
 vault-population candidates supported by the quiet-mature and USDC/SVB
 reconstructions. The generated registry and diagnostics are under
 `data/processed/estimation/phase2b_vaults/`, and the methods and results are
 documented in the
-[Phase 2B vault-parameter report](phase2b_vault_parameter_estimation_report.md).
+[vault-parameter estimation report](../archive/phase_reports/phase2b_vault_parameter_estimation_report.md).
 No estimate has been adopted. Raw debt and collateral-ratio moments remain
 provisional distribution choices because the current global Gaussian
 interfaces do not preserve the observed heavy tails or exact-ilk
@@ -1951,7 +1952,7 @@ dissertation. They must not be hidden by selecting convenient parameter values.
 
 ---
 
-## 9. Phase 2 reproducibility checklist
+## 9. Reproducibility checklist
 
 Phase 2 is ready to begin only when:
 

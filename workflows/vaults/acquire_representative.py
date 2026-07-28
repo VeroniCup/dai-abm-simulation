@@ -3501,13 +3501,13 @@ def write_terra_preflight(
             ),
             "observed": sha256_file(ROOT / "AGENTS.md"),
         },
-        "data/DATA_ACQUISITION_PLAN.md": {
+        "docs/archive/historical_plans/DATA_ACQUISITION_PLAN.md": {
             "expected": (
                 "05587f17600f148d90cc26df4f281258d299188dad8dd53d2ab"
                 "00f351863ee60"
             ),
             "observed": sha256_file(
-                ROOT / "data" / "DATA_ACQUISITION_PLAN.md"
+                ROOT / "docs/archive/historical_plans/DATA_ACQUISITION_PLAN.md"
             ),
         },
     }

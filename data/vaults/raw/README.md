@@ -1,8 +1,14 @@
 # Raw vault data
 
-Place user-supplied vault snapshot CSV files here. Raw files are ignored by Git
-and must not be modified by the processing pipeline.
+Validated monthly methodology chunks and representative-regime acquisitions
+live beneath this directory. They preserve successful Vat frob, fork and grab
+calls, ownership mappings, liquidation annotations and accumulated-rate
+evidence where applicable.
 
-Phase 1E discovery artefacts are written under `phase1e/discovery/`. The durable
-SQL and local validation code live in `sql/` and `scripts/`; diagnostic CSVs,
-state files and metadata remain ignored under the repository data policy.
+Raw rows are immutable and ignored by Git. Checksums, query and execution
+identifiers, resume state and validation records live under
+`data/vaults/provenance/`. SQL templates are under `sql/vaults/templates/`;
+active acquisition entry points are `workflows/vaults/acquire.py` and
+`workflows/vaults/acquire_representative.py`.
+
+See the [representative vault methodology](../../../docs/calibration/vaults.md).

@@ -1274,7 +1274,7 @@ DEFAULT_FIGURES = PROJECT_ROOT / "outputs/estimation/phase2a"
 
 DEFAULT_REPORT = PROJECT_ROOT / "docs/phase2a_parameter_estimation_report.md"
 
-PARAMETER_PLAN = PROJECT_ROOT / "docs/parameter_estimation_plan.md"
+PARAMETER_PLAN = PROJECT_ROOT / "docs/calibration/parameter_estimation.md"
 
 PARAMETER_STATUSES: dict[str, str] = {
     "4.1.1": "scenario_only",

@@ -42,28 +42,30 @@ unless a change is explicitly requested.
 
 Main source files:
 
-- `src/collateral.py`
-- `src/vault.py`
-- `src/liquidation.py`
-- `src/price_process.py`
-- `src/simulation.py`
-- `src/experiments.py`
-- `src/metrics.py`
-- `src/plot_results.py`
-- `src/confidence.py`
-- `src/dai_market.py`
+- `src/dai_sim/model/collateral.py`
+- `src/dai_sim/model/vault.py`
+- `src/dai_sim/model/liquidation.py`
+- `src/dai_sim/model/collateral_prices.py`
+- `src/dai_sim/model/simulation.py`
+- `src/dai_sim/model/metrics.py`
+- `src/dai_sim/model/confidence.py`
+- `src/dai_sim/model/market.py`
+- `src/dai_sim/experiments/scenarios.py`
+- `src/dai_sim/experiments/runner.py`
+- `src/dai_sim/experiments/summaries.py`
+- `src/dai_sim/experiments/plots.py`
 
 Approximate dependency flow:
 
-experiments.py
-    -> simulation.py
-        -> price_process.py
-        -> vault.py
-        -> liquidation.py
-        -> confidence.py
-        -> dai_market.py
-    -> metrics.py
-    -> plot_results.py
+experiments/runner.py
+    -> model/simulation.py
+        -> model/collateral_prices.py
+        -> model/vault.py
+        -> model/liquidation.py
+        -> model/confidence.py
+        -> model/market.py
+    -> experiments/summaries.py
+    -> experiments/plots.py
 
 Inspect actual imports and call sites before editing.
 
@@ -176,19 +178,19 @@ decision explicitly rather than choosing silently.
 Choose validation appropriate to the files changed. At minimum, normally run:
 
     Bash
-    python -m compileall src
+    python -m compileall src workflows
     git diff --check
 
 For simulation changes, also run relevant smoke tests such as:
 
     Bash
-    python src/collateral.py
-    python src/vault.py
-    python src/liquidation.py
-    python src/simulation.py
+    PYTHONPATH=src python -m dai_sim.model.collateral
+    PYTHONPATH=src python -m dai_sim.model.vault
+    PYTHONPATH=src python -m dai_sim.model.liquidation
+    PYTHONPATH=src python -m dai_sim.model.simulation
 
-Run python src/experiments.py only when the task requires experiment
-regeneration or full integration validation.
+Run `PYTHONPATH=src python -m dai_sim.experiments.runner` only when the task
+requires experiment regeneration or full integration validation.
 
 For changes affecting backward compatibility, verify that equivalent ETH-only
 representations and identical seeds produce equal results within the required
@@ -200,9 +202,11 @@ numerical tolerance.
 
 ### Target architecture status
 
-The domain-first repository architecture is the approved target for the next
-dedicated restructuring. It has not yet been implemented. Until an authorised
-migration stage is completed, current paths remain authoritative.
+The domain-first repository architecture is the approved target. Stages 2–8
+have implemented the package, configuration, data, workflow, SQL and
+documentation layers. Test and output migration, compatibility removal and
+final review remain later authorised stages. Current implemented paths remain
+authoritative.
 
 The full implementation specification, file-level path map, compatibility
 policy, and validation sequence are in
@@ -288,13 +292,13 @@ outputs/{experiments,diagnostics,figures,tables}/
 * Consult `docs/repository_restructuring_specification.md` before any structural
   change.
 
-### Temporary transition rule
+### Remaining transition rule
 
-Until the approved migration is implemented:
+Until the remaining migration stages are implemented:
 
 * use current paths where required;
 * do not create ad hoc hybrid folders;
-* do not partially implement the target architecture outside an authorised
+* do not partially implement later target layers outside an authorised
   migration stage;
 * record new work using current paths only when necessary, and map it in the
   restructuring specification before migration.

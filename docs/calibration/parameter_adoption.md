@@ -463,9 +463,9 @@ dai_market:
 Every distribution block states its frequency, collateral scope, regime and
 source. Nulls are deliberate adoption gates, not implied zeros.
 
-## Implementation tranches
+## Implementation sequence
 
-### Tranche A — configuration-only empirical bundle
+### Configuration-only empirical bundle
 
 Fields: `max_close_factor`, represented protocol constants, initial prices,
 target debt shares and reviewed scalar thresholds.
@@ -477,13 +477,14 @@ Current defaults and Experiments 1–5 remain untouched unless the empirical
 configuration is explicitly selected.
 
 Implementation note: Tranche A is now implemented as an opt-in bundle under
-`config/empirical/`, with its audit report at
-`docs/tranche_a_empirical_configuration_report.md`. The implementation adopts
+`config/profiles/`, with its audit report in the
+[historical implementation archive](../archive/tranche_reports/tranche_a_empirical_configuration_report.md).
+The implementation adopts
 only current-interface-compatible rows. Exact-ilk protocol constants, scalar
 GBM moments with unresolved hourly conversion and generator-only collateral
 buffer values remain excluded for later tranches.
 
-### Tranche B — distribution-aware vault initialisation
+### Distribution-aware vault initialisation
 
 Add the optional empirical joint sampler and collateral-specific parametric
 fallback. Update `vault.py`, `simulation.py`, `collateral.py` and a small
@@ -492,15 +493,16 @@ seeds, small-pool fallback and exact ETH-only equivalence.
 
 Implementation note: Tranche B is now implemented as an opt-in
 distribution-aware initialisation path. The runtime pool and configuration are
-under `config/empirical/`, the diagnostic outputs are under the ignored
+under `config/profiles/`, while historical diagnostic outputs remain under the ignored
 `data/processed/estimation/tranche_b/` directory, and the implementation
 report is
-`docs/tranche_b_distributional_vault_initialisation_report.md`. The legacy
+[implementation report](../archive/tranche_reports/tranche_b_distributional_vault_initialisation_report.md).
+The legacy
 Gaussian initialiser remains the default, and Tranche A continues to use its
 configuration-only behaviour unless the Tranche B bundle is explicitly
 selected.
 
-### Tranche C — empirical market and gas sampling
+### Empirical market and gas sampling
 
 Add aligned moving blocks and a regime-labelled gas sampler while retaining
 GBM and scalar gas modes. Test block boundaries, correlations, seed
@@ -510,9 +512,10 @@ Implementation note: Tranche C is now implemented as an opt-in empirical
 environment-input layer. It adds aligned ETH/WBTC return blocks, compact
 market/gas and liquidation-gas runtime pools, and explicit empirical gas input
 modes while preserving legacy GBM and scalar gas defaults. The implementation
-report is `docs/tranche_c_empirical_market_and_gas_report.md`.
+report is in the
+[historical implementation archive](../archive/tranche_reports/tranche_c_empirical_market_and_gas_report.md).
 
-### Tranche D — liquidation demand and throughput
+### Liquidation demand and throughput
 
 Implemented as an opt-in hurdle-count demand interface after Tranches B and C.
 It tests the liquidatable/Bark/grab/Take distinctions, backlog, capacity and
@@ -522,7 +525,7 @@ estimate, and positive counts are sampled from the compact Terra/CeFi hourly
 arrival pool. Sequence sensitivity is retained as a diagnostic artefact only;
 no auction lifecycle or confidence mechanism is added.
 
-### Tranche E — confidence and behavioural calibration
+### Confidence and behavioural calibration
 
 Use minimum-distance or SMM after the observable interfaces are fixed. Test
 ablation, sensitivity and withheld FTX validation. Never present latent

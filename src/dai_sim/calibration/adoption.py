@@ -19,7 +19,7 @@ from .data_loading import PROJECT_ROOT, sha256_file
 
 
 DEFAULT_OUTPUT = PROJECT_ROOT / "data/processed/estimation/adoption_review"
-PARAMETER_PLAN = PROJECT_ROOT / "docs/parameter_estimation_plan.md"
+PARAMETER_PLAN = PROJECT_ROOT / "docs/calibration/parameter_estimation.md"
 PHASE2A_STATUS = (
     PROJECT_ROOT / "data/processed/estimation/phase2a/parameter_status.csv"
 )
@@ -46,7 +46,7 @@ REGISTRIES = {
 }
 PROTECTED = (
     PROJECT_ROOT / "AGENTS.md",
-    PROJECT_ROOT / "data/DATA_ACQUISITION_PLAN.md",
+    PROJECT_ROOT / "docs/archive/historical_plans/DATA_ACQUISITION_PLAN.md",
 )
 ADOPTION_CLASSES = {
     "configuration_ready",

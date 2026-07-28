@@ -1,4 +1,4 @@
-# Phase 1E Representative Calibration Strategy
+# Representative vault calibration
 
 ## Motivation
 
@@ -41,26 +41,26 @@ The pre-Liquidations-2.0 evidence is retained for method validation and owner
 behaviour comparisons. It will not be pooled uncritically with Liquidations 2.0
 auction outcomes.
 
-### Tranche 1 implementation note
+### Quiet-mature implementation note
 
 The first authorised tranche is recorded in
-[`phase1e_b_tranche1_acquisition_report.md`](phase1e_b_tranche1_acquisition_report.md).
+[quiet-mature acquisition report](../archive/phase_reports/phase1e_b_tranche1_acquisition_report.md).
 Quiet-mature boundary, mutation and ownership evidence passed, and its
 historically unbounded rate result was replaced by the bounded Method B
 extraction. The same architecture subsequently completed the USDC/SVB window
 with exact replay and a 90.800-credit observed delta. The detailed records are
-the [tranche 1 report](phase1e_b_tranche1_acquisition_report.md) and the
-[USDC/SVB acquisition report](phase1e_b_usdc_svb_acquisition_report.md).
+the [quiet-mature report](../archive/phase_reports/phase1e_b_tranche1_acquisition_report.md) and the
+[USDC/SVB acquisition report](../archive/phase_reports/phase1e_b_usdc_svb_acquisition_report.md).
 
 ## Representative calibration windows
 
-The market evidence below was calculated locally from the validated Phase 1A
-and Phase 1B panels. Row and credit ranges remain pre-acquisition planning
-estimates for unexecuted windows. Quiet mature and USDC/SVB now have
-authoritative realised dimensions and costs in their linked acquisition
-reports. Credit forecasts use the observed March 2020 rate of approximately
-0.0060 credits per exported 15-column mutation row; execution overhead and
-pricing changes remain uncertain.
+The market evidence below was calculated locally from the validated market and
+gas panels. Row and credit ranges are retained as historical planning estimates
+for comparison with realised acquisition records. Quiet mature, USDC/SVB and
+Terra/CeFi have authoritative realised dimensions and costs in their linked
+acquisition reports. Credit forecasts used the observed March 2020 rate of
+approximately 0.0060 credits per exported 15-column mutation row; execution
+overhead and pricing changes remain uncertain.
 
 | Role | Half-open window | Empirical motivation and model use | Expected mutation rows | Expected incremental credits |
 |---|---|---|---:|---:|
@@ -72,11 +72,11 @@ pricing changes remain uncertain.
 | USDC/SVB depeg | 2023-03-06 to 2023-03-20 | Distinguishes stablecoin contagion from a pure crypto crash. The validated panel records maximum absolute DAI and USDC deviations of about 9.5% and 9.8%. Helps assess whether ETH/WBTC vault owners change debt or collateral during a stablecoin-led disturbance. | 7,000–14,000 | 42–85 |
 | Quiet mature market | 2024-02-01 to 2024-03-01 | Recent low-volatility baseline after protocol maturation. The 99th percentile absolute ETH hourly return was about 1.4%, and DAI/USDC deviations remained below about 0.23%. Establishes ordinary borrowing, repayment and owner-intervention baselines. | 7,250–14,500 | 44–88 |
 
-The five new windows are expected to produce approximately 57,750–115,500
-mutation rows and consume approximately 348–698 credits. A 15% operational
-allowance gives a planning envelope of roughly 400–803 credits. Each window has
-an independent credit ceiling; later windows are not submitted until the
-preceding result is persisted and validated.
+The table's original five-window forecast was approximately 57,750–115,500
+mutation rows and 348–698 credits, with a 15% operational allowance of roughly
+400–803 credits. These figures are planning provenance, not current acquisition
+status. Realised dimensions and costs supersede them wherever a linked
+acquisition report exists.
 
 ## Calibration mapping
 
@@ -119,10 +119,11 @@ The four evidence classes used here are:
 | Stable-depeg transmission to confidence or demand | Scenario assumptions unless identified | Add only if the existing model fails validation; use literature and sensitivity bounds. |
 | Random seed | Scenario assumptions | No empirical interpretation; use common random numbers and multiple seeds. |
 
-## Acquisition roadmap
+## Acquisition roadmap and realised order
 
-Priority is based on expected information per credit, subject to preserving one
-ordinary baseline and one withheld validation window.
+The original priority order below is retained to explain the information-per-
+credit design. Completion status is recorded in the current project status and
+the archived acquisition reports.
 
 1. **Reuse February and March 2020** — no new Dune work; document the
    pre-Liquidations-2.0 limitation.
@@ -245,4 +246,5 @@ The 5 May–20 June 2022 Terra/CeFi window is complete. Its 5,111 boundary rows,
 ledger pass validation. Exact replay reconciles the closing boundary and all
 649 Phase 1C Barks link unambiguously to canonical grabs. This operational
 history does not revise the representative-window methodology. Details are in
-`phase1e_b_terra_cefi_acquisition_report.md`.
+the
+[Terra/CeFi acquisition report](../archive/phase_reports/phase1e_b_terra_cefi_acquisition_report.md).
