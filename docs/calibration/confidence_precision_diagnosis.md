@@ -213,6 +213,13 @@ of structural non-recovery before any new search. This diagnosis does not
 silently substitute a moment, change the horizon or authorise more
 replications.
 
+The separately pre-registered
+[recovery-moment redesign](confidence_recovery_moment.md) is now complete.
+Neither the 48-hour probability contrast nor the 168-hour restricted-mean
+contrast passes every fixed gate. The conditional recovery moment is therefore
+unsupported, and the next boundary is an objective-simplification and
+identification review rather than another Sobol search.
+
 ## 20. Production and validation boundaries
 
 No candidate is selected or preferred. Powell, registry B and USDC/SVB final

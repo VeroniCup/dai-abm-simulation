@@ -35,7 +35,7 @@ def _is_ignored(relative_path: str) -> bool:
 def test_tracked_calibration_evidence_is_content_addressed() -> None:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     assert manifest["schema_version"] == 1
-    assert len(manifest["artefacts"]) == 43
+    assert len(manifest["artefacts"]) == 48
     for record in manifest["artefacts"]:
         path = REPOSITORY_ROOT / record["path"]
         assert path.is_file(), record["semantic_name"]
@@ -127,3 +127,23 @@ def test_large_empirical_sources_remain_ignored() -> None:
         "quiet_mature_2024-02-01_2024-03-01/opening_vault_state.csv",
     )
     assert all(_is_ignored(path) for path in ignored)
+
+
+def test_recovery_redesign_evidence_is_compact_and_non_adopted() -> None:
+    root = REPOSITORY_ROOT / "data/provenance/calibration/confidence"
+    decision = json.loads(
+        (root / "recovery_moment_decision.json").read_text(encoding="utf-8")
+    )
+    reproducibility = json.loads(
+        (root / "recovery_moment_reproducibility.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert decision["status"] == "conditional_recovery_moment_unsupported"
+    assert decision["selected_moment"] is None
+    assert decision["stage2_estimate"] is None
+    assert not decision["runtime_adopted"]
+    assert not reproducibility["objective_values_used"]
+    assert not reproducibility["final_validation_data_used"]
+    assert not reproducibility["registry_b_used"]
+    assert reproducibility["full_search_evaluations"] == 0

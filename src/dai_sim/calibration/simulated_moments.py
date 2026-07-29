@@ -236,6 +236,76 @@ def quartile_contrast(
     return float(high.mean() - low.mean()), int(len(low)), int(len(high))
 
 
+def fixed_horizon_recovery_indicator(
+    recovery_time_hours: float | int | None,
+    *,
+    horizon_hours: int,
+    recovered: bool = True,
+) -> float:
+    """Represent recovery by a fixed horizon without a censoring sentinel."""
+    if horizon_hours <= 0:
+        raise ValueError("The recovery horizon must be positive.")
+    if not recovered or recovery_time_hours is None:
+        return 0.0
+    value = float(recovery_time_hours)
+    if not math.isfinite(value) or value < 0.0:
+        raise ValueError("A recovered duration must be finite and non-negative.")
+    return float(value <= horizon_hours)
+
+
+def restricted_recovery_time(
+    recovery_time_hours: float | int | None,
+    *,
+    restriction_hours: int,
+    recovered: bool = True,
+) -> float:
+    """Cap recovery time while assigning non-recovery the restriction."""
+    if restriction_hours <= 0:
+        raise ValueError("The recovery-time restriction must be positive.")
+    if not recovered or recovery_time_hours is None:
+        return float(restriction_hours)
+    value = float(recovery_time_hours)
+    if not math.isfinite(value) or value < 0.0:
+        raise ValueError("A recovered duration must be finite and non-negative.")
+    return float(min(value, restriction_hours))
+
+
+def fixed_strata_q4_q1_contrast(
+    records: pd.DataFrame,
+    *,
+    outcome: str,
+    q1_event_ids: Sequence[str],
+    q4_event_ids: Sequence[str],
+    event_col: str = "event_id",
+) -> tuple[float, float, float]:
+    """Return an equal-event Q4-minus-Q1 contrast for fixed memberships."""
+    required = {event_col, outcome}
+    missing = required - set(records.columns)
+    if missing:
+        raise ValueError(f"Fixed-strata input is missing: {sorted(missing)}.")
+    if set(q1_event_ids) & set(q4_event_ids):
+        raise ValueError("Q1 and Q4 memberships must not overlap.")
+    per_event = records[[event_col, outcome]].copy()
+    if per_event[event_col].duplicated().any():
+        raise ValueError("Fixed-strata aggregation requires one row per event.")
+    per_event = per_event.set_index(event_col)
+    expected = set(q1_event_ids) | set(q4_event_ids)
+    missing_events = expected - set(per_event.index.astype(str))
+    if missing_events:
+        raise ValueError(f"Fixed-strata events are missing: {sorted(missing_events)}.")
+    q1 = pd.to_numeric(
+        per_event.loc[list(q1_event_ids), outcome], errors="raise"
+    ).to_numpy(dtype=float)
+    q4 = pd.to_numeric(
+        per_event.loc[list(q4_event_ids), outcome], errors="raise"
+    ).to_numpy(dtype=float)
+    if not np.isfinite(np.concatenate((q1, q4))).all():
+        raise ValueError("Fixed-strata outcomes must be finite.")
+    q1_mean = float(q1.mean())
+    q4_mean = float(q4.mean())
+    return q4_mean - q1_mean, q1_mean, q4_mean
+
+
 @dataclass(frozen=True)
 class StructuralParameters:
     """Structural coordinates for the future Stage 2 mechanism."""

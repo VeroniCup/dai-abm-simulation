@@ -25,6 +25,9 @@ but finds predominantly structural non-recovery and an operationally
 impractical replication requirement. It selects no candidate and authorises
 only a future pre-registered simplification or replacement of the recovery
 moment.
+That [recovery-moment redesign](confidence_recovery_moment.md) is complete:
+both bounded alternatives fail at least one fixed gate, so the conditional
+channel is unsupported and no new search is authorised.
 
 Confidence is a latent modelling state. It is not an observed Maker variable,
 a wallet label or a survey measure. Historical DAI prices, collateral returns,

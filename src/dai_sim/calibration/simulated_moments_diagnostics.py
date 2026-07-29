@@ -39,6 +39,9 @@ from .simulated_moments import (
     SIMULATED_CORE_MOMENT_ORDER,
     StructuralParameters,
     array_sha256,
+    fixed_horizon_recovery_indicator,
+    fixed_strata_q4_q1_contrast,
+    restricted_recovery_time,
     sobol_candidates,
 )
 from . import simulated_moments_search as search
@@ -75,6 +78,22 @@ TRACKED_EVIDENCE_NAMES = (
     "monte_carlo_precision_decision.json",
     "monte_carlo_precision_benchmark.json",
 )
+RECOVERY_REDESIGN_EVIDENCE_NAMES = (
+    "recovery_moment_redesign_specification.json",
+    "recovery_moment_empirical_evidence.csv",
+    "recovery_moment_precision_evidence.csv",
+    "recovery_moment_decision.json",
+    "recovery_moment_reproducibility.json",
+)
+DEFAULT_RECOVERY_REDESIGN_ROOT = (
+    REPOSITORY_ROOT
+    / "outputs/diagnostics/calibration/confidence/recovery_moment_redesign"
+)
+RECOVERY_BOOTSTRAP_REPLICATIONS = 2_000
+RECOVERY_BOOTSTRAP_SEED = 20_260_729
+RECOVERY_PRE_ROLL_HOURS = 48
+RECOVERY_PROBABILITY_HORIZONS = (48, 72, 168)
+RECOVERY_RMST_HORIZONS = (168, 72, 336)
 
 MEAN_MOMENTS = {
     "first_six_hour_burden_mean": "first_six_hour_burden",
@@ -2583,6 +2602,966 @@ def _register_evidence(paths: Sequence[Path]) -> None:
             + "\n"
         ).encode("utf-8"),
     )
+
+
+def _recovery_outcome(
+    recovery_time_hours: float | int | None,
+    *,
+    recovered: bool,
+    candidate: str,
+    horizon_hours: int,
+) -> float:
+    if candidate == "fixed_horizon_probability":
+        return fixed_horizon_recovery_indicator(
+            recovery_time_hours,
+            horizon_hours=horizon_hours,
+            recovered=recovered,
+        )
+    if candidate == "restricted_mean_recovery_time":
+        return restricted_recovery_time(
+            recovery_time_hours,
+            restriction_hours=horizon_hours,
+            recovered=recovered,
+        )
+    raise ValueError(f"Unknown recovery-moment candidate: {candidate}.")
+
+
+def _scale_hierarchy(values: Sequence[float]) -> dict[str, Any]:
+    draws = np.asarray(values, dtype=float)
+    if len(draws) < 2 or not np.isfinite(draws).all():
+        raise ValueError("The empirical bootstrap draws must be finite.")
+    bootstrap = float(np.std(draws, ddof=1))
+    iqr = float(
+        (np.quantile(draws, 0.75) - np.quantile(draws, 0.25)) / 1.349
+    )
+    mad = float(
+        1.4826 * np.median(np.abs(draws - np.median(draws)))
+    )
+    hierarchy = (
+        ("event_block_bootstrap_standard_deviation", bootstrap),
+        ("bootstrap_iqr_divided_by_1_349", iqr),
+        ("consistent_bootstrap_mad", mad),
+    )
+    selected = next(
+        ((name, value) for name, value in hierarchy if math.isfinite(value) and value > 0),
+        None,
+    )
+    return {
+        "bootstrap_standard_deviation": bootstrap,
+        "iqr_divided_by_1_349": iqr,
+        "consistent_mad": mad,
+        "selected_method": None if selected is None else selected[0],
+        "selected_scale": None if selected is None else selected[1],
+    }
+
+
+def _fixed_strata_bootstrap(
+    q1: np.ndarray,
+    q4: np.ndarray,
+    *,
+    seed: int,
+    replications: int = RECOVERY_BOOTSTRAP_REPLICATIONS,
+) -> np.ndarray:
+    if len(q1) == 0 or len(q4) == 0:
+        raise ValueError("Both fixed recovery strata must be populated.")
+    generator = np.random.default_rng(seed)
+    draws = np.empty(replications, dtype=float)
+    for replication in range(replications):
+        draws[replication] = float(
+            generator.choice(q4, size=len(q4), replace=True).mean()
+            - generator.choice(q1, size=len(q1), replace=True).mean()
+        )
+    return draws
+
+
+def _leave_one_event_influence(
+    q1: pd.Series,
+    q4: pd.Series,
+    *,
+    point: float,
+) -> pd.DataFrame:
+    rows = []
+    for stratum, values, other in (("q1", q1, q4), ("q4", q4, q1)):
+        for event_id in values.index:
+            retained = values.drop(event_id)
+            contrast = (
+                float(other.mean() - retained.mean())
+                if stratum == "q1"
+                else float(retained.mean() - other.mean())
+            )
+            rows.append(
+                {
+                    "stratum": stratum,
+                    "event_id": str(event_id),
+                    "leave_one_out_contrast": contrast,
+                    "absolute_shift": abs(contrast - point),
+                }
+            )
+    return pd.DataFrame(rows).sort_values(
+        ["absolute_shift", "stratum", "event_id"],
+        ascending=[False, True, True],
+        kind="mergesort",
+    )
+
+
+def recovery_empirical_evidence(
+    catalogue: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Evaluate both fixed candidates on the immutable 74-event catalogue."""
+    calibration = catalogue.loc[catalogue["partition"].eq("calibration")].copy()
+    if len(calibration) != 74 or calibration["event_id"].nunique() != 74:
+        raise ValueError("Recovery redesign requires exactly 74 calibration events.")
+    q1_ids, q4_ids = quartile_event_sets(
+        calibration, stratifier="eth_recovery_24h"
+    )
+    if (len(q1_ids), len(q4_ids)) != (19, 19):
+        raise ValueError("Fixed ETH-recovery quartiles no longer contain 19 events.")
+    configuration = (
+        (
+            "fixed_horizon_probability",
+            horizon,
+            horizon == 48,
+            RECOVERY_BOOTSTRAP_SEED + position,
+        )
+        for position, horizon in enumerate(RECOVERY_PROBABILITY_HORIZONS)
+    )
+    rmst_configuration = (
+        (
+            "restricted_mean_recovery_time",
+            horizon,
+            horizon == 168,
+            RECOVERY_BOOTSTRAP_SEED + 100 + position,
+        )
+        for position, horizon in enumerate(RECOVERY_RMST_HORIZONS)
+    )
+    evidence_rows: list[dict[str, Any]] = []
+    bootstrap_rows: list[dict[str, Any]] = []
+    influence_frames = []
+    indexed = calibration.set_index("event_id", drop=False)
+    for candidate, horizon, primary, seed in (
+        *configuration,
+        *rmst_configuration,
+    ):
+        outcome_name = f"{candidate}_{horizon}"
+        indexed[outcome_name] = [
+            _recovery_outcome(
+                value,
+                recovered=True,
+                candidate=candidate,
+                horizon_hours=horizon,
+            )
+            for value in indexed["recovery_hours_from_trough"]
+        ]
+        q1 = indexed.loc[list(q1_ids), outcome_name].astype(float)
+        q4 = indexed.loc[list(q4_ids), outcome_name].astype(float)
+        point, q1_mean, q4_mean = fixed_strata_q4_q1_contrast(
+            indexed.reset_index(drop=True),
+            outcome=outcome_name,
+            q1_event_ids=q1_ids,
+            q4_event_ids=q4_ids,
+        )
+        draws = _fixed_strata_bootstrap(q1.to_numpy(), q4.to_numpy(), seed=seed)
+        scale = _scale_hierarchy(draws)
+        influence = _leave_one_event_influence(q1, q4, point=point)
+        influence.insert(0, "horizon_hours", horizon)
+        influence.insert(0, "candidate_moment", candidate)
+        influence_frames.append(influence)
+        for replication, value in enumerate(draws):
+            bootstrap_rows.append(
+                {
+                    "candidate_moment": candidate,
+                    "horizon_hours": horizon,
+                    "replication": replication,
+                    "contrast": float(value),
+                }
+            )
+        annual = {}
+        for year in sorted(calibration["calendar_year"].unique()):
+            year_ids = set(
+                calibration.loc[
+                    calibration["calendar_year"].eq(year), "event_id"
+                ].astype(str)
+            )
+            year_q1 = q1.loc[q1.index.isin(year_ids)]
+            year_q4 = q4.loc[q4.index.isin(year_ids)]
+            annual[str(int(year))] = {
+                "q1_count": int(len(year_q1)),
+                "q4_count": int(len(year_q4)),
+                "q1_value": None if year_q1.empty else float(year_q1.mean()),
+                "q4_value": None if year_q4.empty else float(year_q4.mean()),
+                "contrast": (
+                    None
+                    if year_q1.empty or year_q4.empty
+                    else float(year_q4.mean() - year_q1.mean())
+                ),
+            }
+        selected_scale = scale["selected_scale"]
+        if candidate == "fixed_horizon_probability" and primary:
+            gates = {
+                "q1_at_least_15": len(q1) >= 15,
+                "q4_at_least_15": len(q4) >= 15,
+                "q1_at_least_4_recovered": int(q1.sum()) >= 4,
+                "q4_at_least_4_recovered": int(q4.sum()) >= 4,
+                "q1_at_least_4_non_recovered": int((q1 == 0.0).sum()) >= 4,
+                "q4_at_least_4_non_recovered": int((q4 == 0.0).sum()) >= 4,
+                "positive_finite_scale": bool(
+                    selected_scale is not None
+                    and math.isfinite(selected_scale)
+                    and selected_scale > 0
+                ),
+                "maximum_leave_one_out_shift_at_most_one_scale": bool(
+                    selected_scale is not None
+                    and float(influence["absolute_shift"].max()) <= selected_scale
+                ),
+            }
+        elif candidate == "restricted_mean_recovery_time" and primary:
+            gates = {
+                "q1_at_least_15": len(q1) >= 15,
+                "q4_at_least_15": len(q4) >= 15,
+                "positive_finite_scale": bool(
+                    selected_scale is not None
+                    and math.isfinite(selected_scale)
+                    and selected_scale > 0
+                ),
+                "q1_at_least_4_below_restriction": int((q1 < horizon).sum()) >= 4,
+                "q4_at_least_4_below_restriction": int((q4 < horizon).sum()) >= 4,
+                "at_least_4_at_restriction_in_one_stratum": bool(
+                    max(int((q1 == horizon).sum()), int((q4 == horizon).sum()))
+                    >= 4
+                ),
+                "maximum_leave_one_out_shift_at_most_one_scale": bool(
+                    selected_scale is not None
+                    and float(influence["absolute_shift"].max()) <= selected_scale
+                ),
+            }
+        else:
+            gates = {}
+        evidence_rows.append(
+            {
+                "candidate_moment": candidate,
+                "horizon_hours": horizon,
+                "role": "primary" if primary else "diagnostic_only",
+                "q1_event_count": len(q1),
+                "q4_event_count": len(q4),
+                "q1_value": q1_mean,
+                "q4_value": q4_mean,
+                "empirical_contrast": point,
+                **scale,
+                "bootstrap_q05": float(np.quantile(draws, 0.05)),
+                "bootstrap_q50": float(np.quantile(draws, 0.50)),
+                "bootstrap_q95": float(np.quantile(draws, 0.95)),
+                "leave_one_out_minimum": float(
+                    influence["leave_one_out_contrast"].min()
+                ),
+                "leave_one_out_maximum": float(
+                    influence["leave_one_out_contrast"].max()
+                ),
+                "maximum_absolute_leave_one_out_shift": float(
+                    influence["absolute_shift"].max()
+                ),
+                "largest_influence_event": str(influence.iloc[0]["event_id"]),
+                "calendar_year_values": json.dumps(
+                    annual, sort_keys=True, separators=(",", ":")
+                ),
+                "recovered_or_below_count_q1": int(
+                    q1.sum()
+                    if candidate == "fixed_horizon_probability"
+                    else (q1 < horizon).sum()
+                ),
+                "recovered_or_below_count_q4": int(
+                    q4.sum()
+                    if candidate == "fixed_horizon_probability"
+                    else (q4 < horizon).sum()
+                ),
+                "non_recovered_or_capped_count_q1": int(
+                    (q1 == (0.0 if candidate == "fixed_horizon_probability" else horizon)).sum()
+                ),
+                "non_recovered_or_capped_count_q4": int(
+                    (q4 == (0.0 if candidate == "fixed_horizon_probability" else horizon)).sum()
+                ),
+                "empirical_gates": json.dumps(
+                    gates, sort_keys=True, separators=(",", ":")
+                ),
+                "empirical_gate_passed": (
+                    bool(all(gates.values())) if primary else False
+                ),
+                "diagnostic_cannot_become_primary": not primary,
+            }
+        )
+    return (
+        pd.DataFrame(evidence_rows),
+        pd.DataFrame(bootstrap_rows),
+        pd.concat(influence_frames, ignore_index=True),
+    )
+
+
+def _simulation_recovery_outcomes(
+    ladder: pd.DataFrame,
+    catalogue: pd.DataFrame,
+) -> pd.DataFrame:
+    calibration = catalogue.loc[catalogue["partition"].eq("calibration")]
+    anchors = calibration[["event_id", "hours_to_minimum"]].copy()
+    frame = ladder.merge(anchors, on="event_id", how="left", validate="many_to_one")
+    if frame["hours_to_minimum"].isna().any():
+        raise ValueError("A stored recovery result lacks its fixed trough anchor.")
+    frame["recovery_time_from_trough"] = (
+        frame["recovery_completion_hours"]
+        - RECOVERY_PRE_ROLL_HOURS
+        - frame["hours_to_minimum"]
+    )
+    if (frame["recovery_time_from_trough"] < 0).any():
+        raise ValueError("A stored recovery completion precedes its fixed trough.")
+    frame["fixed_horizon_probability"] = [
+        fixed_horizon_recovery_indicator(
+            duration,
+            horizon_hours=48,
+            recovered=not bool(censored),
+        )
+        for duration, censored in zip(
+            frame["recovery_time_from_trough"],
+            frame["right_censored"],
+            strict=True,
+        )
+    ]
+    frame["restricted_mean_recovery_time"] = [
+        restricted_recovery_time(
+            duration,
+            restriction_hours=168,
+            recovered=not bool(censored),
+        )
+        for duration, censored in zip(
+            frame["recovery_time_from_trough"],
+            frame["right_censored"],
+            strict=True,
+        )
+    ]
+    return frame
+
+
+def _standardised_slope(x: np.ndarray, y: np.ndarray) -> float:
+    if np.std(x) == 0.0 or np.std(y) == 0.0:
+        return 0.0
+    standard_x = (x - np.mean(x)) / np.std(x)
+    standard_y = (y - np.mean(y)) / np.std(y)
+    return float(np.polyfit(standard_x, standard_y, 1)[0])
+
+
+def _sensitivity_summary(
+    panel: Mapping[str, Any],
+    points: Mapping[int, float],
+) -> dict[str, Any]:
+    names = (
+        "deterioration_adjustment",
+        "recovery_adjustment",
+        "confidence_floor",
+        "panic_response",
+    )
+    candidates = {
+        int(row["candidate_index"]): row["structural_vector"]
+        for row in panel["candidates"]
+    }
+    indices = [int(value) for value in panel["candidate_indices"]]
+    y = np.asarray([points[index] for index in indices], dtype=float)
+    correlations = {}
+    slopes = {}
+    for name in names:
+        x = np.asarray([candidates[index][name] for index in indices], dtype=float)
+        correlations[name] = float(
+            pd.Series(x).corr(pd.Series(y), method="spearman")
+        )
+        slopes[name] = _standardised_slope(x, y)
+    pairwise = []
+    for position in range(0, len(indices), 2):
+        left = indices[position]
+        right = indices[position + 1]
+        pairwise.append(
+            {
+                "pair_index": position // 2,
+                "left_candidate_index": left,
+                "right_candidate_index": right,
+                "moment_difference": float(points[right] - points[left]),
+                "parameter_differences": {
+                    name: float(candidates[right][name] - candidates[left][name])
+                    for name in names
+                },
+            }
+        )
+    absolute = {name: abs(value) for name, value in correlations.items()}
+    ordered = sorted(absolute, key=lambda name: (-absolute[name], name))
+    recovery_rank = ordered.index("recovery_adjustment") + 1
+    second_value = sorted(absolute.values(), reverse=True)[1]
+    clear_secondary = bool(
+        recovery_rank <= 2
+        or (
+            absolute["recovery_adjustment"] >= 0.35
+            and absolute["recovery_adjustment"] >= second_value - 0.02
+        )
+    )
+    variation = float(np.max(y) - np.min(y))
+    gate = bool(
+        variation > 0.0
+        and (
+            recovery_rank == 1
+            or clear_secondary
+        )
+    )
+    return {
+        "rank_correlations": correlations,
+        "standardised_univariate_slopes": slopes,
+        "local_pairwise_differences": pairwise,
+        "minimum": float(np.min(y)),
+        "maximum": float(np.max(y)),
+        "range": variation,
+        "strongest_absolute_rank_correlation": ordered[0],
+        "recovery_adjustment_rank": recovery_rank,
+        "clear_recovery_adjustment_secondary_relationship": clear_secondary,
+        "non_degenerate": variation > 0.0,
+        "sensitivity_gate_passed": gate,
+    }
+
+
+def recovery_precision_evidence(
+    ladder: pd.DataFrame,
+    catalogue: pd.DataFrame,
+    empirical: pd.DataFrame,
+) -> tuple[pd.DataFrame, dict[str, Any], pd.DataFrame]:
+    """Reuse stored all-event results for both replacement candidates."""
+    frame = _simulation_recovery_outcomes(ladder, catalogue)
+    panel = objective_blind_candidate_panel()
+    if panel["panel_checksum"] != (
+        "7ca9475da16b6e2a971d8adfe8bda6714c0841191e596e45d51bbcf2a26108f9"
+    ):
+        raise ValueError("The objective-blind candidate panel changed.")
+    scale_by_candidate = {
+        str(row.candidate_moment): float(row.selected_scale)
+        for row in empirical.loc[empirical["role"].eq("primary")].itertuples()
+    }
+    rows: list[dict[str, Any]] = []
+    summaries: dict[str, Any] = {}
+    sensitivity_rows = []
+    for candidate in (
+        "fixed_horizon_probability",
+        "restricted_mean_recovery_time",
+    ):
+        candidate_rows: dict[int, list[dict[str, Any]]] = defaultdict(list)
+        for candidate_index in panel["candidate_indices"]:
+            selected_candidate = frame.loc[
+                frame["candidate_index"].eq(candidate_index)
+            ]
+            for replication_count in LADDER_REPLICATIONS:
+                selected = selected_candidate.loc[
+                    selected_candidate["replication"].lt(replication_count)
+                ]
+                estimate = analytic_contrast_mcse(
+                    selected,
+                    outcome=candidate,
+                    stratifier="eth_recovery_24h",
+                )
+                candidate_rows[int(candidate_index)].append(
+                    {
+                        "candidate_moment": candidate,
+                        "candidate_index": int(candidate_index),
+                        "replication_count": replication_count,
+                        "point_contrast": estimate.point_estimate,
+                        "analytic_mcse": estimate.analytic_mcse,
+                        "replication_index_mcse": estimate.replication_index_mcse,
+                        "diagnostic_mcse": estimate.diagnostic_mcse,
+                        "relative_agreement_difference": estimate.relative_disagreement,
+                        "agreement_pass": estimate.agreement_pass,
+                        "empirical_scale": scale_by_candidate[candidate],
+                        "precision_threshold": 0.1 * scale_by_candidate[candidate],
+                        "precision_pass": bool(
+                            estimate.diagnostic_mcse
+                            <= 0.1 * scale_by_candidate[candidate]
+                        ),
+                    }
+                )
+        points = {
+            candidate_index: values[-1]["point_contrast"]
+            for candidate_index, values in candidate_rows.items()
+        }
+        sensitivity = _sensitivity_summary(panel, points)
+        sensitivity_json = json.dumps(
+            sensitivity, sort_keys=True, separators=(",", ":")
+        )
+        r256_requirements = []
+        convergence_classes = []
+        for candidate_index, values in candidate_rows.items():
+            slope, classification = convergence_slope(
+                LADDER_REPLICATIONS,
+                [row["diagnostic_mcse"] for row in values],
+            )
+            convergence_classes.append(classification)
+            requirement = projected_required_replications(
+                replication_count=256,
+                mcse=values[-1]["diagnostic_mcse"],
+                threshold=values[-1]["precision_threshold"],
+                convergence_classification=classification,
+            )
+            numeric_requirement = (
+                None if not isinstance(requirement, int) else requirement
+            )
+            if numeric_requirement is not None:
+                r256_requirements.append(numeric_requirement)
+            persistent_floor = bool(
+                values[-1]["diagnostic_mcse"]
+                >= 0.9 * values[-2]["diagnostic_mcse"]
+            )
+            for row in values:
+                row.update(
+                    convergence_slope=slope,
+                    convergence_classification=classification,
+                    projected_required_replications=requirement,
+                    persistent_variance_floor=persistent_floor,
+                    sensitivity_summary=sensitivity_json,
+                )
+                rows.append(row)
+        r256 = [
+            values[-1] for values in candidate_rows.values()
+        ]
+        requirements = np.asarray(r256_requirements, dtype=float)
+        gates = {
+            "agreement_at_least_15_of_16": sum(
+                row["agreement_pass"] for row in r256
+            )
+            >= 15,
+            "precision_at_least_12_of_16": sum(
+                row["precision_pass"] for row in r256
+            )
+            >= 12,
+            "regular_convergence_at_least_75pct": (
+                convergence_classes.count("regular_convergence") / PANEL_SIZE
+                >= 0.75
+            ),
+            "q90_requirement_at_most_512": bool(
+                len(requirements) == PANEL_SIZE
+                and np.quantile(requirements, 0.90) <= 512
+            ),
+            "no_persistent_variance_floor": not any(
+                row["persistent_variance_floor"]
+                for row in rows
+                if row["candidate_moment"] == candidate
+                and row["replication_count"] == 256
+            ),
+        }
+        summaries[candidate] = {
+            "empirical_scale": scale_by_candidate[candidate],
+            "precision_threshold": 0.1 * scale_by_candidate[candidate],
+            "agreement_pass_count_r256": int(
+                sum(row["agreement_pass"] for row in r256)
+            ),
+            "precision_pass_count_r256": int(
+                sum(row["precision_pass"] for row in r256)
+            ),
+            "regular_convergence_count": int(
+                convergence_classes.count("regular_convergence")
+            ),
+            "median_required_replications": (
+                None
+                if len(requirements) != PANEL_SIZE
+                else float(np.quantile(requirements, 0.50))
+            ),
+            "q90_required_replications": (
+                None
+                if len(requirements) != PANEL_SIZE
+                else float(np.quantile(requirements, 0.90))
+            ),
+            "precision_gates": gates,
+            "precision_gate_passed": bool(all(gates.values())),
+            "sensitivity": sensitivity,
+        }
+        for name, value in sensitivity["rank_correlations"].items():
+            sensitivity_rows.append(
+                {
+                    "candidate_moment": candidate,
+                    "parameter": name,
+                    "rank_correlation": value,
+                    "standardised_univariate_slope": sensitivity[
+                        "standardised_univariate_slopes"
+                    ][name],
+                    "sensitivity_gate_passed": sensitivity[
+                        "sensitivity_gate_passed"
+                    ],
+                }
+            )
+    result = pd.DataFrame(rows).sort_values(
+        ["candidate_moment", "candidate_index", "replication_count"],
+        kind="mergesort",
+    )
+    return result, summaries, pd.DataFrame(sensitivity_rows)
+
+
+def _old_recovery_failure_is_valid(evidence_dir: Path) -> dict[str, Any]:
+    decision = json.loads(
+        (evidence_dir / "monte_carlo_precision_decision.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    top16 = json.loads(
+        (evidence_dir / "sobol_search_top16.json").read_text(encoding="utf-8")
+    )
+    audit = json.loads(
+        (evidence_dir / "monte_carlo_estimator_audit.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    valid = bool(
+        decision["final_diagnosis_classification"]
+        == "recovery_moment_not_operationally_identifiable"
+        and not top16["candidates"]
+        and audit["existing_estimator_classification"]
+        == "correct_hierarchical_mcse"
+    )
+    if not valid:
+        raise ValueError("The fixed old recovery-moment failure did not reproduce.")
+    return {
+        "status": "passed",
+        "old_recovery_moment": "eth_recovery_q4_q1_duration_contrast",
+        "diagnosis": decision["final_diagnosis_classification"],
+        "top16_count": 0,
+        "stage2_estimate": None,
+    }
+
+
+def _recovery_replacement_decision(
+    empirical: pd.DataFrame,
+    precision_summary: Mapping[str, Any],
+) -> dict[str, Any]:
+    primary = empirical.loc[empirical["role"].eq("primary")].set_index(
+        "candidate_moment"
+    )
+    a_name = "fixed_horizon_probability"
+    b_name = "restricted_mean_recovery_time"
+    a_pass = bool(
+        primary.loc[a_name, "empirical_gate_passed"]
+        and precision_summary[a_name]["precision_gate_passed"]
+        and precision_summary[a_name]["sensitivity"]["sensitivity_gate_passed"]
+    )
+    b_pass = bool(
+        primary.loc[b_name, "empirical_gate_passed"]
+        and precision_summary[b_name]["precision_gate_passed"]
+        and precision_summary[b_name]["sensitivity"]["sensitivity_gate_passed"]
+    )
+    if a_pass:
+        status = "fixed_horizon_probability_replacement_accepted"
+        selected = a_name
+    elif b_pass:
+        status = "restricted_mean_replacement_accepted"
+        selected = b_name
+    else:
+        status = "conditional_recovery_moment_unsupported"
+        selected = None
+    authorised = (
+        "pre_register_new_search_identity"
+        if selected is not None
+        else "objective_simplification_and_identification_review"
+    )
+    return {
+        "schema_version": 1,
+        "status": status,
+        "selected_moment": selected,
+        "candidate_a_passed": a_pass,
+        "candidate_b_considered": not a_pass,
+        "candidate_b_passed": b_pass,
+        "candidate_a_empirical_gate_passed": bool(
+            primary.loc[a_name, "empirical_gate_passed"]
+        ),
+        "candidate_b_empirical_gate_passed": bool(
+            primary.loc[b_name, "empirical_gate_passed"]
+        ),
+        "candidate_a_precision_gate_passed": bool(
+            precision_summary[a_name]["precision_gate_passed"]
+        ),
+        "candidate_b_precision_gate_passed": bool(
+            precision_summary[b_name]["precision_gate_passed"]
+        ),
+        "candidate_a_sensitivity_gate_passed": bool(
+            precision_summary[a_name]["sensitivity"]["sensitivity_gate_passed"]
+        ),
+        "candidate_b_sensitivity_gate_passed": bool(
+            precision_summary[b_name]["sensitivity"]["sensitivity_gate_passed"]
+        ),
+        "old_moment_status": "rejected_operational_non_identification",
+        "canonical_smm_specification_changed": selected is not None,
+        "new_canonical_smm_specification_checksum": None,
+        "authorised_next_boundary": authorised,
+        "candidate_selected": False,
+        "stage2_estimate": None,
+        "runtime_adopted": False,
+    }
+
+
+def _register_recovery_evidence(paths: Sequence[Path]) -> None:
+    manifest = json.loads(CALIBRATION_MANIFEST.read_text(encoding="utf-8"))
+    records = {record["path"]: record for record in manifest["artefacts"]}
+    for path in paths:
+        relative = path.relative_to(REPOSITORY_ROOT).as_posix()
+        records[relative] = {
+            "path": relative,
+            "sha256": sha256_file(path),
+            "size_bytes": path.stat().st_size,
+            "semantic_name": path.stem,
+            "context": (
+                "Pre-registered recovery-moment simplification diagnosis; "
+                "no candidate fit, Stage 2 estimate or runtime adoption."
+            ),
+            "classification": "snapshot",
+            "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+            "schema": "Compact deterministic recovery-redesign evidence.",
+            "source_inputs": [
+                "data/provenance/calibration/confidence/event_catalogue.csv",
+                "data/provenance/calibration/confidence/monte_carlo_candidate_panel.json",
+                "data/provenance/calibration/confidence/monte_carlo_precision_decision.json",
+            ],
+        }
+    manifest["artefacts"] = [records[name] for name in sorted(records)]
+    _atomic_bytes(
+        CALIBRATION_MANIFEST,
+        (
+            json.dumps(manifest, indent=2, sort_keys=True, allow_nan=False)
+            + "\n"
+        ).encode("utf-8"),
+    )
+
+
+def run_recovery_moment_redesign(
+    *,
+    action: str = "summarise",
+    run_dir: Path | None = None,
+    evidence_dir: Path = CONFIDENCE_EVIDENCE,
+    diagnostics_dir: Path = DEFAULT_RECOVERY_REDESIGN_ROOT,
+    register_manifest: bool = True,
+) -> dict[str, Any]:
+    """Run or validate the local checkpoint-only recovery redesign."""
+    supported = {
+        "validate-old-failure",
+        "construct-empirical-evidence",
+        "calculate-precision",
+        "resume",
+        "apply-hierarchy",
+        "validate-specification",
+        "summarise",
+    }
+    if action not in supported:
+        raise ValueError(f"Unsupported recovery-redesign action: {action}.")
+    evidence_dir = Path(evidence_dir)
+    if action == "validate-old-failure":
+        return _old_recovery_failure_is_valid(evidence_dir)
+    if action == "validate-specification":
+        return validate_recovery_moment_redesign(evidence_dir=evidence_dir)
+    old = _old_recovery_failure_is_valid(evidence_dir)
+    catalogue = pd.read_csv(evidence_dir / "event_catalogue.csv")
+    empirical, bootstraps, influence = recovery_empirical_evidence(catalogue)
+    if action == "construct-empirical-evidence":
+        return {
+            "status": "passed",
+            "rows": len(empirical),
+            "primary_gate_results": {
+                str(row.candidate_moment): bool(row.empirical_gate_passed)
+                for row in empirical.loc[empirical["role"].eq("primary")].itertuples()
+            },
+        }
+    source_run = Path(run_dir) if run_dir is not None else diagnostic_directory()
+    ladder = _load_ladder_frame(source_run)
+    precision, precision_summary, sensitivity = recovery_precision_evidence(
+        ladder, catalogue, empirical
+    )
+    if action == "calculate-precision":
+        return {
+            "status": "passed",
+            "rows": len(precision),
+            "summary": precision_summary,
+        }
+    decision = _recovery_replacement_decision(empirical, precision_summary)
+    if action == "apply-hierarchy":
+        return decision
+    if decision["canonical_smm_specification_changed"]:
+        raise NotImplementedError(
+            "Canonical replacement is not implemented because the fixed "
+            "empirical hierarchy did not authorise it."
+        )
+    diagnostics_dir = Path(diagnostics_dir)
+    diagnostics_dir.mkdir(parents=True, exist_ok=True)
+    _atomic_csv(diagnostics_dir / "empirical_bootstrap_draws.csv", bootstraps)
+    _atomic_csv(diagnostics_dir / "event_influence.csv", influence)
+    _atomic_csv(diagnostics_dir / "parameter_sensitivity.csv", sensitivity)
+    _atomic_csv(diagnostics_dir / "mcse_ladder.csv", precision)
+    specification = {
+        "schema_version": 1,
+        "failed_old_moment": "eth_recovery_q4_q1_duration_contrast",
+        "old_failure": old,
+        "candidate_hierarchy": [
+            "fixed_horizon_probability",
+            "restricted_mean_recovery_time",
+            "conditional_recovery_moment_unsupported",
+        ],
+        "estimands": {
+            "fixed_horizon_probability": {
+                "primary_horizon_hours": 48,
+                "diagnostic_horizons_hours": [72, 168],
+                "event_outcome": "1(T <= horizon); structural non-recovery is zero",
+                "units": "probability difference",
+                "rationale": [
+                    "24 hours establish the stable recovery run",
+                    "24 further hours permit price return and gate opening",
+                    "near the centre of the observed calibration recovery distribution",
+                    "fixed before simulation-fit comparison",
+                ],
+            },
+            "restricted_mean_recovery_time": {
+                "primary_restriction_hours": 168,
+                "diagnostic_restrictions_hours": [72, 336],
+                "event_outcome": "min(T, restriction); structural non-recovery equals restriction",
+                "units": "hours",
+                "rationale": [
+                    "one-week economic horizon",
+                    "includes the 24-hour stability requirement",
+                    "captures economically meaningful delayed recovery",
+                    "well below the structurally uninformative 792-hour horizon",
+                ],
+            },
+        },
+        "fixed_event_count": 74,
+        "fixed_quartile_membership": "observed eth_recovery_24h Q1 and Q4",
+        "bootstrap": {
+            "method": "fixed-stratum event resampling with replacement",
+            "replications": RECOVERY_BOOTSTRAP_REPLICATIONS,
+            "seed": RECOVERY_BOOTSTRAP_SEED,
+            "quartiles_reassigned": False,
+        },
+        "scale_hierarchy": [
+            "event_block_bootstrap_standard_deviation",
+            "bootstrap_iqr_divided_by_1_349",
+            "consistent_bootstrap_mad",
+        ],
+        "precision_gates": {
+            "agreement_tolerance": AGREEMENT_TOLERANCE,
+            "agreement_required": "15 of 16 at R=256",
+            "fixed_mcse_threshold": "0.10 * empirical scale",
+            "fixed_mcse_pass_required": "12 of 16 at R=256",
+            "regular_convergence_required": "75 percent",
+            "q90_projected_requirement_maximum": 512,
+            "persistent_variance_floor_allowed": False,
+        },
+        "sensitivity_gate": (
+            "non-degenerate panel variation and strongest absolute rank "
+            "correlation with recovery_adjustment or clear secondary relationship"
+        ),
+        "objective_values_used": False,
+        "final_validation_data_used": False,
+        "runtime_adopted": False,
+    }
+    paths_payload: dict[str, Any] = {
+        "recovery_moment_redesign_specification.json": specification,
+        "recovery_moment_decision.json": decision,
+    }
+    for name, payload in paths_payload.items():
+        _atomic_json(evidence_dir / name, payload)
+    _atomic_csv(evidence_dir / "recovery_moment_empirical_evidence.csv", empirical)
+    _atomic_csv(evidence_dir / "recovery_moment_precision_evidence.csv", precision)
+    first_four = [
+        evidence_dir / name
+        for name in RECOVERY_REDESIGN_EVIDENCE_NAMES
+        if name != "recovery_moment_reproducibility.json"
+    ]
+    context_path = source_run / "run_context.json"
+    history_path = source_run / "ladder_history.json"
+    reproducibility = {
+        "schema_version": 1,
+        "reused_checkpoint_identity": {
+            "diagnosis_id": source_run.name,
+            "run_context_sha256": sha256_file(context_path),
+            "history_sha256": sha256_file(history_path),
+            "ladder_row_count": len(ladder),
+            "candidate_count": int(ladder["candidate_index"].nunique()),
+            "event_count": int(ladder["event_id"].nunique()),
+            "replication_count": int(ladder["replication"].nunique()),
+            "registry_id": REGISTRY_A,
+        },
+        "regenerated_simulation_count": 0,
+        "derived_metric_count": int(len(ladder) * 2),
+        "panel_checksum": objective_blind_candidate_panel()["panel_checksum"],
+        "deterministic_evidence_checksums": {
+            path.name: sha256_file(path) for path in first_four
+        },
+        "objective_values_used": False,
+        "final_validation_data_used": False,
+        "registry_b_used": False,
+        "powell_evaluations": 0,
+        "full_search_evaluations": 0,
+        "candidate_selected": False,
+        "runtime_adopted": False,
+    }
+    _atomic_json(
+        evidence_dir / "recovery_moment_reproducibility.json",
+        reproducibility,
+    )
+    tracked = [evidence_dir / name for name in RECOVERY_REDESIGN_EVIDENCE_NAMES]
+    if register_manifest:
+        _register_recovery_evidence(tracked)
+    return {
+        "status": decision["status"],
+        "decision": decision,
+        "empirical_rows": len(empirical),
+        "precision_rows": len(precision),
+        "precision_summary": precision_summary,
+        "tracked_evidence": [
+            path.relative_to(REPOSITORY_ROOT).as_posix() for path in tracked
+        ],
+        "simulation_evaluations": 0,
+        "candidate_selected": False,
+        "runtime_adopted": False,
+    }
+
+
+def validate_recovery_moment_redesign(
+    *,
+    evidence_dir: Path = CONFIDENCE_EVIDENCE,
+) -> dict[str, Any]:
+    """Validate tracked unsupported-redesign evidence and protected boundaries."""
+    evidence_dir = Path(evidence_dir)
+    manifest = {
+        record["path"]: record
+        for record in json.loads(CALIBRATION_MANIFEST.read_text())["artefacts"]
+    }
+    invalid = []
+    for name in RECOVERY_REDESIGN_EVIDENCE_NAMES:
+        path = evidence_dir / name
+        relative = path.relative_to(REPOSITORY_ROOT).as_posix()
+        if (
+            not path.is_file()
+            or relative not in manifest
+            or manifest[relative]["sha256"] != sha256_file(path)
+        ):
+            invalid.append(relative)
+    if invalid:
+        raise ValueError(f"Invalid recovery-redesign evidence: {invalid}.")
+    decision = json.loads(
+        (evidence_dir / "recovery_moment_decision.json").read_text()
+    )
+    empirical = pd.read_csv(
+        evidence_dir / "recovery_moment_empirical_evidence.csv"
+    )
+    precision = pd.read_csv(
+        evidence_dir / "recovery_moment_precision_evidence.csv"
+    )
+    specification = json.loads(
+        (evidence_dir / "simulated_moments_specification.json").read_text()
+    )
+    if decision["status"] != "conditional_recovery_moment_unsupported":
+        raise ValueError("Unexpected accepted recovery replacement.")
+    if specification["schema_version"] != 1:
+        raise ValueError("The unsupported redesign changed the canonical schema.")
+    return {
+        "status": "passed",
+        "decision": decision["status"],
+        "tracked_evidence_count": len(RECOVERY_REDESIGN_EVIDENCE_NAMES),
+        "empirical_rows": len(empirical),
+        "precision_rows": len(precision),
+        "canonical_specification_changed": False,
+        "candidate_selected": False,
+        "runtime_adopted": False,
+    }
 
 
 def validate_completed_diagnosis(

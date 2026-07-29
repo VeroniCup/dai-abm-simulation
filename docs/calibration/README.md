@@ -35,6 +35,10 @@ Active calibration guidance is organised by evidence and decision:
   hierarchical MCSE audit, objective-blind replication ladder and
   recovery-censoring continuation. The recovery moment is not operationally
   identifiable under the registered design; no candidate is selected.
+- [Confidence recovery-moment redesign](confidence_recovery_moment.md) —
+  fixed 48-hour probability and 168-hour restricted-mean alternatives,
+  checkpoint-only precision evidence and the unsupported conditional-channel
+  decision. No replacement, search or runtime adoption follows.
 - [Representative vaults](vaults.md)
 - [Liquidations](liquidations.md)
 - [Protocol parameters](protocol.md)

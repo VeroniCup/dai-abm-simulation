@@ -161,3 +161,9 @@ remain above 2,048 replications. Only three of 15,603 primary-horizon censored
 runs recover under extension to 1,584 or 2,376 hours. The recovery moment is
 therefore classified as not operationally identifiable under the registered
 design. The top-16 population remains empty and no candidate is selected.
+
+The later [recovery-moment redesign](confidence_recovery_moment.md) reuses the
+all-event checkpoints without objective values or new simulations. It
+classifies both bounded replacements as unsupported. This historical search
+therefore remains audit evidence under its original moment schema and does not
+authorise a new search.

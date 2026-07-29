@@ -195,6 +195,16 @@ recovery moment is therefore **not operationally identifiable** under the
 fixed design. No candidate is selected; a future pass must pre-register any
 simplification or replacement before rerunning a search.
 
+The pre-registered
+[recovery-moment redesign](docs/calibration/confidence_recovery_moment.md)
+tests a 48-hour recovery-probability contrast and a 168-hour restricted-mean
+contrast using the fixed 74-event quartiles and objective-blind 16-candidate
+ladder. Candidate A fails its empirical support gate; Candidate B fails its
+empirical support and simulation-precision gates. The result is
+**conditional recovery moment unsupported**. The canonical SMM evidence is
+unchanged, no candidate is selected and no new search is authorised. The next
+boundary is an objective-simplification and identification review.
+
 The dormant [conditional event simulation](docs/calibration/confidence_event_simulation.md)
 is also implemented. It uses a standardised 500-vault, 2.5 million DAI
 ETH-core state, observed ETH paths, registered Stage 1 residual blocks and

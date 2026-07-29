@@ -98,6 +98,11 @@ data/provenance/calibration/confidence/*
 !data/provenance/calibration/confidence/recovery_censoring_diagnosis.json
 !data/provenance/calibration/confidence/monte_carlo_precision_decision.json
 !data/provenance/calibration/confidence/monte_carlo_precision_benchmark.json
+!data/provenance/calibration/confidence/recovery_moment_redesign_specification.json
+!data/provenance/calibration/confidence/recovery_moment_empirical_evidence.csv
+!data/provenance/calibration/confidence/recovery_moment_precision_evidence.csv
+!data/provenance/calibration/confidence/recovery_moment_decision.json
+!data/provenance/calibration/confidence/recovery_moment_reproducibility.json
 
 # Domain-owned provenance. Detailed operational records stay ignored; selected
 # durable entry points remain tracked.

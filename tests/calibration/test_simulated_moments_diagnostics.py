@@ -31,6 +31,8 @@ from dai_sim.calibration.simulated_moments_diagnostics import (
     paired_difference_precision,
     projected_required_replications,
     quartile_event_sets,
+    recovery_empirical_evidence,
+    _recovery_replacement_decision,
 )
 
 
@@ -355,6 +357,72 @@ def test_precision_evidence_manifest_checksums_are_exact() -> None:
     for name in names:
         path = root / name
         assert hashlib.sha256(path.read_bytes()).hexdigest() == records[name]["sha256"]
+
+
+def test_recovery_empirical_evidence_uses_fixed_stratified_bootstrap() -> None:
+    catalogue = pd.read_csv(
+        "data/provenance/calibration/confidence/event_catalogue.csv"
+    )
+    evidence, first, influence = recovery_empirical_evidence(catalogue)
+    repeated, second, _ = recovery_empirical_evidence(catalogue)
+    pd.testing.assert_frame_equal(evidence, repeated)
+    pd.testing.assert_frame_equal(first, second)
+    primary = evidence.loc[evidence["role"].eq("primary")].set_index(
+        "candidate_moment"
+    )
+    assert set(primary.index) == {
+        "fixed_horizon_probability",
+        "restricted_mean_recovery_time",
+    }
+    assert (primary["q1_event_count"] == 19).all()
+    assert (primary["q4_event_count"] == 19).all()
+    assert not primary["empirical_gate_passed"].any()
+    assert len(first) == 6 * 2_000
+    assert influence["event_id"].nunique() <= 38
+
+
+@pytest.mark.parametrize(
+    ("a_empirical", "a_precision", "b_empirical", "b_precision", "expected"),
+    [
+        (True, True, True, True, "fixed_horizon_probability_replacement_accepted"),
+        (False, True, True, True, "restricted_mean_replacement_accepted"),
+        (False, True, False, True, "conditional_recovery_moment_unsupported"),
+    ],
+)
+def test_recovery_replacement_hierarchy_is_fixed(
+    a_empirical,
+    a_precision,
+    b_empirical,
+    b_precision,
+    expected,
+) -> None:
+    empirical = pd.DataFrame(
+        [
+            {
+                "candidate_moment": "fixed_horizon_probability",
+                "role": "primary",
+                "empirical_gate_passed": a_empirical,
+            },
+            {
+                "candidate_moment": "restricted_mean_recovery_time",
+                "role": "primary",
+                "empirical_gate_passed": b_empirical,
+            },
+        ]
+    )
+    summary = {
+        "fixed_horizon_probability": {
+            "precision_gate_passed": a_precision,
+            "sensitivity": {"sensitivity_gate_passed": True},
+        },
+        "restricted_mean_recovery_time": {
+            "precision_gate_passed": b_precision,
+            "sensitivity": {"sensitivity_gate_passed": True},
+        },
+    }
+    result = _recovery_replacement_decision(empirical, summary)
+    assert result["status"] == expected
+    assert not result["candidate_selected"]
 
 
 def test_paired_evidence_neither_ranks_nor_replaces_absolute_gate() -> None:

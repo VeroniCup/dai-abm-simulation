@@ -308,6 +308,81 @@
     },
     {
       "classification": "snapshot",
+      "context": "Pre-registered recovery-moment simplification diagnosis; no candidate fit, Stage 2 estimate or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/recovery_moment_decision.json",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic recovery-redesign evidence.",
+      "semantic_name": "recovery_moment_decision",
+      "sha256": "9d58d6e77664f7fcb33d9dbb1d23250a938bbda72871fbdbcd9fb374f85de53a",
+      "size_bytes": 740,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/event_catalogue.csv",
+        "data/provenance/calibration/confidence/monte_carlo_candidate_panel.json",
+        "data/provenance/calibration/confidence/monte_carlo_precision_decision.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Pre-registered recovery-moment simplification diagnosis; no candidate fit, Stage 2 estimate or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/recovery_moment_empirical_evidence.csv",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic recovery-redesign evidence.",
+      "semantic_name": "recovery_moment_empirical_evidence",
+      "sha256": "0890fe8475c6dbb40d0862724e32a0d07ea7f56ae8dc497959a2bd858e322da8",
+      "size_bytes": 4624,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/event_catalogue.csv",
+        "data/provenance/calibration/confidence/monte_carlo_candidate_panel.json",
+        "data/provenance/calibration/confidence/monte_carlo_precision_decision.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Pre-registered recovery-moment simplification diagnosis; no candidate fit, Stage 2 estimate or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/recovery_moment_precision_evidence.csv",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic recovery-redesign evidence.",
+      "semantic_name": "recovery_moment_precision_evidence",
+      "sha256": "1083d654f6d43c12eef246346e9aa245bf8744b1e0855f47f0199e268f834fba",
+      "size_bytes": 451876,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/event_catalogue.csv",
+        "data/provenance/calibration/confidence/monte_carlo_candidate_panel.json",
+        "data/provenance/calibration/confidence/monte_carlo_precision_decision.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Pre-registered recovery-moment simplification diagnosis; no candidate fit, Stage 2 estimate or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/recovery_moment_redesign_specification.json",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic recovery-redesign evidence.",
+      "semantic_name": "recovery_moment_redesign_specification",
+      "sha256": "c91b3123ba084c463983eb18377c63bbf1995ce07a55c34b1f8d4d078b00a702",
+      "size_bytes": 2135,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/event_catalogue.csv",
+        "data/provenance/calibration/confidence/monte_carlo_candidate_panel.json",
+        "data/provenance/calibration/confidence/monte_carlo_precision_decision.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Pre-registered recovery-moment simplification diagnosis; no candidate fit, Stage 2 estimate or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/recovery_moment_reproducibility.json",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic recovery-redesign evidence.",
+      "semantic_name": "recovery_moment_reproducibility",
+      "sha256": "cd3c21b5b3be2a658d039a4fcaa669b89e6626c5feb46d385288f48ac42ba36c",
+      "size_bytes": 1239,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/event_catalogue.csv",
+        "data/provenance/calibration/confidence/monte_carlo_candidate_panel.json",
+        "data/provenance/calibration/confidence/monte_carlo_precision_decision.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
       "context": "Seeds are derived rather than enumerated; no process-randomised hash or global RNG is used.",
       "path": "data/provenance/calibration/confidence/seed_registry.json",
       "producer": "dai_sim.calibration.simulated_moments",

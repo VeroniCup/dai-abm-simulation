@@ -21,7 +21,10 @@ from dai_sim.calibration.simulated_moments import (
     boundary_model_descriptions,
     build_event_catalogue,
     derive_seed,
+    fixed_horizon_recovery_indicator,
+    fixed_strata_q4_q1_contrast,
     moment_objective,
+    restricted_recovery_time,
     select_search_events,
     sobol_candidates,
     structural_to_transformed,
@@ -37,6 +40,40 @@ def _hourly(prices: list[float]) -> pd.DataFrame:
         },
         index=pd.date_range("2020-01-01", periods=len(prices), freq="h", tz="UTC"),
     )
+
+
+def test_fixed_horizon_recovery_represents_non_recovery_without_sentinel() -> None:
+    assert fixed_horizon_recovery_indicator(47, horizon_hours=48) == 1.0
+    assert fixed_horizon_recovery_indicator(48, horizon_hours=48) == 1.0
+    assert fixed_horizon_recovery_indicator(49, horizon_hours=48) == 0.0
+    assert (
+        fixed_horizon_recovery_indicator(
+            None, horizon_hours=48, recovered=False
+        )
+        == 0.0
+    )
+
+
+def test_restricted_recovery_time_caps_and_owns_non_recovery() -> None:
+    assert restricted_recovery_time(48, restriction_hours=168) == 48.0
+    assert restricted_recovery_time(200, restriction_hours=168) == 168.0
+    assert (
+        restricted_recovery_time(None, restriction_hours=168, recovered=False)
+        == 168.0
+    )
+
+
+def test_fixed_strata_contrast_never_reassigns_quartiles() -> None:
+    frame = pd.DataFrame(
+        {"event_id": ["q1a", "q1b", "mid", "q4a", "q4b"], "outcome": [0, 0, 99, 1, 1]}
+    )
+    contrast, q1, q4 = fixed_strata_q4_q1_contrast(
+        frame,
+        outcome="outcome",
+        q1_event_ids=("q1a", "q1b"),
+        q4_event_ids=("q4a", "q4b"),
+    )
+    assert (contrast, q1, q4) == (1.0, 0.0, 1.0)
 
 
 def test_event_start_completion_first_return_and_identifier_are_semantic() -> None:

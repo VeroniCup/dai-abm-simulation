@@ -26,6 +26,7 @@ def test_help_does_not_require_the_ignored_panel() -> None:
     assert "event-simulation" in result.stdout
     assert "smm-search" in result.stdout
     assert "smm-precision" in result.stdout
+    assert "recovery-redesign" in result.stdout
 
 
 def test_confidence_operation_requires_explicit_input(monkeypatch) -> None:
@@ -322,3 +323,48 @@ def test_precision_workflow_rejects_optimisation_and_validation_flags(
     parser = market_gas_protocol.build_parser()
     with pytest.raises(SystemExit):
         parser.parse_args(["smm-precision", unsupported])
+
+
+def test_recovery_redesign_forwards_only_local_checkpoint_controls(
+    monkeypatch, tmp_path
+) -> None:
+    observed = {}
+    monkeypatch.setattr(
+        market_gas_protocol,
+        "run_recovery_moment_redesign",
+        lambda **kwargs: observed.update(kwargs)
+        or {"status": "conditional_recovery_moment_unsupported"},
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "market_gas_protocol.py",
+            "recovery-redesign",
+            "--recovery-action",
+            "resume",
+            "--precision-root",
+            str(tmp_path / "checkpoints"),
+            "--evidence-dir",
+            str(tmp_path / "evidence"),
+            "--recovery-diagnostics-dir",
+            str(tmp_path / "diagnostics"),
+        ],
+    )
+    assert market_gas_protocol.main() == 0
+    assert observed["action"] == "resume"
+    assert observed["run_dir"] == (tmp_path / "checkpoints").resolve()
+    assert observed["diagnostics_dir"] == (tmp_path / "diagnostics").resolve()
+    assert not observed["register_manifest"]
+
+
+@pytest.mark.parametrize(
+    "unsupported",
+    ["--powell", "--registry-b", "--final-validation", "--optimise", "--search-action"],
+)
+def test_recovery_redesign_rejects_search_and_optimisation_operations(
+    unsupported,
+) -> None:
+    parser = market_gas_protocol.build_parser()
+    with pytest.raises(SystemExit):
+        parser.parse_args(["recovery-redesign", unsupported])

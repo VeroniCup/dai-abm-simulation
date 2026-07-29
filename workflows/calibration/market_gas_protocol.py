@@ -51,6 +51,7 @@ from dai_sim.calibration.simulated_moments_diagnostics import (
     prepare_diagnostic_cache,
     run_extended_horizon_diagnosis,
     run_replication_ladder,
+    run_recovery_moment_redesign,
     summarise_precision_diagnosis,
     validate_completed_diagnosis,
     validate_diagnostic_cache,
@@ -75,6 +76,7 @@ def build_parser() -> argparse.ArgumentParser:
             "event-simulation",
             "smm-search",
             "smm-precision",
+            "recovery-redesign",
         ),
         default="phase2a",
     )
@@ -188,6 +190,28 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         help="Ignored root containing resumable precision-diagnosis state.",
     )
+    parser.add_argument(
+        "--recovery-action",
+        choices=(
+            "validate-old-failure",
+            "construct-empirical-evidence",
+            "calculate-precision",
+            "resume",
+            "apply-hierarchy",
+            "validate-specification",
+            "summarise",
+        ),
+        default="validate-specification",
+        help=(
+            "Local checkpoint-only recovery-moment redesign; never searches, "
+            "ranks candidates, optimises parameters or adopts runtime values."
+        ),
+    )
+    parser.add_argument(
+        "--recovery-diagnostics-dir",
+        type=Path,
+        help="Ignored output directory for recovery-redesign diagnostics.",
+    )
     return parser
 
 
@@ -195,6 +219,23 @@ def main() -> int:
     """Execute once and print only compact provenance, never input rows."""
     parser = build_parser()
     args = parser.parse_args()
+    if args.operation == "recovery-redesign":
+        keyword_arguments = {
+            "action": args.recovery_action,
+            "evidence_dir": args.evidence_dir.resolve(),
+            "register_manifest": (
+                args.evidence_dir.resolve() == CONFIDENCE_EVIDENCE.resolve()
+            ),
+        }
+        if args.precision_root is not None:
+            keyword_arguments["run_dir"] = args.precision_root.resolve()
+        if args.recovery_diagnostics_dir is not None:
+            keyword_arguments["diagnostics_dir"] = (
+                args.recovery_diagnostics_dir.resolve()
+            )
+        result = run_recovery_moment_redesign(**keyword_arguments)
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return 0
     if args.operation == "smm-precision":
         run_dir = (
             args.precision_root.resolve()

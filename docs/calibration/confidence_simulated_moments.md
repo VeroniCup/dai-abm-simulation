@@ -47,6 +47,13 @@ predominantly structural non-recovery, and classifies the registered recovery
 moment as not operationally identifiable. Any simplification or replacement
 requires a separate pre-registration; no candidate is selected here.
 
+That pre-registered
+[recovery-moment redesign](confidence_recovery_moment.md) has now rejected
+both bounded alternatives under their fixed gates. Because no replacement is
+accepted, the canonical eight-moment evidence remains unchanged and must not
+be used to initiate another search. The next task is an explicit objective
+simplification and identification review.
+
 ## 2. Why the predictive route is closed
 
 The binary persistence design has no positive outcome. The continuous

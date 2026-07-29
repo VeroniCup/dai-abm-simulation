@@ -13,6 +13,11 @@ the same deterministic paths to diagnose censoring only. Its first 792 hours
 match this simulator exactly; no future observed DAI data, final-validation
 event or runtime integration is introduced.
 
+The subsequent [recovery-moment redesign](confidence_recovery_moment.md)
+derives bounded outcomes from the stored completion positions and fixed
+observed trough anchors. It does not change trajectories, stopping rules or
+recovery gates, and it accepts no replacement.
+
 This implementation validates interfaces and computational feasibility. The
 separate [Sobol-search execution layer](confidence_sobol_search.md) reuses this
 mechanism and its exact event metrics to rank the fixed candidate design. The
