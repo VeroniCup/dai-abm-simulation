@@ -24,6 +24,9 @@ Active calibration guidance is organised by evidence and decision:
   deterministic search infrastructure, identification and blocked validation.
   Stage 1 is accepted for future SMM; Stage 2 remains unfitted and no
   behavioural mechanism is runtime adopted.
+- [Conditional confidence event simulation](confidence_event_simulation.md)
+  — dormant standardised state, observed-ETH paths, recovery gates, interface
+  probes and bounded workload evidence; no Stage 2 fit or runtime integration.
 - [Representative vaults](vaults.md)
 - [Liquidations](liquidations.md)
 - [Protocol parameters](protocol.md)

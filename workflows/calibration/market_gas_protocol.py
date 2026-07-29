@@ -16,6 +16,7 @@ REPOSITORY_ROOT = runpy.run_path(str(_WORKFLOW_BOOTSTRAP))["bootstrap_runtime"](
 from dai_sim.calibration.market import (
     CONFIDENCE_DIAGNOSTICS,
     CONFIDENCE_EVIDENCE,
+    CONFIDENCE_PANEL,
     DEFAULT_FIGURES,
     DEFAULT_OUTPUT,
     DEFAULT_REPORT,
@@ -23,6 +24,11 @@ from dai_sim.calibration.market import (
     Phase2AConfig,
     run_confidence_calibration_infrastructure,
     run_phase2a,
+)
+from dai_sim.calibration.event_simulation import (
+    DEFAULT_EVENT_DIAGNOSTICS,
+    PROBE_INDICES,
+    run_event_simulation_evidence,
 )
 
 
@@ -38,7 +44,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "operation",
         nargs="?",
-        choices=("phase2a", "confidence-infrastructure"),
+        choices=("phase2a", "confidence-infrastructure", "event-simulation"),
         default="phase2a",
     )
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
@@ -62,11 +68,38 @@ def build_parser() -> argparse.ArgumentParser:
         default=CONFIDENCE_EVIDENCE,
     )
     parser.add_argument(
+        "--source-evidence-dir",
+        type=Path,
+        default=CONFIDENCE_EVIDENCE,
+        help="Registered accepted Stage 1 and residual evidence.",
+    )
+    parser.add_argument(
         "--diagnostics-dir",
         type=Path,
         default=CONFIDENCE_DIAGNOSTICS,
     )
     parser.add_argument("--validation-only", action="store_true")
+    parser.add_argument(
+        "--event-action",
+        choices=("validate", "initial-state", "gates", "smoke", "benchmark", "all"),
+        default="all",
+        help="Bounded dormant event-simulation operation; never an optimiser.",
+    )
+    parser.add_argument(
+        "--registry-id",
+        default="confidence-smm-registry-a",
+        help="Deterministic seed-registry root for event-simulation operations.",
+    )
+    parser.add_argument(
+        "--probe-indices",
+        default="0,127,255",
+        help="Exact comma-separated interface probes; only 0,127,255 are accepted.",
+    )
+    parser.add_argument(
+        "--event-diagnostics-dir",
+        type=Path,
+        default=DEFAULT_EVENT_DIAGNOSTICS,
+    )
     return parser
 
 
@@ -74,6 +107,32 @@ def main() -> int:
     """Execute once and print only compact provenance, never input rows."""
     parser = build_parser()
     args = parser.parse_args()
+    if args.operation == "event-simulation":
+        try:
+            probe_indices = tuple(
+                int(value.strip())
+                for value in args.probe_indices.split(",")
+                if value.strip()
+            )
+        except ValueError:
+            parser.error("--probe-indices must contain comma-separated integers")
+        if probe_indices != PROBE_INDICES:
+            parser.error("--probe-indices must be exactly 0,127,255")
+        action = "validate" if args.validation_only else args.event_action
+        result = run_event_simulation_evidence(
+            panel_path=(args.input or CONFIDENCE_PANEL).resolve(),
+            source_evidence_dir=args.source_evidence_dir.resolve(),
+            evidence_dir=args.evidence_dir.resolve(),
+            diagnostics_dir=args.event_diagnostics_dir.resolve(),
+            registry_id=args.registry_id,
+            probe_indices=probe_indices,
+            action=action,
+            register_manifest=(
+                args.evidence_dir.resolve() == CONFIDENCE_EVIDENCE.resolve()
+            ),
+        )
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return 0
     if args.operation == "confidence-infrastructure":
         if args.input is None:
             parser.error(

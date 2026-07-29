@@ -30,6 +30,71 @@ from .statistics import (
 )
 
 
+CONDITIONAL_EVENT_EVIDENCE_FILES = (
+    "conditional_event_specification.json",
+    "conditional_initial_state.json",
+    "recovery_gate_specification.json",
+    "event_simulation_smoke.json",
+    "event_simulation_benchmark.json",
+)
+
+
+def validate_conditional_event_evidence(
+    evidence_dir: Path,
+    manifest_path: Path,
+) -> dict[str, Any]:
+    """Validate compact dormant-event evidence and its manifest ownership."""
+    manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+    records = {record["path"]: record for record in manifest["artefacts"]}
+    checked: list[dict[str, Any]] = []
+    payloads: dict[str, dict[str, Any]] = {}
+    for name in CONDITIONAL_EVENT_EVIDENCE_FILES:
+        path = (Path(evidence_dir) / name).resolve()
+        payloads[name] = json.loads(path.read_text(encoding="utf-8"))
+        relative = path.relative_to(PROJECT_ROOT).as_posix()
+        if relative not in records:
+            raise ValueError(f"Conditional event evidence is not registered: {relative}.")
+        digest = sha256_file(path)
+        if digest != records[relative]["sha256"]:
+            raise ValueError(f"Conditional event evidence checksum differs: {relative}.")
+        checked.append(
+            {"path": relative, "sha256": digest, "size_bytes": path.stat().st_size}
+        )
+    specification = payloads["conditional_event_specification.json"]
+    initial = payloads["conditional_initial_state.json"]
+    gates = payloads["recovery_gate_specification.json"]
+    smoke = payloads["event_simulation_smoke.json"]
+    benchmark = payloads["event_simulation_benchmark.json"]
+    if any(
+        payload.get("runtime_adopted")
+        for payload in (specification, initial, gates, smoke, benchmark)
+    ):
+        raise ValueError("Dormant event evidence cannot be runtime adopted.")
+    if specification.get("stage2_parameter_defaults") is not None:
+        raise ValueError("Conditional specification contains Stage 2 defaults.")
+    if smoke.get("stage2_fit_performed") or smoke.get("candidate_ranking_performed"):
+        raise ValueError("Smoke evidence must not fit or rank Stage 2 probes.")
+    if smoke.get("final_validation_event_simulated"):
+        raise ValueError("Final validation must remain unsimulated.")
+    if smoke.get("full_trajectories_tracked"):
+        raise ValueError("Compact evidence must not contain trajectories.")
+    if benchmark.get("extrapolated_workloads_executed"):
+        raise ValueError("Extrapolated benchmark workloads must remain unexecuted.")
+    text = "\n".join(
+        (Path(evidence_dir) / name).read_text(encoding="utf-8")
+        for name in CONDITIONAL_EVENT_EVIDENCE_FILES
+    )
+    if "/Users/" in text:
+        raise ValueError("Compact event evidence contains an absolute local path.")
+    return {
+        "status": "passed",
+        "checked": checked,
+        "runtime_adopted": False,
+        "stage2_fit_performed": False,
+        "final_validation_event_simulated": False,
+    }
+
+
 PHASE2A_DIR = (
     PROJECT_ROOT / "outputs/diagnostics/calibration/market_gas_protocol"
 )

@@ -1,0 +1,59 @@
+{
+  "benchmark_workload": {
+    "event_replication_runs": 8,
+    "events": 4,
+    "probe_id": "sobol_127",
+    "registry_id": "confidence-smm-registry-a",
+    "replications": 2
+  },
+  "environment": {
+    "platform": "macOS-15.7.7-arm64-arm-64bit-Mach-O",
+    "processor": "arm",
+    "python": "3.13.9"
+  },
+  "extrapolated_workloads_executed": false,
+  "implementation_optimisations_if_needed": [
+    "event-level parallelism",
+    "cached deterministic initial states",
+    "cached ETH paths",
+    "cached residual blocks",
+    "vectorised metric calculation"
+  ],
+  "linear_extrapolations": [
+    {
+      "event_replication_runs": 262144,
+      "executed": false,
+      "linear_seconds": 394317.231423378,
+      "workload": "sobol_search"
+    },
+    {
+      "event_replication_runs": 37888,
+      "executed": false,
+      "linear_seconds": 56991.1623541601,
+      "workload": "bounded_candidate_follow_up"
+    },
+    {
+      "event_replication_runs": 1024,
+      "executed": false,
+      "linear_seconds": 1540.3016852475703,
+      "workload": "four_powell_refinements_at_cap"
+    },
+    {
+      "event_replication_runs": 47360,
+      "executed": false,
+      "linear_seconds": 71238.95294270013,
+      "workload": "finalists_two_registries"
+    }
+  ],
+  "observed": {
+    "compact_result_payload_bytes": 11738,
+    "maximum_run_seconds": 5.487423958009458,
+    "median_run_seconds": 0.39593491650157375,
+    "peak_traced_memory_bytes": 4122472,
+    "wall_clock_seconds": 12.033606915996643
+  },
+  "optimisation_design_changed": false,
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "status": "bounded_benchmark_complete"
+}

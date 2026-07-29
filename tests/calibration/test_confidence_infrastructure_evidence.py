@@ -20,6 +20,11 @@ REQUIRED = {
     "parameter_bounds.json",
     "event_catalogue.csv",
     "seed_registry.json",
+    "conditional_event_specification.json",
+    "conditional_initial_state.json",
+    "recovery_gate_specification.json",
+    "event_simulation_smoke.json",
+    "event_simulation_benchmark.json",
 }
 
 
@@ -111,3 +116,60 @@ def test_seed_registry_vectors_reproduce() -> None:
             replication=vector["replication"],
             stream_name=vector["stream_name"],
         )
+
+
+def test_conditional_event_evidence_is_dormant_compact_and_non_ranked() -> None:
+    specification = json.loads(
+        (ROOT / "conditional_event_specification.json").read_text(encoding="utf-8")
+    )
+    initial = json.loads(
+        (ROOT / "conditional_initial_state.json").read_text(encoding="utf-8")
+    )
+    gates = json.loads(
+        (ROOT / "recovery_gate_specification.json").read_text(encoding="utf-8")
+    )
+    smoke = json.loads(
+        (ROOT / "event_simulation_smoke.json").read_text(encoding="utf-8")
+    )
+    benchmark = json.loads(
+        (ROOT / "event_simulation_benchmark.json").read_text(encoding="utf-8")
+    )
+    assert specification["common_maximum_horizon_hours"] == 792
+    assert specification["stage2_parameter_defaults"] is None
+    assert initial["normalisation"]["vault_count"] == 500
+    assert initial["normalisation"]["total_debt_dai"] == 2_500_000
+    assert gates["fitted_recovery_gate_coefficient"] is None
+    assert gates["liquidation_pressure"]["liquidatable_share_substituted"] is False
+    assert len(smoke["event_ids"]) == 4
+    assert len(smoke["probe_vectors"]) == 5
+    assert not smoke["candidate_ranking_performed"]
+    assert not smoke["stage2_fit_performed"]
+    assert not smoke["final_validation_event_simulated"]
+    assert not smoke["full_trajectories_tracked"]
+    assert set(smoke["simulated_moments_by_probe"]) == {
+        probe["probe_id"] for probe in smoke["probe_vectors"]
+    }
+    for result in smoke["simulated_moments_by_probe"].values():
+        assert len(result["moments"]) == 8
+        assert result["event_count"] == 4
+        assert result["equal_event_weighting"]
+        assert not result["objective_evaluated"]
+    assert benchmark["benchmark_workload"]["event_replication_runs"] == 8
+    assert not benchmark["extrapolated_workloads_executed"]
+    assert all(
+        not payload["runtime_adopted"]
+        for payload in (specification, initial, gates, smoke, benchmark)
+    )
+
+
+def test_conditional_event_evidence_validator_passes_registered_checksums() -> None:
+    from dai_sim.calibration.validation import validate_conditional_event_evidence
+
+    result = validate_conditional_event_evidence(
+        ROOT,
+        REPOSITORY_ROOT / "data/provenance/calibration/manifest.json",
+    )
+    assert result["status"] == "passed"
+    assert len(result["checked"]) == 5
+    assert not result["runtime_adopted"]
+    assert not result["stage2_fit_performed"]

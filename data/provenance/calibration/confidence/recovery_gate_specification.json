@@ -1,0 +1,29 @@
+{
+  "fitted_recovery_gate_coefficient": null,
+  "liquidation_pressure": {
+    "cleared_tab_owner": "Liquidation summary debt_repaid",
+    "formula": "U / (U + C24 + epsilon)",
+    "liquidatable_share_substituted": false,
+    "primary_rule": "U equals zero within tolerance",
+    "tolerance_dai": 1e-09,
+    "unresolved_tab_owner": "remaining debt of active liquidatable vaults after current-hour action"
+  },
+  "material_active_bad_debt": {
+    "diagnostic_sensitivities": [
+      0.001,
+      0.01
+    ],
+    "primary_rule": "active bad debt greater than numerical tolerance blocks recovery",
+    "reference_tolerance_dai": 2.4999999999999998e-06,
+    "sensitivities_used_by_primary_gate": false,
+    "tolerance_formula": "max(1e-9, 1e-12 * initial system debt) DAI"
+  },
+  "recovery_band": [
+    0.995,
+    1.005
+  ],
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "stability_hours": 24,
+  "status": "operational"
+}

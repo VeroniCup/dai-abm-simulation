@@ -534,6 +534,195 @@ def select_search_events(
     return sorted(result)
 
 
+def select_event_smoke_subset(events: pd.DataFrame) -> list[str]:
+    """Select one content-hash event from each burden quartile.
+
+    Quartile ownership is deterministic under source-row reordering, including
+    tied burden values: ties are broken semantically by event identifier before
+    equal-sized rank groups are assigned.  Validation events are ineligible.
+    """
+    required = {"event_id", "partition", "first_six_hour_burden"}
+    missing = required - set(events.columns)
+    if missing:
+        raise ValueError(f"Smoke-event input is missing: {sorted(missing)}.")
+    selected = events.loc[events["partition"].eq("calibration")].copy()
+    if len(selected) != 74:
+        raise ValueError("Smoke selection requires exactly 74 calibration events.")
+    selected = selected.sort_values(
+        ["first_six_hour_burden", "event_id"], kind="mergesort"
+    ).reset_index(drop=True)
+    selected["_burden_quartile"] = np.minimum(
+        3,
+        np.floor(4 * np.arange(len(selected)) / len(selected)).astype(int),
+    )
+    selected["_content_hash"] = selected["event_id"].map(
+        lambda value: hashlib.sha256(str(value).encode("utf-8")).hexdigest()
+    )
+    result = (
+        selected.sort_values(
+            ["_burden_quartile", "_content_hash", "event_id"],
+            kind="mergesort",
+        )
+        .groupby("_burden_quartile", sort=True)
+        .first()["event_id"]
+        .tolist()
+    )
+    if len(result) != 4:
+        raise ValueError("Smoke selection did not reproduce four burden quartiles.")
+    return result
+
+
+SIMULATED_CORE_MOMENT_ORDER = (
+    "ordinary_below_mean",
+    "ordinary_above_mean",
+    "first_six_hour_burden_mean",
+    "maximum_downside_deviation_mean",
+    "recovery_completion_hours_mean",
+    "failed_recovery_attempts_mean",
+    "initial_gap_q4_q1_burden_contrast",
+    "eth_recovery_q4_q1_duration_contrast",
+)
+
+
+@dataclass(frozen=True)
+class SimulatedCoreMoments:
+    """Eight fixed simulated moments plus non-objective diagnostics."""
+
+    moments: dict[str, float]
+    event_count: int
+    replication_count: int
+    right_censored_event_replications: int
+    equal_event_weighting: bool
+    objective_evaluated: bool
+    diagnostic_moments_excluded: tuple[str, ...]
+
+
+def _metric_record(result: Any) -> dict[str, Any]:
+    metrics = result.metrics if hasattr(result, "metrics") else result
+    if hasattr(metrics, "__dataclass_fields__"):
+        return {
+            field: getattr(metrics, field)
+            for field in metrics.__dataclass_fields__
+        }
+    if isinstance(metrics, Mapping):
+        return dict(metrics)
+    raise TypeError("Each supplied result must expose metrics or be a mapping.")
+
+
+def aggregate_simulated_core_moments(
+    results: Sequence[Any],
+    *,
+    ordinary_preservation: Mapping[str, float],
+    expected_event_ids: Sequence[str] | None = None,
+) -> SimulatedCoreMoments:
+    """Aggregate the fixed eight-moment schema with equal event weighting.
+
+    Replications are averaged within event before events receive equal weight.
+    Right-censored recovery durations enter at their explicit censoring time;
+    their count remains separately auditable.  This function never evaluates
+    the SMM objective.
+    """
+    if not results:
+        raise ValueError("At least one conditional event result is required.")
+    required_preservation = {"ordinary_below_mean", "ordinary_above_mean"}
+    if set(ordinary_preservation) != required_preservation:
+        raise ValueError("Both and only the two Stage 1 preservation moments are required.")
+    records = pd.DataFrame([_metric_record(result) for result in results])
+    required = {
+        "event_id",
+        "replication",
+        "first_six_hour_burden",
+        "maximum_downside_deviation",
+        "recovery_completion_hours",
+        "failed_recovery_attempts",
+        "initial_peg_gap",
+        "eth_recovery_24h",
+        "right_censored",
+        "cumulative_downside_burden",
+        "burden_after_first_return",
+    }
+    missing = required - set(records.columns)
+    if missing:
+        raise ValueError(f"Conditional metrics are missing: {sorted(missing)}.")
+    if records[["event_id", "replication"]].duplicated().any():
+        raise ValueError("Each event-replication result must be unique.")
+    observed_ids = set(records["event_id"])
+    if expected_event_ids is not None and observed_ids != set(expected_event_ids):
+        missing_ids = sorted(set(expected_event_ids) - observed_ids)
+        extra_ids = sorted(observed_ids - set(expected_event_ids))
+        raise ValueError(
+            f"Event results are incomplete; missing={missing_ids}, extra={extra_ids}."
+        )
+    numeric = [
+        "first_six_hour_burden",
+        "maximum_downside_deviation",
+        "recovery_completion_hours",
+        "failed_recovery_attempts",
+        "initial_peg_gap",
+        "eth_recovery_24h",
+    ]
+    for column in numeric:
+        records[column] = pd.to_numeric(records[column], errors="coerce")
+        if records[column].isna().any():
+            raise ValueError(f"Conditional metric {column} contains missing values.")
+    per_event = (
+        records.groupby("event_id", sort=True)
+        .agg(
+            first_six_hour_burden=("first_six_hour_burden", "mean"),
+            maximum_downside_deviation=("maximum_downside_deviation", "mean"),
+            recovery_completion_hours=("recovery_completion_hours", "mean"),
+            failed_recovery_attempts=("failed_recovery_attempts", "mean"),
+            initial_peg_gap=("initial_peg_gap", "first"),
+            eth_recovery_24h=("eth_recovery_24h", "first"),
+        )
+        .reset_index()
+    )
+    initial_contrast = quartile_contrast(
+        per_event,
+        stratifier="initial_peg_gap",
+        outcome="first_six_hour_burden",
+    )[0]
+    recovery_contrast = quartile_contrast(
+        per_event,
+        stratifier="eth_recovery_24h",
+        outcome="recovery_completion_hours",
+    )[0]
+    moments = {
+        "ordinary_below_mean": float(ordinary_preservation["ordinary_below_mean"]),
+        "ordinary_above_mean": float(ordinary_preservation["ordinary_above_mean"]),
+        "first_six_hour_burden_mean": float(
+            per_event["first_six_hour_burden"].mean()
+        ),
+        "maximum_downside_deviation_mean": float(
+            per_event["maximum_downside_deviation"].mean()
+        ),
+        "recovery_completion_hours_mean": float(
+            per_event["recovery_completion_hours"].mean()
+        ),
+        "failed_recovery_attempts_mean": float(
+            per_event["failed_recovery_attempts"].mean()
+        ),
+        "initial_gap_q4_q1_burden_contrast": float(initial_contrast),
+        "eth_recovery_q4_q1_duration_contrast": float(recovery_contrast),
+    }
+    if tuple(moments) != SIMULATED_CORE_MOMENT_ORDER:
+        raise AssertionError("Simulated core moment order changed unexpectedly.")
+    return SimulatedCoreMoments(
+        moments=moments,
+        event_count=int(len(per_event)),
+        replication_count=int(len(records)),
+        right_censored_event_replications=int(
+            records["right_censored"].astype(bool).sum()
+        ),
+        equal_event_weighting=True,
+        objective_evaluated=False,
+        diagnostic_moments_excluded=(
+            "cumulative_downside_burden",
+            "burden_after_first_return",
+        ),
+    )
+
+
 def sobol_candidates(
     *,
     count: int = 256,

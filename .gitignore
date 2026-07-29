@@ -80,6 +80,11 @@ data/provenance/calibration/confidence/*
 !data/provenance/calibration/confidence/parameter_bounds.json
 !data/provenance/calibration/confidence/event_catalogue.csv
 !data/provenance/calibration/confidence/seed_registry.json
+!data/provenance/calibration/confidence/conditional_event_specification.json
+!data/provenance/calibration/confidence/conditional_initial_state.json
+!data/provenance/calibration/confidence/recovery_gate_specification.json
+!data/provenance/calibration/confidence/event_simulation_smoke.json
+!data/provenance/calibration/confidence/event_simulation_benchmark.json
 
 # Domain-owned provenance. Detailed operational records stay ignored; selected
 # durable entry points remain tracked.

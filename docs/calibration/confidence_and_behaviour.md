@@ -861,4 +861,7 @@ including `bad_debt_recovery_drag`, `arbitrage_recovery_strength` and
 mode. The recovery band and duration, material threshold, continuous burden,
 ETH stress, equal stress weights, tab-pressure role and coefficient
 normalisation are resolved. The SMM methodology is now pre-registered, but
-executable infrastructure and fitting still require separate authorisation.
+fitting still requires separate authorisation. The executable
+[conditional event design](confidence_event_simulation.md) now supplies the
+dormant standardised state and recovery gates without changing production
+behaviour or adopting a Stage 2 value.

@@ -15,7 +15,9 @@ from dai_sim.calibration.market import (
 )
 from dai_sim.calibration.simulated_moments import (
     PANIC_RESPONSE_UPPER_BOUND,
+    SIMULATED_CORE_MOMENT_ORDER,
     StructuralParameters,
+    aggregate_simulated_core_moments,
     boundary_model_descriptions,
     build_event_catalogue,
     derive_seed,
@@ -209,3 +211,67 @@ def test_sobol_design_is_deterministic_and_inside_structural_bounds() -> None:
         assert 0 <= candidate.confidence_floor < 1
         assert 0 <= candidate.panic_response <= PANIC_RESPONSE_UPPER_BOUND
     assert hashlib.sha256(np.asarray(transformed, dtype="<f8").tobytes()).hexdigest()
+
+
+def _conditional_metric(event: int, replication: int, burden: float) -> dict:
+    return {
+        "event_id": f"event_{event}",
+        "replication": replication,
+        "first_six_hour_burden": burden,
+        "maximum_downside_deviation": burden / 100,
+        "recovery_completion_hours": 10 + event,
+        "failed_recovery_attempts": event % 2,
+        "initial_peg_gap": float(event),
+        "eth_recovery_24h": float(4 - event),
+        "right_censored": event == 3,
+        "cumulative_downside_burden": burden * 2,
+        "burden_after_first_return": burden,
+    }
+
+
+def test_simulated_core_moments_use_equal_event_weights_and_no_objective() -> None:
+    results = [
+        _conditional_metric(event, replication, event + replication)
+        for event in range(4)
+        for replication in range(2)
+    ]
+    aggregated = aggregate_simulated_core_moments(
+        results,
+        ordinary_preservation={
+            "ordinary_below_mean": 0.1,
+            "ordinary_above_mean": -0.1,
+        },
+        expected_event_ids=[f"event_{event}" for event in range(4)],
+    )
+    assert tuple(aggregated.moments) == SIMULATED_CORE_MOMENT_ORDER
+    assert aggregated.event_count == 4
+    assert aggregated.replication_count == 8
+    assert aggregated.moments["first_six_hour_burden_mean"] == pytest.approx(2.0)
+    assert aggregated.right_censored_event_replications == 2
+    assert aggregated.equal_event_weighting
+    assert not aggregated.objective_evaluated
+    assert aggregated.diagnostic_moments_excluded == (
+        "cumulative_downside_burden",
+        "burden_after_first_return",
+    )
+
+
+def test_simulated_moments_reject_missing_events_and_duplicate_replications() -> None:
+    results = [_conditional_metric(event, 0, float(event)) for event in range(4)]
+    with pytest.raises(ValueError, match="incomplete"):
+        aggregate_simulated_core_moments(
+            results,
+            ordinary_preservation={
+                "ordinary_below_mean": 0.1,
+                "ordinary_above_mean": -0.1,
+            },
+            expected_event_ids=["event_0", "event_1", "event_2", "missing"],
+        )
+    with pytest.raises(ValueError, match="unique"):
+        aggregate_simulated_core_moments(
+            [results[0], results[0]],
+            ordinary_preservation={
+                "ordinary_below_mean": 0.1,
+                "ordinary_above_mean": -0.1,
+            },
+        )

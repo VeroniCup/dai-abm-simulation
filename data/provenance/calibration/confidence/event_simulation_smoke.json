@@ -1,0 +1,371 @@
+{
+  "candidate_ranking_performed": false,
+  "event_ids": [
+    "calibration__20200509T220000Z",
+    "calibration__20201119T090000Z",
+    "calibration__20210613T040000Z",
+    "calibration__20201102T090000Z"
+  ],
+  "event_selection": "one lowest-content-hash event per first-six-hour-burden quartile",
+  "final_validation_event_simulated": false,
+  "full_trajectories_tracked": false,
+  "probe_vectors": [
+    {
+      "boundary_status": "interior",
+      "candidate_index": 0,
+      "probe_id": "sobol_0",
+      "source_sobol_checksum": "fc56a12f0066cd84a15f5df52254ccf4a678847168af45e7f235757b3b1adde5",
+      "structural_vector": {
+        "confidence_floor": 0.028257581405341833,
+        "deterioration_adjustment": 0.004441847093403558,
+        "panic_response": 0.7246945004398565,
+        "recovery_adjustment": 0.0037534781618436936
+      }
+    },
+    {
+      "boundary_status": "interior",
+      "candidate_index": 127,
+      "probe_id": "sobol_127",
+      "source_sobol_checksum": "fc56a12f0066cd84a15f5df52254ccf4a678847168af45e7f235757b3b1adde5",
+      "structural_vector": {
+        "confidence_floor": 0.5726250158622861,
+        "deterioration_adjustment": 0.013376828283071737,
+        "panic_response": 2.5196896407401,
+        "recovery_adjustment": 0.0006416583434666915
+      }
+    },
+    {
+      "boundary_status": "interior",
+      "candidate_index": 255,
+      "probe_id": "sobol_255",
+      "source_sobol_checksum": "fc56a12f0066cd84a15f5df52254ccf4a678847168af45e7f235757b3b1adde5",
+      "structural_vector": {
+        "confidence_floor": 0.9614799879491328,
+        "deterioration_adjustment": 0.0022479966282846764,
+        "panic_response": 2.3653131717151585,
+        "recovery_adjustment": 0.0009903457643359599
+      }
+    },
+    {
+      "boundary_status": "kappa_P=0",
+      "candidate_index": null,
+      "probe_id": "boundary_panic_response_zero",
+      "source_sobol_checksum": "fc56a12f0066cd84a15f5df52254ccf4a678847168af45e7f235757b3b1adde5",
+      "structural_vector": {
+        "confidence_floor": 0.5726250158622861,
+        "deterioration_adjustment": 0.013376828283071737,
+        "panic_response": 0.0,
+        "recovery_adjustment": 0.0006416583434666915
+      }
+    },
+    {
+      "boundary_status": "C_min=0",
+      "candidate_index": null,
+      "probe_id": "boundary_confidence_floor_zero",
+      "source_sobol_checksum": "fc56a12f0066cd84a15f5df52254ccf4a678847168af45e7f235757b3b1adde5",
+      "structural_vector": {
+        "confidence_floor": 0.0,
+        "deterioration_adjustment": 0.013376828283071737,
+        "panic_response": 2.5196896407401,
+        "recovery_adjustment": 0.0006416583434666915
+      }
+    }
+  ],
+  "purpose": "Interface smoke only; no fit comparison.",
+  "replication_ids": [
+    0
+  ],
+  "results": [
+    {
+      "event_hours": 112,
+      "event_id": "calibration__20200509T220000Z",
+      "probe_id": "sobol_0",
+      "recovery_success": true,
+      "replication": 0,
+      "result_checksum": "a1b8dd90b2b387bc2b6f3164cdd2d041876531d9dd534df6c3ab1bd1c2452abe",
+      "right_censored": false
+    },
+    {
+      "event_hours": 744,
+      "event_id": "calibration__20200509T220000Z",
+      "probe_id": "sobol_127",
+      "recovery_success": false,
+      "replication": 0,
+      "result_checksum": "7ede1ac1971bd996a51f1525b933d7b5db023980ae353e8939a49b3ae6ff08f2",
+      "right_censored": true
+    },
+    {
+      "event_hours": 112,
+      "event_id": "calibration__20200509T220000Z",
+      "probe_id": "sobol_255",
+      "recovery_success": true,
+      "replication": 0,
+      "result_checksum": "952015c11b103cced0fa1fb6058805fb4af6a1e2c469313c44b1ac0c242686c3",
+      "right_censored": false
+    },
+    {
+      "event_hours": 112,
+      "event_id": "calibration__20200509T220000Z",
+      "probe_id": "boundary_panic_response_zero",
+      "recovery_success": true,
+      "replication": 0,
+      "result_checksum": "7abefbb535a1e34c2e9eca3bf320198f0e6fc13b558f4243a94d9d2a437e8a9c",
+      "right_censored": false
+    },
+    {
+      "event_hours": 744,
+      "event_id": "calibration__20200509T220000Z",
+      "probe_id": "boundary_confidence_floor_zero",
+      "recovery_success": false,
+      "replication": 0,
+      "result_checksum": "e70f52fd9aa974d39061ab1be57a7192a8d099d8831b04a0ff63e1219342fddb",
+      "right_censored": true
+    },
+    {
+      "event_hours": 49,
+      "event_id": "calibration__20201119T090000Z",
+      "probe_id": "sobol_0",
+      "recovery_success": true,
+      "replication": 0,
+      "result_checksum": "4e57bf54cf75026950156bf09ac58b9e2a0cf521abe01fc1e0eccf3afc0c94d7",
+      "right_censored": false
+    },
+    {
+      "event_hours": 49,
+      "event_id": "calibration__20201119T090000Z",
+      "probe_id": "sobol_127",
+      "recovery_success": true,
+      "replication": 0,
+      "result_checksum": "97e8f78be639078f0d180da9cd330654db127a93aec655c14f7a147dd6f89e52",
+      "right_censored": false
+    },
+    {
+      "event_hours": 49,
+      "event_id": "calibration__20201119T090000Z",
+      "probe_id": "sobol_255",
+      "recovery_success": true,
+      "replication": 0,
+      "result_checksum": "9a794dc6a6e8373bf47308879e2cd67173f587e1e39dbe2887ec1a513f6f6712",
+      "right_censored": false
+    },
+    {
+      "event_hours": 49,
+      "event_id": "calibration__20201119T090000Z",
+      "probe_id": "boundary_panic_response_zero",
+      "recovery_success": true,
+      "replication": 0,
+      "result_checksum": "c27033c3e81374471da6b8878e9c4de223c4b569008fe21588887c14796c3a4c",
+      "right_censored": false
+    },
+    {
+      "event_hours": 49,
+      "event_id": "calibration__20201119T090000Z",
+      "probe_id": "boundary_confidence_floor_zero",
+      "recovery_success": true,
+      "replication": 0,
+      "result_checksum": "3291cefce714921a3dffc4476d065af56b528c005267a29bef42ab956c0b9276",
+      "right_censored": false
+    },
+    {
+      "event_hours": 51,
+      "event_id": "calibration__20210613T040000Z",
+      "probe_id": "sobol_0",
+      "recovery_success": true,
+      "replication": 0,
+      "result_checksum": "2b3c54593bcda5c39715471c94d4c623931b8b36de50e457f71b197f0549e6d6",
+      "right_censored": false
+    },
+    {
+      "event_hours": 51,
+      "event_id": "calibration__20210613T040000Z",
+      "probe_id": "sobol_127",
+      "recovery_success": true,
+      "replication": 0,
+      "result_checksum": "8c7cd4bd4241f02d8bd464dd18b424fa6fd91c053fbf5b013d48bf18c38f33a4",
+      "right_censored": false
+    },
+    {
+      "event_hours": 51,
+      "event_id": "calibration__20210613T040000Z",
+      "probe_id": "sobol_255",
+      "recovery_success": true,
+      "replication": 0,
+      "result_checksum": "99bdaa4ba13b33888b77e0d0336d17811863ef6c9f955114db0e126daa1be9a3",
+      "right_censored": false
+    },
+    {
+      "event_hours": 51,
+      "event_id": "calibration__20210613T040000Z",
+      "probe_id": "boundary_panic_response_zero",
+      "recovery_success": true,
+      "replication": 0,
+      "result_checksum": "ee6113f072015ebe3a9df5cee8e69af8527b3be82f6184e807d18a572a6c01c0",
+      "right_censored": false
+    },
+    {
+      "event_hours": 51,
+      "event_id": "calibration__20210613T040000Z",
+      "probe_id": "boundary_confidence_floor_zero",
+      "recovery_success": true,
+      "replication": 0,
+      "result_checksum": "d8599fe2262f720f0cedc811a3e481ead8b2fb5d99ecb384e6d27ca841a2df7d",
+      "right_censored": false
+    },
+    {
+      "event_hours": 64,
+      "event_id": "calibration__20201102T090000Z",
+      "probe_id": "sobol_0",
+      "recovery_success": true,
+      "replication": 0,
+      "result_checksum": "c143cbe4f232dfc6c2ed3c5a175abca5477d93379398e5f6c2463cc2b8a28085",
+      "right_censored": false
+    },
+    {
+      "event_hours": 64,
+      "event_id": "calibration__20201102T090000Z",
+      "probe_id": "sobol_127",
+      "recovery_success": true,
+      "replication": 0,
+      "result_checksum": "28f6f44aaff5ea46b2ef77f31dd979d86340445927e34b88161ae2def1e6e94d",
+      "right_censored": false
+    },
+    {
+      "event_hours": 64,
+      "event_id": "calibration__20201102T090000Z",
+      "probe_id": "sobol_255",
+      "recovery_success": true,
+      "replication": 0,
+      "result_checksum": "bd8281a4ba4179908f35fe83ba302d4b81a7eb88b13aa39e15e1b8cd1dfbe9d5",
+      "right_censored": false
+    },
+    {
+      "event_hours": 64,
+      "event_id": "calibration__20201102T090000Z",
+      "probe_id": "boundary_panic_response_zero",
+      "recovery_success": true,
+      "replication": 0,
+      "result_checksum": "1e118b18559ae4d2786269b4f73fbea27c6fc77528f80bc2fcdff7e32362f607",
+      "right_censored": false
+    },
+    {
+      "event_hours": 64,
+      "event_id": "calibration__20201102T090000Z",
+      "probe_id": "boundary_confidence_floor_zero",
+      "recovery_success": true,
+      "replication": 0,
+      "result_checksum": "ca548d3fbe4e3ad4cf5894b42d12d993ba7cc2c2f3b39664f22fde301d67810e",
+      "right_censored": false
+    }
+  ],
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "seed_difference_replication_ids": [
+    0,
+    1
+  ],
+  "simulated_moments_by_probe": {
+    "boundary_confidence_floor_zero": {
+      "diagnostic_moments_excluded": [
+        "cumulative_downside_burden",
+        "burden_after_first_return"
+      ],
+      "equal_event_weighting": true,
+      "event_count": 4,
+      "moments": {
+        "eth_recovery_q4_q1_duration_contrast": -695.0,
+        "failed_recovery_attempts_mean": 0.0,
+        "first_six_hour_burden_mean": 0.0,
+        "initial_gap_q4_q1_burden_contrast": 0.0,
+        "maximum_downside_deviation_mean": 0.12375,
+        "ordinary_above_mean": -9.51345460505e-05,
+        "ordinary_below_mean": 0.000353255329457,
+        "recovery_completion_hours_mean": 226.0
+      },
+      "objective_evaluated": false,
+      "right_censored_event_replications": 1
+    },
+    "boundary_panic_response_zero": {
+      "diagnostic_moments_excluded": [
+        "cumulative_downside_burden",
+        "burden_after_first_return"
+      ],
+      "equal_event_weighting": true,
+      "event_count": 4,
+      "moments": {
+        "eth_recovery_q4_q1_duration_contrast": -63.0,
+        "failed_recovery_attempts_mean": 0.0,
+        "first_six_hour_burden_mean": 0.0,
+        "initial_gap_q4_q1_burden_contrast": 0.0,
+        "maximum_downside_deviation_mean": 0.0,
+        "ordinary_above_mean": -9.51345460505e-05,
+        "ordinary_below_mean": 0.000353255329457,
+        "recovery_completion_hours_mean": 68.0
+      },
+      "objective_evaluated": false,
+      "right_censored_event_replications": 0
+    },
+    "sobol_0": {
+      "diagnostic_moments_excluded": [
+        "cumulative_downside_burden",
+        "burden_after_first_return"
+      ],
+      "equal_event_weighting": true,
+      "event_count": 4,
+      "moments": {
+        "eth_recovery_q4_q1_duration_contrast": -63.0,
+        "failed_recovery_attempts_mean": 0.0,
+        "first_six_hour_burden_mean": 0.0,
+        "initial_gap_q4_q1_burden_contrast": 0.0,
+        "maximum_downside_deviation_mean": 0.0,
+        "ordinary_above_mean": -9.51345460505e-05,
+        "ordinary_below_mean": 0.000353255329457,
+        "recovery_completion_hours_mean": 68.0
+      },
+      "objective_evaluated": false,
+      "right_censored_event_replications": 0
+    },
+    "sobol_127": {
+      "diagnostic_moments_excluded": [
+        "cumulative_downside_burden",
+        "burden_after_first_return"
+      ],
+      "equal_event_weighting": true,
+      "event_count": 4,
+      "moments": {
+        "eth_recovery_q4_q1_duration_contrast": -695.0,
+        "failed_recovery_attempts_mean": 0.0,
+        "first_six_hour_burden_mean": 0.0,
+        "initial_gap_q4_q1_burden_contrast": 0.0,
+        "maximum_downside_deviation_mean": 0.12375,
+        "ordinary_above_mean": -9.51345460505e-05,
+        "ordinary_below_mean": 0.000353255329457,
+        "recovery_completion_hours_mean": 226.0
+      },
+      "objective_evaluated": false,
+      "right_censored_event_replications": 1
+    },
+    "sobol_255": {
+      "diagnostic_moments_excluded": [
+        "cumulative_downside_burden",
+        "burden_after_first_return"
+      ],
+      "equal_event_weighting": true,
+      "event_count": 4,
+      "moments": {
+        "eth_recovery_q4_q1_duration_contrast": -63.0,
+        "failed_recovery_attempts_mean": 0.0,
+        "first_six_hour_burden_mean": 0.0,
+        "initial_gap_q4_q1_burden_contrast": 0.0,
+        "maximum_downside_deviation_mean": 0.0,
+        "ordinary_above_mean": -9.51345460505e-05,
+        "ordinary_below_mean": 0.000353255329457,
+        "recovery_completion_hours_mean": 68.0
+      },
+      "objective_evaluated": false,
+      "right_censored_event_replications": 0
+    }
+  },
+  "stage2_fit_performed": false,
+  "status": "passed",
+  "structural_validity": true
+}

@@ -694,3 +694,10 @@ Before fitting or adoption:
 The moment set is feasible for an infrastructure pass, not evidence that the
 four parameters are identified. No behavioural coefficient has been fitted or
 adopted.
+
+The dormant [conditional event simulator](confidence_event_simulation.md) now
+implements the standardised ETH-core state, observed-ETH event paths,
+recovery gates, deterministic interface probes and fixed simulated-moment
+aggregation needed before a bounded objective evaluation. This is a
+conditional experiment rather than exact historical replay. It fits no Stage
+2 value, ranks no probe and remains outside the production simulation loop.

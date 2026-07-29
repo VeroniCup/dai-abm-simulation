@@ -1,0 +1,40 @@
+{
+  "calibration_only": true,
+  "common_maximum_horizon_hours": 792,
+  "event_path_ownership": {
+    "dai": "observed at pre-roll start only; simulated thereafter",
+    "eth": "observed canonical hourly path"
+  },
+  "final_validation_boundary": {
+    "eth_path_complete": true,
+    "event_id": "final_stress_validation__20230311T010000Z",
+    "parsed": true,
+    "simulated": false,
+    "used_for_design": false
+  },
+  "initial_state_reference": "data/provenance/calibration/confidence/conditional_initial_state.json",
+  "interpretation": "Observed ETH conditional experiment with one observed DAI initial condition; not an exact historical Maker replay.",
+  "longest_calibration_event_hours": 703,
+  "post_recovery_hours": 24,
+  "pre_roll_hours": 48,
+  "primary_collateral_mode": "ETH-only mechanism core",
+  "residual_block_specification_sha256": "6f55b51acfc1da23836b3d847153bd4f68e4a38fc33fd967e9d3b795737bf28c",
+  "residual_evidence_reference": "data/provenance/calibration/confidence/stage1_residual_summary.json",
+  "residual_sequence_sha256": "3fa2319cee9e1749405c0dc477e0f11ef9c31dd83c371b619bd33eda23c37c30",
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "stage1_evidence_reference": "data/provenance/calibration/confidence/stage1_market_estimates.json",
+  "stage2_parameter_defaults": null,
+  "status": "implemented_conditional_non_exact_replay",
+  "within_hour_ordering": [
+    "read lagged DAI and observed ETH history",
+    "scale lagged peg gap and 24-hour ETH downside",
+    "update persistent confidence from prior-hour gates",
+    "apply accepted Stage 1 response and current residual innovation",
+    "value vaults at current observed ETH",
+    "sample existing liquidation demand and run existing liquidation logic",
+    "reconcile cleared tab, unresolved tab and active bad debt",
+    "set recovery inputs for the next hour",
+    "record conditional metrics"
+  ]
+}

@@ -178,6 +178,16 @@ seed registry, 32-event subset and 256-point Sobol design are implemented but
 not evaluated against the simulator. Stage 2 SMM fitting and behavioural
 runtime integration remain pending separate authorisation.
 
+The dormant [conditional event simulation](docs/calibration/confidence_event_simulation.md)
+is also implemented. It uses a standardised 500-vault, 2.5 million DAI
+ETH-core state, observed ETH paths, registered Stage 1 residual blocks and
+explicit zero-backlog/material-active-bad-debt recovery gates. Four
+content-hashed calibration smoke events and deterministic Sobol/boundary
+interface probes validate the mechanism, and the bounded eight-run workload
+benchmark is recorded. This is conditional rather than exact historical
+replay. No Stage 2 parameter has been fitted or ranked, and the final USDC/SVB
+event remains unsimulated.
+
 The remaining empirical work is adoption and validation of defensible
 parameter candidates, followed by calibrated counterfactual experiments.
 Changes to auction execution, confidence mechanics, stable-depeg transmission
