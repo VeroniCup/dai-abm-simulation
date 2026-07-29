@@ -1,0 +1,9 @@
+moment,group,initial_group_weight,initial_total_weight,within_group_weight,maximum_allowed_total_weight,status
+ordinary_below_mean,A,0.25,0.125,1,0.2,accepted_for_future_smm
+ordinary_above_mean,A,0.25,0.125,1,0.2,accepted_for_future_smm
+first_six_hour_burden_mean,B,0.25,0.125,1,0.2,accepted_for_future_smm
+maximum_downside_deviation_mean,B,0.25,0.125,1,0.2,accepted_for_future_smm
+recovery_completion_hours_mean,C,0.25,0.125,1,0.2,accepted_for_future_smm
+failed_recovery_attempts_mean,C,0.25,0.125,1,0.2,accepted_for_future_smm
+initial_gap_q4_q1_burden_contrast,D,0.25,0.125,1,0.2,accepted_for_future_smm
+eth_recovery_q4_q1_duration_contrast,D,0.25,0.125,1,0.2,accepted_for_future_smm

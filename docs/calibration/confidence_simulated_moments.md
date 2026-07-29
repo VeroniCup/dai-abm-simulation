@@ -2,10 +2,11 @@
 
 ## 1. Purpose and methodological boundary
 
-This document pre-registers a constrained simulated-moments calibration for a
-future persistent behavioural-confidence mechanism. It connects the validated
-historical DAI and ETH evidence to a bounded parameter-estimation design
-without fitting parameters, adopting values or changing executable behaviour.
+This document specifies a constrained simulated-moments calibration for a
+future persistent behavioural-confidence mechanism. The first bounded
+infrastructure pass now connects the validated historical DAI and ETH evidence
+to a reproducible Stage 1 estimate and a future Stage 2 design without fitting
+Stage 2 parameters, adopting values or changing executable behaviour.
 
 The design has three stages:
 
@@ -13,10 +14,28 @@ The design has three stages:
 2. estimate a four-parameter behavioural state by simulated moments; and
 3. test additional mechanisms only as declared sensitivities.
 
-The current instantaneous confidence mechanism remains authoritative until a
-separate implementation and estimation pass is authorised. This document does
-not implement persistence, change the price equation, alter a profile, select
-a fitted parameter or reopen the predictive regression.
+The current instantaneous confidence mechanism remains authoritative. Pure
+persistent-confidence and coefficient-normalised market-response interfaces
+exist for testing, but neither has a production caller. No profile is altered,
+no Stage 2 parameter is selected and the predictive regression remains closed.
+
+### 1.1 Implemented boundary
+
+The bounded infrastructure now provides:
+
+- a pure persistent-confidence transition with an explicit recovery gate;
+- an unused pure coefficient-normalised DAI response;
+- joint non-negative estimation of \(\kappa_-\) and \(\kappa_+\);
+- a centred, run-bounded 24-hour empirical residual-block source;
+- the deterministic 75-event catalogue;
+- compact evidence for the eight fixed moments;
+- cryptographically derived random-stream ownership; and
+- structural transformations, the pure four-group objective, the
+  pre-registered 32-event subset and 256 Sobol candidates.
+
+This is infrastructure, not behavioural adoption. The workflow does not call
+the simulator, evaluate an SMM objective over candidates, rank candidates or
+fit \(\alpha_d,\alpha_r,C_{\min},\kappa_P\).
 
 ## 2. Why the predictive route is closed
 
@@ -80,8 +99,12 @@ hours:
 Confidence is treated as approximately one in these observations. Stage 1
 must use calendar-block uncertainty and must not separately estimate the
 legacy products of adjustment speed, arbitrage strength or panic multipliers.
-The three Stage 1 quantities are fixed when Stage 2 begins. No Stage 1
-coefficient is fitted in this design pass.
+The three Stage 1 quantities are fixed when Stage 2 begins. The bounded
+implementation estimates
+\(\widehat\kappa_-=0.1993809753\) and
+\(\widehat\kappa_+=0.1051311602\) from the 1,189 fixed daily observations.
+Both calendar-month bootstrap sign and boundary gates pass. These are accepted
+for future SMM, not runtime adopted.
 
 ### 4.2 Stage 2: constrained behavioural SMM
 
@@ -608,19 +631,22 @@ is an implementation blocker rather than an invitation to infer a threshold.
 - the current optional recovery equation is retained only as a legacy
   ablation and is excluded from the new primary behavioural mode.
 
-## 25. Future evidence, outputs, code and tests
+## 25. Evidence, outputs, code and tests
 
-Future compact, content-addressed evidence belongs under
+Compact, content-addressed evidence is now tracked under
 `data/provenance/calibration/confidence/`:
 
+- `stage1_market_estimates.json`;
+- `stage1_residual_summary.json`;
 - `simulated_moments_specification.json`;
 - `empirical_moments.csv`;
 - `moment_weights.csv`;
 - `parameter_bounds.json`;
 - `event_catalogue.csv`;
-- `seed_registry.json`;
-- `identification_summary.json`; and
-- `simulated_moments_selection.json`.
+- `seed_registry.json`.
+
+`identification_summary.json` and `simulated_moments_selection.json` are
+deliberately absent because they require a completed SMM fit.
 
 They must be registered in the calibration manifest and contain no hourly
 trajectories. Diagnostics belong in
@@ -628,16 +654,17 @@ trajectories. Diagnostics belong in
 `outputs/tables/calibration/confidence/`, and event trajectories in
 `outputs/experiments/confidence/`.
 
-Existing owners should be extended where their responsibility is clear:
+The bounded implementation uses the existing semantic owners:
 
 - `model/confidence.py`: bounded persistent state and recovery gate;
 - `model/market.py`: effective response equation;
-- `model/simulation.py`: state timing and persistence;
-- `model/metrics.py`: event and recovery outcomes;
+- `model/simulation.py`: unchanged legacy state timing;
+- `model/metrics.py`: unchanged legacy outcomes;
 - `calibration/market.py`: ordinary-market quantities and event construction;
 - `calibration/validation.py`: blocked, influence and identification checks;
-- `experiments/scenarios.py` and `summaries.py`: conditional event ownership;
-  and
+- `experiments/scenarios.py` and `summaries.py`: unchanged;
+- `calibration/simulated_moments.py`: pure events, transformations, objective,
+  seeds, subset and Sobol design; and
 - `workflows/calibration/market_gas_protocol.py`: calibration entry point.
 
 A substantive `src/dai_sim/calibration/simulated_moments.py` is appropriate
@@ -645,24 +672,21 @@ only if event simulation, objective evaluation, seed ownership and optimisation
 would otherwise obscure `market.py`. Generic `smm.py`, `optimisation.py`,
 `utils.py` and wrapper-only workflows are prohibited.
 
-Future tests cover event construction, ordinary sampling, scales and weights,
+Current tests cover event construction, ordinary sampling, scales and weights,
 state bounds and timing, seed determinism, objective reproducibility, boundary
-models, Jacobian diagnostics, leave-one-event-out, blocked partitions,
-legacy-mode checksums and evidence-manifest integrity.
+models, blocked partitions, legacy regression checks and evidence-manifest
+integrity. Jacobian and leave-one-event-out fit tests remain Stage 2 work.
 
 ## 26. Remaining blockers
 
-Executable implementation and fitting still require separate authorisation.
-Before fitting:
+Stage 2 fitting and runtime integration still require separate authorisation.
+Before fitting or adoption:
 
-- Stage 1 estimators and residual representation must be implemented and
-  reviewed;
 - the severe bad-debt recovery-gate condition must be defined or the gate must
   remain explicitly unavailable;
 - conditional event initial-state sampling must be specified without claiming
   exact replay;
 - the exact legacy/new configuration interface must be approved;
-- the deterministic event catalogue and seed registry must be materialised;
 - computational workload must be benchmarked; and
 - the current simulator must gain persistent confidence only through a
   regression-protected implementation.

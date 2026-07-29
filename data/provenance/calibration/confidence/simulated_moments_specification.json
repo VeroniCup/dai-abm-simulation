@@ -1,0 +1,100 @@
+{
+  "calibration_event_starts_by_year": {
+    "2020": 26,
+    "2021": 48
+  },
+  "core_moments": [
+    "ordinary_below_mean",
+    "ordinary_above_mean",
+    "first_six_hour_burden_mean",
+    "maximum_downside_deviation_mean",
+    "recovery_completion_hours_mean",
+    "failed_recovery_attempts_mean",
+    "initial_gap_q4_q1_burden_contrast",
+    "eth_recovery_q4_q1_duration_contrast"
+  ],
+  "event_counts": {
+    "calibration": 74,
+    "complete": 75,
+    "cross_partition": 0,
+    "final_stress_validation": 1,
+    "quiet_validation": 0
+  },
+  "groups": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "implementation_boundary": "Infrastructure only; no simulator evaluation, ranking or fit.",
+  "initial_group_weight": 0.25,
+  "initial_total_weight_per_moment": 0.125,
+  "rejected_diagnostic_moments": [
+    {
+      "classification": "diagnostic_only_exclusion",
+      "dominant_event_share": 0.5654677753527823,
+      "moment": "cumulative_downside_burden"
+    },
+    {
+      "classification": "diagnostic_only_exclusion",
+      "dominant_event_share": 0.6263672942285676,
+      "moment": "burden_after_first_return"
+    }
+  ],
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "search_subset": {
+    "count": 32,
+    "event_ids": [
+      "calibration__20200505T100000Z",
+      "calibration__20200509T220000Z",
+      "calibration__20200511T090000Z",
+      "calibration__20200519T020000Z",
+      "calibration__20200520T160000Z",
+      "calibration__20200611T160000Z",
+      "calibration__20200615T050000Z",
+      "calibration__20200807T180000Z",
+      "calibration__20201102T090000Z",
+      "calibration__20201107T150000Z",
+      "calibration__20201109T150000Z",
+      "calibration__20201112T180000Z",
+      "calibration__20201119T090000Z",
+      "calibration__20201201T230000Z",
+      "calibration__20210204T040000Z",
+      "calibration__20210208T030000Z",
+      "calibration__20210209T210000Z",
+      "calibration__20210228T030000Z",
+      "calibration__20210308T080000Z",
+      "calibration__20210314T050000Z",
+      "calibration__20210322T000000Z",
+      "calibration__20210325T210000Z",
+      "calibration__20210401T030000Z",
+      "calibration__20210605T110000Z",
+      "calibration__20210624T020000Z",
+      "calibration__20210625T070000Z",
+      "calibration__20210702T030000Z",
+      "calibration__20210716T090000Z",
+      "calibration__20210808T140000Z",
+      "calibration__20210812T140000Z",
+      "calibration__20210827T000000Z",
+      "calibration__20210920T030000Z"
+    ],
+    "selection_inputs": [
+      "maximum six-hour burden quartile",
+      "ETH downside quartile",
+      "recovery duration quartile",
+      "calendar year"
+    ],
+    "sha256": "96e63cf508a94ca31601662503c9463f9bd694078263c0ceb5fe1fe090c968f4"
+  },
+  "sobol_design": {
+    "count": 256,
+    "dimensions": 4,
+    "scramble": true,
+    "seed": 20260729,
+    "structural_candidate_sha256": "fc56a12f0066cd84a15f5df52254ccf4a678847168af45e7f235757b3b1adde5",
+    "tracked_candidate_grid": false
+  },
+  "stage2_estimates": null,
+  "status": "accepted_for_future_smm"
+}

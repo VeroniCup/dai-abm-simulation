@@ -1,0 +1,32 @@
+{
+  "autocorrelation": {
+    "lag_1": -0.011612989673463251,
+    "lag_24": -0.0017181450692625028,
+    "lag_6": 0.05795868020018656
+  },
+  "block_index_specification_sha256": "6f55b51acfc1da23836b3d847153bd4f68e4a38fc33fd967e9d3b795737bf28c",
+  "centred_residual_sequence_sha256": "3fa2319cee9e1749405c0dc477e0f11ef9c31dd83c371b619bd33eda23c37c30",
+  "complete_block_count": 25017,
+  "contiguous_run_count": 587,
+  "eligible_hourly_residual_count": 28859,
+  "gates": {
+    "at_least_100_blocks": true,
+    "centred_mean_within_tolerance": true,
+    "finite_non_zero_variance": true
+  },
+  "longest_contiguous_run_hours": 4536,
+  "mean_after_centring": 7.694119856025201e-21,
+  "mean_before_centring": 0.00013039202563576286,
+  "quantiles": {
+    "p01": -0.003144347833143768,
+    "p05": -0.001251423739410352,
+    "p50": -3.9156468744339516e-05,
+    "p95": 0.001387507335120065,
+    "p99": 0.0036403184373553243
+  },
+  "representation": "centred empirical 24-hour moving blocks",
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "standard_deviation": 0.0010550354739851109,
+  "status": "accepted_for_future_smm"
+}

@@ -1,0 +1,9 @@
+moment,group,semantic_definition,units,empirical_value,empirical_scale,recomputed_bootstrap_scale,eligible_count,initial_group_weight,initial_total_weight,concentration_result,status,runtime_adopted
+ordinary_below_mean,A,Mean next-hour DAI price change for ordinary daily below-peg observations.,USD per hour,0.000353255329457,0.00013559,0.000131767757049,172,0.25,0.125,pass,accepted_for_future_smm,False
+ordinary_above_mean,A,Mean next-hour DAI price change for ordinary daily above-peg observations.,USD per hour,-9.51345460505e-05,2.883e-05,2.72958208382e-05,1017,0.25,0.125,pass,accepted_for_future_smm,False
+first_six_hour_burden_mean,B,Equal-event mean first-six-hour capped downside burden.,"index [0,1]",0.126703078078,0.024570982533,0.024570982533,74,0.25,0.125,pass,accepted_for_future_smm,False
+maximum_downside_deviation_mean,B,Equal-event mean maximum downside deviation below 0.995.,USD,0.00323460698198,0.00054365875715,0.00054365875715,74,0.25,0.125,pass,accepted_for_future_smm,False
+recovery_completion_hours_mean,C,Equal-event mean hours to completion of sustained recovery.,hours,48.9594594595,9.53942829382,9.53942829382,74,0.25,0.125,pass,accepted_for_future_smm,False
+failed_recovery_attempts_mean,C,Equal-event mean number of failed recovery attempts.,count,3.12162162162,1.2984694187,1.2984694187,74,0.25,0.125,pass,accepted_for_future_smm,False
+initial_gap_q4_q1_burden_contrast,D,Initial-gap Q4 minus Q1 maximum-six-hour-burden contrast.,"index [0,1]",0.599065643275,0.071927,0.10087725298,19,0.25,0.125,pass,accepted_for_future_smm,False
+eth_recovery_q4_q1_duration_contrast,D,24-hour ETH-recovery Q4 minus Q1 recovery-duration contrast.,hours,-12.3157894737,7.5325,22.6729183027,19,0.25,0.125,pass,accepted_for_future_smm,False

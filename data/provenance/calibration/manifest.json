@@ -201,6 +201,97 @@
       "schema": "Compact JSON burden gates, anchor sensitivity, validation summaries and final no-fit classification.",
       "context": "Design C passes burden-count and predictor-scale gates but fails the pre-registered episode-dominance gate; the predictive route is closed in favour of constrained SMM.",
       "classification": "snapshot"
+    },
+    {
+      "semantic_name": "confidence_stage1_market_estimates",
+      "path": "data/provenance/calibration/confidence/stage1_market_estimates.json",
+      "producer": "dai_sim.calibration.market",
+      "source_inputs": ["data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"],
+      "sha256": "d86625e268c7e8b8abcb6d37e48f87c3c01578c8a3c09024a57da93978614547",
+      "size_bytes": 4573,
+      "schema": "Compact JSON Stage 1 coefficient estimates, calendar-month bootstrap uncertainty, stability checks and acceptance gates.",
+      "context": "Accepted for future SMM only; neither coefficient is adopted by a runtime profile.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "confidence_stage1_residual_summary",
+      "path": "data/provenance/calibration/confidence/stage1_residual_summary.json",
+      "producer": "dai_sim.calibration.market",
+      "source_inputs": ["data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv", "data/provenance/calibration/confidence/stage1_market_estimates.json"],
+      "sha256": "98299918d452695b96f639aaae4c2344c189a3351bd55f1d86a2441d5bcded0e",
+      "size_bytes": 1118,
+      "schema": "Compact JSON centred residual and 24-hour run-bounded moving-block diagnostics and checksums.",
+      "context": "No hourly residual sequence or moving-block pool is tracked.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "confidence_simulated_moments_specification",
+      "path": "data/provenance/calibration/confidence/simulated_moments_specification.json",
+      "producer": "dai_sim.calibration.market",
+      "source_inputs": ["data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"],
+      "sha256": "7237beca817dd22ab10a6e1f5a89342b9a26469d7d960d5ee95925d4e4f2c05a",
+      "size_bytes": 3054,
+      "schema": "Compact JSON event counts, core-moment ownership, deterministic search subset and Sobol design checksums.",
+      "context": "Search infrastructure only; no candidate is evaluated, ranked or selected and no Stage 2 estimate exists.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "confidence_empirical_moments",
+      "path": "data/provenance/calibration/confidence/empirical_moments.csv",
+      "producer": "dai_sim.calibration.market",
+      "source_inputs": ["data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"],
+      "sha256": "51bf9ca89ec28b5e5716e04fdafb0052356a12c3ec148b8378ef115d20bad100",
+      "size_bytes": 1758,
+      "dimensions": [8, 13],
+      "schema": "Exactly eight pre-registered core moments with groups, definitions, values, scales, counts, weights and statuses.",
+      "context": "Calibration-only empirical moment evidence; validation events are excluded.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "confidence_moment_weights",
+      "path": "data/provenance/calibration/confidence/moment_weights.csv",
+      "producer": "dai_sim.calibration.market",
+      "source_inputs": ["data/provenance/calibration/confidence/empirical_moments.csv"],
+      "sha256": "5a30ee47bbc443db1afa671ec9bc25c50caea3dc6b5593bc352a149db6555ea0",
+      "size_bytes": 686,
+      "dimensions": [8, 7],
+      "schema": "Four-group initial weights with mean-one within-group weights and the fixed concentration ceiling.",
+      "context": "Initial objective weights only; no fit-quality reweighting has occurred.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "confidence_parameter_bounds",
+      "path": "data/provenance/calibration/confidence/parameter_bounds.json",
+      "producer": "dai_sim.calibration.market",
+      "source_inputs": ["docs/calibration/confidence_simulated_moments.md"],
+      "sha256": "6e1fcb4dcc3047b03bd24d290946fa532cab70412a867bc640fac8929fb4feda",
+      "size_bytes": 762,
+      "schema": "JSON structural restrictions, machine-safe interior epsilon and explicit boundary models.",
+      "context": "Contains no Stage 2 parameter estimate and nothing is runtime adopted.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "confidence_event_catalogue",
+      "path": "data/provenance/calibration/confidence/event_catalogue.csv",
+      "producer": "dai_sim.calibration.simulated_moments",
+      "source_inputs": ["data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"],
+      "sha256": "65e44c6b6790d292e360e4b21d068f3eedf0266287227ee0e4b167a4e29b2110",
+      "size_bytes": 27345,
+      "dimensions": [75, 34],
+      "schema": "One row per complete semantically identified material-downside event with timing, burden, recovery and eligibility fields.",
+      "context": "Compact event-level evidence only; no hourly market payload is embedded.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "confidence_seed_registry",
+      "path": "data/provenance/calibration/confidence/seed_registry.json",
+      "producer": "dai_sim.calibration.simulated_moments",
+      "source_inputs": ["docs/calibration/confidence_simulated_moments.md"],
+      "sha256": "b1d9e1e563aff2831351c0023287008c5351126ba84f31096602e6e134927813",
+      "size_bytes": 1125,
+      "schema": "Compact SHA-256 derivation contract, two registry roots, three stream owners, supported replication counts and verification vectors.",
+      "context": "Seeds are derived rather than enumerated; no process-randomised hash or global RNG is used.",
+      "classification": "snapshot"
     }
   ]
 }

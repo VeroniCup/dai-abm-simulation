@@ -1,0 +1,147 @@
+{
+  "above_peg_observations": 1017,
+  "above_peg_response": {
+    "bootstrap_median": 0.10590280181403908,
+    "bootstrap_p05": 0.0552079353301983,
+    "bootstrap_p95": 0.1531774165389052,
+    "bootstrap_standard_error": 0.029527751359449104,
+    "point_estimate": 0.10513116022712267,
+    "positive_sign_frequency": 1.0,
+    "zero_bound_frequency": 0.0
+  },
+  "below_peg_observations": 172,
+  "below_peg_response": {
+    "bootstrap_median": 0.20426384661198665,
+    "bootstrap_p05": 0.023967664176334325,
+    "bootstrap_p95": 0.44283480329066416,
+    "bootstrap_standard_error": 0.12762592723837007,
+    "point_estimate": 0.19938097532295382,
+    "positive_sign_frequency": 1.0,
+    "zero_bound_frequency": 0.0
+  },
+  "bootstrap": {
+    "method": "complete calendar-month blocks with replacement",
+    "replications": 2000,
+    "seed": 20260729
+  },
+  "calendar_month_concentration": {
+    "above": 0.06780578610690845,
+    "below": 0.15392388370320093
+  },
+  "estimator": "joint scipy.optimize.lsq_linear; no intercept; non-negative bounds",
+  "gates": {
+    "above_month_concentration_at_most_25pct": true,
+    "above_positive_frequency_at_least_90pct": true,
+    "above_zero_bound_below_20pct": true,
+    "at_least_100_above": true,
+    "at_least_100_below": true,
+    "below_month_concentration_at_most_25pct": true,
+    "below_positive_frequency_at_least_90pct": true,
+    "below_zero_bound_below_20pct": true,
+    "finite_coefficients": true
+  },
+  "input_path": "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv",
+  "input_sha256": "5d7f1ec9171023d442acbcebd41cd1837eb899769c37eb38b5c2561c9d64a5c9",
+  "interval": {
+    "end_exclusive": "2024-07-01T00:00:00+00:00",
+    "excluded_half_open_intervals": [
+      [
+        "2022-11-01T00:00:00+00:00",
+        "2022-11-21T00:00:00+00:00"
+      ],
+      [
+        "2023-03-06T00:00:00+00:00",
+        "2023-03-20T00:00:00+00:00"
+      ]
+    ],
+    "start_inclusive": "2019-12-31T00:00:00+00:00"
+  },
+  "leave_one_year_out_estimates": [
+    {
+      "above_peg_observations": 969,
+      "above_peg_response": 0.14413139574137815,
+      "below_peg_observations": 149,
+      "below_peg_response": 0.31665078279955594,
+      "calendar_year": 2020,
+      "observations": 1118
+    },
+    {
+      "above_peg_observations": 831,
+      "above_peg_response": 0.030663129638935475,
+      "below_peg_observations": 117,
+      "below_peg_response": 0.10613614849905448,
+      "calendar_year": 2021,
+      "observations": 948
+    },
+    {
+      "above_peg_observations": 722,
+      "above_peg_response": 0.09841843500717855,
+      "below_peg_observations": 123,
+      "below_peg_response": 0.17070322353289916,
+      "calendar_year": 2022,
+      "observations": 845
+    },
+    {
+      "above_peg_observations": 709,
+      "above_peg_response": 0.1119534919367795,
+      "below_peg_observations": 129,
+      "below_peg_response": 0.17686154045622315,
+      "calendar_year": 2023,
+      "observations": 838
+    },
+    {
+      "above_peg_observations": 837,
+      "above_peg_response": 0.11722007609390074,
+      "below_peg_observations": 170,
+      "below_peg_response": 0.20228035481257117,
+      "calendar_year": 2024,
+      "observations": 1007
+    }
+  ],
+  "ordinary_observations": 1189,
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "status": "accepted_for_future_smm",
+  "year_specific_estimates": [
+    {
+      "above_peg_observations": 48,
+      "above_peg_response": 1.2762847053491528e-10,
+      "below_peg_observations": 23,
+      "below_peg_response": 2.4324749820813695e-11,
+      "calendar_year": 2020,
+      "observations": 71
+    },
+    {
+      "above_peg_observations": 186,
+      "above_peg_response": 0.21261031341462336,
+      "below_peg_observations": 55,
+      "below_peg_response": 0.2698828927819107,
+      "calendar_year": 2021,
+      "observations": 241
+    },
+    {
+      "above_peg_observations": 295,
+      "above_peg_response": 0.1308895077723911,
+      "below_peg_observations": 49,
+      "below_peg_response": 0.5223339852409539,
+      "calendar_year": 2022,
+      "observations": 344
+    },
+    {
+      "above_peg_observations": 308,
+      "above_peg_response": 0.04637264286771258,
+      "below_peg_observations": 43,
+      "below_peg_response": 0.5142670701211848,
+      "calendar_year": 2023,
+      "observations": 351
+    },
+    {
+      "above_peg_observations": 180,
+      "above_peg_response": 0.009903494364076181,
+      "below_peg_observations": 2,
+      "below_peg_response": 3.053640628816071e-20,
+      "calendar_year": 2024,
+      "observations": 182
+    }
+  ]
+}

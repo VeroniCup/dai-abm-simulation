@@ -3,18 +3,20 @@
 ## 1. Purpose and decision boundary
 
 This document defines the first post-restructuring calibration milestone for
-confidence, DAI-market behaviour and peg recovery. It audits the implemented
+confidence, DAI-market behaviour and peg recovery. It audits the production
 mechanism, identifies what the existing empirical evidence can support, and
-specifies a bounded future implementation. It does not estimate behavioural
-parameters, adopt new values or authorise executable changes.
+specifies a bounded future implementation. Stage 1 ordinary-market
+coefficients and residual innovations have now been estimated for future SMM,
+but no persistent-confidence parameter is estimated or adopted.
 
 The companion [confidence estimation design](confidence_estimation.md) fixes
 the outcome, sample, liquidation reconstruction, estimator and evidence
 ownership. Its feasibility result is deliberately separate from this mechanism
 design. The subsequent [constrained simulated-moments
 design](confidence_simulated_moments.md) closes the methodological gap between
-the historical evidence and a future bounded implementation. It pre-registers
-moments, bounds, weighting and validation without fitting parameters.
+the historical evidence and a future bounded implementation. Its pure
+interfaces, Stage 1 estimator, event catalogue and search infrastructure are
+implemented; Stage 2 fitting and runtime integration remain blocked.
 
 Confidence is a latent modelling state. It is not an observed Maker variable,
 a wallet label or a survey measure. Historical DAI prices, collateral returns,

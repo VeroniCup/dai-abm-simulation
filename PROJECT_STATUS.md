@@ -64,10 +64,12 @@ structural stages:
 The bounded post-Stage-11 semantic-output correction and tracked-clone
 self-containment correction are also complete. Temporary compatibility
 interfaces have been removed. The Stage 12 working and tracked-only checkouts
-each passed the then-current 491-test suite. The current working suite contains
-501 passing tests after the historical confidence-evidence additions; runtime
-inputs, smoke checks and Experiments 1–5 retain their frozen integrity
-evidence.
+each passed the then-current 491-test suite. The pre-infrastructure working
+suite contained 501 passing tests after the historical confidence-evidence
+additions. The behavioural-confidence infrastructure raises the current suite
+to 536 passing tests through substantive model, calibration, workflow and
+evidence tests; runtime inputs, smoke checks and Experiments 1–5 retain their
+frozen integrity evidence.
 
 Repository restructuring is closed. The
 [final restructuring review](docs/validation/repository_restructuring.md)
@@ -146,7 +148,8 @@ predictive stress-proxy regression route permanently. No coefficient was
 fitted.
 
 The [constrained simulated-moments
-specification](docs/calibration/confidence_simulated_moments.md) is complete.
+specification](docs/calibration/confidence_simulated_moments.md) and its first
+bounded infrastructure pass are complete.
 It fixes equal weights on scaled lagged peg-gap and ETH-downside stress,
 separates direct estimation of \(\kappa_-\), \(\kappa_+\) and residual
 innovations from the Stage 2 vector
@@ -157,14 +160,23 @@ catalogue contains 74 calibration events, all beginning in 2020–21, plus one
 untouched USDC/SVB final-stress event. This temporal concentration is retained
 as an identification and validation risk.
 
+The fixed ordinary sample reproduces 1,189 daily observations: 172 below the
+peg and 1,017 above it. Joint bounded least squares gives candidate effective
+responses \(\widehat\kappa_-=0.1993809753\) and
+\(\widehat\kappa_+=0.1051311602\). Both coefficient gates and the run-bounded
+24-hour residual-block gates pass, so Stage 1 is accepted for future SMM. The
+pure persistent-confidence and coefficient-normalised market interfaces have
+no production caller, and no runtime profile adopts them.
+
 Bad debt is classified as a recovery-gate mechanism only. Policy feedback is
 a literature-informed sensitivity, and the current optional recovery equation
 is retained only as a legacy ablation. The SMM design includes explicit
 bounds, common-random-number replication, Sobol search, nested boundary
 models, Jacobian diagnostics, event bootstrap, leave-one-event-out checks and
-quiet/final blocked validation. It fits no parameter. Executable
-infrastructure, Stage 1 estimation, SMM fitting and behavioural implementation
-all remain pending separate authorisation.
+quiet/final blocked validation. The transformations, objective, deterministic
+seed registry, 32-event subset and 256-point Sobol design are implemented but
+not evaluated against the simulator. Stage 2 SMM fitting and behavioural
+runtime integration remain pending separate authorisation.
 
 The remaining empirical work is adoption and validation of defensible
 parameter candidates, followed by calibrated counterfactual experiments.

@@ -17,6 +17,7 @@ module provides a transparent mechanism for stress testing:
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 
 import numpy as np
 
@@ -90,6 +91,82 @@ class DAIMarketConfig:
             raise ValueError("bad_debt_recovery_drag cannot be negative.")
         if not 0 <= self.min_recovery_confidence <= 1:
             raise ValueError("min_recovery_confidence must be between 0 and 1.")
+
+
+@dataclass(frozen=True)
+class BehaviouralMarketResponse:
+    """Auditable components of the coefficient-normalised price response."""
+
+    below_peg_stabilising_component: float
+    above_peg_supply_component: float
+    panic_component: float
+    residual_innovation: float
+    unclipped_price_change: float
+    unclipped_next_price: float
+    clipped_next_price: float
+    lower_bound_binding: bool
+    upper_bound_binding: bool
+
+
+def coefficient_normalised_market_response(
+    *,
+    dai_price: float,
+    confidence: float,
+    below_peg_response: float,
+    above_peg_response: float,
+    panic_response: float,
+    residual_innovation: float,
+    min_price: float,
+    max_price: float,
+) -> BehaviouralMarketResponse:
+    """Evaluate the proposed behavioural equation without runtime side effects."""
+    numeric = (
+        dai_price,
+        confidence,
+        below_peg_response,
+        above_peg_response,
+        panic_response,
+        residual_innovation,
+        min_price,
+        max_price,
+    )
+    if not all(math.isfinite(value) for value in numeric):
+        raise ValueError("Behavioural market inputs must be finite.")
+    if dai_price <= 0.0:
+        raise ValueError("dai_price must be positive.")
+    if not 0.0 <= confidence <= 1.0:
+        raise ValueError("confidence must be in [0, 1].")
+    if any(
+        coefficient < 0.0
+        for coefficient in (
+            below_peg_response,
+            above_peg_response,
+            panic_response,
+        )
+    ):
+        raise ValueError("Effective response coefficients must be non-negative.")
+    if min_price <= 0.0 or max_price <= min_price:
+        raise ValueError("Require 0 < min_price < max_price.")
+
+    below_gap = max(1.0 - dai_price, 0.0)
+    above_gap = max(dai_price - 1.0, 0.0)
+    stabilising = below_peg_response * confidence * below_gap
+    supply = -above_peg_response * above_gap
+    panic = -panic_response * (1.0 - confidence) * below_gap
+    change = stabilising + supply + panic + residual_innovation
+    next_price = dai_price + change
+    clipped = min(max(next_price, min_price), max_price)
+    return BehaviouralMarketResponse(
+        below_peg_stabilising_component=stabilising,
+        above_peg_supply_component=supply,
+        panic_component=panic,
+        residual_innovation=residual_innovation,
+        unclipped_price_change=change,
+        unclipped_next_price=next_price,
+        clipped_next_price=clipped,
+        lower_bound_binding=next_price < min_price,
+        upper_bound_binding=next_price > max_price,
+    )
 
 
 def calculate_dai_market_pressures(

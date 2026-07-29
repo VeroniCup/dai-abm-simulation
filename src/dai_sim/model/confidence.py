@@ -16,6 +16,7 @@ This is inspired by stablecoin panic-regime modelling, but adapted to DAI.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 
 
 @dataclass(frozen=True)
@@ -89,6 +90,202 @@ class ConfidenceConfig:
             raise ValueError("panic_confidence cannot be negative.")
         if self.panic_selling_multiplier < 0:
             raise ValueError("panic_selling_multiplier cannot be negative.")
+
+
+@dataclass(frozen=True)
+class PersistentConfidenceConfig:
+    """Explicit, non-runtime parameters for the persistent-confidence model."""
+
+    deterioration_adjustment: float
+    recovery_adjustment: float
+    confidence_floor: float
+    stability_hours: int
+
+    def validate(self) -> None:
+        """Validate the structural restrictions of the proposed mechanism."""
+        values = (
+            self.deterioration_adjustment,
+            self.recovery_adjustment,
+            self.confidence_floor,
+        )
+        if not all(math.isfinite(value) for value in values):
+            raise ValueError("Persistent-confidence parameters must be finite.")
+        if not (
+            0.0
+            < self.recovery_adjustment
+            <= self.deterioration_adjustment
+            <= 1.0
+        ):
+            raise ValueError(
+                "Require 0 < recovery_adjustment <= "
+                "deterioration_adjustment <= 1."
+            )
+        if not 0.0 <= self.confidence_floor < 1.0:
+            raise ValueError("confidence_floor must be in [0, 1).")
+        if isinstance(self.stability_hours, bool) or self.stability_hours < 1:
+            raise ValueError("stability_hours must be an integer of at least 1.")
+        if int(self.stability_hours) != self.stability_hours:
+            raise ValueError("stability_hours must be an integer of at least 1.")
+
+
+@dataclass(frozen=True)
+class PersistentConfidenceState:
+    """Persistent confidence and its recovery-gate memory."""
+
+    confidence: float
+    consecutive_stable_hours: int
+    recovery_gate_open: bool
+
+    @classmethod
+    def initial(cls) -> "PersistentConfidenceState":
+        """Return the pre-registered state without using future evidence."""
+        return cls(
+            confidence=1.0,
+            consecutive_stable_hours=0,
+            recovery_gate_open=False,
+        )
+
+    def validate(self) -> None:
+        """Validate a state supplied to the pure transition function."""
+        if not math.isfinite(self.confidence) or not 0.0 <= self.confidence <= 1.0:
+            raise ValueError("confidence must be finite and in [0, 1].")
+        if (
+            isinstance(self.consecutive_stable_hours, bool)
+            or self.consecutive_stable_hours < 0
+            or int(self.consecutive_stable_hours)
+            != self.consecutive_stable_hours
+        ):
+            raise ValueError(
+                "consecutive_stable_hours must be a non-negative integer."
+            )
+
+
+@dataclass(frozen=True)
+class RecoveryGateInputs:
+    """Required observable conditions controlling confidence recovery."""
+
+    price_inside_recovery_band: bool
+    liquidation_pressure_acceptable: bool
+    severe_bad_debt_present: bool
+
+
+@dataclass(frozen=True)
+class PersistentConfidenceUpdate:
+    """A new immutable state plus auditable transition diagnostics."""
+
+    state: PersistentConfidenceState
+    target_stress: float
+    target_confidence: float
+    branch: str
+    updated_stable_counter: int
+    recovery_gate_open: bool
+
+
+def observable_stress(
+    scaled_peg_gap: float,
+    scaled_collateral_stress: float,
+    *,
+    peg_weight: float = 0.5,
+    collateral_weight: float = 0.5,
+) -> float:
+    """Combine already-scaled observable stress inputs without rescaling them."""
+    values = (
+        scaled_peg_gap,
+        scaled_collateral_stress,
+        peg_weight,
+        collateral_weight,
+    )
+    if not all(math.isfinite(value) for value in values):
+        raise ValueError("Stress inputs and weights must be finite.")
+    if not 0.0 <= scaled_peg_gap <= 1.0:
+        raise ValueError("scaled_peg_gap must be in [0, 1].")
+    if not 0.0 <= scaled_collateral_stress <= 1.0:
+        raise ValueError("scaled_collateral_stress must be in [0, 1].")
+    if peg_weight < 0.0 or collateral_weight < 0.0:
+        raise ValueError("Stress weights must be non-negative.")
+    if not math.isclose(
+        peg_weight + collateral_weight,
+        1.0,
+        rel_tol=0.0,
+        abs_tol=1e-12,
+    ):
+        raise ValueError("Stress weights must sum to one.")
+    return min(
+        1.0,
+        max(
+            0.0,
+            peg_weight * scaled_peg_gap
+            + collateral_weight * scaled_collateral_stress,
+        ),
+    )
+
+
+def update_persistent_confidence(
+    state: PersistentConfidenceState,
+    config: PersistentConfidenceConfig,
+    *,
+    scaled_peg_gap: float,
+    scaled_collateral_stress: float,
+    recovery_inputs: RecoveryGateInputs,
+    peg_weight: float = 0.5,
+    collateral_weight: float = 0.5,
+) -> PersistentConfidenceUpdate:
+    """Apply one pure persistent-confidence transition.
+
+    This interface is intentionally not called by the production simulation.
+    """
+    state.validate()
+    config.validate()
+    stress = observable_stress(
+        scaled_peg_gap,
+        scaled_collateral_stress,
+        peg_weight=peg_weight,
+        collateral_weight=collateral_weight,
+    )
+    target = 1.0 - stress
+    qualifying = (
+        recovery_inputs.price_inside_recovery_band
+        and recovery_inputs.liquidation_pressure_acceptable
+        and not recovery_inputs.severe_bad_debt_present
+    )
+    if qualifying:
+        stable_hours = state.consecutive_stable_hours + 1
+        gate_open = stable_hours >= config.stability_hours
+    else:
+        stable_hours = 0
+        gate_open = False
+
+    if target < state.confidence:
+        confidence = max(
+            config.confidence_floor,
+            state.confidence
+            + config.deterioration_adjustment * (target - state.confidence),
+        )
+        branch = "deterioration"
+    elif gate_open:
+        confidence = min(
+            1.0,
+            state.confidence
+            + config.recovery_adjustment * (1.0 - state.confidence),
+        )
+        branch = "recovery"
+    else:
+        confidence = state.confidence
+        branch = "hold"
+
+    updated = PersistentConfidenceState(
+        confidence=confidence,
+        consecutive_stable_hours=stable_hours,
+        recovery_gate_open=gate_open,
+    )
+    return PersistentConfidenceUpdate(
+        state=updated,
+        target_stress=stress,
+        target_confidence=target,
+        branch=branch,
+        updated_stable_counter=stable_hours,
+        recovery_gate_open=gate_open,
+    )
 
 
 def classify_price_regime(

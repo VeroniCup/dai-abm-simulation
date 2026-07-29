@@ -218,5 +218,10 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
         "tests/workflows/test_semantic_output_paths.py": 5,
         "tests/calibration/test_tracked_calibration_evidence.py": 6,
         "tests/calibration/test_confidence_evidence.py": 10,
+        "tests/calibration/test_confidence_infrastructure_evidence.py": 6,
+        "tests/calibration/test_simulated_moments.py": 8,
+        "tests/model/test_confidence.py": 10,
+        "tests/model/test_market.py": 7,
+        "tests/workflows/test_confidence_calibration.py": 4,
     }
     assert len(nodeids) == 419 + len(additions)

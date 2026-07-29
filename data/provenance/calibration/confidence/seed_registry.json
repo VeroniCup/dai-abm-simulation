@@ -1,0 +1,41 @@
+{
+  "algorithm": "SHA-256 over canonical JSON; bytes 0:8 as unsigned big-endian integer",
+  "event_id_convention": "<partition>__<UTC onset YYYYMMDDTHHMMSSZ>",
+  "registry_root_identifiers": [
+    "confidence-smm-registry-a",
+    "confidence-smm-registry-b"
+  ],
+  "schema_version": 1,
+  "stream_names": [
+    "vault_sampling",
+    "market_innovations",
+    "liquidation_randomness"
+  ],
+  "supported_replication_counts": [
+    32,
+    64
+  ],
+  "verification_vectors": [
+    {
+      "event_id": "calibration__20200128T020000Z",
+      "registry_id": "confidence-smm-registry-a",
+      "replication": 0,
+      "seed": 10197023794858747310,
+      "stream_name": "vault_sampling"
+    },
+    {
+      "event_id": "calibration__20200128T020000Z",
+      "registry_id": "confidence-smm-registry-a",
+      "replication": 31,
+      "seed": 4579888580977489476,
+      "stream_name": "market_innovations"
+    },
+    {
+      "event_id": "calibration__20210301T000000Z",
+      "registry_id": "confidence-smm-registry-b",
+      "replication": 63,
+      "seed": 5398962559752155142,
+      "stream_name": "liquidation_randomness"
+    }
+  ]
+}

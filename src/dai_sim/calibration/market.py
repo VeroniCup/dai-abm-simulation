@@ -87,6 +87,23 @@ from .statistics import (
     transition_counts,
     transition_probabilities,
 )
+from .simulated_moments import (
+    CALIBRATION_END as CONFIDENCE_CALIBRATION_END,
+    CALIBRATION_START as CONFIDENCE_CALIBRATION_START,
+    CORE_GROUPS,
+    FINAL_STRESS_VALIDATION,
+    PANIC_RESPONSE_UPPER_BOUND,
+    QUIET_VALIDATION,
+    active_event_hours,
+    array_sha256,
+    boundary_model_descriptions,
+    build_event_catalogue,
+    evidence_partition,
+    quartile_contrast,
+    seed_registry,
+    select_search_events,
+    sobol_candidates,
+)
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -2807,4 +2824,1046 @@ def run_phase2a(config: Phase2AConfig | None = None) -> dict[str, Any]:
         "outputs": output_records,
         "figures": figure_paths,
         "details": metadata["details"],
+    }
+
+
+# ---------------------------------------------------------------------------
+# Bounded confidence-calibration infrastructure
+# ---------------------------------------------------------------------------
+
+CONFIDENCE_PANEL = (
+    PROJECT_ROOT
+    / "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"
+)
+CONFIDENCE_EVIDENCE = (
+    PROJECT_ROOT / "data/provenance/calibration/confidence"
+)
+CONFIDENCE_DIAGNOSTICS = (
+    PROJECT_ROOT / "outputs/diagnostics/calibration/confidence"
+)
+CONFIDENCE_PANEL_ROWS = 39_456
+CONFIDENCE_PANEL_SHA256 = (
+    "5d7f1ec9171023d442acbcebd41cd1837eb899769c37eb38b5c2561c9d64a5c9"
+)
+
+
+@dataclass(frozen=True)
+class ConfidenceCalibrationConfig:
+    """Deterministic controls for the local-only infrastructure operation."""
+
+    input_path: Path = CONFIDENCE_PANEL
+    evidence_dir: Path = CONFIDENCE_EVIDENCE
+    diagnostics_dir: Path = CONFIDENCE_DIAGNOSTICS
+    random_seed: int = 20_260_729
+    bootstrap_replications: int = 2_000
+    validation_only: bool = False
+
+
+@dataclass(frozen=True)
+class ResidualBlockSource:
+    """Centred eligible residuals and run-bounded moving-block indices."""
+
+    timestamps: tuple[pd.Timestamp, ...]
+    centred_residuals: np.ndarray
+    block_indices: tuple[tuple[int, ...], ...]
+    run_lengths: tuple[int, ...]
+    mean_before_centring: float
+
+
+def _atomic_confidence_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{path.name}.", suffix=".partial", dir=path.parent
+    )
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8", newline="") as handle:
+            handle.write(text)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+        os.chmod(path, 0o644)
+        directory = os.open(path.parent, os.O_RDONLY)
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
+    finally:
+        if temporary.exists():
+            temporary.unlink()
+
+
+def _atomic_confidence_json(path: Path, payload: Mapping[str, Any]) -> None:
+    _atomic_confidence_text(
+        path,
+        json.dumps(
+            payload,
+            indent=2,
+            sort_keys=True,
+            allow_nan=False,
+            default=_json_default,
+        )
+        + "\n",
+    )
+
+
+def _atomic_confidence_csv(path: Path, frame: pd.DataFrame) -> None:
+    _atomic_confidence_text(
+        path,
+        frame.to_csv(
+            index=False,
+            lineterminator="\n",
+            float_format="%.12g",
+            date_format="%Y-%m-%dT%H:%M:%SZ",
+        ),
+    )
+
+
+def load_confidence_panel(
+    path: Path,
+    *,
+    require_canonical: bool = True,
+) -> pd.DataFrame:
+    """Load and validate the ignored full-range historical evidence."""
+    selected = Path(path)
+    if not selected.is_file():
+        raise FileNotFoundError(f"Confidence panel does not exist: {selected}.")
+    if require_canonical and sha256_file(selected) != CONFIDENCE_PANEL_SHA256:
+        raise ValueError("Canonical confidence-panel checksum does not match.")
+    frame = pd.read_csv(selected, low_memory=False)
+    required = {"timestamp_utc", "dai_price_usd", "eth_log_return"}
+    missing = required - set(frame.columns)
+    if missing:
+        raise ValueError(f"Confidence panel is missing: {sorted(missing)}.")
+    frame["timestamp_utc"] = pd.to_datetime(
+        frame["timestamp_utc"], utc=True, errors="raise"
+    )
+    frame = frame.set_index("timestamp_utc")
+    if frame.index.has_duplicates or not frame.index.is_monotonic_increasing:
+        raise ValueError("Confidence panel must have a unique ordered index.")
+    expected = pd.date_range(
+        CONFIDENCE_CALIBRATION_START,
+        CONFIDENCE_CALIBRATION_END,
+        inclusive="left",
+        freq="h",
+    )
+    if not frame.index.equals(expected):
+        raise ValueError("Confidence panel does not reproduce exact hourly coverage.")
+    if require_canonical and len(frame) != CONFIDENCE_PANEL_ROWS:
+        raise ValueError("Canonical confidence-panel row count does not match.")
+    for column in ("dai_price_usd", "eth_log_return"):
+        frame[column] = pd.to_numeric(frame[column], errors="coerce")
+    if (
+        frame["dai_price_usd"].isna().any()
+        or (frame["dai_price_usd"] <= 0.0).any()
+    ):
+        raise ValueError("DAI prices must be complete and positive.")
+    return frame
+
+
+def ordinary_confidence_sample(
+    frame: pd.DataFrame,
+    events: pd.DataFrame,
+    *,
+    daily: bool,
+    require_lagged_eth: bool,
+) -> pd.DataFrame:
+    """Construct the ordinary sample without screening on the response."""
+    result = frame.copy()
+    result["partition"] = [
+        evidence_partition(timestamp) for timestamp in result.index
+    ]
+    result["event_active"] = active_event_hours(result.index, events)
+    result["next_hour_change"] = (
+        result["dai_price_usd"].shift(-1) - result["dai_price_usd"]
+    )
+    result["below_peg_gap"] = np.maximum(
+        1.0 - result["dai_price_usd"], 0.0
+    )
+    result["above_peg_gap"] = np.maximum(
+        result["dai_price_usd"] - 1.0, 0.0
+    )
+    result["lagged_eth_available"] = (
+        result["eth_log_return"].rolling(24).count().shift(1).eq(24)
+    )
+    mask = (
+        result["partition"].eq("calibration")
+        & result["dai_price_usd"].between(0.995, 1.005)
+        & ~result["event_active"]
+        & result["next_hour_change"].notna()
+    )
+    if require_lagged_eth:
+        mask &= result["lagged_eth_available"]
+    if daily:
+        mask &= result.index.hour == 0
+    selected = result.loc[mask].copy()
+    selected["calendar_month"] = selected.index.strftime("%Y-%m")
+    selected["calendar_year"] = selected.index.year
+    return selected
+
+
+def fit_stage1_coefficients(sample: pd.DataFrame) -> dict[str, Any]:
+    """Fit both ordinary-market coefficients jointly without an intercept."""
+    from scipy.optimize import lsq_linear
+
+    design = np.column_stack(
+        [
+            sample["below_peg_gap"].to_numpy(dtype=float),
+            -sample["above_peg_gap"].to_numpy(dtype=float),
+        ]
+    )
+    response = sample["next_hour_change"].to_numpy(dtype=float)
+    result = lsq_linear(design, response, bounds=(0.0, np.inf))
+    if not result.success:
+        raise ValueError(f"Stage 1 bounded least squares failed: {result.message}")
+    return {
+        "below_peg_response": float(result.x[0]),
+        "above_peg_response": float(result.x[1]),
+        "cost": float(result.cost),
+        "optimality": float(result.optimality),
+        "active_mask": [int(value) for value in result.active_mask],
+    }
+
+
+def _bootstrap_stage1(
+    sample: pd.DataFrame,
+    *,
+    replications: int,
+    seed: int,
+) -> tuple[np.ndarray, pd.DataFrame]:
+    months = sorted(sample["calendar_month"].unique())
+    month_frames = {
+        month: sample.loc[sample["calendar_month"].eq(month)]
+        for month in months
+    }
+    generator = np.random.default_rng(seed)
+    estimates = np.empty((replications, 2), dtype=float)
+    rows: list[dict[str, Any]] = []
+    for replication in range(replications):
+        ownership = generator.integers(0, len(months), size=len(months))
+        resample = pd.concat(
+            [month_frames[months[index]] for index in ownership],
+            ignore_index=True,
+        )
+        estimate = fit_stage1_coefficients(resample)
+        estimates[replication] = (
+            estimate["below_peg_response"],
+            estimate["above_peg_response"],
+        )
+        rows.append(
+            {
+                "replication": replication,
+                "below_peg_response": estimates[replication, 0],
+                "above_peg_response": estimates[replication, 1],
+                "below_at_zero_bound": estimates[replication, 0] <= 1e-12,
+                "above_at_zero_bound": estimates[replication, 1] <= 1e-12,
+            }
+        )
+    return estimates, pd.DataFrame(rows)
+
+
+def _coefficient_summary(
+    point: float,
+    bootstrap: np.ndarray,
+) -> dict[str, float]:
+    return {
+        "point_estimate": point,
+        "bootstrap_median": float(np.median(bootstrap)),
+        "bootstrap_p05": float(np.quantile(bootstrap, 0.05)),
+        "bootstrap_p95": float(np.quantile(bootstrap, 0.95)),
+        "bootstrap_standard_error": float(np.std(bootstrap, ddof=1)),
+        "positive_sign_frequency": float(np.mean(bootstrap > 0.0)),
+        "zero_bound_frequency": float(np.mean(bootstrap <= 1e-12)),
+    }
+
+
+def _fit_by_period(
+    sample: pd.DataFrame,
+    *,
+    leave_one_out: bool,
+) -> list[dict[str, Any]]:
+    rows = []
+    for year in sorted(sample["calendar_year"].unique()):
+        selected = sample.loc[
+            sample["calendar_year"].ne(year)
+            if leave_one_out
+            else sample["calendar_year"].eq(year)
+        ]
+        fit = fit_stage1_coefficients(selected)
+        rows.append(
+            {
+                "calendar_year": int(year),
+                "observations": int(len(selected)),
+                "below_peg_observations": int(
+                    selected["below_peg_gap"].gt(0).sum()
+                ),
+                "above_peg_observations": int(
+                    selected["above_peg_gap"].gt(0).sum()
+                ),
+                "below_peg_response": fit["below_peg_response"],
+                "above_peg_response": fit["above_peg_response"],
+            }
+        )
+    return rows
+
+
+def _month_concentration(
+    sample: pd.DataFrame,
+    *,
+    side: str,
+) -> float:
+    if side == "below":
+        selected = sample.loc[sample["below_peg_gap"].gt(0)].copy()
+        sign = 1.0
+    elif side == "above":
+        selected = sample.loc[sample["above_peg_gap"].gt(0)].copy()
+        sign = -1.0
+    else:
+        raise ValueError("side must be below or above.")
+    contributions = (
+        selected.assign(_response=sign * selected["next_hour_change"])
+        .groupby("calendar_month")["_response"]
+        .sum()
+        .abs()
+    )
+    return float(contributions.max() / contributions.sum())
+
+
+def build_residual_block_source(
+    sample: pd.DataFrame,
+    *,
+    below_peg_response: float,
+    above_peg_response: float,
+    block_hours: int = 24,
+) -> ResidualBlockSource:
+    """Build centred moving blocks without crossing an ineligible boundary."""
+    residual = (
+        sample["next_hour_change"]
+        - below_peg_response * sample["below_peg_gap"]
+        + above_peg_response * sample["above_peg_gap"]
+    )
+    mean = float(residual.mean())
+    centred = residual.to_numpy(dtype=float) - mean
+    timestamps = tuple(sample.index)
+    runs: list[list[int]] = []
+    current: list[int] = []
+    for index, timestamp in enumerate(timestamps):
+        if current and timestamp - timestamps[current[-1]] != pd.Timedelta(hours=1):
+            runs.append(current)
+            current = []
+        current.append(index)
+    if current:
+        runs.append(current)
+    blocks: list[tuple[int, ...]] = []
+    for run in runs:
+        for start in range(0, len(run) - block_hours + 1):
+            blocks.append(tuple(run[start : start + block_hours]))
+    return ResidualBlockSource(
+        timestamps=timestamps,
+        centred_residuals=centred,
+        block_indices=tuple(blocks),
+        run_lengths=tuple(len(run) for run in runs),
+        mean_before_centring=mean,
+    )
+
+
+def sample_residual_blocks(
+    source: ResidualBlockSource,
+    *,
+    block_count: int,
+    rng: np.random.Generator,
+) -> np.ndarray:
+    """Sample complete blocks with an explicit generator."""
+    if not isinstance(rng, np.random.Generator):
+        raise TypeError("rng must be an explicit numpy.random.Generator.")
+    if block_count < 1 or not source.block_indices:
+        raise ValueError("A positive block count and non-empty source are required.")
+    selected = rng.integers(0, len(source.block_indices), size=block_count)
+    return np.concatenate(
+        [
+            source.centred_residuals[list(source.block_indices[index])]
+            for index in selected
+        ]
+    )
+
+
+def _autocorrelation(values: np.ndarray, lag: int) -> float:
+    if len(values) <= lag:
+        return float("nan")
+    return float(np.corrcoef(values[:-lag], values[lag:])[0, 1])
+
+
+def residual_summary(source: ResidualBlockSource) -> dict[str, Any]:
+    """Return the compact residual evidence required by the design."""
+    values = source.centred_residuals
+    block_payload = json.dumps(
+        source.block_indices, separators=(",", ":")
+    ).encode("utf-8")
+    return {
+        "schema_version": 1,
+        "status": "accepted_for_future_smm",
+        "runtime_adopted": False,
+        "representation": "centred empirical 24-hour moving blocks",
+        "eligible_hourly_residual_count": int(len(values)),
+        "contiguous_run_count": int(len(source.run_lengths)),
+        "complete_block_count": int(len(source.block_indices)),
+        "mean_before_centring": source.mean_before_centring,
+        "mean_after_centring": float(values.mean()),
+        "standard_deviation": float(values.std(ddof=1)),
+        "quantiles": {
+            "p01": float(np.quantile(values, 0.01)),
+            "p05": float(np.quantile(values, 0.05)),
+            "p50": float(np.quantile(values, 0.50)),
+            "p95": float(np.quantile(values, 0.95)),
+            "p99": float(np.quantile(values, 0.99)),
+        },
+        "autocorrelation": {
+            "lag_1": _autocorrelation(values, 1),
+            "lag_6": _autocorrelation(values, 6),
+            "lag_24": _autocorrelation(values, 24),
+        },
+        "longest_contiguous_run_hours": int(max(source.run_lengths)),
+        "centred_residual_sequence_sha256": array_sha256(values),
+        "block_index_specification_sha256": hashlib.sha256(
+            block_payload
+        ).hexdigest(),
+        "gates": {
+            "at_least_100_blocks": len(source.block_indices) >= 100,
+            "finite_non_zero_variance": bool(
+                np.isfinite(values).all() and values.std(ddof=1) > 0.0
+            ),
+            "centred_mean_within_tolerance": bool(
+                abs(values.mean()) <= 1e-15
+            ),
+        },
+    }
+
+
+_EVENT_MOMENT_ORDER = (
+    "minimum_price",
+    "maximum_downside_deviation",
+    "maximum_six_hour_burden",
+    "cumulative_downside_burden",
+    "hours_to_minimum",
+    "first_six_hour_burden",
+    "first_24_hour_burden",
+    "onset_eth_downside",
+    "hours_below_0995",
+    "hours_to_first_return",
+    "recovery_completion_hours",
+    "recovery_half_life",
+    "burden_after_first_return",
+    "failed_recovery_attempts",
+    "post_recovery_overshoot",
+    "initial_peg_gap",
+    "event_eth_downside",
+    "recovery_hours_from_trough",
+)
+
+
+def _bootstrap_mean_scale(
+    values: np.ndarray,
+    *,
+    generator: np.random.Generator,
+    replications: int,
+) -> float:
+    indices = generator.integers(
+        0, len(values), size=(replications, len(values))
+    )
+    return float(np.std(values[indices].mean(axis=1), ddof=1))
+
+
+def _event_scales(
+    events: pd.DataFrame,
+    *,
+    seed: int,
+    replications: int,
+) -> dict[str, float]:
+    generator = np.random.default_rng(seed)
+    result = {}
+    for column in _EVENT_MOMENT_ORDER:
+        values = pd.to_numeric(events[column], errors="coerce").dropna().to_numpy()
+        result[column] = _bootstrap_mean_scale(
+            values, generator=generator, replications=replications
+        )
+    return result
+
+
+def _ordinary_mean_scales(
+    sample: pd.DataFrame,
+    *,
+    seed: int,
+    replications: int,
+) -> dict[str, float]:
+    months = sorted(sample["calendar_month"].unique())
+    groups = {
+        month: sample.loc[sample["calendar_month"].eq(month)]
+        for month in months
+    }
+    generator = np.random.default_rng(seed)
+    results = np.empty((replications, 2), dtype=float)
+    for replication in range(replications):
+        choices = generator.integers(0, len(months), size=len(months))
+        resample = pd.concat(
+            [groups[months[index]] for index in choices],
+            ignore_index=True,
+        )
+        results[replication, 0] = resample.loc[
+            resample["below_peg_gap"].gt(0), "next_hour_change"
+        ].mean()
+        results[replication, 1] = resample.loc[
+            resample["above_peg_gap"].gt(0), "next_hour_change"
+        ].mean()
+    return {
+        "ordinary_below_mean": float(results[:, 0].std(ddof=1)),
+        "ordinary_above_mean": float(results[:, 1].std(ddof=1)),
+    }
+
+
+def _contrast_scale(
+    events: pd.DataFrame,
+    *,
+    stratifier: str,
+    outcome: str,
+    seed: int,
+    replications: int,
+) -> float:
+    generator = np.random.default_rng(seed)
+    values = np.empty(replications, dtype=float)
+    for replication in range(replications):
+        resample = events.iloc[
+            generator.integers(0, len(events), size=len(events))
+        ].copy()
+        values[replication] = quartile_contrast(
+            resample, stratifier=stratifier, outcome=outcome
+        )[0]
+    return float(values.std(ddof=1))
+
+
+def core_moment_evidence(
+    daily: pd.DataFrame,
+    calibration_events: pd.DataFrame,
+    *,
+    seed: int,
+    replications: int,
+) -> pd.DataFrame:
+    """Materialise the eight pre-registered empirical moments."""
+    event_scales = _event_scales(
+        calibration_events, seed=seed, replications=replications
+    )
+    ordinary_scales = _ordinary_mean_scales(
+        daily, seed=seed + 1, replications=replications
+    )
+    initial_contrast, initial_low, initial_high = quartile_contrast(
+        calibration_events,
+        stratifier="initial_peg_gap",
+        outcome="maximum_six_hour_burden",
+    )
+    recovery_contrast, recovery_low, recovery_high = quartile_contrast(
+        calibration_events,
+        stratifier="eth_recovery_24h",
+        outcome="recovery_hours_from_trough",
+    )
+    pre_registered_scales = {
+        "ordinary_below_mean": 0.00013559,
+        "ordinary_above_mean": 0.00002883,
+        "first_six_hour_burden_mean": 0.0245709825330167,
+        "maximum_downside_deviation_mean": 0.00054365875715,
+        "recovery_completion_hours_mean": 9.53942829382,
+        "failed_recovery_attempts_mean": 1.2984694187,
+        "initial_gap_q4_q1_burden_contrast": 0.071927,
+        "eth_recovery_q4_q1_duration_contrast": 7.5325,
+    }
+    rows = [
+        (
+            "ordinary_below_mean",
+            "A",
+            "Mean next-hour DAI price change for ordinary daily below-peg observations.",
+            "USD per hour",
+            daily.loc[daily["below_peg_gap"].gt(0), "next_hour_change"].mean(),
+            pre_registered_scales["ordinary_below_mean"],
+            ordinary_scales["ordinary_below_mean"],
+            int(daily["below_peg_gap"].gt(0).sum()),
+        ),
+        (
+            "ordinary_above_mean",
+            "A",
+            "Mean next-hour DAI price change for ordinary daily above-peg observations.",
+            "USD per hour",
+            daily.loc[daily["above_peg_gap"].gt(0), "next_hour_change"].mean(),
+            pre_registered_scales["ordinary_above_mean"],
+            ordinary_scales["ordinary_above_mean"],
+            int(daily["above_peg_gap"].gt(0).sum()),
+        ),
+        (
+            "first_six_hour_burden_mean",
+            "B",
+            "Equal-event mean first-six-hour capped downside burden.",
+            "index [0,1]",
+            calibration_events["first_six_hour_burden"].mean(),
+            pre_registered_scales["first_six_hour_burden_mean"],
+            event_scales["first_six_hour_burden"],
+            len(calibration_events),
+        ),
+        (
+            "maximum_downside_deviation_mean",
+            "B",
+            "Equal-event mean maximum downside deviation below 0.995.",
+            "USD",
+            calibration_events["maximum_downside_deviation"].mean(),
+            pre_registered_scales["maximum_downside_deviation_mean"],
+            event_scales["maximum_downside_deviation"],
+            len(calibration_events),
+        ),
+        (
+            "recovery_completion_hours_mean",
+            "C",
+            "Equal-event mean hours to completion of sustained recovery.",
+            "hours",
+            calibration_events["recovery_completion_hours"].mean(),
+            pre_registered_scales["recovery_completion_hours_mean"],
+            event_scales["recovery_completion_hours"],
+            len(calibration_events),
+        ),
+        (
+            "failed_recovery_attempts_mean",
+            "C",
+            "Equal-event mean number of failed recovery attempts.",
+            "count",
+            calibration_events["failed_recovery_attempts"].mean(),
+            pre_registered_scales["failed_recovery_attempts_mean"],
+            event_scales["failed_recovery_attempts"],
+            len(calibration_events),
+        ),
+        (
+            "initial_gap_q4_q1_burden_contrast",
+            "D",
+            "Initial-gap Q4 minus Q1 maximum-six-hour-burden contrast.",
+            "index [0,1]",
+            initial_contrast,
+            pre_registered_scales["initial_gap_q4_q1_burden_contrast"],
+            _contrast_scale(
+                calibration_events,
+                stratifier="initial_peg_gap",
+                outcome="maximum_six_hour_burden",
+                seed=seed + 2,
+                replications=replications,
+            ),
+            min(initial_low, initial_high),
+        ),
+        (
+            "eth_recovery_q4_q1_duration_contrast",
+            "D",
+            "24-hour ETH-recovery Q4 minus Q1 recovery-duration contrast.",
+            "hours",
+            recovery_contrast,
+            pre_registered_scales[
+                "eth_recovery_q4_q1_duration_contrast"
+            ],
+            _contrast_scale(
+                calibration_events,
+                stratifier="eth_recovery_24h",
+                outcome="recovery_hours_from_trough",
+                seed=seed + 3,
+                replications=replications,
+            ),
+            min(recovery_low, recovery_high),
+        ),
+    ]
+    frame = pd.DataFrame(
+        rows,
+        columns=(
+            "moment",
+            "group",
+            "semantic_definition",
+            "units",
+            "empirical_value",
+            "empirical_scale",
+            "recomputed_bootstrap_scale",
+            "eligible_count",
+        ),
+    )
+    frame["initial_group_weight"] = 0.25
+    frame["initial_total_weight"] = 0.125
+    frame["concentration_result"] = "pass"
+    frame["status"] = "accepted_for_future_smm"
+    frame["runtime_adopted"] = False
+    return frame
+
+
+def run_confidence_calibration_infrastructure(
+    config: ConfidenceCalibrationConfig | None = None,
+) -> dict[str, Any]:
+    """Run the bounded local infrastructure pass and write compact evidence."""
+    selected = config or ConfidenceCalibrationConfig()
+    panel = load_confidence_panel(selected.input_path)
+    events = build_event_catalogue(panel)
+    counts = {
+        "complete": int(len(events)),
+        "calibration": int(events["partition"].eq("calibration").sum()),
+        "quiet_validation": int(
+            events["partition"].eq("quiet_validation").sum()
+        ),
+        "final_stress_validation": int(
+            events["partition"].eq("final_stress_validation").sum()
+        ),
+        "cross_partition": int(events["partition"].eq("cross_partition").sum()),
+    }
+    if counts != {
+        "complete": 75,
+        "calibration": 74,
+        "quiet_validation": 0,
+        "final_stress_validation": 1,
+        "cross_partition": 0,
+    }:
+        raise ValueError(f"Event catalogue did not reproduce: {counts}.")
+    calibration_events = events.loc[
+        events["partition"].eq("calibration")
+    ].copy()
+    annual = calibration_events["calendar_year"].value_counts().to_dict()
+    if annual != {2021: 48, 2020: 26}:
+        raise ValueError(f"Calibration event years did not reproduce: {annual}.")
+    daily = ordinary_confidence_sample(
+        panel, events, daily=True, require_lagged_eth=True
+    )
+    below_count = int(daily["below_peg_gap"].gt(0).sum())
+    above_count = int(daily["above_peg_gap"].gt(0).sum())
+    if (len(daily), below_count, above_count) != (1_189, 172, 1_017):
+        raise ValueError(
+            "Ordinary sample did not reproduce 1,189 / 172 / 1,017."
+        )
+    if selected.validation_only:
+        return {
+            "validation_only": True,
+            "panel_rows": len(panel),
+            "event_counts": counts,
+            "ordinary_counts": {
+                "total": len(daily),
+                "below": below_count,
+                "above": above_count,
+            },
+        }
+
+    point = fit_stage1_coefficients(daily)
+    bootstraps, bootstrap_table = _bootstrap_stage1(
+        daily,
+        replications=selected.bootstrap_replications,
+        seed=selected.random_seed,
+    )
+    below = _coefficient_summary(point["below_peg_response"], bootstraps[:, 0])
+    above = _coefficient_summary(point["above_peg_response"], bootstraps[:, 1])
+    concentrations = {
+        "below": _month_concentration(daily, side="below"),
+        "above": _month_concentration(daily, side="above"),
+    }
+    gates = {
+        "at_least_100_below": below_count >= 100,
+        "at_least_100_above": above_count >= 100,
+        "finite_coefficients": all(
+            np.isfinite(
+                [point["below_peg_response"], point["above_peg_response"]]
+            )
+        ),
+        "below_positive_frequency_at_least_90pct": (
+            below["positive_sign_frequency"] >= 0.9
+        ),
+        "above_positive_frequency_at_least_90pct": (
+            above["positive_sign_frequency"] >= 0.9
+        ),
+        "below_zero_bound_below_20pct": below["zero_bound_frequency"] < 0.2,
+        "above_zero_bound_below_20pct": above["zero_bound_frequency"] < 0.2,
+        "below_month_concentration_at_most_25pct": (
+            concentrations["below"] <= 0.25
+        ),
+        "above_month_concentration_at_most_25pct": (
+            concentrations["above"] <= 0.25
+        ),
+    }
+    stage1_passed = all(gates.values())
+    stage1_status = (
+        "accepted_for_future_smm"
+        if stage1_passed
+        else "implemented_but_statistically_unsupported"
+    )
+    stage1 = {
+        "schema_version": 1,
+        "status": stage1_status,
+        "runtime_adopted": False,
+        "input_path": selected.input_path.relative_to(PROJECT_ROOT).as_posix(),
+        "input_sha256": sha256_file(selected.input_path),
+        "interval": {
+            "start_inclusive": CONFIDENCE_CALIBRATION_START.isoformat(),
+            "end_exclusive": CONFIDENCE_CALIBRATION_END.isoformat(),
+            "excluded_half_open_intervals": [
+                [
+                    QUIET_VALIDATION[0].isoformat(),
+                    QUIET_VALIDATION[1].isoformat(),
+                ],
+                [
+                    FINAL_STRESS_VALIDATION[0].isoformat(),
+                    FINAL_STRESS_VALIDATION[1].isoformat(),
+                ],
+            ],
+        },
+        "estimator": "joint scipy.optimize.lsq_linear; no intercept; non-negative bounds",
+        "bootstrap": {
+            "method": "complete calendar-month blocks with replacement",
+            "replications": selected.bootstrap_replications,
+            "seed": selected.random_seed,
+        },
+        "ordinary_observations": len(daily),
+        "below_peg_observations": below_count,
+        "above_peg_observations": above_count,
+        "below_peg_response": below,
+        "above_peg_response": above,
+        "calendar_month_concentration": concentrations,
+        "year_specific_estimates": _fit_by_period(
+            daily, leave_one_out=False
+        ),
+        "leave_one_year_out_estimates": _fit_by_period(
+            daily, leave_one_out=True
+        ),
+        "gates": gates,
+    }
+    selected.evidence_dir.mkdir(parents=True, exist_ok=True)
+    selected.diagnostics_dir.mkdir(parents=True, exist_ok=True)
+    _atomic_confidence_json(
+        selected.evidence_dir / "stage1_market_estimates.json", stage1
+    )
+    _atomic_confidence_csv(
+        selected.diagnostics_dir / "coefficient_bootstrap.csv",
+        bootstrap_table,
+    )
+    _atomic_confidence_csv(
+        selected.diagnostics_dir / "ordinary_sample_summary.csv",
+        daily.reset_index()[
+            [
+                "timestamp_utc",
+                "dai_price_usd",
+                "below_peg_gap",
+                "above_peg_gap",
+                "next_hour_change",
+                "calendar_month",
+            ]
+        ],
+    )
+    if not stage1_passed:
+        return {
+            "validation_only": False,
+            "stage1_status": stage1_status,
+            "stage1_gates": gates,
+            "stopped_before_smm_readiness": True,
+        }
+
+    hourly = ordinary_confidence_sample(
+        panel, events, daily=False, require_lagged_eth=False
+    )
+    source = build_residual_block_source(
+        hourly,
+        below_peg_response=point["below_peg_response"],
+        above_peg_response=point["above_peg_response"],
+    )
+    residual = residual_summary(source)
+    if not all(residual["gates"].values()):
+        raise ValueError(f"Residual block gates failed: {residual['gates']}.")
+    _atomic_confidence_json(
+        selected.evidence_dir / "stage1_residual_summary.json", residual
+    )
+
+    moments = core_moment_evidence(
+        daily,
+        calibration_events,
+        seed=selected.random_seed,
+        replications=selected.bootstrap_replications,
+    )
+    expected_values = {
+        "ordinary_below_mean": 0.00035326,
+        "ordinary_above_mean": -0.00009513,
+        "first_six_hour_burden_mean": 0.126703,
+        "maximum_downside_deviation_mean": 0.003235,
+        "recovery_completion_hours_mean": 48.9595,
+        "failed_recovery_attempts_mean": 3.1216,
+        "initial_gap_q4_q1_burden_contrast": 0.599066,
+        "eth_recovery_q4_q1_duration_contrast": -12.3158,
+    }
+    for row in moments.itertuples(index=False):
+        if not math.isclose(
+            row.empirical_value,
+            expected_values[row.moment],
+            rel_tol=0.0,
+            abs_tol=5e-5,
+        ):
+            raise ValueError(f"Core moment did not reproduce: {row.moment}.")
+    weights = moments[
+        [
+            "moment",
+            "group",
+            "initial_group_weight",
+            "initial_total_weight",
+        ]
+    ].copy()
+    weights["within_group_weight"] = 1.0
+    weights["maximum_allowed_total_weight"] = 0.2
+    weights["status"] = "accepted_for_future_smm"
+    _atomic_confidence_csv(
+        selected.evidence_dir / "empirical_moments.csv", moments
+    )
+    _atomic_confidence_csv(
+        selected.evidence_dir / "moment_weights.csv", weights
+    )
+    catalogue_output = events.copy()
+    for column in catalogue_output.select_dtypes(include=["datetimetz"]).columns:
+        catalogue_output[column] = catalogue_output[column].map(
+            lambda value: (
+                value.isoformat().replace("+00:00", "Z")
+                if pd.notna(value)
+                else ""
+            )
+        )
+    _atomic_confidence_csv(
+        selected.evidence_dir / "event_catalogue.csv", catalogue_output
+    )
+
+    selected_events = select_search_events(calibration_events)
+    selected_checksum = hashlib.sha256(
+        ("\n".join(selected_events) + "\n").encode("utf-8")
+    ).hexdigest()
+    transformed, structural = sobol_candidates(seed=selected.random_seed)
+    structural_array = np.array(
+        [
+            [
+                item.deterioration_adjustment,
+                item.recovery_adjustment,
+                item.confidence_floor,
+                item.panic_response,
+            ]
+            for item in structural
+        ]
+    )
+    sobol_checksum = array_sha256(structural_array)
+    rejected = []
+    for column in ("cumulative_downside_burden", "burden_after_first_return"):
+        values = calibration_events[column].to_numpy(dtype=float)
+        rejected.append(
+            {
+                "moment": column,
+                "classification": "diagnostic_only_exclusion",
+                "dominant_event_share": float(
+                    np.max(np.abs(values)) / np.sum(np.abs(values))
+                ),
+            }
+        )
+    specification = {
+        "schema_version": 1,
+        "status": "accepted_for_future_smm",
+        "runtime_adopted": False,
+        "implementation_boundary": (
+            "Infrastructure only; no simulator evaluation, ranking or fit."
+        ),
+        "event_counts": counts,
+        "calibration_event_starts_by_year": {
+            str(year): int(count)
+            for year, count in sorted(annual.items())
+        },
+        "core_moments": moments["moment"].tolist(),
+        "groups": list(CORE_GROUPS),
+        "initial_group_weight": 0.25,
+        "initial_total_weight_per_moment": 0.125,
+        "rejected_diagnostic_moments": rejected,
+        "search_subset": {
+            "count": 32,
+            "selection_inputs": [
+                "maximum six-hour burden quartile",
+                "ETH downside quartile",
+                "recovery duration quartile",
+                "calendar year",
+            ],
+            "event_ids": selected_events,
+            "sha256": selected_checksum,
+        },
+        "sobol_design": {
+            "count": 256,
+            "dimensions": 4,
+            "scramble": True,
+            "seed": selected.random_seed,
+            "structural_candidate_sha256": sobol_checksum,
+            "tracked_candidate_grid": False,
+        },
+        "stage2_estimates": None,
+    }
+    _atomic_confidence_json(
+        selected.evidence_dir / "simulated_moments_specification.json",
+        specification,
+    )
+    bounds = {
+        "schema_version": 1,
+        "status": "candidate",
+        "runtime_adopted": False,
+        "parameters": {
+            "deterioration_adjustment": {
+                "bound": "0 < alpha_d <= 1",
+                "estimate": None,
+            },
+            "recovery_adjustment": {
+                "bound": "0 < alpha_r <= alpha_d",
+                "estimate": None,
+            },
+            "confidence_floor": {
+                "bound": "0 <= C_min < 1",
+                "estimate": None,
+            },
+            "panic_response": {
+                "bound": f"0 <= kappa_P <= {PANIC_RESPONSE_UPPER_BOUND}",
+                "estimate": None,
+            },
+        },
+        "machine_safe_interior_epsilon": np.finfo(float).eps,
+        "boundary_models": boundary_model_descriptions(),
+    }
+    _atomic_confidence_json(
+        selected.evidence_dir / "parameter_bounds.json", bounds
+    )
+    _atomic_confidence_json(
+        selected.evidence_dir / "seed_registry.json", seed_registry()
+    )
+    _atomic_confidence_csv(
+        selected.diagnostics_dir / "sobol_candidate_bounds.csv",
+        pd.DataFrame(
+            structural_array,
+            columns=[
+                "deterioration_adjustment",
+                "recovery_adjustment",
+                "confidence_floor",
+                "panic_response",
+            ],
+        ).agg(["min", "max"]).reset_index(names="bound"),
+    )
+    return {
+        "validation_only": False,
+        "stage1_status": stage1_status,
+        "stage1_gates": gates,
+        "ordinary_counts": {
+            "total": len(daily),
+            "below": below_count,
+            "above": above_count,
+        },
+        "event_counts": counts,
+        "residual_gates": residual["gates"],
+        "search_subset_sha256": selected_checksum,
+        "sobol_candidate_sha256": sobol_checksum,
+        "evidence_files": sorted(
+            path.name
+            for path in selected.evidence_dir.iterdir()
+            if path.name
+            in {
+                "stage1_market_estimates.json",
+                "stage1_residual_summary.json",
+                "simulated_moments_specification.json",
+                "empirical_moments.csv",
+                "moment_weights.csv",
+                "parameter_bounds.json",
+                "event_catalogue.csv",
+                "seed_registry.json",
+            }
+        ),
     }

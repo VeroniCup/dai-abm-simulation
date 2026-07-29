@@ -1,0 +1,30 @@
+{
+  "boundary_models": {
+    "confidence_floor_zero": "C_min = 0",
+    "equal_adjustment_rates": "alpha_d = alpha_r",
+    "instantaneous_deterioration_target": "alpha_d = 1",
+    "panic_response_zero": "kappa_P = 0"
+  },
+  "machine_safe_interior_epsilon": 2.220446049250313e-16,
+  "parameters": {
+    "confidence_floor": {
+      "bound": "0 <= C_min < 1",
+      "estimate": null
+    },
+    "deterioration_adjustment": {
+      "bound": "0 < alpha_d <= 1",
+      "estimate": null
+    },
+    "panic_response": {
+      "bound": "0 <= kappa_P <= 2.75454",
+      "estimate": null
+    },
+    "recovery_adjustment": {
+      "bound": "0 < alpha_r <= alpha_d",
+      "estimate": null
+    }
+  },
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "status": "candidate"
+}

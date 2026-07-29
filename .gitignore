@@ -72,6 +72,14 @@ data/provenance/calibration/confidence/*
 !data/provenance/calibration/confidence/historical_market_harmonisation.json
 !data/provenance/calibration/confidence/sparse_predictor_scaling.json
 !data/provenance/calibration/confidence/design_c_feasibility.json
+!data/provenance/calibration/confidence/stage1_market_estimates.json
+!data/provenance/calibration/confidence/stage1_residual_summary.json
+!data/provenance/calibration/confidence/simulated_moments_specification.json
+!data/provenance/calibration/confidence/empirical_moments.csv
+!data/provenance/calibration/confidence/moment_weights.csv
+!data/provenance/calibration/confidence/parameter_bounds.json
+!data/provenance/calibration/confidence/event_catalogue.csv
+!data/provenance/calibration/confidence/seed_registry.json
 
 # Domain-owned provenance. Detailed operational records stay ignored; selected
 # durable entry points remain tracked.

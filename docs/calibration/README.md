@@ -21,8 +21,9 @@ Active calibration guidance is organised by evidence and decision:
   no-fit Design C decision.
 - [Constrained confidence simulated moments](confidence_simulated_moments.md)
   — staged direct/SMM ownership, equal-event moments, bounds, weighting,
-  optimisation, identification and blocked validation. This is a no-fit
-  methodological specification, not completed behavioural calibration.
+  deterministic search infrastructure, identification and blocked validation.
+  Stage 1 is accepted for future SMM; Stage 2 remains unfitted and no
+  behavioural mechanism is runtime adopted.
 - [Representative vaults](vaults.md)
 - [Liquidations](liquidations.md)
 - [Protocol parameters](protocol.md)

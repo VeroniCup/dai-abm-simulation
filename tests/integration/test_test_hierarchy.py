@@ -9,7 +9,13 @@ from tests.support import REPOSITORY_ROOT
 
 
 TESTS_ROOT = REPOSITORY_ROOT / "tests"
-APPROVED_CATEGORIES = {"calibration", "inputs", "integration", "workflows"}
+APPROVED_CATEGORIES = {
+    "calibration",
+    "inputs",
+    "integration",
+    "model",
+    "workflows",
+}
 EXPECTED_MAPPING = {
     "tests/test_configuration_profiles.py": (
         "tests/inputs/test_configuration_profiles.py"
@@ -120,6 +126,11 @@ CLEAN_CLONE_CORRECTION_MODULES = {
 }
 POST_RESTRUCTURING_FEATURE_MODULES = {
     "tests/calibration/test_confidence_evidence.py",
+    "tests/calibration/test_confidence_infrastructure_evidence.py",
+    "tests/calibration/test_simulated_moments.py",
+    "tests/model/test_confidence.py",
+    "tests/model/test_market.py",
+    "tests/workflows/test_confidence_calibration.py",
 }
 EXPECTED_FIXTURES = {
     "tests/fixtures/market/empirical_market.csv": (
@@ -173,7 +184,6 @@ def test_only_populated_semantic_categories_exist() -> None:
         and any(path.rglob("test_*.py"))
     }
     assert populated == APPROVED_CATEGORIES
-    assert not (TESTS_ROOT / "model").exists()
     assert not (TESTS_ROOT / "experiments").exists()
 
 
@@ -185,7 +195,7 @@ def test_no_test_module_remains_at_suite_root() -> None:
 
 def test_no_placeholder_or_duplicate_test_module_exists() -> None:
     modules = sorted(TESTS_ROOT.rglob("test_*.py"))
-    assert len(modules) == 43
+    assert len(modules) == 48
     assert all(path.stat().st_size > 100 for path in modules)
     assert len({path.resolve() for path in modules}) == len(modules)
 
