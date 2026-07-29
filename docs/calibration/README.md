@@ -11,9 +11,11 @@ Active calibration guidance is organised by evidence and decision:
 - [Market and gas](market_and_gas.md)
 - [Confidence and behaviour](confidence_and_behaviour.md) — mechanism design
   for latent confidence, DAI response and sustained recovery.
-- [Confidence estimation](confidence_estimation.md) — fixed outcome, sample,
-  liquidation reconstruction, estimator, feasibility gates and future evidence
-  ownership for the observable stress proxy.
+- [Confidence estimation](confidence_estimation.md) — binary persistence
+  design, liquidation reconstruction and non-estimable feasibility result.
+- [Confidence evidence redesign](confidence_evidence_redesign.md) —
+  continuous downside burden, deterministic origin grid, evidence-partition
+  gates and the pre-registered historical extension.
 - [Representative vaults](vaults.md)
 - [Liquidations](liquidations.md)
 - [Protocol parameters](protocol.md)

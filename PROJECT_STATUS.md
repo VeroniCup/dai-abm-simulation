@@ -99,28 +99,44 @@ The behavioural-confidence calibration planning pass has resolved four core
 specification choices in the [confidence and behavioural calibration
 plan](docs/calibration/confidence_and_behaviour.md): sustained price recovery
 uses the \(\pm0.5\%\) band for 24 consecutive hours; primary collateral stress
-is lagged 24-hour ETH downside; primary liquidation pressure is the lagged
-backlog-to-clearance ratio; and the new behavioural DAI response uses directly
-estimated effective coefficients after scale normalisation.
+is lagged 24-hour ETH downside; liquidation-system pressure is measured by the
+lagged backlog-to-clearance ratio and retained as a sensitivity/recovery gate;
+and the new behavioural DAI response uses directly estimated effective
+coefficients after scale normalisation.
 
 These are pre-registered estimation choices, not adopted behavioural values.
 The [confidence estimation design](docs/calibration/confidence_estimation.md)
-now fixes material downside at \(p<0.995\), defines the six-hour persistence
-outcome, selects the tab-based backlog-to-clearance proxy after its
-reconstruction gate passes, and records the penalised logistic estimation and
-diagnostic protocol.
+preserves the binary audit: it fixes material downside at \(p<0.995\), defines
+the six-hour persistence outcome, selects the tab-based backlog-to-clearance
+measure after its reconstruction gate passes, and records the planned binary
+logistic protocol that proved infeasible.
 
-Actual coefficient fitting is not ready: the fixed calibration sample contains
-27 eligible origins across 24 episodes, with zero positive outcomes, and tab
-pressure has no variation at those origins. Validation contains no eligible
-origin. Stress observations remain withheld rather than being reassigned to
-calibration. A separate pre-registered sampling or evidence redesign is
-therefore required before estimation.
+The binary persistence design is complete and non-estimable: its fixed
+calibration sample contains 27 origins across 24 episodes, zero positive
+outcomes, and no tab-pressure variation. No coefficient was fitted.
 
-Executable implementation remains unauthorised pending that redesign, the
-bad-debt and optional-mechanism decisions, calibration diagnostics, coefficient
-estimates and uncertainty intervals, legacy/new-mode interface review, and
-separate bounded implementation authorisation.
+The [confidence evidence
+redesign](docs/calibration/confidence_evidence_redesign.md) retains the 0.995
+material threshold and six-hour horizon, but uses a continuous future downside
+burden on a deterministic 00:00/06:00/12:00/18:00 UTC grid. Design A supplies
+4,167 calibration origins, but only 47 have positive burden, 9 reach burden
+0.10, all burden occurs in 2021, and both market predictors have zero MAD.
+Design B adds Terra/CeFi hours but no burden and fails the same gates.
+USDC/SVB remains an adequate untouched downside evaluation.
+
+Tab pressure continues to pass its reconstruction gate but is positive at only
+one calibration origin, in one month and one independent backlog episode, with
+zero coincident burden. It is therefore fixed as a sensitivity predictor and
+possible confidence-recovery gate, not a primary estimator input.
+
+No existing repository evidence provides a validated pre-June-2021 hourly
+DAI/ETH extension. Design C is the pre-registered next evidence design, subject
+to separate acquisition and the same no-fit feasibility gates; no current
+partition is ready for estimation. Coefficient fitting and behavioural
+implementation remain unauthorised pending that evidence, valid chronological
+folds, calibration diagnostics, uncertainty intervals, the bad-debt and
+optional-mechanism decisions, legacy/new-mode interface review, and separate
+bounded authorisation.
 
 The remaining empirical work is adoption and validation of defensible
 parameter candidates, followed by calibrated counterfactual experiments.

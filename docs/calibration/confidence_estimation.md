@@ -13,6 +13,13 @@ This is a design and feasibility record. It does not estimate or adopt
 behavioural coefficients, implement persistent confidence, change the current
 market equation or authorise a runtime profile.
 
+The binary persistence design is preserved here as an audit record. Its
+one-class result means that the binary estimator is no longer the primary next
+step. The separately pre-registered
+[confidence evidence redesign](confidence_evidence_redesign.md) replaces the
+primary target and origin sampling for future work without rewriting or
+discarding this failed result.
+
 The feasibility audit used the existing local hourly market panel and
 Liquidations 2.0 action evidence without changing them. Temporary calculations
 were kept outside the repository.
@@ -508,6 +515,10 @@ Before actual fitting:
 - obtain separate authorisation for the exact estimation code and compact
   evidence files.
 
-After fitting, coefficient uncertainty, legacy/new-mode configuration review
-and empirical-profile adoption remain separate decisions. Behavioural
+The evidence redesign retains the threshold and horizon but evaluates a
+continuous future downside burden on a deterministic six-hour grid. Designs A
+and B remain non-estimable, and no validated pre-June-2021 market extension is
+currently available for Design C. After a future evidence sample passes those
+gates, coefficient uncertainty, legacy/new-mode configuration review and
+empirical-profile adoption remain separate decisions. Behavioural
 implementation is still unauthorised.
