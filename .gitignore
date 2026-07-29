@@ -66,6 +66,12 @@ data/provenance/calibration/liquidations/*
 !data/provenance/calibration/parameter_readiness/
 data/provenance/calibration/parameter_readiness/*
 !data/provenance/calibration/parameter_readiness/representative_vault_parameter_readiness.csv
+!data/provenance/calibration/confidence/
+data/provenance/calibration/confidence/*
+!data/provenance/calibration/confidence/historical_market_coverage.json
+!data/provenance/calibration/confidence/historical_market_harmonisation.json
+!data/provenance/calibration/confidence/sparse_predictor_scaling.json
+!data/provenance/calibration/confidence/design_c_feasibility.json
 
 # Domain-owned provenance. Detailed operational records stay ignored; selected
 # durable entry points remain tracked.

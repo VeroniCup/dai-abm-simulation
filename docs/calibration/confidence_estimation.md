@@ -32,6 +32,7 @@ The design uses these current empirical owners:
 | --- | --- | --- |
 | Hourly DAI outcome | `data/market/processed/dune_hourly_market_prices_processed.csv` | `timestamp_utc`, `dai_price_usd` |
 | Hourly ETH stress | Same market panel | `eth_log_return`; the structurally missing first return is outside every eligible 24-hour lookback |
+| Design C DAI/ETH extension | `data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv` | Complete 31 December 2019–30 June 2024 calibration evidence; evaluated only in the later no-fit Design C pass |
 | Auction state transitions | `data/liquidations/processed/liquidation_actions_2021-06-01_2024-06-30.csv` | `kick_event.tab_raw/tab_dai`; `take_event.remaining_tab_raw/remaining_tab_dai` and `owe_raw/owe_dai` |
 | Auction identity and terminal cross-check | `data/liquidations/processed/liquidation_auctions_2021-06-01_2024-06-30.csv` | `clipper_contract`, `auction_id`, `ilk`, `terminal_classification` |
 | Published hourly cross-check | `data/liquidations/processed/liquidation_hourly_by_ilk_2021-06-01_2024-06-30.csv` | `debt_repaid_dai`, `successful_takes`, `auctions_completed`; its `unresolved_auctions` field is not the live intralifecycle backlog |
@@ -502,14 +503,13 @@ workflow or new top-level directory.
 
 ## 17. Remaining blockers
 
-Before actual fitting:
+Before any behavioural fitting:
 
-- provide a separately pre-registered calibration design with enough genuine
-  positive and negative outcomes while retaining meaningful withheld evidence;
-- resolve zero variation in liquidation pressure at eligible calibration
-  origins, or keep tab pressure as a sensitivity rather than an identified
-  primary coefficient;
-- ensure the revised design supports at least three chronological folds;
+- pre-register the constrained simulated-moments fallback and its identified
+  continuous deterioration, recovery and tail moments;
+- keep tab pressure as a sensitivity and possible recovery gate rather than an
+  identified primary coefficient;
+- preserve blocked and leave-one-event-out validation;
 - decide the bad-debt severe-condition definition and optional policy/recovery
   mechanisms; and
 - obtain separate authorisation for the exact estimation code and compact
@@ -517,8 +517,11 @@ Before actual fitting:
 
 The evidence redesign retains the threshold and horizon but evaluates a
 continuous future downside burden on a deterministic six-hour grid. Designs A
-and B remain non-estimable, and no validated pre-June-2021 market extension is
-currently available for Design C. After a future evidence sample passes those
-gates, coefficient uncertainty, legacy/new-mode configuration review and
-empirical-profile adoption remain separate decisions. Behavioural
-implementation is still unauthorised.
+and B remain non-estimable. The subsequent
+[historical market evidence pass](confidence_historical_market_evidence.md)
+adopts a complete pre-June-2021 extension and evaluates Design C. Both primary
+predictors pass their sparse positive-Q95 scaling gates, but one episode
+contributes 56.55% of calibration burden against the fixed 25% ceiling.
+Design C therefore also remains non-estimable, the final predictive-extension
+route is closed and no coefficient is fitted. Behavioural implementation is
+still unauthorised; the declared next method is constrained simulated moments.

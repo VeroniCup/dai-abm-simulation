@@ -35,7 +35,7 @@ def _is_ignored(relative_path: str) -> bool:
 def test_tracked_calibration_evidence_is_content_addressed() -> None:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     assert manifest["schema_version"] == 1
-    assert len(manifest["artefacts"]) == 13
+    assert len(manifest["artefacts"]) == 17
     for record in manifest["artefacts"]:
         path = REPOSITORY_ROOT / record["path"]
         assert path.is_file(), record["semantic_name"]

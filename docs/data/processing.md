@@ -23,6 +23,12 @@ and their manifests are tracked because simulations depend on them.
 wide market panel, log returns, DAI/USDC peg deviations and stablecoin-extreme
 review under `data/market/processed/`.
 
+`workflows/market/process_historical_evidence.py` validates and harmonises the
+separate full-range DAI/ETH confidence-calibration extract, compares the
+overlapping prices with the operational panel and evaluates the frozen Design
+C scaling and burden gates. It creates no coefficients and does not alter
+runtime market inputs.
+
 Prices are not winsorised, clipped, smoothed, interpolated or forward-filled.
 The first log return remains missing. Review flags do not classify values as
 errors.

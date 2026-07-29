@@ -20,7 +20,7 @@ The original continuous vault plan is preserved byte-for-byte in the
 
 | Domain | Primary source | Authoritative workflow | SQL |
 | --- | --- | --- | --- |
-| Market | Dune `prices.hour` | `workflows/market/acquire.py` | `sql/market/templates/hourly_prices.sql` |
+| Market | Dune `prices.hour` | `workflows/market/acquire.py` | `sql/market/templates/hourly_prices.sql` and `sql/market/templates/hourly_market_prices.sql` |
 | Gas | Dune `ethereum.transactions` and `ethereum.blocks` | `workflows/gas/acquire.py` | `sql/gas/templates/hourly_conditions.sql` |
 | Protocol | Decoded Maker Vat, Spot, Jug, Dog and Clipper calls | `workflows/protocol/acquire.py` | `sql/protocol/templates/` |
 | Vaults | Successful Vat frob, fork and grab; manager mapping and rate calls | `workflows/vaults/acquire.py` and `workflows/vaults/acquire_representative.py` | `sql/vaults/templates/` |
@@ -32,14 +32,22 @@ checksums, query and execution identifiers belong under
 
 ## Market series
 
-The market query retrieves WETH as model asset ETH, WBTC as the
+The operational market query retrieves WETH as model asset ETH, WBTC as the
 BTC-collateral proxy, DAI and native USDC on Ethereum. WBTC remains WBTC in raw
-data. The interval is half-open from 1 June 2021 to 1 July 2024 UTC.
+data. Its interval is half-open from 1 June 2021 to 1 July 2024 UTC.
 
-Preferred source: Dune. Supported fallbacks already identified in the
-historical plan are Binance, Kraken and Coinbase for market-price
-corroboration. A fallback requires its own provenance and explicit source/unit
-mapping; it is not automatically substituted.
+The confidence-calibration extension uses the same Dune `prices.hour`
+methodology and exact WETH and DAI contracts over the half-open interval from
+31 December 2019 to 1 July 2024. It deliberately excludes WBTC and USDC
+because they are not inputs to the pre-registered Design C evidence gate. The
+two-asset result is a separate calibration evidence panel; it does not replace
+the established four-asset operational panel.
+
+Preferred source: Dune. The full-range confidence extension selected the first
+authorised route: an exact `prices.hour` extension with CoinPaprika as the
+reported source throughout. No provider boundary was introduced. Any future
+fallback requires its own provenance and explicit source/unit mapping; it is
+not automatically substituted.
 
 ## Gas series
 

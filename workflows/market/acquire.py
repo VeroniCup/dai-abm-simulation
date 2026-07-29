@@ -30,7 +30,9 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-from workflows.market.validate import validate_prices
+import pandas as pd
+
+from workflows.market.validate import EXPECTED, validate_prices
 
 
 API_ROOT = "https://api.dune.com/api/v1"
@@ -235,6 +237,8 @@ def download_csv_once_per_page(
     download_state_path = parts_directory / "download_state.json"
     parts_directory.mkdir(parents=True, exist_ok=True)
 
+    page_checksums: dict[int, str] = {}
+    page_row_counts: dict[int, int] = {}
     if download_state_path.exists():
         state = json.loads(download_state_path.read_text(encoding="utf-8"))
         if state.get("execution_id") != execution_id:
@@ -243,6 +247,14 @@ def download_csv_once_per_page(
             )
         offset = state.get("next_offset")
         visited_offsets = {int(value) for value in state.get("visited_offsets", [])}
+        page_checksums = {
+            int(key): str(value)
+            for key, value in state.get("page_checksums", {}).items()
+        }
+        page_row_counts = {
+            int(key): int(value)
+            for key, value in state.get("page_row_counts", {}).items()
+        }
     else:
         offset = 0
         visited_offsets: set[int] = set()
@@ -258,18 +270,54 @@ def download_csv_once_per_page(
             "GET",
             f"{API_ROOT}/execution/{execution_id}/results/csv?{query}",
         )
+        header, separator, remainder = body.partition(b"\n")
+        if not separator:
+            raise DuneAcquisitionError(
+                f"CSV result page at offset {offset} has no header."
+            )
+        row_count = len(remainder.splitlines())
+        if row_count == 0:
+            raise DuneAcquisitionError(
+                f"CSV result page at offset {offset} contains no rows."
+            )
+        page_checksum = hashlib.sha256(body).hexdigest()
+        if page_checksum in page_checksums.values():
+            raise DuneAcquisitionError(
+                f"Dune repeated an unchanged result page at offset {offset}."
+            )
+        next_offset = _next_offset(headers)
+        if next_offset is not None:
+            expected_next = offset + row_count
+            if next_offset != expected_next:
+                raise DuneAcquisitionError(
+                    "Dune result pagination did not advance contiguously: "
+                    f"offset {offset}, rows {row_count}, next {next_offset}."
+                )
         part_path = parts_directory / f"offset_{offset:012d}.csv"
         if part_path.exists():
             raise DuneAcquisitionError(f"Result page already exists: {part_path}.")
-        part_path.write_bytes(body)
+        partial_part = part_path.with_suffix(part_path.suffix + ".partial")
+        with partial_part.open("wb") as handle:
+            handle.write(body)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(partial_part, part_path)
         visited_offsets.add(offset)
-        offset = _next_offset(headers)
+        page_checksums[offset] = page_checksum
+        page_row_counts[offset] = row_count
+        offset = next_offset
         write_json(
             download_state_path,
             {
                 "execution_id": execution_id,
                 "next_offset": offset,
                 "visited_offsets": sorted(visited_offsets),
+                "page_checksums": {
+                    str(key): page_checksums[key] for key in sorted(page_checksums)
+                },
+                "page_row_counts": {
+                    str(key): page_row_counts[key] for key in sorted(page_row_counts)
+                },
             },
         )
 
@@ -352,8 +400,11 @@ def append_manifest_records(
     checksum: str,
     coverage: dict[str, Any],
     validation_report: dict[str, Any],
+    requested_start: str = REQUESTED_START,
+    requested_end: str = REQUESTED_END,
+    selected_assets: tuple[str, ...] = tuple(item[0].split("_")[2].upper() for item in SERIES),
 ) -> None:
-    """Append four provenance records after a successful acquisition."""
+    """Append selected provenance records after a successful acquisition."""
     with manifest_path.open("r", encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle)
         fieldnames = list(reader.fieldnames or [])
@@ -401,8 +452,8 @@ def append_manifest_records(
         "sql_file_path": str(sql_file_path),
         "sql_sha256": sql_checksum,
         "acquisition_timestamp_utc": acquired_at.isoformat(),
-        "requested_start_utc": REQUESTED_START,
-        "requested_end_utc": REQUESTED_END,
+        "requested_start_utc": requested_start,
+        "requested_end_utc": requested_end,
         "actual_minimum_timestamp_utc": str(coverage["minimum_timestamp_utc"]),
         "actual_maximum_timestamp_utc": str(coverage["maximum_timestamp_utc"]),
         "raw_file_path": str(output_path),
@@ -424,6 +475,9 @@ def append_manifest_records(
             lineterminator="\n",
         )
         for series_name, model_variable, unit, notes in SERIES:
+            asset = series_name.removeprefix("dune_hourly_").removesuffix("_usd").upper()
+            if asset not in selected_assets:
+                continue
             row = {column: "" for column in fieldnames}
             row.update(common)
             row.update(
@@ -459,6 +513,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--sql-file", type=Path, default=DEFAULT_SQL_FILE)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
+    parser.add_argument(
+        "--no-manifest-update",
+        action="store_true",
+        help="Preserve a candidate outside the canonical manifest pending adoption.",
+    )
+    parser.add_argument("--requested-start", default=REQUESTED_START)
+    parser.add_argument("--requested-end", default=REQUESTED_END)
+    parser.add_argument(
+        "--expected-assets",
+        nargs="+",
+        choices=tuple(EXPECTED),
+        default=list(EXPECTED),
+    )
     parser.add_argument("--validation-report", type=Path)
     parser.add_argument(
         "--provenance-directory",
@@ -467,7 +534,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--timeout-seconds", type=int, default=1800)
     parser.add_argument("--poll-seconds", type=float, default=5.0)
-    parser.add_argument("--page-size", type=int, default=50_000)
+    parser.add_argument("--page-size", type=int, default=32_000)
     return parser.parse_args()
 
 
@@ -481,7 +548,7 @@ def main() -> int:
         raise SystemExit("DUNE_API_KEY is not set in the environment.")
     if args.output.exists():
         raise SystemExit(f"Refusing to overwrite existing raw data: {args.output}")
-    if not args.manifest.exists():
+    if not args.no_manifest_update and not args.manifest.exists():
         raise SystemExit(f"Data manifest does not exist: {args.manifest}")
     if not args.sql_file.exists():
         raise SystemExit(f"Production SQL file does not exist: {args.sql_file}")
@@ -499,6 +566,15 @@ def main() -> int:
 
     sql_checksum = sha256_file(args.sql_file)
     print(f"Local SQL SHA-256: {sql_checksum}")
+    requested_start = pd.Timestamp(args.requested_start)
+    requested_end = pd.Timestamp(args.requested_end)
+    if requested_start.tzinfo is None or requested_end.tzinfo is None:
+        raise SystemExit("Requested boundaries must explicitly declare a timezone.")
+    requested_start = requested_start.tz_convert("UTC")
+    requested_end = requested_end.tz_convert("UTC")
+    if requested_start >= requested_end:
+        raise SystemExit("Requested start must precede the exclusive end.")
+    expected_assets = tuple(args.expected_assets)
 
     state_path = args.provenance_directory / (
         args.output.stem + ".execution.json"
@@ -536,6 +612,9 @@ def main() -> int:
             if args.mode == "temporary-query"
             else ("SUBMITTED" if not args.resume_execution_id else "RESUMED")
         ),
+        "requested_start_utc": requested_start.isoformat(),
+        "requested_end_utc": requested_end.isoformat(),
+        "expected_assets": list(expected_assets),
     }
     write_json(state_path, state_record)
 
@@ -554,7 +633,12 @@ def main() -> int:
         acquired_at = utc_now()
         coverage = inspect_csv(args.output)
         checksum = sha256_file(args.output)
-        validation_report, validation_failures = validate_prices(args.output)
+        validation_report, validation_failures = validate_prices(
+            args.output,
+            requested_start=requested_start,
+            requested_end=requested_end,
+            expected_assets=expected_assets,
+        )
         validation_report_path = (
             args.validation_report
             or args.provenance_directory / (
@@ -566,8 +650,8 @@ def main() -> int:
             {
                 "state": "ACQUIRED",
                 "acquisition_timestamp_utc": acquired_at.isoformat(),
-                "requested_start_utc": REQUESTED_START,
-                "requested_end_utc": REQUESTED_END,
+                "requested_start_utc": requested_start.isoformat(),
+                "requested_end_utc": requested_end.isoformat(),
                 "retrieval_page_count": page_count,
                 "sha256": checksum,
                 "validation_report": str(validation_report_path),
@@ -578,19 +662,23 @@ def main() -> int:
             }
         )
         write_json(state_path, state_record)
-        append_manifest_records(
-            args.manifest,
-            args.output,
-            args.query_id,
-            execution_id,
-            query_type,
-            args.sql_file,
-            sql_checksum,
-            acquired_at,
-            checksum,
-            coverage,
-            validation_report,
-        )
+        if not args.no_manifest_update:
+            append_manifest_records(
+                args.manifest,
+                args.output,
+                args.query_id,
+                execution_id,
+                query_type,
+                args.sql_file,
+                sql_checksum,
+                acquired_at,
+                checksum,
+                coverage,
+                validation_report,
+                requested_start=requested_start.isoformat(),
+                requested_end=requested_end.isoformat(),
+                selected_assets=expected_assets,
+            )
     except (DuneAcquisitionError, TimeoutError) as exc:
         print(str(exc), file=sys.stderr)
         return 1

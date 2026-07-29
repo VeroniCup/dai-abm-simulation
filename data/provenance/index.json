@@ -9,10 +9,10 @@
       "authoritative_manifest": "data/provenance/data_manifest.csv",
       "raw_source_location": "data/market/raw/",
       "processed_output_location": "data/market/processed/",
-      "coverage": "[2021-06-01T00:00:00Z, 2024-07-01T00:00:00Z)",
+      "coverage": "General four-asset panel: [2021-06-01T00:00:00Z, 2024-07-01T00:00:00Z); adopted DAI/ETH confidence evidence: [2019-12-31T00:00:00Z, 2024-07-01T00:00:00Z)",
       "validation_status": "passed",
       "checksum_policy": "Raw and processed SHA-256 values are recorded in the detailed data manifest.",
-      "acquisition_status": "complete"
+      "acquisition_status": "complete; exact-source historical DAI/ETH extension adopted for confidence calibration"
     },
     {
       "category": "Phase 1B Ethereum gas",

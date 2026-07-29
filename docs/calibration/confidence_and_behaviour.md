@@ -439,12 +439,13 @@ as a severe-persistence diagnostic and audit record. The exact target,
 sampling, partition and feasibility rules are in the
 [evidence redesign](confidence_evidence_redesign.md).
 
-The current Designs A and B do not pass the burden or transformation gates,
-and no existing historical market panel can instantiate Design C. No
-coefficient is therefore fitted. When a future Design C sample passes, the
-primary market-only feature set is lagged peg gap and ETH downside; tab
-pressure remains a pre-registered sensitivity unless it independently passes
-its sparse-variation gate.
+Designs A and B do not pass the burden or transformation gates. The subsequent
+[historical market evidence pass](confidence_historical_market_evidence.md)
+instantiates Design C with one complete 2019–2024 DAI/ETH methodology. Its
+primary predictors pass the sparse scaling gates, but its largest episode
+supplies 56.55% of calibration burden against the fixed 25% ceiling. No
+coefficient is therefore fitted. The predictive route is closed and tab
+pressure remains a pre-registered sensitivity and possible recovery gate.
 
 Bad debt is excluded from the primary proxy until its coverage and variation
 pass the pre-registered data-quality gate. It may then enter as a
@@ -551,7 +552,7 @@ current data do not identify them.
 | --- | --- | --- | --- | --- |
 | Existing DAI regime thresholds | Direct empirical classification rules | DAI price quantiles and episode classification | Existing registered quantiles plus nearby-threshold grid | Year-block bootstrap and held-out episode performance |
 | Liquidatable-share thresholds | Distributionally estimated rules | Reconstructed liquidatable share | Regime-specific quantiles with window-cluster bootstrap | Leave-one-stress-window-out; report moderate/severe alternatives |
-| Stress-proxy coefficients | Statistically estimated | Six-hour future downside burden | L2-regularised fractional logistic mean model after Design C passes | Expanding calendar blocks, block bootstrap, calibration and ablation |
+| Stress-proxy coefficients | Not estimable under the closed predictive route | Six-hour future downside burden | No estimator: Designs A–C fail their pre-registered feasibility gates | Preserve the burden evidence for SMM targets; do not fit predictive coefficients |
 | \(\alpha_d\) | Statistically/SMM estimated | Deterioration speed, depeg depth and cumulative deviation | Constrained minimum distance or SMM | Profile interval and blocked validation |
 | \(\alpha_r\) | Statistically/SMM estimated | Recovery half-life and sustained recovery | Constrained minimum distance or SMM | Profile interval and leave-one-episode-out |
 | Stability period \(k\) | Fixed primary specification | 24 qualifying stable hours | Pre-registered at 24 hours; test only the 12- and 48-hour sensitivities | No selection after validation |
@@ -605,8 +606,8 @@ heterogeneity is not required unless the row says otherwise.
 | `min_recovery_confidence` | Recovery activation boundary; index | Recovery/non-recovery classification | Current design: profiled threshold; future design uses stability gate | Scale-dependent interval; no heterogeneity | Profiles/factory → recovery discount | Unnecessary under recommended stability gate |
 | Hard-coded liquidatable-share coefficient | Direct selling response; pressure/share | DAI move conditional on unresolved pressure | Consolidate into stress proxy/panic coefficient | Not separately identifiable; no heterogeneity | No owner → simulation systemic pressure | Unnecessary and removable in current form |
 | Hard-coded bad-debt-ratio coefficient | Direct selling response; pressure/ratio | DAI move conditional on defensible bad-debt ratio | Include only after data gate and consolidation | Sparse-tail uncertainty; no heterogeneity | No owner → simulation systemic pressure | Unnecessary in current form; sensitivity if supported |
-| Stress-proxy peg coefficient \(\beta_p\) | Predictive stress loading; log-odds per standardised gap | Six-hour future downside burden; lagged below-peg gap | L2-regularised fractional logistic model after Design C passes; calibration and sign checks on withheld data | Time-block bootstrap; system-wide | Future calibration candidate → confidence target | Statistically estimated, pending Design C |
-| Stress-proxy collateral coefficient \(\beta_r\) | Predictive stress loading; log-odds per standardised downside measure | Six-hour future downside burden; lagged 24-hour ETH downside stress | Same model and evidence gates as \(\beta_p\); portfolio composite is sensitivity only | Time-block bootstrap; no agent heterogeneity | Future calibration candidate → confidence target | Statistically estimated, pending Design C |
+| Stress-proxy peg coefficient \(\beta_p\) | Predictive stress loading; log-odds per standardised gap | Six-hour future downside burden; lagged below-peg gap | Not fitted: Design C fails the fixed episode-dominance gate | No coefficient interval; system-wide evidence retained for diagnosis | Closed predictive route | Not estimable under Designs A–C |
+| Stress-proxy collateral coefficient \(\beta_r\) | Predictive stress loading; log-odds per standardised downside measure | Six-hour future downside burden; lagged 24-hour ETH downside stress | Not fitted: Design C fails the fixed episode-dominance gate | No coefficient interval; portfolio composite remains a sensitivity only | Closed predictive route | Not estimable under Designs A–C |
 | Stress-proxy liquidation coefficient \(\beta_l\) | Optional predictive stress loading; log-odds per transformed pressure | Six-hour future downside burden; lagged backlog-to-clearance ratio | Excluded from the primary model after the sparse-variation gate; retain as a supported-subperiod sensitivity | Coverage and block uncertainty; no agent heterogeneity | Future calibration sensitivity → confidence target | Sensitivity predictor; not currently estimable |
 | Stress-proxy bad-debt coefficient \(\beta_b\) | Optional predictive loading; log-odds per standardised ratio | Continued depeg; defensible bad-debt ratio | Estimate only after coverage gate; otherwise S-only | Sparse-event interval; no agent heterogeneity | Future calibration candidate → confidence target | Stress-test parameter unless data support estimation |
 | Deterioration adjustment \(\alpha_d\) | Downward state adjustment; fraction per hour | Depeg onset speed, depth and cumulative deviation | Constrained SMM on C; validate V | Profile interval; no agent heterogeneity | Future confidence config → state update | Statistically estimated |
@@ -661,8 +662,9 @@ occurs in 2021, and the lagged peg-gap and ETH-downside transforms both have
 zero MAD. Adding Terra/CeFi in Design B adds no downside burden. USDC/SVB
 remains an adequate untouched downside evaluation with 52 origins, 12
 non-zero burdens and 11 burdens at or above 0.25. No coefficient is fitted.
-The next evidence design requires a separately acquired and validated
-pre-June-2021 DAI/ETH market extension.
+The pre-June-2021 DAI/ETH extension is now acquired and validated. Design C
+contains adequate burden counts and multi-year variation but fails the fixed
+episode-dominance gate, so it does not authorise fitting.
 
 ## 10. Peg-recovery outcomes and experiments
 
@@ -780,10 +782,11 @@ The implementation gate requires:
 
 ## 13. Data gaps and acquisition dependencies
 
-The current market panel remains sufficient for price-threshold, asymmetric
-peg-correction, residual-noise and descriptive duration work. The redesigned
-stress proxy, however, requires the separately pre-registered pre-June-2021
-DAI/ETH market extension before coefficient fitting. Continuous liquidation
+The operational market panel remains sufficient for price-threshold,
+asymmetric peg-correction, residual-noise and descriptive duration work. The
+separate full-range DAI/ETH confidence panel now supplies the pre-June-2021
+extension. Its failed episode-dominance gate, rather than a remaining market
+coverage gap, blocks predictive coefficient fitting. Continuous liquidation
 pressure itself needs no new reconstruction, but remains a sensitivity because
 its deterministic-grid variation is insufficient.
 
@@ -820,7 +823,7 @@ current stress-proxy coefficient fit.
 
 ### Acceptance criteria for implementation
 
-Implementation is ready for authorisation only when:
+Behavioural implementation is ready for authorisation only when:
 
 1. the continuous burden target and deterministic six-hour grid remain
    reproducible;
@@ -828,11 +831,11 @@ Implementation is ready for authorisation only when:
    role is preserved unless new evidence independently passes the variation
    gate;
 3. bad-debt treatment, including the severe-condition definition, is fixed;
-4. the pre-registered Design C market extension supplies adequate burden and
-   predictor variation without weakening USDC/SVB validation;
-5. the stress-proxy model passes calibration, sign, stability and ablation
-   diagnostics and produces effective coefficient estimates, uncertainty
-   intervals and provenance records;
+4. the constrained simulated-moments fallback is separately pre-registered
+   without changing the fixed burden target or validation partitions;
+5. the SMM design produces identified effective parameters, uncertainty
+   intervals, ablations and provenance records without reviving the closed
+   predictive route;
 6. the exact legacy/new-mode configuration interface is reviewed;
 7. the legacy behavioural mode and frozen regressions remain mandatory; and
 8. the bounded executable files and tests in Section 11 receive separate
@@ -840,8 +843,6 @@ Implementation is ready for authorisation only when:
 
 ### Unresolved decisions
 
-- Acquire and validate the pre-registered Design C DAI/ETH extension, then
-  repeat the no-fit burden, scale, fold and validation gates.
 - Keep tab pressure as a sensitivity predictor and recovery-gate variable
   unless future evidence independently passes every sparse-variation gate.
 - Decide whether bad debt passes the primary-data gate or remains sensitivity
@@ -858,8 +859,8 @@ The recovery band and duration, material-depeg threshold, continuous six-hour
 burden target, deterministic UTC grid, ETH-only primary collateral stress,
 tab-based backlog-to-clearance measure and effective-coefficient scale
 normalisation are resolved specifications, not unresolved choices. The tab
-reconstruction gate passes, but tab variation and both current evidence
-designs fail their estimation gates. Until the pre-registered Design C
-extension and subsequent estimates exist, coding a new confidence mechanism
-would require guessed parameter values. This planning pass therefore stops
-before executable implementation.
+reconstruction gate passes, but tab variation and all three predictive
+evidence designs fail their estimation gates. Coding a new confidence
+mechanism would therefore require guessed parameters. The next methodological
+task is the pre-registered constrained simulated-moments fallback, not another
+predictive-target redesign.

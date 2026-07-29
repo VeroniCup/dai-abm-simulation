@@ -236,13 +236,16 @@ USDC/SVB is not admitted to calibration.
 
 ### 8.3 Design C: longer historical market evidence
 
-Design C would extend only the DAI and ETH market evidence. Its primary model
-would use peg gap and ETH downside over the longer sample. Liquidation pressure
-would remain unavailable before its validated Liquidations 2.0 coverage and
-would be evaluated only on the supported subperiod.
+Design C extends only the DAI and ETH market evidence. Its primary design uses
+peg gap and ETH downside over the longer sample. Liquidation pressure remains
+unavailable before its validated Liquidations 2.0 coverage and is retained
+only on the supported subperiod.
 
-No suitable pre-June-2021 market panel exists locally, so Design C cannot be
-evaluated in this pass.
+At the time of this redesign, no suitable pre-June-2021 panel existed locally.
+The later [historical market evidence
+pass](confidence_historical_market_evidence.md) acquired the fixed extension,
+applied the gates without fitting and found that Design C fails the 25%
+episode-dominance ceiling.
 
 ## 9. Partition-selection rule
 
@@ -254,11 +257,10 @@ not chosen for apparently better performance:
 3. Design C is considered only because A and B fail or because an existing
    validated extension materially improves episode independence.
 
-Neither A nor B passes the burden or predictor-scale gates. Design C is
-therefore the **pre-registered next evidence design**, but no current
-estimation partition is selected: C requires a separate historical market
-acquisition and validation before it can pass or fail. This is not readiness
-for coefficient fitting.
+Neither A nor B passes the burden or predictor-scale gates. Design C was
+therefore the **pre-registered next evidence design**. Its subsequent
+acquisition is valid, but the largest episode contributes 56.55% of total
+calibration burden. No design is selected for coefficient fitting.
 
 ## 10. Feasibility results
 
@@ -366,9 +368,9 @@ The evidence can preserve a genuine withheld downside event. The present
 failure is inadequate calibration variation, not the absence of a possible
 validation set.
 
-## 12. Selected estimator class
+## 12. Pre-registered estimator class (not activated)
 
-After a future Design C sample passes the gates, the primary estimator is an
+Had Design C passed every gate, the primary estimator would have been an
 unweighted, L2-regularised fractional logistic mean model:
 
 \[
@@ -387,7 +389,7 @@ is lagged peg gap and ETH downside. Tab and count pressure remain separate
 sensitivities on their supported subperiod. This feature set remains subject
 to non-zero training-fold scale gates.
 
-The future baselines are:
+Had the gates passed, the baselines would have been:
 
 1. unconditional mean burden;
 2. lagged peg gap only;
@@ -400,13 +402,14 @@ It advances only if the fractional model has materially poor zero calibration,
 both onset classes are adequate, and rolling calibration improves without
 episode dominance.
 
-## 13. Cross-validation and uncertainty
+## 13. Pre-registered cross-validation and uncertainty
 
-Future origins are grouped into contiguous calendar blocks. Expanding-window
-folds preserve chronology and keep complete one-sided episodes within one
-fold. A six-hour purge separates training and fold validation.
-Transformations are owned by each training fold, and at least three valid folds
-are required.
+Under the unactivated predictive design, origins would have been grouped into
+contiguous calendar blocks. Expanding-window folds would have preserved
+chronology and kept complete one-sided episodes within one fold. A six-hour
+purge would have separated training and fold validation. Transformations would
+have been owned by each training fold, with at least three valid folds
+required.
 
 Uncertainty uses the larger of one-sided episode blocks and seven-day blocks.
 Grid origins are not treated as independent hourly draws. The future
@@ -441,45 +444,29 @@ does not convert it into a fitted primary predictor.
 | --- | --- | --- | --- |
 | `data/market/raw/dune_prices_hourly_2021-06-01_2024-06-30.csv` | Ignored | Four-asset hourly long panel; 1 Jun 2021–30 Jun 2024; no missing or duplicate asset-hours | Authoritative Dune `prices.hour` evidence and checksums; no earlier observations |
 | `data/market/processed/dune_hourly_market_prices_processed.csv` | Ignored | 27,024-row hourly wide panel over the same period | Exact compatible DAI/USD and ETH/USD fields; complete provenance; no extension |
+| `data/market/raw/dune_prices_hourly_dai_eth_2019-12-31_2024-06-30.csv` | Ignored | 78,912-row full-range long DAI/ETH extract | Adopted exact-source extension; query 8145897 and execution `01KYP8NPE5XH2KN926949AYKGT` |
+| `data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv` | Ignored | 39,456 complete hourly DAI/ETH rows | Canonical confidence-calibration panel; no missing hours, interpolation or provider boundary |
 | `data/market/processed/combined/hourly_market_gas_panel.csv` | Ignored | 27,024-row hourly join over the same period | Compatible, but inherits the same market boundary |
 | `data/market/model_inputs/environment_blocks/pool.csv` | Tracked | 27,024 hourly runtime rows over the same period | Derived input; has ETH fields but no DAI price and adds no earlier evidence |
 | `data/market/processed/stablecoin_extreme_review.csv` | Ignored | 113 flagged observations within the current period | Non-exhaustive review, not a continuous sample |
 | `outputs/diagnostics/calibration/market_gas_protocol/market/dai_peg_distribution.csv` | Ignored | Aggregate summaries of the current panel | No hourly observations and no earlier evidence |
 | `tests/fixtures/market/empirical_market.csv` | Tracked | 19 small hourly fixture rows beginning in 2000 | Synthetic test evidence with a known gap; not empirical or provenance-backed |
-| `data/provenance/data_manifest.csv` and market provenance JSON | Mixed tracked/ignored | Metadata for the current acquisition only | Authoritative current provenance; documents no pre-June-2021 acquisition |
+| `data/provenance/calibration/confidence/` | Tracked compact evidence | Coverage, harmonisation, sparse scaling and Design C decision | Content-addressed in the calibration evidence manifest |
 
 DAI prices are USD per DAI and ETH prices are USD per the WETH instrument in
-the current Dune `prices.hour` acquisition. No active, archived or generated
-repository artefact supplies a validated continuous pre-June-2021 DAI/ETH
-panel. Vault mutation evidence from 2019–2020 is not market-price evidence and
-cannot fill this gap.
-
-The minimum future Design C acquisition is an hourly DAI and WETH panel for
-31 December 2019 00:00 UTC to 1 June 2021 00:00 UTC, exclusive. Estimation
-origins begin on 1 January 2020 after the required 24-hour lookback. The
-acquisition must use the same token identities, USD units, UTC convention and
-source fields where available, and must validate continuity, duplicates,
-source changes, checksums and compatibility before concatenation. USDC/SVB
-remains wholly withheld.
-
-This boundary is pre-registered for the next evidence pass. If it still fails
-the burden gates, the sample is not expanded opportunistically.
+the Dune `prices.hour` acquisitions. The full-range panel now supplies the
+previously missing evidence without using vault mutations or another provider.
+USDC/SVB remains wholly withheld. Design C fails its dominance gate, so the
+sample is not expanded or shifted opportunistically.
 
 ## 16. Future evidence ownership
 
-No evidence file is created by this feasibility pass. A later authorised
-estimation pass should place compact, content-addressed records under:
+The historical acquisition creates compact, content-addressed records under:
 
 `data/provenance/calibration/confidence/`
 
-with:
-
-- `evidence_redesign_specification.json`;
-- `burden_target_summary.json`;
-- `origin_grid_summary.json`;
-- `partition_selection.json`;
-- `liquidation_predictor_role.json`; and
-- `historical_evidence_inventory.json`.
+with coverage, harmonisation, sparse-scaling and final Design C evidence. Their
+checksums are registered in `data/provenance/calibration/manifest.json`.
 
 Generated diagnostics belong under
 `outputs/diagnostics/calibration/confidence/`, and dissertation tables under
@@ -493,20 +480,15 @@ new top-level directory is required.
 
 ## 17. Remaining blockers
 
-Coefficient fitting remains blocked because:
+Coefficient fitting remains blocked because Designs A and B fail their burden
+and transformation gates, tab pressure fails every sparse-variation gate and
+Design C fails the fixed episode-dominance gate. Its primary market predictors
+do pass the replacement positive-Q95 scaling gates, but that partial success
+cannot override target concentration.
 
-- Designs A and B fail the non-zero-burden, material-burden and
-  multi-year-burden gates;
-- peg gap and ETH downside have zero calibration MAD on the deterministic
-  grids;
-- tab pressure fails every sparse-variation gate;
-- Design C has no existing validated historical market evidence; and
-- at least three valid chronological folds have not been demonstrated.
-
-The next bounded task is acquisition and validation of the pre-registered
-Design C market extension, followed by the same no-fit feasibility gates. A
-coefficient-estimation pass is ready only if that evidence independently
-passes the target, scale, fold and withheld-validation requirements.
+The final evidence-extension stop rule closes this predictive route. The next
+bounded method is constrained simulated moments using continuous deterioration
+and recovery evidence, subject to a separately authorised specification.
 
 No coefficient has been fitted, no runtime parameter has been adopted and no
 behavioural implementation is authorised.

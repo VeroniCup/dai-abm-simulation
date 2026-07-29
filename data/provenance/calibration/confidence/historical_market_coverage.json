@@ -1,0 +1,77 @@
+{
+  "coverage": {
+    "asset_identities": {
+      "DAI": {
+        "contract_address": "0x6b175474e89094c44da98b954eedeac495271d0f",
+        "dune_instrument": "DAI"
+      },
+      "ETH": {
+        "contract_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        "dune_instrument": "WETH"
+      }
+    },
+    "assets": [
+      "DAI",
+      "ETH"
+    ],
+    "duplicate_asset_hours": 0,
+    "expected_hours_computed": 39456,
+    "longest_identical_price_run_hours": {
+      "DAI": 0,
+      "ETH": 0
+    },
+    "missing_hours": {
+      "DAI": 0,
+      "ETH": 0
+    },
+    "non_finite_prices": 0,
+    "non_positive_prices": 0,
+    "price_convention": "Dune prices.hour price field",
+    "processed_columns": 12,
+    "processed_path": "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv",
+    "processed_rows": 39456,
+    "processed_sha256": "5d7f1ec9171023d442acbcebd41cd1837eb899769c37eb38b5c2561c9d64a5c9",
+    "provider_forward_fill_note": "Dune documents carry-forward when no trade is observed. Identical-price runs are reported separately.",
+    "raw_columns": 8,
+    "raw_path": "data/market/raw/dune_prices_hourly_dai_eth_2019-12-31_2024-06-30.csv",
+    "raw_rows": 78912,
+    "raw_sha256": "5a9ca2aa78cadf23c780eb7ab9462f9c99307e931c57afed126002a68be4f232",
+    "requested_end_exclusive_utc": "2024-07-01T00:00:00+00:00",
+    "requested_start_utc": "2019-12-31T00:00:00+00:00",
+    "source_change_counts": {
+      "DAI": 0,
+      "ETH": 0
+    },
+    "source_distribution": {
+      "DAI": {
+        "coinpaprika": 39456
+      },
+      "ETH": {
+        "coinpaprika": 39456
+      }
+    },
+    "stale_runs_at_least_six_hours": {
+      "DAI": [],
+      "ETH": []
+    },
+    "timestamp_convention": "start-of-hour UTC",
+    "validation_passed": true
+  },
+  "purpose": "Canonical full-range DAI/ETH confidence-calibration coverage.",
+  "schema_version": 1,
+  "source": {
+    "engine": "small",
+    "execution_id": "01KYP8NPE5XH2KN926949AYKGT",
+    "provider": "Dune",
+    "query_id": 8145897,
+    "query_type": "private temporary",
+    "sql_path": "sql/market/templates/hourly_market_prices.sql",
+    "sql_sha256": "1bc8ff155372731c435ab330d10e16e262c5df29557ff84ffe4cd111dc7babfc",
+    "table": "prices.hour"
+  },
+  "usage": {
+    "credits_used_after": 1260.942,
+    "credits_used_before": 1042.408,
+    "observed_delta": 218.5340000000001
+  }
+}

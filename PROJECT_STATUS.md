@@ -63,10 +63,11 @@ structural stages:
 
 The bounded post-Stage-11 semantic-output correction and tracked-clone
 self-containment correction are also complete. Temporary compatibility
-interfaces have been removed. The current full suite and the tracked-only
-checkout each pass 491 tests; runtime inputs, empirical payloads, SQL,
-generated outputs, smoke checks and Experiments 1–5 retain their frozen
-integrity evidence.
+interfaces have been removed. The Stage 12 working and tracked-only checkouts
+each passed the then-current 491-test suite. The current working suite contains
+501 passing tests after the historical confidence-evidence additions; runtime
+inputs, smoke checks and Experiments 1–5 retain their frozen integrity
+evidence.
 
 Repository restructuring is closed. The
 [final restructuring review](docs/validation/repository_restructuring.md)
@@ -129,14 +130,22 @@ one calibration origin, in one month and one independent backlog episode, with
 zero coincident burden. It is therefore fixed as a sensitivity predictor and
 possible confidence-recovery gate, not a primary estimator input.
 
-No existing repository evidence provides a validated pre-June-2021 hourly
-DAI/ETH extension. Design C is the pre-registered next evidence design, subject
-to separate acquisition and the same no-fit feasibility gates; no current
-partition is ready for estimation. Coefficient fitting and behavioural
-implementation remain unauthorised pending that evidence, valid chronological
-folds, calibration diagnostics, uncertainty intervals, the bad-debt and
-optional-mechanism decisions, legacy/new-mode interface review, and separate
-bounded authorisation.
+The pre-registered [Design C historical market
+extension](docs/calibration/confidence_historical_market_evidence.md) is now
+acquired and adopted. It supplies 39,456 complete DAI/ETH hours from 31
+December 2019 through 30 June 2024 using the same Dune `prices.hour` and
+CoinPaprika methodology as the existing panel. Both sparse positive-Q95
+predictor transformations pass their declared gates, and USDC/SVB remains
+untouched validation evidence.
+
+Design C is nevertheless not eligible for fitting. It has 321 non-zero
+calibration origins and 74 contributing episodes, but one December 2020–
+January 2021 episode contributes 56.55% of total burden against the fixed 25%
+ceiling. The final evidence-extension stop rule therefore closes the
+predictive stress-proxy regression route. No coefficient was fitted.
+Behavioural implementation remains unauthorised; the next methodological
+boundary is a separately specified constrained simulated-moments calibration
+with blocked and leave-one-event-out validation.
 
 The remaining empirical work is adoption and validation of defensible
 parameter candidates, followed by calibrated counterfactual experiments.

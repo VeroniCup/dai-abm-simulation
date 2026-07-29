@@ -104,8 +104,16 @@ def validate_prices(
     path: Path,
     requested_start: pd.Timestamp = DEFAULT_START,
     requested_end: pd.Timestamp = DEFAULT_END,
+    expected_assets: tuple[str, ...] | None = None,
 ) -> tuple[dict[str, Any], list[str]]:
     """Validate raw data and return a serialisable report and failures."""
+    selected_assets = tuple(EXPECTED) if expected_assets is None else expected_assets
+    unknown_assets = sorted(set(selected_assets) - set(EXPECTED))
+    if unknown_assets:
+        raise ValueError(f"Unknown expected assets: {unknown_assets}")
+    if not selected_assets:
+        raise ValueError("At least one expected asset is required.")
+
     frame = pd.read_csv(path, dtype={"contract_address": "string"})
     missing_columns = sorted(set(REQUIRED_COLUMNS) - set(frame.columns))
     if missing_columns:
@@ -140,9 +148,9 @@ def validate_prices(
         failures.append(f"{out_of_bounds} rows are outside the requested interval")
 
     actual_assets = set(frame["asset"].dropna().astype(str))
-    expected_assets = set(EXPECTED)
-    missing_assets = sorted(expected_assets - actual_assets)
-    unexpected_assets = sorted(actual_assets - expected_assets)
+    expected_asset_set = set(selected_assets)
+    missing_assets = sorted(expected_asset_set - actual_assets)
+    unexpected_assets = sorted(actual_assets - expected_asset_set)
     if missing_assets:
         failures.append(f"missing assets: {missing_assets}")
     if unexpected_assets:
@@ -187,7 +195,8 @@ def validate_prices(
         freq="1h",
     )
     by_asset: dict[str, Any] = {}
-    for asset, identifiers in EXPECTED.items():
+    for asset in selected_assets:
+        identifiers = EXPECTED[asset]
         subset = frame.loc[frame["asset"] == asset]
         duplicate_asset_hour_count = int(
             subset.duplicated(subset=["_timestamp"], keep=False).sum()
@@ -276,9 +285,9 @@ def validate_prices(
         "file": str(path),
         "requested_start_utc": requested_start.isoformat(),
         "requested_end_exclusive_utc": requested_end.isoformat(),
-        "expected_assets": sorted(expected_assets),
+        "expected_assets": sorted(expected_asset_set),
         "expected_hours_per_asset": len(expected_hours),
-        "expected_total_rows": len(expected_hours) * len(expected_assets),
+        "expected_total_rows": len(expected_hours) * len(expected_asset_set),
         "actual_total_rows": int(len(frame)),
         "duplicate_asset_hour_row_count": duplicate_count,
         "null_price_count": null_price_count,

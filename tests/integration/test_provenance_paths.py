@@ -83,7 +83,7 @@ def test_cross_domain_manifest_active_paths_resolve() -> None:
     with manifest.open("r", encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
 
-    assert len(rows) == 5
+    assert len(rows) == 7
     for row in rows:
         for key, value in row.items():
             if not value:

@@ -42,6 +42,13 @@ files, transient states, local validation outputs and machine-specific paths
 remain ignored unless a durable record is required for an irreproducible
 execution.
 
+The compact confidence evidence under
+`data/provenance/calibration/confidence/` records the adopted historical
+market coverage, overlap harmonisation, frozen sparse-predictor scales and
+Design C no-fit decision. It contains no hourly observations; the ignored raw
+and processed files are identified by checksum in the cross-domain and
+calibration manifests.
+
 Credentials, `.env` files and Dune API keys never belong in provenance.
 
 ## Checksum classes

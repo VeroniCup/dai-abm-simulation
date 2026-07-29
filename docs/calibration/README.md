@@ -16,6 +16,9 @@ Active calibration guidance is organised by evidence and decision:
 - [Confidence evidence redesign](confidence_evidence_redesign.md) —
   continuous downside burden, deterministic origin grid, evidence-partition
   gates and the pre-registered historical extension.
+- [Historical confidence market evidence](confidence_historical_market_evidence.md)
+  — the adopted 2019–2024 DAI/ETH extension, sparse scaling gates and final
+  no-fit Design C decision.
 - [Representative vaults](vaults.md)
 - [Liquidations](liquidations.md)
 - [Protocol parameters](protocol.md)

@@ -157,6 +157,50 @@
       "schema": "JSON evidence record containing six contract creation records, explicit stopped-call reconciliation, verified source bindings and effective default-state boundaries.",
       "context": "Canonical compact evidence supporting the six documented stopped=0 protocol states; the larger acquisition corpus remains ignored.",
       "classification": "snapshot"
+    },
+    {
+      "semantic_name": "confidence_historical_market_coverage",
+      "path": "data/provenance/calibration/confidence/historical_market_coverage.json",
+      "producer": "workflows.market.process_historical_evidence",
+      "source_inputs": ["data/market/raw/dune_prices_hourly_dai_eth_2019-12-31_2024-06-30.csv", "sql/market/templates/hourly_market_prices.sql"],
+      "sha256": "b2dcc1dfa49b06671ecdf4628a13f7e25f6a06e2dcd4d2f83893084d2ab357df",
+      "size_bytes": 2373,
+      "schema": "Compact JSON source, identity, interval, checksum and Dune-usage evidence; no hourly observations.",
+      "context": "Canonical coverage record for the adopted full-range DAI/ETH confidence-calibration panel.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "confidence_historical_market_harmonisation",
+      "path": "data/provenance/calibration/confidence/historical_market_harmonisation.json",
+      "producer": "workflows.market.process_historical_evidence",
+      "source_inputs": ["data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv", "data/market/processed/dune_hourly_market_prices_processed.csv"],
+      "sha256": "924f43f030e11b21b5fd76703eee99db08e091d2e9f62b1cd2006bf55e7ba868",
+      "size_bytes": 7451,
+      "schema": "Compact JSON overlap statistics, floating-representation tolerances and source-adoption decision.",
+      "context": "The existing-source extension reproduces every overlap label and price to documented floating representation.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "confidence_sparse_predictor_scaling",
+      "path": "data/provenance/calibration/confidence/sparse_predictor_scaling.json",
+      "producer": "workflows.market.process_historical_evidence",
+      "source_inputs": ["data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"],
+      "sha256": "9b39ddcf549ed86f7d7553602f03167a5fd4f55df5b45a93adb4a5ac39ee09d1",
+      "size_bytes": 3956,
+      "schema": "Compact JSON positive-Q95 transformation, gates, quintiles and validation extrapolation.",
+      "context": "Pre-registered bounded scaling evidence; no coefficient is fitted and withheld evidence does not determine scale.",
+      "classification": "snapshot"
+    },
+    {
+      "semantic_name": "confidence_design_c_feasibility",
+      "path": "data/provenance/calibration/confidence/design_c_feasibility.json",
+      "producer": "workflows.market.process_historical_evidence",
+      "source_inputs": ["data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"],
+      "sha256": "9110beb27e2cce422df6c419938fe986d6454e5ea45902dbb50c537fed93ef70",
+      "size_bytes": 9690,
+      "schema": "Compact JSON burden gates, anchor sensitivity, validation summaries and final no-fit classification.",
+      "context": "Design C passes burden-count and predictor-scale gates but fails the pre-registered episode-dominance gate; the predictive route is closed in favour of constrained SMM.",
+      "classification": "snapshot"
     }
   ]
 }

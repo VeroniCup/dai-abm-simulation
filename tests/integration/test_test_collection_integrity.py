@@ -13,6 +13,7 @@ import sys
 from tests.integration.test_test_hierarchy import (
     CLEAN_CLONE_CORRECTION_MODULES,
     EXPECTED_MAPPING,
+    POST_RESTRUCTURING_FEATURE_MODULES,
     POST_STAGE11_CORRECTION_MODULES,
     STAGE11_MODULES,
     STAGE9_MODULES,
@@ -91,6 +92,7 @@ def _baseline_nodeids(nodeids: list[str]) -> list[str]:
             | STAGE11_MODULES
             | POST_STAGE11_CORRECTION_MODULES
             | CLEAN_CLONE_CORRECTION_MODULES
+            | POST_RESTRUCTURING_FEATURE_MODULES
         )
     )
 
@@ -201,6 +203,7 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
             | STAGE11_MODULES
             | POST_STAGE11_CORRECTION_MODULES
             | CLEAN_CLONE_CORRECTION_MODULES
+            | POST_RESTRUCTURING_FEATURE_MODULES
         )
         for nodeid in additions
     )
@@ -214,5 +217,6 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
         "tests/workflows/test_canonical_commands.py": 21,
         "tests/workflows/test_semantic_output_paths.py": 5,
         "tests/calibration/test_tracked_calibration_evidence.py": 6,
+        "tests/calibration/test_confidence_evidence.py": 10,
     }
     assert len(nodeids) == 419 + len(additions)

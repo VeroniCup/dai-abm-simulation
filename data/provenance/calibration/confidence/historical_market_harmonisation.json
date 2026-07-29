@@ -1,0 +1,210 @@
+{
+  "exact_source_extension": true,
+  "floating_representation_tolerance": {
+    "relative": 1e-12,
+    "six_hour_burden_absolute": 1e-12
+  },
+  "maximum_overlap_price_difference": 4.547473508864641e-12,
+  "maximum_overlap_relative_difference": 1.2571273720783864e-15,
+  "no_forward_fill_by_repository": true,
+  "no_interpolation": true,
+  "overlap": {
+    "assets": {
+      "DAI": {
+        "absolute_difference": {
+          "count": 27024,
+          "maximum": 1.1102230246251565e-15,
+          "mean": 2.2449725126051537e-16,
+          "median": 2.220446049250313e-16,
+          "p95": 6.661338147750939e-16,
+          "p99": 7.771561172376096e-16
+        },
+        "episode_disagreements": {
+          "november_2022": {
+            "burden_absolute_difference": 0.0,
+            "price_hours_different": 0
+          },
+          "terra_cefi": {
+            "burden_absolute_difference": 0.0,
+            "price_hours_different": 2
+          },
+          "usdc_svb": {
+            "burden_absolute_difference": 4.070667414257656e-13,
+            "price_hours_different": 0
+          }
+        },
+        "exact_matches": 9756,
+        "label_disagreements": {
+          "below_0_99": 0,
+          "below_0_995": 0,
+          "outside_symmetric_recovery_band": 0,
+          "six_hour_burden_materially_different": 0,
+          "six_hour_burden_numerically_different": 203
+        },
+        "largest_discrepancies": [
+          {
+            "absolute_difference": 1.1102230246251565e-15,
+            "candidate": 1.0017495833333334,
+            "existing": 1.0017495833333323,
+            "timestamp_utc": "2021-11-16T17:00:00+00:00"
+          },
+          {
+            "absolute_difference": 1.1102230246251565e-15,
+            "candidate": 1.0003708333333334,
+            "existing": 1.0003708333333323,
+            "timestamp_utc": "2021-11-17T12:00:00+00:00"
+          },
+          {
+            "absolute_difference": 1.1102230246251565e-15,
+            "candidate": 1.0017983333333331,
+            "existing": 1.0017983333333342,
+            "timestamp_utc": "2021-11-29T17:00:00+00:00"
+          },
+          {
+            "absolute_difference": 1.1102230246251565e-15,
+            "candidate": 1.0002976666666668,
+            "existing": 1.0002976666666656,
+            "timestamp_utc": "2022-01-16T01:00:00+00:00"
+          },
+          {
+            "absolute_difference": 1.1102230246251565e-15,
+            "candidate": 1.0013715833333334,
+            "existing": 1.0013715833333323,
+            "timestamp_utc": "2022-04-14T06:00:00+00:00"
+          },
+          {
+            "absolute_difference": 1.1102230246251565e-15,
+            "candidate": 1.0033451666666666,
+            "existing": 1.0033451666666655,
+            "timestamp_utc": "2022-04-14T15:00:00+00:00"
+          },
+          {
+            "absolute_difference": 1.1102230246251565e-15,
+            "candidate": 1.0030170833333334,
+            "existing": 1.0030170833333345,
+            "timestamp_utc": "2022-04-18T13:00:00+00:00"
+          },
+          {
+            "absolute_difference": 1.1102230246251565e-15,
+            "candidate": 1.0048313333333334,
+            "existing": 1.0048313333333323,
+            "timestamp_utc": "2022-04-29T12:00:00+00:00"
+          },
+          {
+            "absolute_difference": 1.1102230246251565e-15,
+            "candidate": 1.0005138333333334,
+            "existing": 1.0005138333333323,
+            "timestamp_utc": "2022-05-10T23:00:00+00:00"
+          },
+          {
+            "absolute_difference": 1.1102230246251565e-15,
+            "candidate": 1.000535416666667,
+            "existing": 1.0005354166666658,
+            "timestamp_utc": "2022-06-06T13:00:00+00:00"
+          }
+        ],
+        "matched_timestamps": 27024,
+        "price_correlation": 1.0,
+        "relative_difference_quantiles": {
+          "maximum": 1.1101548426152382e-15,
+          "p50": 2.2180662490041244e-16,
+          "p95": 6.65212102434592e-16,
+          "p99": 7.788315346649425e-16
+        },
+        "total_six_hour_burden": {
+          "absolute_difference": 2.412754891711888e-12,
+          "candidate": 74.82976666666687,
+          "existing": 74.82976666666724
+        }
+      },
+      "ETH": {
+        "absolute_difference": {
+          "count": 27024,
+          "maximum": 4.547473508864641e-12,
+          "mean": 5.241399052166172e-13,
+          "median": 4.547473508864641e-13,
+          "p95": 1.3642420526593924e-12,
+          "p99": 2.2737367544323206e-12
+        },
+        "exact_matches": 7061,
+        "largest_discrepancies": [
+          {
+            "absolute_difference": 4.547473508864641e-12,
+            "candidate": 4010.485833333333,
+            "existing": 4010.4858333333377,
+            "timestamp_utc": "2021-10-27T14:00:00+00:00"
+          },
+          {
+            "absolute_difference": 4.547473508864641e-12,
+            "candidate": 4418.41,
+            "existing": 4418.409999999995,
+            "timestamp_utc": "2021-11-16T01:00:00+00:00"
+          },
+          {
+            "absolute_difference": 3.637978807091713e-12,
+            "candidate": 4176.1866666666665,
+            "existing": 4176.18666666667,
+            "timestamp_utc": "2021-10-28T14:00:00+00:00"
+          },
+          {
+            "absolute_difference": 3.637978807091713e-12,
+            "candidate": 4174.8983333333335,
+            "existing": 4174.89833333333,
+            "timestamp_utc": "2021-10-28T15:00:00+00:00"
+          },
+          {
+            "absolute_difference": 3.637978807091713e-12,
+            "candidate": 4358.878333333333,
+            "existing": 4358.878333333337,
+            "timestamp_utc": "2021-10-30T12:00:00+00:00"
+          },
+          {
+            "absolute_difference": 3.637978807091713e-12,
+            "candidate": 4541.591666666666,
+            "existing": 4541.59166666667,
+            "timestamp_utc": "2021-11-05T09:00:00+00:00"
+          },
+          {
+            "absolute_difference": 3.637978807091713e-12,
+            "candidate": 4162.683333333333,
+            "existing": 4162.683333333337,
+            "timestamp_utc": "2021-11-27T08:00:00+00:00"
+          },
+          {
+            "absolute_difference": 3.637978807091713e-12,
+            "candidate": 4252.1125,
+            "existing": 4252.112500000004,
+            "timestamp_utc": "2021-11-28T22:00:00+00:00"
+          },
+          {
+            "absolute_difference": 3.637978807091713e-12,
+            "candidate": 4520.4625,
+            "existing": 4520.462500000003,
+            "timestamp_utc": "2021-12-03T15:00:00+00:00"
+          },
+          {
+            "absolute_difference": 3.637978807091713e-12,
+            "candidate": 4340.0625,
+            "existing": 4340.062500000004,
+            "timestamp_utc": "2021-12-06T22:00:00+00:00"
+          }
+        ],
+        "log_return_correlation": 0.9999999999999999,
+        "matched_timestamps": 27024,
+        "price_correlation": 1.0,
+        "relative_difference_quantiles": {
+          "maximum": 1.2571273720783864e-15,
+          "p50": 1.9363647341084959e-16,
+          "p95": 5.899578168343585e-16,
+          "p99": 7.674890235712487e-16
+        }
+      }
+    },
+    "candidate_missing_timestamps": [],
+    "existing_missing_timestamps": [],
+    "requested_overlap_hours": 27024
+  },
+  "purpose": "Exact-source overlap and source-adoption evidence.",
+  "schema_version": 1,
+  "source_adoption_decision": "adopt_exact_source_extension"
+}

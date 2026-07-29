@@ -22,6 +22,9 @@ HISTORICAL_TEMPLATE_TARGETS = {
     "sql/protocol/generated/history/eth_a_debt_ceiling_diagnostic.sql",
     "sql/protocol/generated/history/vat_wbtc_activation_diagnostic.sql",
 }
+POST_RESTRUCTURING_ACTIVE_SQL = {
+    "sql/market/templates/hourly_market_prices.sql",
+}
 
 
 def _sql_mapping() -> list[dict[str, str]]:
@@ -41,15 +44,16 @@ def test_sql_inventory_maps_once_to_unique_targets() -> None:
     assert len(sources) == len(set(sources))
     assert len(targets) == len(set(targets))
     assert all(row["migration_stage"] == "07_sql" for row in mapping)
-    assert {
+    actual = {
         path.relative_to(REPOSITORY_ROOT).as_posix()
         for path in SQL_ROOT.rglob("*.sql")
-    } == set(targets)
+    }
+    assert actual == set(targets) | POST_RESTRUCTURING_ACTIVE_SQL
 
 
 def test_sql_hierarchy_contains_only_populated_semantic_domains() -> None:
     sql_files = tuple(SQL_ROOT.rglob("*.sql"))
-    assert len(sql_files) == 117
+    assert len(sql_files) == 117 + len(POST_RESTRUCTURING_ACTIVE_SQL)
     assert {path.relative_to(SQL_ROOT).parts[0] for path in sql_files} == {
         "gas",
         "liquidations",
@@ -80,8 +84,9 @@ def test_template_and_generated_storage_matches_approved_map() -> None:
         path.relative_to(REPOSITORY_ROOT).as_posix()
         for path in (SQL_ROOT).glob("*/generated/**/*.sql")
     }
-    assert len(template_paths) == 14
+    assert len(template_paths) == 14 + len(POST_RESTRUCTURING_ACTIVE_SQL)
     assert len(generated_paths) == 103
+    assert POST_RESTRUCTURING_ACTIVE_SQL <= template_paths
     assert HISTORICAL_TEMPLATE_TARGETS <= generated_paths
     assert all(
         target_rows[path]["archive_status"] == "historical"
