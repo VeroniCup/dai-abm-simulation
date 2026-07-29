@@ -95,16 +95,21 @@ review reproduced all of them without changing executable behaviour.
 
 ## Next research work
 
-The behavioural-confidence calibration planning pass is complete. It audits
-the current confidence and DAI-response mechanism, records the empirical
-identification limits and defines the calibration, validation and stress-test
-split in the [confidence and behavioural calibration
-plan](docs/calibration/confidence_and_behaviour.md). Executable implementation
-is not yet authorised, and no behavioural values have been adopted.
+The behavioural-confidence calibration planning pass has resolved four core
+specification choices in the [confidence and behavioural calibration
+plan](docs/calibration/confidence_and_behaviour.md): sustained price recovery
+uses the \(\pm0.5\%\) band for 24 consecutive hours; primary collateral stress
+is lagged 24-hour ETH downside; primary liquidation pressure is the lagged
+backlog-to-clearance ratio; and the new behavioural DAI response uses directly
+estimated effective coefficients after scale normalisation.
 
-The next model-development milestone is the bounded resolution of the plan's
-unresolved choices, followed by explicitly authorised estimation and
-implementation of confidence, behavioural DAI demand and peg recovery.
+These are pre-registered estimation choices, not adopted behavioural values.
+Executable implementation remains unauthorised pending the remaining outcome,
+bad-debt and proxy-gate decisions, calibration diagnostics, coefficient
+estimates and uncertainty intervals, and separate bounded implementation
+authorisation. The next model-development milestone is the empirical-estimation
+design pass, followed only then by explicitly authorised implementation of
+confidence, behavioural DAI demand and peg recovery.
 
 The remaining empirical work is adoption and validation of defensible
 parameter candidates, followed by calibrated counterfactual experiments.

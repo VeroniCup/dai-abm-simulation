@@ -223,7 +223,7 @@ not yet exist as explicit interfaces.
 | Realised and downside volatility | Constructible | Rolling return dispersion and negative semivariance using only past data |
 | Gas and transaction-cost conditions | Directly available | Hourly median and tail gas prices, utilisation and standardised cost indices; liquidation transaction gas is separate |
 | Liquidation count and volume | Directly available | Continuous hourly liquidation panel by exact ilk |
-| Liquidation backlog | Directly available as a proxy | `unresolved_auctions` plus initiated/completed flow; it is not identical to simulated unsafe-vault inventory |
+| Liquidation backlog | Constructible from auction-state data | Reconstruct end-of-hour unresolved remaining `tab` from Kick initial `tab_dai` and the latest successful Take `remaining_tab_dai`; it is not identical to simulated unsafe-vault inventory. The current hourly `unresolved_auctions` field is not sufficient by itself. Source-state coverage is currently 1,157/1,157 Kick initial tabs and 1,317/1,317 Take remaining tabs across the six target ilks; the final hourly reconstruction must still reconcile units and cleared-tab flows. |
 | Unsuccessful or delayed liquidation | Directly available as a proxy | Failed Take attempts, Redos, unresolved auctions and observed duration; failed inner-call gas remains unobserved |
 | Bad debt | Constructible only as a proxy | Auction remaining-tab/bad-debt proxy and reconstructed states; sparse and not a complete accounting series |
 | Liquidatable-vault share | Constructible in representative windows | Reconstructed collateral ratio versus effective liquidation ratio; not continuously observed over the full sample |
@@ -253,26 +253,181 @@ The recommended interpretation is a bounded, system-wide reduced-form index:
 - the index is validated through DAI-price and recovery moments, not against an
   unobserved confidence label.
 
-A transparent proxy target can be estimated from lagged observables:
+A transparent proxy target will be estimated from pre-registered, lagged
+observables. The four specifications below fix its inputs and the related
+recovery and DAI-response definitions before estimation; they do not adopt
+values or authorise executable implementation.
+
+### 5.1 Resolved pre-registered specifications
+
+#### Sustained peg recovery
+
+The primary recovery band is \(\lvert p_t-1\rvert\le 0.005\), equivalently
+\(0.995\le p_t\le 1.005\). Sustained recovery requires 24 consecutive hourly
+observations inside that band. The recovery clock begins at the first
+post-shock exit from the band. First return to the band and sustained recovery
+are separate outcomes: any later observation outside the band resets the
+consecutive-hours counter, and an episode reaching its simulation horizon
+without 24 qualifying hours is not sustainably recovered. Report recovery time
+in hours from the first post-shock band exit; event-based experiments may also
+report time from the exogenous shock step.
+
+This price-recovery definition is independent of confidence, liquidation and
+bad debt. Confidence recovery uses the same 24-hour stability period, but also
+requires liquidation pressure at or below its calibration-sample 75th
+percentile and no severe bad-debt condition. A new material depeg, pressure
+above that gate or a severe bad-debt condition resets the confidence-recovery
+counter. The severe bad-debt definition remains unresolved.
+
+The pre-registered sensitivities are bands of \(\pm0.25\%\) and \(\pm1\%\),
+and sustained durations of 12 and 48 hours. They must not be selected after
+inspecting simulation success rates; the primary result remains \(\pm0.5\%\)
+for 24 hours.
+
+#### Primary collateral-stress proxy
+
+The primary collateral predictor is lagged ETH downside stress:
+
+\[
+R_t^- = \max\left(0, -\sum_{j=1}^{24}r^{ETH}_{t-j}\right).
+\]
+
+It is the negative part of the trailing 24-hour cumulative ETH log return and
+uses observations through hour \(t-1\) only. Centre it on the calibration
+sample median, scale it by the calibration-sample median absolute deviation,
+and winsorise it at the calibration-sample first and 99th percentiles. Freeze
+these transformation values before validation and apply them unchanged to
+validation and stress windows.
+
+ETH is the primary aggregate channel because it is directly and continuously
+observed, avoids an inadequately supported historical collateral-weight series,
+reduces parameter and measurement complexity, and is the most defensible first
+aggregate collateral-stress measure. A pre-registered multi-collateral
+sensitivity is:
+
+\[
+R_t^{-,\mathrm{portfolio}}
+= w_{t-1}^{ETH}R_t^{-,ETH}+w_{t-1}^{WBTC}R_t^{-,WBTC}.
+\]
+
+Its weights must be lagged, represent actual debt exposure or a documented
+model portfolio, sum to one over included volatile collateral, and use the
+same timing and transformation discipline. Debt ceilings must not silently
+substitute for debt shares. Stable collateral is excluded from this downside
+return composite; its effects belong in separate depeg or correlation
+sensitivities.
+
+#### Primary liquidation-pressure proxy
+
+The primary liquidation-system pressure measure is:
+
+\[
+L_t = \frac{U_{t-1}}{U_{t-1}+C^{24}_{t-1}+\epsilon},
+\]
+
+where \(U_{t-1}\) is total unresolved auction remaining `tab` at the end of
+the prior hour, and \(C^{24}_{t-1}\) is total liquidation `tab` successfully
+cleared during the preceding 24 completed hours. Both are in DAI;
+\(\epsilon\) only avoids division by zero, and \(L_t=0\) is defined when both
+the unresolved stock and clearance flow are zero. The proxy is bounded in
+\([0,1]\): low values indicate little unresolved inventory relative to recent
+clearance capacity, while high values indicate backlog or weak clearance.
+It is a liquidation-system pressure measure, not the simulated unsafe-vault
+share.
+
+Only information available before the hour-\(t\) behavioural update may be
+used: completions during hour \(t\) are excluded. The remaining-tab form is
+admissible only if at least 95% of unresolved-auction observations have usable
+remaining-tab values, there is no material time-window or ilk-specific
+coverage break, and units and aggregation reconcile with completed-tab
+measures. The source-state check above establishes usable Kick/Take fields for
+the current six-ilk evidence; the hourly reconstruction and reconciliation
+remain an explicit estimation gate.
+
+If that gate fails, the fixed fallback for the estimation design is the count
+analogue
+
+\[
+L_t^{\mathrm{count}} =
+\frac{N_{t-1}^{\mathrm{unresolved}}}
+{N_{t-1}^{\mathrm{unresolved}}+N_{t-1}^{\mathrm{completed,24h}}+1}.
+\]
+
+This is a documented fallback specification, not an automatic runtime
+fallback. The selected form must be fixed before fitting. Estimate
+recovery-compatible and severe thresholds as the calibration-sample 75th and
+95th percentiles respectively, then apply them unchanged to validation and
+stress windows. Failed Take attempts, Redos, gas cost, initiated-auction count
+and auction duration are excluded as independent primary coefficients; they
+remain valid ablation, alternative-definition, data-quality or sensitivity
+inputs.
+
+#### Coefficient-normalised DAI response
+
+For the new behavioural mode, define
+
+\[
+g_t^- = \max(1-p_t,0), \qquad g_t^+ = \max(p_t-1,0),
+\]
+
+and estimate the primary response equation directly:
+
+\[
+\Delta p_t =
+\kappa_- C_tg_t^-
+-\kappa_+g_t^+
+-\kappa_P(1-C_t)g_t^-
++\varepsilon_t,
+\qquad
+p_{t+1}=\operatorname{clip}(p_t+\Delta p_t).
+\]
+
+Here \(\kappa_-\) is the effective hourly below-peg stabilising response,
+\(\kappa_+\) the effective hourly above-peg supply response, \(\kappa_P\)
+the consolidated hourly panic-selling response, and \(\varepsilon_t\) the
+residual innovation estimated after deterministic terms. \(C_t\) is bounded
+between the estimated confidence floor and one.
+
+Normalise the generic price-adjustment scale to one in the new behavioural
+mode and estimate these effective coefficients in hourly price-change units.
+Do not estimate a separate common adjustment speed. The legacy mode retains its
+current equation and parameters unchanged. In the new mode,
+`price_adjustment_speed`, `arbitrage_strength`,
+`above_peg_supply_strength`, `panic_strength`, `panic_selling_multiplier`,
+the hard-coded liquidatable-share and bad-debt-ratio selling coefficients, and
+`arbitrage_recovery_strength` are not separately estimated. They remain only
+for legacy compatibility until implementation and are candidates for removal
+from the new mode after regression-protected implementation.
+
+Collateral and liquidation stress enter the primary response through
+confidence only. The sole primary panic-selling term is
+\(\kappa_P(1-C_t)g_t^-\), avoiding double counting. Policy feedback, bad-debt
+recovery drag, long-run confidence scarring, arbitrage-capacity constraints and
+agent-level participation probabilities remain optional sensitivity or
+future-data mechanisms.
+
+### 5.2 Observable stress model
 
 \[
 \Pr(Y_{t+h}=1)
 =
 \operatorname{logit}^{-1}\left(
-\beta_0+\beta_p g_t^-+\beta_r r_t^-+\beta_l L_t+\beta_b B_t
+\beta_0+\beta_p z(g_{t-1}^-)+\beta_r z(R_t^-)+\beta_l z(L_t)
 \right),
 \]
 
 where \(Y_{t+h}\) denotes continued material depeg over a fixed horizon,
-\(g_t^-\) is below-peg deviation, \(r_t^-\) is downside collateral stress,
-\(L_t\) is unresolved liquidation pressure and \(B_t\) is a defensible bad-debt
-proxy. This probability is a stress proxy, not observed confidence.
+all predictors are lagged, and \(z\) denotes the calibration-sample
+transformation described above. This probability is a stress proxy, not
+observed confidence. The prediction horizon and material-depeg threshold
+remain to be fixed before fitting.
 
-Bad debt should enter the primary proxy only if its coverage and variation pass
-the pre-registered data-quality gate. Otherwise it remains a sensitivity
-channel. Gas may condition the liquidation-pressure measure, but should not be
-added as an independent confidence coefficient without incremental predictive
-evidence.
+Bad debt is excluded from the primary proxy until its coverage and variation
+pass the pre-registered data-quality gate. It may then enter as a
+pre-registered sensitivity interaction, not an automatically included fourth
+primary predictor. Gas may condition an alternative liquidation-pressure
+measure, but is not an independent primary confidence coefficient without
+incremental predictive evidence.
 
 ## 6. Candidate model designs
 
@@ -320,16 +475,18 @@ C_{t-1},
 \end{cases}
 \]
 
-The stability gate opens after \(k\) consecutive hours inside the calibrated
-DAI band, with no severe unresolved-liquidation or bad-debt condition. A new
-material depeg or severe liquidation condition closes the gate and resets its
-counter. This permits persistence and recovery without forcing recovery.
+The stability gate opens after 24 consecutive hours inside the primary
+\(\pm0.5\%\) DAI band, with liquidation pressure at or below its
+calibration-sample 75th percentile and no severe bad-debt condition. A new
+material depeg, pressure above that threshold or a severe bad-debt condition
+closes the gate and resets its counter. This permits persistence and recovery
+without forcing recovery.
 
 The minimum new state parameters are:
 
 - deterioration adjustment \(\alpha_d\);
 - recovery adjustment \(\alpha_r\);
-- recovery stability period \(k\); and
+- recovery stability period (fixed at 24 hours in the primary specification);
 - confidence floor \(C_{\min}\).
 
 Do not add a separate persistence coefficient: persistence is already implied
@@ -340,43 +497,29 @@ requires it.
 
 ### 7.2 Stress inputs
 
-The primary stress proxy should use the smallest validated set:
+The primary stress proxy uses the smallest validated set:
 
 - below-peg deviation;
-- downside ETH/WBTC return or downside-volatility composite; and
-- unresolved liquidation pressure normalised by exposure.
+- lagged 24-hour ETH downside stress; and
+- lagged liquidation backlog-to-clearance pressure.
 
-Bad-debt ratio is included only after coverage validation. Repeated-stress
-history can be represented by the state equation rather than an additional
-coefficient. Peg thresholds and liquidatable-share thresholds remain
+The portfolio-weighted ETH/WBTC measure is a sensitivity, not an alternative
+primary estimate. Bad-debt ratio is included only after coverage validation.
+Repeated-stress history can be represented by the state equation rather than an
+additional coefficient. Peg thresholds and liquidatable-share thresholds remain
 observable classification rules rather than latent confidence values.
 
 ### 7.3 DAI response
 
-Estimate effective response coefficients rather than attempting to identify
-products of arbitrary scales:
-
-\[
-\kappa_- =
-\text{price adjustment speed}\times\text{arbitrage strength},
-\qquad
-\kappa_+ =
-\text{price adjustment speed}\times\text{above-peg supply strength}.
-\]
-
-Normalise `price_adjustment_speed` to one documented scale for behavioural
-calibration, or expose \(\kappa_-\) and \(\kappa_+\) directly. Do not estimate
-both components of either product.
-
-Use one effective panic coefficient multiplying a documented panic signal.
-The present `panic_selling_multiplier`, `panic_strength`, hard-coded
-liquidatable-share coefficient and hard-coded bad-debt coefficient are not
-separately identifiable. The future implementation must either consolidate
-them or fix all but one by explicit normalisation.
-
-Estimate residual noise after the deterministic response. Do not add an
-arbitrage-capacity parameter or agent participation distribution in the
-primary specification because current data do not identify either.
+The coefficient-normalised response equation and its interpretation are fixed
+in Section 5.1. The generic price-adjustment scale is one in the new
+behavioural mode, so \(\kappa_-\), \(\kappa_+\) and \(\kappa_P\) are estimated
+directly as effective hourly price-change coefficients. Do not estimate
+component products or a separate common adjustment speed. The current
+component coefficients remain legacy-only until implementation; residual noise
+is estimated after deterministic terms. Arbitrage capacity and agent
+participation distributions are outside the primary specification because the
+current data do not identify them.
 
 ## 8. Parameter-estimation strategy
 
@@ -387,7 +530,7 @@ primary specification because current data do not identify either.
 | Stress-proxy coefficients | Statistically estimated | Probability of continued material depeg | Penalised logistic model with lagged, standardised predictors | Time-block bootstrap, coefficient signs, calibration curve and ablation |
 | \(\alpha_d\) | Statistically/SMM estimated | Deterioration speed, depeg depth and cumulative deviation | Constrained minimum distance or SMM | Profile interval and blocked validation |
 | \(\alpha_r\) | Statistically/SMM estimated | Recovery half-life and sustained recovery | Constrained minimum distance or SMM | Profile interval and leave-one-episode-out |
-| Stability period \(k\) | Distributionally estimated discrete parameter | Stable hours preceding sustained recovery | Empirical duration distribution; small pre-registered grid | Sensitivity around selected quantile |
+| Stability period \(k\) | Fixed primary specification | 24 qualifying stable hours | Pre-registered at 24 hours; test only the 12- and 48-hour sensitivities | No selection after validation |
 | Confidence floor \(C_{\min}\) | Calibrated behavioural parameter | Severe-depeg depth and weak arbitrage response | Profiled bounded SMM | Wide interval; stress test rather than false precision |
 | Effective below-peg response \(\kappa_-\) | Statistically estimated then SMM-refined | One-step correction, duration and overshoot below peg | Asymmetric autoregression followed by SMM | Block bootstrap and withheld FTX interval |
 | Effective above-peg response \(\kappa_+\) | Statistically estimated then SMM-refined | One-step correction and overshoot above peg | Same asymmetric model | Test restricted symmetric model first |
@@ -422,29 +565,29 @@ heterogeneity is not required unless the row says otherwise.
 | `normal_confidence` | Normal latent level; index | Scale normalisation | Fix at one, not estimate | None after normalisation; no heterogeneity | Profiles/factory → demand/recovery | Fixed modelling normalisation |
 | `stress_confidence` | Stress latent level; index | Stress correction and persistence moments | Current discrete design: joint SMM on C, V validation | Profile interval; no heterogeneity | Profiles/factory → demand/recovery | Unnecessary if bounded continuous state is adopted |
 | `panic_confidence` | Panic latent level; index | Severe depth and non-recovery moments | Current discrete design: bounded SMM using C, test S | Very wide tail interval; no heterogeneity | Profiles/factory → demand/recovery | Unnecessary if bounded continuous state is adopted |
-| `panic_selling_multiplier` | Converts panic peg gap to pressure; multiplier | Tail depth and cumulative below-peg area | Not separately estimable from `panic_strength`; normalise jointly | Profile ridge expected; no heterogeneity | Profiles/factory → panic pressure | Unnecessary and removable after consolidation |
+| `panic_selling_multiplier` | Legacy panic-gap multiplier | Tail depth and cumulative below-peg area | Not estimated in the new mode; replaced by effective \(\kappa_P\) | Retained only for legacy compatibility | Profiles/factory → panic pressure | Superseded in the new mode; removal candidate after protected implementation |
 | `peg_price` | USD target; USD/DAI | Maker design target | No estimator; formula checks | None; no heterogeneity | Profiles/factory → all market equations | Directly observed protocol/design constant |
-| `price_adjustment_speed` | Pressure-to-price scale; per step | DAI change conditional on all pressures | Fix scale or estimate only effective products on C; validate V | Identification normalisation; no heterogeneity | Profiles/factory → price update | Unnecessary as a separately estimated parameter |
-| `arbitrage_strength` | Below-peg response; dimensionless | Below-peg one-step correction and duration | Estimate effective \(\kappa_-\) on C; validate V and S | Block-bootstrap/profile interval; aggregate only | Profiles/factory → demand pressure | Statistically estimated only as effective product |
-| `above_peg_supply_strength` | Above-peg response; dimensionless | Above-peg one-step correction and overshoot | Estimate effective \(\kappa_+\) on C; validate V | Block-bootstrap interval; aggregate only | Profiles/factory → supply pressure | Statistically estimated only as effective product |
-| `panic_strength` | Panic-pressure response; dimensionless | Extreme DAI depth, area and persistence | One consolidated coefficient by SMM on C; test S | Profile interval and ablation; no heterogeneity | Profiles/factory → panic supply | Statistically estimated after consolidation |
+| `price_adjustment_speed` | Legacy common pressure-to-price scale | DAI change conditional on all pressures | Fixed at one only as a new-mode normalisation; not estimated separately | Retained only for legacy compatibility | Profiles/factory → price update | Superseded by effective hourly coefficients in the new mode |
+| `arbitrage_strength` | Legacy below-peg component | Below-peg one-step correction and duration | Not estimated in the new mode; estimate effective \(\kappa_-\) directly | Retained only for legacy compatibility | Profiles/factory → demand pressure | Superseded in the new mode; removal candidate after protected implementation |
+| `above_peg_supply_strength` | Legacy above-peg component | Above-peg one-step correction and overshoot | Not estimated in the new mode; estimate effective \(\kappa_+\) directly | Retained only for legacy compatibility | Profiles/factory → supply pressure | Superseded in the new mode; removal candidate after protected implementation |
+| `panic_strength` | Legacy panic component | Extreme DAI depth, area and persistence | Not estimated in the new mode; estimate effective \(\kappa_P\) directly | Retained only for legacy compatibility | Profiles/factory → panic supply | Superseded in the new mode; removal candidate after protected implementation |
 | `noise_std` | Residual DAI innovation scale; USD/step | Residual price changes | Fit after deterministic terms on C; check V residuals | Empirical residual/bootstrap interval; regime sensitivity only | Profiles/factory → price update | Distributionally estimated |
 | `min_price` | Numerical floor; USD/DAI | Binding frequency only | No estimator; widen in S | Scenario range; no heterogeneity | Profiles/factory → clipping | Stress-test parameter |
 | `max_price` | Numerical ceiling; USD/DAI | Binding frequency only | No estimator; widen in S | Scenario range; no heterogeneity | Profiles/factory → clipping | Stress-test parameter |
 | `enable_peg_recovery` | Optional mechanism switch; Boolean | Nested-model recovery performance | Paired ablation on C and V | Model-selection uncertainty; no heterogeneity | Profiles/factory → recovery function | Stress-test parameter pending replacement decision |
-| `arbitrage_recovery_strength` | Additional below-peg response; dimensionless | Incremental recovery beyond base arbitrage | Nested-model test on C; validate V | Expected collinearity; no heterogeneity | Profiles/factory → recovery function | Unnecessary unless incremental identification passes |
+| `arbitrage_recovery_strength` | Legacy additional below-peg response | Incremental recovery beyond base arbitrage | Not estimated in the new mode; review as a legacy ablation | Retained only for legacy compatibility | Profiles/factory → recovery function | Superseded in the new mode; removal candidate after protected implementation |
 | `policy_feedback_strength` | Stylised policy response; dimensionless | Recovery aligned with effective protocol actions | Not causally identified; event evidence only | Literature/scenario range; no heterogeneity | Profiles/factory → recovery function | Literature-informed prior or stress-test parameter |
 | `bad_debt_recovery_drag` | Recovery impairment; dimensionless | Recovery conditional on bad-debt ratio | Interaction SMM only if data gate passes | Wide profile interval; no heterogeneity | Profiles/factory → recovery discount | Stress-test parameter unless statistically identified |
 | `min_recovery_confidence` | Recovery activation boundary; index | Recovery/non-recovery classification | Current design: profiled threshold; future design uses stability gate | Scale-dependent interval; no heterogeneity | Profiles/factory → recovery discount | Unnecessary under recommended stability gate |
 | Hard-coded liquidatable-share coefficient | Direct selling response; pressure/share | DAI move conditional on unresolved pressure | Consolidate into stress proxy/panic coefficient | Not separately identifiable; no heterogeneity | No owner → simulation systemic pressure | Unnecessary and removable in current form |
 | Hard-coded bad-debt-ratio coefficient | Direct selling response; pressure/ratio | DAI move conditional on defensible bad-debt ratio | Include only after data gate and consolidation | Sparse-tail uncertainty; no heterogeneity | No owner → simulation systemic pressure | Unnecessary in current form; sensitivity if supported |
 | Stress-proxy peg coefficient \(\beta_p\) | Predictive stress loading; log-odds per standardised gap | Continued depeg; lagged below-peg gap | Penalised logistic model on C; calibration and sign checks V | Time-block bootstrap; system-wide | Future calibration candidate → confidence target | Statistically estimated |
-| Stress-proxy collateral coefficient \(\beta_r\) | Predictive stress loading; log-odds per standardised downside measure | Continued depeg; lagged ETH/WBTC downside stress | Same model and windows as \(\beta_p\) | Time-block bootstrap; no agent heterogeneity | Future calibration candidate → confidence target | Statistically estimated |
-| Stress-proxy liquidation coefficient \(\beta_l\) | Predictive stress loading; log-odds per standardised pressure | Continued depeg; unresolved auctions/exposure | Same model, ablation and V check | Coverage and block uncertainty; no agent heterogeneity | Future calibration candidate → confidence target | Statistically estimated |
+| Stress-proxy collateral coefficient \(\beta_r\) | Predictive stress loading; log-odds per standardised downside measure | Continued depeg; lagged 24-hour ETH downside stress | Same model and windows as \(\beta_p\); portfolio composite is sensitivity only | Time-block bootstrap; no agent heterogeneity | Future calibration candidate → confidence target | Statistically estimated |
+| Stress-proxy liquidation coefficient \(\beta_l\) | Predictive stress loading; log-odds per standardised pressure | Continued depeg; lagged backlog-to-clearance ratio | Same model, ablation and V check after the remaining-tab gate | Coverage and block uncertainty; no agent heterogeneity | Future calibration candidate → confidence target | Statistically estimated |
 | Stress-proxy bad-debt coefficient \(\beta_b\) | Optional predictive loading; log-odds per standardised ratio | Continued depeg; defensible bad-debt ratio | Estimate only after coverage gate; otherwise S-only | Sparse-event interval; no agent heterogeneity | Future calibration candidate → confidence target | Stress-test parameter unless data support estimation |
 | Deterioration adjustment \(\alpha_d\) | Downward state adjustment; fraction per hour | Depeg onset speed, depth and cumulative deviation | Constrained SMM on C; validate V | Profile interval; no agent heterogeneity | Future confidence config → state update | Statistically estimated |
 | Recovery adjustment \(\alpha_r\) | Upward state adjustment; fraction per hour | Recovery half-life and sustained recovery | Constrained SMM on C; validate V, test S | Profile/episode-bootstrap interval; no agent heterogeneity | Future confidence config → state update | Statistically estimated |
-| Stability period \(k\) | Delay before recovery; hours | Stable hours preceding sustained recovery | Empirical duration quantile and small fixed grid on C | Discrete sensitivity interval; no agent heterogeneity | Future confidence config → state update | Distributionally estimated |
+| Stability period \(k\) | Delay before confidence recovery; hours | 24 qualifying stable hours plus the confidence gate | Fixed at 24 hours; test 12 and 48 hours only as pre-registered sensitivities | No post-validation selection; no agent heterogeneity | Future confidence config → state update | Fixed primary specification |
 | Confidence floor \(C_{\min}\) | Lower bounded latent response; index | Severe depth and weak correction | Profiled bounded SMM on C; stress check S | Wide tail range; no agent heterogeneity | Future confidence config → state update | Statistically estimated with stress-test bounds |
 | Effective below-peg response \(\kappa_-\) | Aggregate stabilising response; price change per gap per hour | Subsequent DAI correction; lagged negative gap and confidence | Asymmetric regression then SMM on C; validate V | Block-bootstrap/profile interval; aggregate only | Future market config → demand pressure | Statistically estimated |
 | Effective above-peg response \(\kappa_+\) | Aggregate supply response; price change per gap per hour | Subsequent DAI correction; lagged positive gap | Asymmetric regression then SMM on C; validate V | Block-bootstrap/profile interval; aggregate only | Future market config → supply pressure | Statistically estimated |
@@ -484,14 +627,23 @@ targets for manual path matching.
 
 ## 10. Peg-recovery outcomes and experiments
 
-Recovery must be defined before simulation comparison. For peg band
-\(\delta\) and required duration \(h\), sustained recovery occurs at the first
-step \(t\) such that:
+Recovery is defined before simulation comparison. The primary peg band is
+\(\delta=0.005\) and the required duration is \(h=24\) hourly observations.
+Sustained recovery occurs at the first step \(t\) such that:
 
 \[
-|p_s-1|\le\delta
-\quad\text{for every }s\in[t,t+h-1].
+|p_s-1|\le0.005
+\quad\text{for every }s\in[t,t+23].
 \]
+
+The clock begins at the first post-shock exit from this band. First return to
+the band and sustained recovery are reported separately; any later observation
+outside the band resets the counter. An episode that reaches the simulation
+horizon without 24 qualifying hours is not sustainably recovered. Report time
+in hours from the first post-shock exit and, for event-based experiments, also
+report time from the exogenous shock step. This price outcome does not depend
+on confidence, liquidation or bad debt. The pre-registered sensitivity bands
+are \(\pm0.25\%\) and \(\pm1\%\), with 12- and 48-hour durations.
 
 Report at least:
 
@@ -626,36 +778,36 @@ questions. They do not block the recommended aggregate bounded-state design.
 
 Implementation is ready for authorisation only when:
 
-1. the outcome horizon, peg bands and sustained-recovery duration are fixed;
-2. the calibration, validation and stress windows are materialised and
-   non-overlapping for new coefficients;
-3. liquidation-pressure and bad-debt proxies have explicit definitions and
-   coverage reports;
-4. effective rather than multiplicatively redundant DAI coefficients are
-   selected;
-5. the stress-proxy specification passes sign, stability and ablation checks;
-6. every adopted parameter has a point estimate, uncertainty interval and
-   provenance record;
+1. the material-depeg outcome threshold and prediction horizon are fixed;
+2. remaining-tab coverage passes its gate or the pre-registered count proxy is
+   selected before fitting;
+3. bad-debt treatment, including the severe-condition definition, is fixed;
+4. the stress-proxy model passes calibration, sign, stability and ablation
+   diagnostics;
+5. effective coefficient estimates, uncertainty intervals and provenance
+   records exist;
+6. the exact legacy/new-mode configuration interface is reviewed;
 7. the legacy behavioural mode and frozen regressions remain mandatory; and
-8. the exact executable files and tests in Section 11 receive separate
+8. the bounded executable files and tests in Section 11 receive separate
    authorisation.
 
 ### Unresolved decisions
 
-- Choose the material-depeg band and sustained-recovery duration before
-  estimation.
-- Decide whether the primary stress proxy uses ETH only or a debt-share-weighted
-  ETH/WBTC downside measure.
-- Define unresolved liquidation pressure using auctions, unsafe inventory or a
-  documented combination.
+- Fix the prediction horizon for continued material depeg and the exact
+  material-depeg classification threshold used as the proxy outcome.
 - Decide whether bad debt passes the primary-data gate or remains sensitivity
-  only.
-- Choose which scale parameter is normalised in the DAI pressure equation.
+  only, including its severe-condition definition.
+- Decide whether policy feedback remains a sensitivity mechanism.
 - Decide whether the optional recovery equation is removed, retained only as an
-  ablation, or re-expressed by the confidence recovery state.
+  ablation, or re-expressed by the confidence recovery state; it is not part
+  of the new primary response equation.
+- Produce the parameter estimates and uncertainty intervals.
 - Decide whether the empirical profile opts into the new mechanism after
   validation while the legacy profile remains unchanged.
 
-Until these decisions and estimates exist, coding a new confidence mechanism
+The recovery band and duration, ETH-only primary collateral stress,
+backlog-to-clearance liquidation pressure and effective-coefficient scale
+normalisation are resolved specifications, not unresolved choices. Until the
+remaining decisions and estimates exist, coding a new confidence mechanism
 would require guessed parameter values. This planning pass therefore stops
 before executable implementation.
