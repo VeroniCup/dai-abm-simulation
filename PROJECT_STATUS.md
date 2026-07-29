@@ -164,7 +164,8 @@ The fixed ordinary sample reproduces 1,189 daily observations: 172 below the
 peg and 1,017 above it. Joint bounded least squares gives candidate effective
 responses \(\widehat\kappa_-=0.1993809753\) and
 \(\widehat\kappa_+=0.1051311602\). Both coefficient gates and the run-bounded
-24-hour residual-block gates pass, so Stage 1 is accepted for future SMM. The
+24-hour residual-block gates pass, so Stage 1 is accepted as a fixed input to
+the completed global search and any separately authorised continuation. The
 pure persistent-confidence and coefficient-normalised market interfaces have
 no production caller, and no runtime profile adopts them.
 
@@ -174,9 +175,14 @@ is retained only as a legacy ablation. The SMM design includes explicit
 bounds, common-random-number replication, Sobol search, nested boundary
 models, Jacobian diagnostics, event bootstrap, leave-one-event-out checks and
 quiet/final blocked validation. The transformations, objective, deterministic
-seed registry, 32-event subset and 256-point Sobol design are implemented but
-not evaluated against the simulator. Stage 2 SMM fitting and behavioural
-runtime integration remain pending separate authorisation.
+seed registry, 32-event subset and 256-point Sobol design are implemented and
+the fixed 262,144-run search is complete. All 256 candidates pass structural
+and objective validity, 53 pass the numerical-bound gate, and none passes the
+fixed all-moment MCSE gate at 32 replications. The deterministic top-16 rule
+therefore selects no candidate. The pass is classified as **Sobol search
+completed but insufficient valid candidates**; the all-event follow-up,
+Powell, registry B, final validation, a final Stage 2 estimate and behavioural
+runtime integration have not begun.
 
 The dormant [conditional event simulation](docs/calibration/confidence_event_simulation.md)
 is also implemented. It uses a standardised 500-vault, 2.5 million DAI
@@ -185,8 +191,9 @@ explicit zero-backlog/material-active-bad-debt recovery gates. Four
 content-hashed calibration smoke events and deterministic Sobol/boundary
 interface probes validate the mechanism, and the bounded eight-run workload
 benchmark is recorded. This is conditional rather than exact historical
-replay. No Stage 2 parameter has been fitted or ranked, and the final USDC/SVB
-event remains unsimulated.
+replay. The fixed subset candidates have now been ranked but no valid top 16
+exists, no Stage 2 parameter has been fitted or adopted, and the final
+USDC/SVB event remains unsimulated.
 
 The remaining empirical work is adoption and validation of defensible
 parameter candidates, followed by calibrated counterfactual experiments.

@@ -129,6 +129,7 @@ POST_RESTRUCTURING_FEATURE_MODULES = {
     "tests/calibration/test_confidence_infrastructure_evidence.py",
     "tests/calibration/test_event_simulation.py",
     "tests/calibration/test_simulated_moments.py",
+    "tests/calibration/test_simulated_moments_search.py",
     "tests/model/test_confidence.py",
     "tests/model/test_market.py",
     "tests/workflows/test_confidence_calibration.py",
@@ -196,7 +197,7 @@ def test_no_test_module_remains_at_suite_root() -> None:
 
 def test_no_placeholder_or_duplicate_test_module_exists() -> None:
     modules = sorted(TESTS_ROOT.rglob("test_*.py"))
-    assert len(modules) == 49
+    assert len(modules) == 50
     assert all(path.stat().st_size > 100 for path in modules)
     assert len({path.resolve() for path in modules}) == len(modules)
 

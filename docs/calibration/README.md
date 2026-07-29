@@ -27,6 +27,10 @@ Active calibration guidance is organised by evidence and decision:
 - [Conditional confidence event simulation](confidence_event_simulation.md)
   — dormant standardised state, observed-ETH paths, recovery gates, interface
   probes and bounded workload evidence; no Stage 2 fit or runtime integration.
+- [Pre-registered confidence Sobol search](confidence_sobol_search.md)
+  — immutable candidate-invariant cache, spawned candidate evaluation, atomic
+  resume and deterministic ranking. The 256-candidate search is complete, but
+  the fixed MCSE gate permits no top-16 all-event follow-up.
 - [Representative vaults](vaults.md)
 - [Liquidations](liquidations.md)
 - [Protocol parameters](protocol.md)

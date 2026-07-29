@@ -2,6 +2,375 @@
   "artefacts": [
     {
       "classification": "snapshot",
+      "context": "Canonical compact evidence supporting the six documented stopped=0 protocol states; the larger acquisition corpus remains ignored.",
+      "path": "data/protocol/provenance/clipper_stopped_default_evidence.json",
+      "producer": "workflows.protocol.acquire",
+      "schema": "JSON evidence record containing six contract creation records, explicit stopped-call reconciliation, verified source bindings and effective default-state boundaries.",
+      "semantic_name": "clipper_stopped_default_evidence",
+      "sha256": "7353ebff7cceb971adc0be6b324034fda49faa312fb57d4ba9c44039c382b5a5",
+      "size_bytes": 8741,
+      "source_inputs": [
+        "data/protocol/provenance/archive/diagnostic/phase1d_clipper_stopped_minimal_diagnostic.csv",
+        "sql/protocol/generated/history/clipper_stopped_minimal_diagnostic.sql",
+        "verified Clipper source and Solidity default-storage semantics"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Compact canonical protocol provenance required to reconstruct the stopped parameter without treating missing calls as zero.",
+      "dimensions": [
+        6,
+        18
+      ],
+      "path": "data/protocol/provenance/clipper_stopped_default_states.csv",
+      "producer": "workflows.protocol.acquire",
+      "schema": "Documented default-state rows retaining state_source, is_observed_call and evidence_reference.",
+      "semantic_name": "clipper_stopped_default_states",
+      "sha256": "615c26fdf3484c08972eef57705ff714af74cb5fa742ebaff004afdb2126ee85",
+      "size_bytes": 2281,
+      "source_inputs": [
+        "data/protocol/provenance/clipper_stopped_default_evidence.json",
+        "data/protocol/provenance/manifest.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Conditional, non-exact historical experiment; not runtime adopted.",
+      "path": "data/provenance/calibration/confidence/conditional_event_specification.json",
+      "producer": "dai_sim.calibration.event_simulation",
+      "schema": "Compact JSON calibration evidence; no hourly trajectory.",
+      "semantic_name": "confidence_conditional_event_specification",
+      "sha256": "03a4105cfafc8c4942fd45e4840a306a966c75bda889fe3420bdabfccd7266f0",
+      "size_bytes": 1893,
+      "source_inputs": [
+        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv",
+        "data/provenance/calibration/confidence/event_catalogue.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Compact standardised ETH-core state normalisation and checksum.",
+      "path": "data/provenance/calibration/confidence/conditional_initial_state.json",
+      "producer": "dai_sim.calibration.event_simulation",
+      "schema": "Compact JSON calibration evidence; no hourly trajectory.",
+      "semantic_name": "confidence_conditional_initial_state",
+      "sha256": "9a344fd3785d4cd0fbe54f7d3a3536f9cd37f71f4ee2f7ddd5013c570441fa46",
+      "size_bytes": 2800,
+      "source_inputs": [
+        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv",
+        "data/provenance/calibration/confidence/event_catalogue.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Design C passes burden-count and predictor-scale gates but fails the pre-registered episode-dominance gate; the predictive route is closed in favour of constrained SMM.",
+      "path": "data/provenance/calibration/confidence/design_c_feasibility.json",
+      "producer": "workflows.market.process_historical_evidence",
+      "schema": "Compact JSON burden gates, anchor sensitivity, validation summaries and final no-fit classification.",
+      "semantic_name": "confidence_design_c_feasibility",
+      "sha256": "9110beb27e2cce422df6c419938fe986d6454e5ea45902dbb50c537fed93ef70",
+      "size_bytes": 9690,
+      "source_inputs": [
+        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Calibration-only empirical moment evidence; validation events are excluded.",
+      "dimensions": [
+        8,
+        13
+      ],
+      "path": "data/provenance/calibration/confidence/empirical_moments.csv",
+      "producer": "dai_sim.calibration.market",
+      "schema": "Exactly eight pre-registered core moments with groups, definitions, values, scales, counts, weights and statuses.",
+      "semantic_name": "confidence_empirical_moments",
+      "sha256": "51bf9ca89ec28b5e5716e04fdafb0052356a12c3ec148b8378ef115d20bad100",
+      "size_bytes": 1758,
+      "source_inputs": [
+        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Compact event-level evidence only; no hourly market payload is embedded.",
+      "dimensions": [
+        75,
+        34
+      ],
+      "path": "data/provenance/calibration/confidence/event_catalogue.csv",
+      "producer": "dai_sim.calibration.simulated_moments",
+      "schema": "One row per complete semantically identified material-downside event with timing, burden, recovery and eligibility fields.",
+      "semantic_name": "confidence_event_catalogue",
+      "sha256": "65e44c6b6790d292e360e4b21d068f3eedf0266287227ee0e4b167a4e29b2110",
+      "size_bytes": 27345,
+      "source_inputs": [
+        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Bounded observed timing and linear workload extrapolations only.",
+      "path": "data/provenance/calibration/confidence/event_simulation_benchmark.json",
+      "producer": "dai_sim.calibration.event_simulation",
+      "schema": "Compact JSON calibration evidence; no hourly trajectory.",
+      "semantic_name": "confidence_event_simulation_benchmark",
+      "sha256": "401fe3537bc5bcb224f7c345e63363c40eddf60bf6a59d0b84da3f8d2e6660fe",
+      "size_bytes": 1633,
+      "source_inputs": [
+        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv",
+        "data/provenance/calibration/confidence/event_catalogue.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Interface probes only; no Stage 2 ranking, selection or fit.",
+      "path": "data/provenance/calibration/confidence/event_simulation_smoke.json",
+      "producer": "dai_sim.calibration.event_simulation",
+      "schema": "Compact JSON calibration evidence; no hourly trajectory.",
+      "semantic_name": "confidence_event_simulation_smoke",
+      "sha256": "1666dc0e02e33a3ff572363b7bb9d8ba2050a494a533cda6039b14dc5f731ef2",
+      "size_bytes": 12743,
+      "source_inputs": [
+        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv",
+        "data/provenance/calibration/confidence/event_catalogue.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Canonical coverage record for the adopted full-range DAI/ETH confidence-calibration panel.",
+      "path": "data/provenance/calibration/confidence/historical_market_coverage.json",
+      "producer": "workflows.market.process_historical_evidence",
+      "schema": "Compact JSON source, identity, interval, checksum and Dune-usage evidence; no hourly observations.",
+      "semantic_name": "confidence_historical_market_coverage",
+      "sha256": "b2dcc1dfa49b06671ecdf4628a13f7e25f6a06e2dcd4d2f83893084d2ab357df",
+      "size_bytes": 2373,
+      "source_inputs": [
+        "data/market/raw/dune_prices_hourly_dai_eth_2019-12-31_2024-06-30.csv",
+        "sql/market/templates/hourly_market_prices.sql"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "The existing-source extension reproduces every overlap label and price to documented floating representation.",
+      "path": "data/provenance/calibration/confidence/historical_market_harmonisation.json",
+      "producer": "workflows.market.process_historical_evidence",
+      "schema": "Compact JSON overlap statistics, floating-representation tolerances and source-adoption decision.",
+      "semantic_name": "confidence_historical_market_harmonisation",
+      "sha256": "924f43f030e11b21b5fd76703eee99db08e091d2e9f62b1cd2006bf55e7ba868",
+      "size_bytes": 7451,
+      "source_inputs": [
+        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv",
+        "data/market/processed/dune_hourly_market_prices_processed.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Initial objective weights only; no fit-quality reweighting has occurred.",
+      "dimensions": [
+        8,
+        7
+      ],
+      "path": "data/provenance/calibration/confidence/moment_weights.csv",
+      "producer": "dai_sim.calibration.market",
+      "schema": "Four-group initial weights with mean-one within-group weights and the fixed concentration ceiling.",
+      "semantic_name": "confidence_moment_weights",
+      "sha256": "5a30ee47bbc443db1afa671ec9bc25c50caea3dc6b5593bc352a149db6555ea0",
+      "size_bytes": 686,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/empirical_moments.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Contains no Stage 2 parameter estimate and nothing is runtime adopted.",
+      "path": "data/provenance/calibration/confidence/parameter_bounds.json",
+      "producer": "dai_sim.calibration.market",
+      "schema": "JSON structural restrictions, machine-safe interior epsilon and explicit boundary models.",
+      "semantic_name": "confidence_parameter_bounds",
+      "sha256": "6e1fcb4dcc3047b03bd24d290946fa532cab70412a867bc640fac8929fb4feda",
+      "size_bytes": 762,
+      "source_inputs": [
+        "docs/calibration/confidence_simulated_moments.md"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Zero-backlog and material-active-bad-debt recovery gates.",
+      "path": "data/provenance/calibration/confidence/recovery_gate_specification.json",
+      "producer": "dai_sim.calibration.event_simulation",
+      "schema": "Compact JSON calibration evidence; no hourly trajectory.",
+      "semantic_name": "confidence_recovery_gate_specification",
+      "sha256": "e0208285c0f532b81b16ded9d2db74091b0fa34953b968cccc39378a8eb87017",
+      "size_bytes": 924,
+      "source_inputs": [
+        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv",
+        "data/provenance/calibration/confidence/event_catalogue.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Seeds are derived rather than enumerated; no process-randomised hash or global RNG is used.",
+      "path": "data/provenance/calibration/confidence/seed_registry.json",
+      "producer": "dai_sim.calibration.simulated_moments",
+      "schema": "Compact SHA-256 derivation contract, two registry roots, three stream owners, supported replication counts and verification vectors.",
+      "semantic_name": "confidence_seed_registry",
+      "sha256": "b1d9e1e563aff2831351c0023287008c5351126ba84f31096602e6e134927813",
+      "size_bytes": 1125,
+      "source_inputs": [
+        "docs/calibration/confidence_simulated_moments.md"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Search infrastructure only; no candidate is evaluated, ranked or selected and no Stage 2 estimate exists.",
+      "path": "data/provenance/calibration/confidence/simulated_moments_specification.json",
+      "producer": "dai_sim.calibration.market",
+      "schema": "Compact JSON event counts, core-moment ownership, deterministic search subset and Sobol design checksums.",
+      "semantic_name": "confidence_simulated_moments_specification",
+      "sha256": "7237beca817dd22ab10a6e1f5a89342b9a26469d7d960d5ee95925d4e4f2c05a",
+      "size_bytes": 3054,
+      "source_inputs": [
+        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "pre-registered confidence Sobol search; calibration-only",
+      "path": "data/provenance/calibration/confidence/sobol_search_benchmark.json",
+      "producer": "dai_sim.calibration.simulated_moments_search",
+      "schema": "Compact calibration evidence; no cache, trajectory or replication payload.",
+      "semantic_name": "sobol_search_benchmark",
+      "sha256": "98c558a08af0f65565bb939a7d00ec746a5bc4f362e7b66ea921026375a837a9",
+      "size_bytes": 2905,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/conditional_event_specification.json",
+        "data/provenance/calibration/confidence/simulated_moments_specification.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "pre-registered confidence Sobol search; calibration-only",
+      "path": "data/provenance/calibration/confidence/sobol_search_cache_summary.json",
+      "producer": "dai_sim.calibration.simulated_moments_search",
+      "schema": "Compact calibration evidence; no cache, trajectory or replication payload.",
+      "semantic_name": "sobol_search_cache_summary",
+      "sha256": "280bc8c348f832d0139edf81d123b82f9cfe90efedef1a927eb8680102a88dbf",
+      "size_bytes": 320,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/conditional_event_specification.json",
+        "data/provenance/calibration/confidence/simulated_moments_specification.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "pre-registered confidence Sobol search; calibration-only",
+      "path": "data/provenance/calibration/confidence/sobol_search_candidates.csv",
+      "producer": "dai_sim.calibration.simulated_moments_search",
+      "schema": "Compact calibration evidence; no cache, trajectory or replication payload.",
+      "semantic_name": "sobol_search_candidates",
+      "sha256": "cb2372631e5b5100d301e085896b85630a869bf82986fb8ba78fd9b79d02df35",
+      "size_bytes": 71960,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/conditional_event_specification.json",
+        "data/provenance/calibration/confidence/simulated_moments_specification.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "pre-registered confidence Sobol search; calibration-only",
+      "path": "data/provenance/calibration/confidence/sobol_search_reproducibility.json",
+      "producer": "dai_sim.calibration.simulated_moments_search",
+      "schema": "Compact calibration evidence; no cache, trajectory or replication payload.",
+      "semantic_name": "sobol_search_reproducibility",
+      "sha256": "f37d5e7a293c3c98f364d3d1f9109c367834a6bfcbde2303eb7fa0fe706a0e57",
+      "size_bytes": 1079,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/conditional_event_specification.json",
+        "data/provenance/calibration/confidence/simulated_moments_specification.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "pre-registered confidence Sobol search; calibration-only",
+      "path": "data/provenance/calibration/confidence/sobol_search_specification.json",
+      "producer": "dai_sim.calibration.simulated_moments_search",
+      "schema": "Compact calibration evidence; no cache, trajectory or replication payload.",
+      "semantic_name": "sobol_search_specification",
+      "sha256": "e8d1a2552507954e38543eba0810ed706c4cff106f40139b958082c278038e27",
+      "size_bytes": 3051,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/conditional_event_specification.json",
+        "data/provenance/calibration/confidence/simulated_moments_specification.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "pre-registered confidence Sobol search; calibration-only",
+      "path": "data/provenance/calibration/confidence/sobol_search_top16.json",
+      "producer": "dai_sim.calibration.simulated_moments_search",
+      "schema": "Compact calibration evidence; no cache, trajectory or replication payload.",
+      "semantic_name": "sobol_search_top16",
+      "sha256": "ee10ea10e5e33ede06b0e42c8089de14dba1e5901711b19e1821feacbecd252c",
+      "size_bytes": 383,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/conditional_event_specification.json",
+        "data/provenance/calibration/confidence/simulated_moments_specification.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Pre-registered bounded scaling evidence; no coefficient is fitted and withheld evidence does not determine scale.",
+      "path": "data/provenance/calibration/confidence/sparse_predictor_scaling.json",
+      "producer": "workflows.market.process_historical_evidence",
+      "schema": "Compact JSON positive-Q95 transformation, gates, quintiles and validation extrapolation.",
+      "semantic_name": "confidence_sparse_predictor_scaling",
+      "sha256": "9b39ddcf549ed86f7d7553602f03167a5fd4f55df5b45a93adb4a5ac39ee09d1",
+      "size_bytes": 3956,
+      "source_inputs": [
+        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Accepted for future SMM only; neither coefficient is adopted by a runtime profile.",
+      "path": "data/provenance/calibration/confidence/stage1_market_estimates.json",
+      "producer": "dai_sim.calibration.market",
+      "schema": "Compact JSON Stage 1 coefficient estimates, calendar-month bootstrap uncertainty, stability checks and acceptance gates.",
+      "semantic_name": "confidence_stage1_market_estimates",
+      "sha256": "d86625e268c7e8b8abcb6d37e48f87c3c01578c8a3c09024a57da93978614547",
+      "size_bytes": 4573,
+      "source_inputs": [
+        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "No hourly residual sequence or moving-block pool is tracked.",
+      "path": "data/provenance/calibration/confidence/stage1_residual_summary.json",
+      "producer": "dai_sim.calibration.market",
+      "schema": "Compact JSON centred residual and 24-hour run-bounded moving-block diagnostics and checksums.",
+      "semantic_name": "confidence_stage1_residual_summary",
+      "sha256": "98299918d452695b96f639aaae4c2344c189a3351bd55f1d86a2441d5bcded0e",
+      "size_bytes": 1118,
+      "source_inputs": [
+        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv",
+        "data/provenance/calibration/confidence/stage1_market_estimates.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Canonical liquidation and stress-tail candidate evidence used by parameter-adoption reconciliation.",
+      "path": "data/provenance/calibration/liquidations/candidate_parameters.json",
+      "producer": "dai_sim.calibration.liquidations",
+      "schema": "JSON Phase 2C candidate registry",
+      "semantic_name": "liquidation_candidate_parameters",
+      "sha256": "6487b22a7cbfa3acc6bcdd5e2df5cff6473431f247065f1d6c6e6495ccef067e",
+      "size_bytes": 8086,
+      "source_snapshot": "outputs/diagnostics/calibration/liquidations/phase2c_parameter_candidates.json"
+    },
+    {
+      "classification": "snapshot",
       "context": "Canonical Phase 2A candidate evidence; candidate values, thresholds, sample windows, statuses and JSON types are unchanged.",
       "path": "data/provenance/calibration/market_gas_protocol/candidate_parameters.json",
       "producer": "dai_sim.calibration.market",
@@ -10,17 +379,6 @@
       "sha256": "fae0583fd2dc8a477df49d5954c80c486a209f8d3df963d779e5fe289fa5972d",
       "size_bytes": 69865,
       "source_snapshot": "outputs/diagnostics/calibration/market_gas_protocol/phase2a_candidate_parameters.json"
-    },
-    {
-      "classification": "snapshot",
-      "context": "Canonical reviewed Phase 2A candidate evidence used by parameter-adoption reconciliation.",
-      "path": "data/provenance/calibration/market_gas_protocol/reviewed_candidates.json",
-      "producer": "dai_sim.calibration.validation",
-      "schema": "JSON object containing phase, reviewed_candidates, schema_version and source_registry_sha256",
-      "semantic_name": "market_gas_protocol_reviewed_candidates",
-      "sha256": "5875728b0cfe260752dc2f1618a92a1c958145e5eaa82a91505356a064e10300",
-      "size_bytes": 124299,
-      "source_snapshot": "outputs/diagnostics/calibration/market_gas_protocol/review/phase2a_reviewed_candidates.json"
     },
     {
       "classification": "snapshot",
@@ -50,55 +408,14 @@
     },
     {
       "classification": "snapshot",
-      "context": "Canonical representative-vault candidate evidence used by parameter-adoption reconciliation.",
-      "path": "data/provenance/calibration/vaults/candidate_parameters.json",
-      "producer": "dai_sim.calibration.vaults",
-      "schema": "JSON Phase 2B candidate registry",
-      "semantic_name": "vault_candidate_parameters",
-      "sha256": "f345ded318fe5fb18c36106e4812dff8e1d64edd1bba9fd9b2b090522d0f0049",
-      "size_bytes": 14768,
-      "source_snapshot": "outputs/diagnostics/calibration/vaults/phase2b_parameter_candidates.json"
-    },
-    {
-      "classification": "snapshot",
-      "context": "Canonical liquidation and stress-tail candidate evidence used by parameter-adoption reconciliation.",
-      "path": "data/provenance/calibration/liquidations/candidate_parameters.json",
-      "producer": "dai_sim.calibration.liquidations",
-      "schema": "JSON Phase 2C candidate registry",
-      "semantic_name": "liquidation_candidate_parameters",
-      "sha256": "6487b22a7cbfa3acc6bcdd5e2df5cff6473431f247065f1d6c6e6495ccef067e",
-      "size_bytes": 8086,
-      "source_snapshot": "outputs/diagnostics/calibration/liquidations/phase2c_parameter_candidates.json"
-    },
-    {
-      "classification": "snapshot",
-      "context": "Canonical adopted-parameter evidence. The ignored output copy remains a regenerable report.",
-      "dimensions": [
-        56,
-        31
-      ],
-      "path": "data/provenance/calibration/parameter_adoption/parameter_adoption_matrix.csv",
-      "producer": "dai_sim.calibration.adoption",
-      "schema": "One authoritative row per documented simulator-parameter subsection, including candidate, compatibility and adoption-decision fields.",
-      "semantic_name": "parameter_adoption_matrix",
-      "sha256": "a78a3824c967de1cf794c4128115d67b461d7c207f94ea6b4a44acfc535b44ed",
-      "size_bytes": 70741,
-      "source_snapshot": "outputs/diagnostics/calibration/parameter_adoption/parameter_adoption_matrix.csv"
-    },
-    {
-      "classification": "snapshot",
-      "context": "Canonical evidence consumed by empirical profile validation; no adoption decision or value changed.",
-      "dimensions": [
-        12,
-        17
-      ],
-      "path": "data/provenance/calibration/parameter_adoption/configuration_ready_candidates.csv",
-      "producer": "dai_sim.calibration.adoption",
-      "schema": "Configuration-compatible subset of the adoption matrix.",
-      "semantic_name": "configuration_ready_candidates",
-      "sha256": "71e60ba546d860c10d3de0a1e91b016117432f1510b0fd425b2b799219e0dd02",
-      "size_bytes": 9174,
-      "source_snapshot": "outputs/diagnostics/calibration/parameter_adoption/configuration_ready_candidates.csv"
+      "context": "Canonical reviewed Phase 2A candidate evidence used by parameter-adoption reconciliation.",
+      "path": "data/provenance/calibration/market_gas_protocol/reviewed_candidates.json",
+      "producer": "dai_sim.calibration.validation",
+      "schema": "JSON object containing phase, reviewed_candidates, schema_version and source_registry_sha256",
+      "semantic_name": "market_gas_protocol_reviewed_candidates",
+      "sha256": "5875728b0cfe260752dc2f1618a92a1c958145e5eaa82a91505356a064e10300",
+      "size_bytes": 124299,
+      "source_snapshot": "outputs/diagnostics/calibration/market_gas_protocol/review/phase2a_reviewed_candidates.json"
     },
     {
       "classification": "snapshot",
@@ -117,6 +434,21 @@
     },
     {
       "classification": "snapshot",
+      "context": "Canonical evidence consumed by empirical profile validation; no adoption decision or value changed.",
+      "dimensions": [
+        12,
+        17
+      ],
+      "path": "data/provenance/calibration/parameter_adoption/configuration_ready_candidates.csv",
+      "producer": "dai_sim.calibration.adoption",
+      "schema": "Configuration-compatible subset of the adoption matrix.",
+      "semantic_name": "configuration_ready_candidates",
+      "sha256": "71e60ba546d860c10d3de0a1e91b016117432f1510b0fd425b2b799219e0dd02",
+      "size_bytes": 9174,
+      "source_snapshot": "outputs/diagnostics/calibration/parameter_adoption/configuration_ready_candidates.csv"
+    },
+    {
+      "classification": "snapshot",
       "context": "Canonical adoption-review evidence, not a runtime configuration.",
       "dimensions": [
         10,
@@ -129,6 +461,21 @@
       "sha256": "8a8c83ab731396c36697e987154f79536d2228df2707ea46ac3cbf6d922c93a3",
       "size_bytes": 2682,
       "source_snapshot": "outputs/diagnostics/calibration/parameter_adoption/model_interface_gaps.csv"
+    },
+    {
+      "classification": "snapshot",
+      "context": "Canonical adopted-parameter evidence. The ignored output copy remains a regenerable report.",
+      "dimensions": [
+        56,
+        31
+      ],
+      "path": "data/provenance/calibration/parameter_adoption/parameter_adoption_matrix.csv",
+      "producer": "dai_sim.calibration.adoption",
+      "schema": "One authoritative row per documented simulator-parameter subsection, including candidate, compatibility and adoption-decision fields.",
+      "semantic_name": "parameter_adoption_matrix",
+      "sha256": "a78a3824c967de1cf794c4128115d67b461d7c207f94ea6b4a44acfc535b44ed",
+      "size_bytes": 70741,
+      "source_snapshot": "outputs/diagnostics/calibration/parameter_adoption/parameter_adoption_matrix.csv"
     },
     {
       "classification": "snapshot",
@@ -177,277 +524,14 @@
     },
     {
       "classification": "snapshot",
-      "context": "Compact canonical protocol provenance required to reconstruct the stopped parameter without treating missing calls as zero.",
-      "dimensions": [
-        6,
-        18
-      ],
-      "path": "data/protocol/provenance/clipper_stopped_default_states.csv",
-      "producer": "workflows.protocol.acquire",
-      "schema": "Documented default-state rows retaining state_source, is_observed_call and evidence_reference.",
-      "semantic_name": "clipper_stopped_default_states",
-      "sha256": "615c26fdf3484c08972eef57705ff714af74cb5fa742ebaff004afdb2126ee85",
-      "size_bytes": 2281,
-      "source_inputs": [
-        "data/protocol/provenance/clipper_stopped_default_evidence.json",
-        "data/protocol/provenance/manifest.json"
-      ]
-    },
-    {
-      "classification": "snapshot",
-      "context": "Canonical compact evidence supporting the six documented stopped=0 protocol states; the larger acquisition corpus remains ignored.",
-      "path": "data/protocol/provenance/clipper_stopped_default_evidence.json",
-      "producer": "workflows.protocol.acquire",
-      "schema": "JSON evidence record containing six contract creation records, explicit stopped-call reconciliation, verified source bindings and effective default-state boundaries.",
-      "semantic_name": "clipper_stopped_default_evidence",
-      "sha256": "7353ebff7cceb971adc0be6b324034fda49faa312fb57d4ba9c44039c382b5a5",
-      "size_bytes": 8741,
-      "source_inputs": [
-        "data/protocol/provenance/archive/diagnostic/phase1d_clipper_stopped_minimal_diagnostic.csv",
-        "sql/protocol/generated/history/clipper_stopped_minimal_diagnostic.sql",
-        "verified Clipper source and Solidity default-storage semantics"
-      ]
-    },
-    {
-      "classification": "snapshot",
-      "context": "Canonical coverage record for the adopted full-range DAI/ETH confidence-calibration panel.",
-      "path": "data/provenance/calibration/confidence/historical_market_coverage.json",
-      "producer": "workflows.market.process_historical_evidence",
-      "schema": "Compact JSON source, identity, interval, checksum and Dune-usage evidence; no hourly observations.",
-      "semantic_name": "confidence_historical_market_coverage",
-      "sha256": "b2dcc1dfa49b06671ecdf4628a13f7e25f6a06e2dcd4d2f83893084d2ab357df",
-      "size_bytes": 2373,
-      "source_inputs": [
-        "data/market/raw/dune_prices_hourly_dai_eth_2019-12-31_2024-06-30.csv",
-        "sql/market/templates/hourly_market_prices.sql"
-      ]
-    },
-    {
-      "classification": "snapshot",
-      "context": "The existing-source extension reproduces every overlap label and price to documented floating representation.",
-      "path": "data/provenance/calibration/confidence/historical_market_harmonisation.json",
-      "producer": "workflows.market.process_historical_evidence",
-      "schema": "Compact JSON overlap statistics, floating-representation tolerances and source-adoption decision.",
-      "semantic_name": "confidence_historical_market_harmonisation",
-      "sha256": "924f43f030e11b21b5fd76703eee99db08e091d2e9f62b1cd2006bf55e7ba868",
-      "size_bytes": 7451,
-      "source_inputs": [
-        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv",
-        "data/market/processed/dune_hourly_market_prices_processed.csv"
-      ]
-    },
-    {
-      "classification": "snapshot",
-      "context": "Pre-registered bounded scaling evidence; no coefficient is fitted and withheld evidence does not determine scale.",
-      "path": "data/provenance/calibration/confidence/sparse_predictor_scaling.json",
-      "producer": "workflows.market.process_historical_evidence",
-      "schema": "Compact JSON positive-Q95 transformation, gates, quintiles and validation extrapolation.",
-      "semantic_name": "confidence_sparse_predictor_scaling",
-      "sha256": "9b39ddcf549ed86f7d7553602f03167a5fd4f55df5b45a93adb4a5ac39ee09d1",
-      "size_bytes": 3956,
-      "source_inputs": [
-        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"
-      ]
-    },
-    {
-      "classification": "snapshot",
-      "context": "Design C passes burden-count and predictor-scale gates but fails the pre-registered episode-dominance gate; the predictive route is closed in favour of constrained SMM.",
-      "path": "data/provenance/calibration/confidence/design_c_feasibility.json",
-      "producer": "workflows.market.process_historical_evidence",
-      "schema": "Compact JSON burden gates, anchor sensitivity, validation summaries and final no-fit classification.",
-      "semantic_name": "confidence_design_c_feasibility",
-      "sha256": "9110beb27e2cce422df6c419938fe986d6454e5ea45902dbb50c537fed93ef70",
-      "size_bytes": 9690,
-      "source_inputs": [
-        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"
-      ]
-    },
-    {
-      "classification": "snapshot",
-      "context": "Accepted for future SMM only; neither coefficient is adopted by a runtime profile.",
-      "path": "data/provenance/calibration/confidence/stage1_market_estimates.json",
-      "producer": "dai_sim.calibration.market",
-      "schema": "Compact JSON Stage 1 coefficient estimates, calendar-month bootstrap uncertainty, stability checks and acceptance gates.",
-      "semantic_name": "confidence_stage1_market_estimates",
-      "sha256": "d86625e268c7e8b8abcb6d37e48f87c3c01578c8a3c09024a57da93978614547",
-      "size_bytes": 4573,
-      "source_inputs": [
-        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"
-      ]
-    },
-    {
-      "classification": "snapshot",
-      "context": "No hourly residual sequence or moving-block pool is tracked.",
-      "path": "data/provenance/calibration/confidence/stage1_residual_summary.json",
-      "producer": "dai_sim.calibration.market",
-      "schema": "Compact JSON centred residual and 24-hour run-bounded moving-block diagnostics and checksums.",
-      "semantic_name": "confidence_stage1_residual_summary",
-      "sha256": "98299918d452695b96f639aaae4c2344c189a3351bd55f1d86a2441d5bcded0e",
-      "size_bytes": 1118,
-      "source_inputs": [
-        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv",
-        "data/provenance/calibration/confidence/stage1_market_estimates.json"
-      ]
-    },
-    {
-      "classification": "snapshot",
-      "context": "Search infrastructure only; no candidate is evaluated, ranked or selected and no Stage 2 estimate exists.",
-      "path": "data/provenance/calibration/confidence/simulated_moments_specification.json",
-      "producer": "dai_sim.calibration.market",
-      "schema": "Compact JSON event counts, core-moment ownership, deterministic search subset and Sobol design checksums.",
-      "semantic_name": "confidence_simulated_moments_specification",
-      "sha256": "7237beca817dd22ab10a6e1f5a89342b9a26469d7d960d5ee95925d4e4f2c05a",
-      "size_bytes": 3054,
-      "source_inputs": [
-        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"
-      ]
-    },
-    {
-      "classification": "snapshot",
-      "context": "Calibration-only empirical moment evidence; validation events are excluded.",
-      "dimensions": [
-        8,
-        13
-      ],
-      "path": "data/provenance/calibration/confidence/empirical_moments.csv",
-      "producer": "dai_sim.calibration.market",
-      "schema": "Exactly eight pre-registered core moments with groups, definitions, values, scales, counts, weights and statuses.",
-      "semantic_name": "confidence_empirical_moments",
-      "sha256": "51bf9ca89ec28b5e5716e04fdafb0052356a12c3ec148b8378ef115d20bad100",
-      "size_bytes": 1758,
-      "source_inputs": [
-        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"
-      ]
-    },
-    {
-      "classification": "snapshot",
-      "context": "Initial objective weights only; no fit-quality reweighting has occurred.",
-      "dimensions": [
-        8,
-        7
-      ],
-      "path": "data/provenance/calibration/confidence/moment_weights.csv",
-      "producer": "dai_sim.calibration.market",
-      "schema": "Four-group initial weights with mean-one within-group weights and the fixed concentration ceiling.",
-      "semantic_name": "confidence_moment_weights",
-      "sha256": "5a30ee47bbc443db1afa671ec9bc25c50caea3dc6b5593bc352a149db6555ea0",
-      "size_bytes": 686,
-      "source_inputs": [
-        "data/provenance/calibration/confidence/empirical_moments.csv"
-      ]
-    },
-    {
-      "classification": "snapshot",
-      "context": "Contains no Stage 2 parameter estimate and nothing is runtime adopted.",
-      "path": "data/provenance/calibration/confidence/parameter_bounds.json",
-      "producer": "dai_sim.calibration.market",
-      "schema": "JSON structural restrictions, machine-safe interior epsilon and explicit boundary models.",
-      "semantic_name": "confidence_parameter_bounds",
-      "sha256": "6e1fcb4dcc3047b03bd24d290946fa532cab70412a867bc640fac8929fb4feda",
-      "size_bytes": 762,
-      "source_inputs": [
-        "docs/calibration/confidence_simulated_moments.md"
-      ]
-    },
-    {
-      "classification": "snapshot",
-      "context": "Compact event-level evidence only; no hourly market payload is embedded.",
-      "dimensions": [
-        75,
-        34
-      ],
-      "path": "data/provenance/calibration/confidence/event_catalogue.csv",
-      "producer": "dai_sim.calibration.simulated_moments",
-      "schema": "One row per complete semantically identified material-downside event with timing, burden, recovery and eligibility fields.",
-      "semantic_name": "confidence_event_catalogue",
-      "sha256": "65e44c6b6790d292e360e4b21d068f3eedf0266287227ee0e4b167a4e29b2110",
-      "size_bytes": 27345,
-      "source_inputs": [
-        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv"
-      ]
-    },
-    {
-      "classification": "snapshot",
-      "context": "Seeds are derived rather than enumerated; no process-randomised hash or global RNG is used.",
-      "path": "data/provenance/calibration/confidence/seed_registry.json",
-      "producer": "dai_sim.calibration.simulated_moments",
-      "schema": "Compact SHA-256 derivation contract, two registry roots, three stream owners, supported replication counts and verification vectors.",
-      "semantic_name": "confidence_seed_registry",
-      "sha256": "b1d9e1e563aff2831351c0023287008c5351126ba84f31096602e6e134927813",
-      "size_bytes": 1125,
-      "source_inputs": [
-        "docs/calibration/confidence_simulated_moments.md"
-      ]
-    },
-    {
-      "classification": "snapshot",
-      "context": "Conditional, non-exact historical experiment; not runtime adopted.",
-      "path": "data/provenance/calibration/confidence/conditional_event_specification.json",
-      "producer": "dai_sim.calibration.event_simulation",
-      "schema": "Compact JSON calibration evidence; no hourly trajectory.",
-      "semantic_name": "confidence_conditional_event_specification",
-      "sha256": "03a4105cfafc8c4942fd45e4840a306a966c75bda889fe3420bdabfccd7266f0",
-      "size_bytes": 1893,
-      "source_inputs": [
-        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv",
-        "data/provenance/calibration/confidence/event_catalogue.csv"
-      ]
-    },
-    {
-      "classification": "snapshot",
-      "context": "Compact standardised ETH-core state normalisation and checksum.",
-      "path": "data/provenance/calibration/confidence/conditional_initial_state.json",
-      "producer": "dai_sim.calibration.event_simulation",
-      "schema": "Compact JSON calibration evidence; no hourly trajectory.",
-      "semantic_name": "confidence_conditional_initial_state",
-      "sha256": "9a344fd3785d4cd0fbe54f7d3a3536f9cd37f71f4ee2f7ddd5013c570441fa46",
-      "size_bytes": 2800,
-      "source_inputs": [
-        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv",
-        "data/provenance/calibration/confidence/event_catalogue.csv"
-      ]
-    },
-    {
-      "classification": "snapshot",
-      "context": "Zero-backlog and material-active-bad-debt recovery gates.",
-      "path": "data/provenance/calibration/confidence/recovery_gate_specification.json",
-      "producer": "dai_sim.calibration.event_simulation",
-      "schema": "Compact JSON calibration evidence; no hourly trajectory.",
-      "semantic_name": "confidence_recovery_gate_specification",
-      "sha256": "e0208285c0f532b81b16ded9d2db74091b0fa34953b968cccc39378a8eb87017",
-      "size_bytes": 924,
-      "source_inputs": [
-        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv",
-        "data/provenance/calibration/confidence/event_catalogue.csv"
-      ]
-    },
-    {
-      "classification": "snapshot",
-      "context": "Interface probes only; no Stage 2 ranking, selection or fit.",
-      "path": "data/provenance/calibration/confidence/event_simulation_smoke.json",
-      "producer": "dai_sim.calibration.event_simulation",
-      "schema": "Compact JSON calibration evidence; no hourly trajectory.",
-      "semantic_name": "confidence_event_simulation_smoke",
-      "sha256": "1666dc0e02e33a3ff572363b7bb9d8ba2050a494a533cda6039b14dc5f731ef2",
-      "size_bytes": 12743,
-      "source_inputs": [
-        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv",
-        "data/provenance/calibration/confidence/event_catalogue.csv"
-      ]
-    },
-    {
-      "classification": "snapshot",
-      "context": "Bounded observed timing and linear workload extrapolations only.",
-      "path": "data/provenance/calibration/confidence/event_simulation_benchmark.json",
-      "producer": "dai_sim.calibration.event_simulation",
-      "schema": "Compact JSON calibration evidence; no hourly trajectory.",
-      "semantic_name": "confidence_event_simulation_benchmark",
-      "sha256": "401fe3537bc5bcb224f7c345e63363c40eddf60bf6a59d0b84da3f8d2e6660fe",
-      "size_bytes": 1633,
-      "source_inputs": [
-        "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv",
-        "data/provenance/calibration/confidence/event_catalogue.csv"
-      ]
+      "context": "Canonical representative-vault candidate evidence used by parameter-adoption reconciliation.",
+      "path": "data/provenance/calibration/vaults/candidate_parameters.json",
+      "producer": "dai_sim.calibration.vaults",
+      "schema": "JSON Phase 2B candidate registry",
+      "semantic_name": "vault_candidate_parameters",
+      "sha256": "f345ded318fe5fb18c36106e4812dff8e1d64edd1bba9fd9b2b090522d0f0049",
+      "size_bytes": 14768,
+      "source_snapshot": "outputs/diagnostics/calibration/vaults/phase2b_parameter_candidates.json"
     }
   ],
   "ownership_policy": {

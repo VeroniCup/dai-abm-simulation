@@ -8,9 +8,11 @@ evaluation. It is owned by
 `src/dai_sim/calibration/event_simulation.py`, is calibration-only and has no
 production caller. No runtime profile enables persistent confidence.
 
-This implementation validates interfaces and computational feasibility. It
-does not estimate, rank or select \(\alpha_d\), \(\alpha_r\), \(C_{\min}\) or
-\(\kappa_P\).
+This implementation validates interfaces and computational feasibility. The
+separate [Sobol-search execution layer](confidence_sobol_search.md) reuses this
+mechanism and its exact event metrics to rank the fixed candidate design. The
+event simulator itself still does not select or runtime-adopt
+\(\alpha_d\), \(\alpha_r\), \(C_{\min}\) or \(\kappa_P\).
 
 ## 2. Conditional experiment, not exact replay
 

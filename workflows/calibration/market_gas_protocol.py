@@ -30,6 +30,18 @@ from dai_sim.calibration.event_simulation import (
     PROBE_INDICES,
     run_event_simulation_evidence,
 )
+from dai_sim.calibration.simulated_moments_search import (
+    DEFAULT_SEARCH_ROOT,
+    benchmark_workers,
+    load_search_identity,
+    prepare_search_cache,
+    run_sobol_search,
+    search_directory,
+    summarise_sobol_search,
+    validate_completed_search,
+    validate_search_cache,
+    validate_serial_parallel,
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -44,7 +56,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "operation",
         nargs="?",
-        choices=("phase2a", "confidence-infrastructure", "event-simulation"),
+        choices=(
+            "phase2a",
+            "confidence-infrastructure",
+            "event-simulation",
+            "smm-search",
+        ),
         default="phase2a",
     )
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
@@ -100,6 +117,37 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=DEFAULT_EVENT_DIAGNOSTICS,
     )
+    parser.add_argument(
+        "--search-action",
+        choices=(
+            "prepare-cache",
+            "validate-cache",
+            "benchmark",
+            "equivalence",
+            "run",
+            "resume",
+            "summarise",
+            "validate",
+        ),
+        default="validate",
+        help="Explicit fixed-design Sobol-search operation.",
+    )
+    parser.add_argument(
+        "--search-root",
+        type=Path,
+        default=DEFAULT_SEARCH_ROOT,
+        help="Ignored root for immutable caches and candidate checkpoints.",
+    )
+    parser.add_argument(
+        "--workers",
+        type=int,
+        help="Explicit spawned worker count; omitted values use the benchmark.",
+    )
+    parser.add_argument(
+        "--recover-stale-lock",
+        action="store_true",
+        help="Explicitly recover a verified stale search lock.",
+    )
     return parser
 
 
@@ -107,6 +155,65 @@ def main() -> int:
     """Execute once and print only compact provenance, never input rows."""
     parser = build_parser()
     args = parser.parse_args()
+    if args.operation == "smm-search":
+        identity, _ = load_search_identity(args.evidence_dir.resolve())
+        run_dir = search_directory(identity, args.search_root.resolve())
+        if args.search_action == "prepare-cache":
+            if args.input is None:
+                parser.error("smm-search prepare-cache requires an explicit --input")
+            result = prepare_search_cache(
+                panel_path=args.input.resolve(),
+                evidence_dir=args.evidence_dir.resolve(),
+                search_root=args.search_root.resolve(),
+                workers=args.workers,
+            )
+        elif args.search_action == "validate-cache":
+            result = validate_search_cache(
+                run_dir, expected_identity=identity
+            )
+        elif args.search_action == "benchmark":
+            result = benchmark_workers(run_dir)
+        else:
+            benchmark_path = run_dir / "worker_benchmark.json"
+            if args.workers is None:
+                if not benchmark_path.is_file():
+                    parser.error(
+                        "Run the worker benchmark or supply explicit --workers"
+                    )
+                workers = int(
+                    json.loads(benchmark_path.read_text(encoding="utf-8"))[
+                        "selected_workers"
+                    ]
+                )
+            else:
+                workers = args.workers
+            if workers < 1 or workers > 6:
+                parser.error("--workers must be between 1 and 6")
+            if args.search_action == "equivalence":
+                result = validate_serial_parallel(run_dir, workers=workers)
+            elif args.search_action in {"run", "resume"}:
+                result = run_sobol_search(
+                    run_dir,
+                    workers=workers,
+                    resume=args.search_action == "resume",
+                    recover_stale_lock=args.recover_stale_lock,
+                )
+            elif args.search_action == "summarise":
+                result = summarise_sobol_search(
+                    run_dir,
+                    evidence_dir=args.evidence_dir.resolve(),
+                    register_manifest=(
+                        args.evidence_dir.resolve()
+                        == CONFIDENCE_EVIDENCE.resolve()
+                    ),
+                )
+            else:
+                result = validate_completed_search(
+                    run_dir,
+                    evidence_dir=args.evidence_dir.resolve(),
+                )
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return 0
     if args.operation == "event-simulation":
         try:
             probe_indices = tuple(

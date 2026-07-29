@@ -173,3 +173,47 @@ def test_conditional_event_evidence_validator_passes_registered_checksums() -> N
     assert len(result["checked"]) == 5
     assert not result["runtime_adopted"]
     assert not result["stage2_fit_performed"]
+
+
+def test_sobol_search_evidence_reproduces_fixed_complete_design() -> None:
+    specification = json.loads(
+        (ROOT / "sobol_search_specification.json").read_text(encoding="utf-8")
+    )
+    cache = json.loads(
+        (ROOT / "sobol_search_cache_summary.json").read_text(encoding="utf-8")
+    )
+    candidates = pd.read_csv(ROOT / "sobol_search_candidates.csv")
+    assert specification["candidate_count"] == 256
+    assert specification["event_count"] == 32
+    assert specification["replications"] == 32
+    assert specification["registry_id"] == "confidence-smm-registry-a"
+    assert cache["event_replication_package_count"] == 1_024
+    assert len(candidates) == 256
+    assert set(candidates["candidate_index"]) == set(range(256))
+
+
+def test_sobol_top16_is_nonfinal_and_keeps_validation_blocked() -> None:
+    top16 = json.loads(
+        (ROOT / "sobol_search_top16.json").read_text(encoding="utf-8")
+    )
+    reproducibility = json.loads(
+        (ROOT / "sobol_search_reproducibility.json").read_text(encoding="utf-8")
+    )
+    assert len(top16["selected_candidate_indices"]) in {0, 16}
+    assert not top16["runtime_adopted"]
+    assert not top16["final_parameter_selection"]
+    assert not reproducibility["registry_b_used"]
+    assert not reproducibility["final_validation_used"]
+    assert not reproducibility["runtime_adopted"]
+
+
+def test_sobol_search_evidence_validator_passes_registered_checksums() -> None:
+    from dai_sim.calibration.validation import validate_sobol_search_evidence
+
+    result = validate_sobol_search_evidence(
+        ROOT,
+        REPOSITORY_ROOT / "data/provenance/calibration/manifest.json",
+    )
+    assert result["status"] == "passed"
+    assert result["candidate_count"] == 256
+    assert len(result["checked"]) == 6

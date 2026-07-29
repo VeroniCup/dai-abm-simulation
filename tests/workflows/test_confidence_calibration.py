@@ -24,6 +24,7 @@ def test_help_does_not_require_the_ignored_panel() -> None:
     assert result.returncode == 0
     assert "confidence-infrastructure" in result.stdout
     assert "event-simulation" in result.stdout
+    assert "smm-search" in result.stdout
 
 
 def test_confidence_operation_requires_explicit_input(monkeypatch) -> None:
@@ -138,3 +139,95 @@ def test_event_workflow_rejects_non_preregistered_probe_or_optimisation_flag(
     parser = market_gas_protocol.build_parser()
     with pytest.raises(SystemExit):
         parser.parse_args(["event-simulation", "--optimise"])
+
+
+def test_search_cache_preparation_requires_explicit_ignored_panel(monkeypatch) -> None:
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["market_gas_protocol.py", "smm-search", "--search-action", "prepare-cache"],
+    )
+    with pytest.raises(SystemExit) as error:
+        market_gas_protocol.main()
+    assert error.value.code == 2
+
+
+def test_search_validation_does_not_require_ignored_panel(
+    monkeypatch, tmp_path
+) -> None:
+    observed = {}
+    identity = type("Identity", (), {"search_id": "fixed-search"})()
+    monkeypatch.setattr(
+        market_gas_protocol,
+        "load_search_identity",
+        lambda _: (identity, {}),
+    )
+    monkeypatch.setattr(
+        market_gas_protocol,
+        "validate_search_cache",
+        lambda run_dir, expected_identity: observed.update(
+            run_dir=run_dir, identity=expected_identity
+        )
+        or {"status": "passed"},
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "market_gas_protocol.py",
+            "smm-search",
+            "--search-action",
+            "validate-cache",
+            "--search-root",
+            str(tmp_path),
+        ],
+    )
+    assert market_gas_protocol.main() == 0
+    assert observed["run_dir"] == (tmp_path / "fixed-search").resolve()
+
+
+def test_search_resume_forwards_explicit_workers_and_lock_policy(
+    monkeypatch, tmp_path
+) -> None:
+    observed = {}
+    identity = type("Identity", (), {"search_id": "fixed-search"})()
+    monkeypatch.setattr(
+        market_gas_protocol,
+        "load_search_identity",
+        lambda _: (identity, {}),
+    )
+    monkeypatch.setattr(
+        market_gas_protocol,
+        "run_sobol_search",
+        lambda run_dir, **kwargs: observed.update(run_dir=run_dir, **kwargs)
+        or {"status": "passed"},
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "market_gas_protocol.py",
+            "smm-search",
+            "--search-action",
+            "resume",
+            "--search-root",
+            str(tmp_path),
+            "--workers",
+            "4",
+            "--recover-stale-lock",
+        ],
+    )
+    assert market_gas_protocol.main() == 0
+    assert observed["workers"] == 4
+    assert observed["resume"]
+    assert observed["recover_stale_lock"]
+
+
+@pytest.mark.parametrize(
+    "unsupported",
+    ["--powell", "--registry-b", "--final-validation"],
+)
+def test_search_workflow_rejects_unauthorised_operations(unsupported) -> None:
+    parser = market_gas_protocol.build_parser()
+    with pytest.raises(SystemExit):
+        parser.parse_args(["smm-search", unsupported])

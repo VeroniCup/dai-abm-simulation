@@ -37,6 +37,14 @@ CONDITIONAL_EVENT_EVIDENCE_FILES = (
     "event_simulation_smoke.json",
     "event_simulation_benchmark.json",
 )
+SOBOL_SEARCH_EVIDENCE_FILES = (
+    "sobol_search_specification.json",
+    "sobol_search_cache_summary.json",
+    "sobol_search_candidates.csv",
+    "sobol_search_top16.json",
+    "sobol_search_reproducibility.json",
+    "sobol_search_benchmark.json",
+)
 
 
 def validate_conditional_event_evidence(
@@ -92,6 +100,82 @@ def validate_conditional_event_evidence(
         "runtime_adopted": False,
         "stage2_fit_performed": False,
         "final_validation_event_simulated": False,
+    }
+
+
+def validate_sobol_search_evidence(
+    evidence_dir: Path,
+    manifest_path: Path,
+) -> dict[str, Any]:
+    """Validate compact non-final Sobol-search evidence and its boundaries."""
+    manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+    records = {record["path"]: record for record in manifest["artefacts"]}
+    checked = []
+    for name in SOBOL_SEARCH_EVIDENCE_FILES:
+        path = (Path(evidence_dir) / name).resolve()
+        relative = path.relative_to(PROJECT_ROOT).as_posix()
+        if relative not in records or records[relative]["sha256"] != sha256_file(path):
+            raise ValueError(f"Sobol-search evidence is not registered: {relative}.")
+        checked.append(
+            {
+                "path": relative,
+                "sha256": sha256_file(path),
+                "size_bytes": path.stat().st_size,
+            }
+        )
+    specification = json.loads(
+        (Path(evidence_dir) / "sobol_search_specification.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    top16 = json.loads(
+        (Path(evidence_dir) / "sobol_search_top16.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    reproducibility = json.loads(
+        (Path(evidence_dir) / "sobol_search_reproducibility.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    candidates = pd.read_csv(Path(evidence_dir) / "sobol_search_candidates.csv")
+    if (
+        specification["candidate_count"] != 256
+        or specification["event_count"] != 32
+        or specification["replications"] != 32
+        or specification["registry_id"] != "confidence-smm-registry-a"
+    ):
+        raise ValueError("Sobol-search evidence differs from the fixed design.")
+    if (
+        len(candidates) != 256
+        or set(candidates["candidate_index"]) != set(range(256))
+    ):
+        raise ValueError("Sobol candidate evidence is incomplete.")
+    if any(
+        payload.get("runtime_adopted")
+        for payload in (specification, top16, reproducibility)
+    ):
+        raise ValueError("Sobol search evidence cannot be runtime adopted.")
+    if reproducibility.get("registry_b_used") or reproducibility.get(
+        "final_validation_used"
+    ):
+        raise ValueError("Blocked evidence entered the Sobol search.")
+    if top16.get("final_parameter_selection"):
+        raise ValueError("Top 16 must not claim final parameter selection.")
+    text = "\n".join(
+        (Path(evidence_dir) / name).read_text(encoding="utf-8")
+        for name in SOBOL_SEARCH_EVIDENCE_FILES
+    )
+    if "/Users/" in text or "trajectory" in candidates.columns:
+        raise ValueError("Compact Sobol evidence contains local or trajectory data.")
+    return {
+        "status": "passed",
+        "checked": checked,
+        "candidate_count": len(candidates),
+        "top16_count": len(top16["selected_candidate_indices"]),
+        "runtime_adopted": False,
+        "registry_b_used": False,
+        "final_validation_used": False,
     }
 
 

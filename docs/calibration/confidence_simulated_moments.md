@@ -3,10 +3,11 @@
 ## 1. Purpose and methodological boundary
 
 This document specifies a constrained simulated-moments calibration for a
-future persistent behavioural-confidence mechanism. The first bounded
-infrastructure pass now connects the validated historical DAI and ETH evidence
-to a reproducible Stage 1 estimate and a future Stage 2 design without fitting
-Stage 2 parameters, adopting values or changing executable behaviour.
+future persistent behavioural-confidence mechanism. The bounded infrastructure
+connects the validated historical DAI and ETH evidence to a reproducible Stage
+1 estimate and an executable Stage 2 design. Its initial fixed Sobol search is
+complete without fitting Stage 2 parameters, adopting values or changing
+executable behaviour.
 
 The design has three stages:
 
@@ -33,9 +34,11 @@ The bounded infrastructure now provides:
 - structural transformations, the pure four-group objective, the
   pre-registered 32-event subset and 256 Sobol candidates.
 
-This is infrastructure, not behavioural adoption. The workflow does not call
-the simulator, evaluate an SMM objective over candidates, rank candidates or
-fit \(\alpha_d,\alpha_r,C_{\min},\kappa_P\).
+The subsequent [pre-registered Sobol search](confidence_sobol_search.md)
+evaluates the fixed 256-candidate, 32-event, 32-replication design with
+resumable process parallelism. This remains calibration evidence rather than
+behavioural adoption: it does not fit a final vector, run the all-event
+follow-up or alter production behaviour.
 
 ## 2. Why the predictive route is closed
 
@@ -104,7 +107,8 @@ implementation estimates
 \(\widehat\kappa_-=0.1993809753\) and
 \(\widehat\kappa_+=0.1051311602\) from the 1,189 fixed daily observations.
 Both calendar-month bootstrap sign and boundary gates pass. These are accepted
-for future SMM, not runtime adopted.
+as fixed inputs to the completed global search and any separately authorised
+continuation, not runtime adopted.
 
 ### 4.2 Stage 2: constrained behavioural SMM
 
@@ -480,6 +484,11 @@ event-replication runs under the planned subset and refinement caps. It is
 fixed from dimension and workload, not preliminary fit. Gradients are not
 used.
 
+The first step has now been executed in full. All 256 candidates are
+structurally and objectively valid, but none passes the fixed all-moment MCSE
+gate at 32 replications. Consequently the top-16 all-event step has not begun
+and no candidate is an estimate.
+
 ## 17. Identification diagnostics
 
 The future implementation must report:
@@ -643,7 +652,13 @@ Compact, content-addressed evidence is now tracked under
 - `moment_weights.csv`;
 - `parameter_bounds.json`;
 - `event_catalogue.csv`;
-- `seed_registry.json`.
+- `seed_registry.json`;
+- `sobol_search_specification.json`;
+- `sobol_search_cache_summary.json`;
+- `sobol_search_candidates.csv`;
+- `sobol_search_top16.json`;
+- `sobol_search_reproducibility.json`; and
+- `sobol_search_benchmark.json`.
 
 `identification_summary.json` and `simulated_moments_selection.json` are
 deliberately absent because they require a completed SMM fit.
@@ -661,10 +676,12 @@ The bounded implementation uses the existing semantic owners:
 - `model/simulation.py`: unchanged legacy state timing;
 - `model/metrics.py`: unchanged legacy outcomes;
 - `calibration/market.py`: ordinary-market quantities and event construction;
-- `calibration/validation.py`: blocked, influence and identification checks;
+- `calibration/validation.py`: evidence, blocked, influence and identification checks;
 - `experiments/scenarios.py` and `summaries.py`: unchanged;
 - `calibration/simulated_moments.py`: pure events, transformations, objective,
   seeds, subset and Sobol design; and
+- `calibration/simulated_moments_search.py`: immutable cache, spawned
+  candidate execution, checkpoints, resume and ranking; and
 - `workflows/calibration/market_gas_protocol.py`: calibration entry point.
 
 A substantive `src/dai_sim/calibration/simulated_moments.py` is appropriate
@@ -679,17 +696,12 @@ integrity. Jacobian and leave-one-event-out fit tests remain Stage 2 work.
 
 ## 26. Remaining blockers
 
-Stage 2 fitting and runtime integration still require separate authorisation.
-Before fitting or adoption:
-
-- the severe bad-debt recovery-gate condition must be defined or the gate must
-  remain explicitly unavailable;
-- conditional event initial-state sampling must be specified without claiming
-  exact replay;
-- the exact legacy/new configuration interface must be approved;
-- computational workload must be benchmarked; and
-- the current simulator must gain persistent confidence only through a
-  regression-protected implementation.
+Stage 2 fitting and runtime integration remain blocked. The immediate
+statistical blocker is that zero of 256 candidates passes every fixed MCSE
+gate at 32 replications, so the declared top-16 rule cannot authorise an
+all-event follow-up. Any redesign of uncertainty estimation or replication
+count requires a separate methodological decision; it cannot be inferred from
+candidate fit.
 
 The moment set is feasible for an infrastructure pass, not evidence that the
 four parameters are identified. No behavioural coefficient has been fitted or
@@ -698,6 +710,7 @@ adopted.
 The dormant [conditional event simulator](confidence_event_simulation.md) now
 implements the standardised ETH-core state, observed-ETH event paths,
 recovery gates, deterministic interface probes and fixed simulated-moment
-aggregation needed before a bounded objective evaluation. This is a
-conditional experiment rather than exact historical replay. It fits no Stage
-2 value, ranks no probe and remains outside the production simulation loop.
+aggregation used by the completed bounded Sobol evaluation. This is a
+conditional experiment rather than exact historical replay. The search ranks
+all candidates but selects no valid top 16, fits no Stage 2 value and remains
+outside the production simulation loop.

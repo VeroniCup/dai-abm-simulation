@@ -16,7 +16,9 @@ design. The subsequent [constrained simulated-moments
 design](confidence_simulated_moments.md) closes the methodological gap between
 the historical evidence and a future bounded implementation. Its pure
 interfaces, Stage 1 estimator, event catalogue and search infrastructure are
-implemented; Stage 2 fitting and runtime integration remain blocked.
+implemented. The fixed 256-candidate search is complete, but its all-moment
+MCSE gate admits no candidate, so Stage 2 fitting and runtime integration
+remain blocked. See the [Sobol search record](confidence_sobol_search.md).
 
 Confidence is a latent modelling state. It is not an observed Maker variable,
 a wallet label or a survey measure. Historical DAI prices, collateral returns,
@@ -837,9 +839,8 @@ Behavioural implementation is ready for authorisation only when:
    and its severe-condition definition is fixed before implementation;
 4. the constrained simulated-moments specification is implemented without
    changing the fixed burden target or validation partitions;
-5. the future SMM run produces identified effective parameters, uncertainty
-   intervals, ablations and provenance records without reviving the closed
-   predictive route;
+5. a separately authorised response to the completed search's fixed MCSE
+   failure produces defensible uncertainty before any all-event follow-up;
 6. the exact legacy/new-mode configuration interface is reviewed;
 7. the legacy behavioural mode and frozen regressions remain mandatory; and
 8. the bounded executable files and tests in Section 11 receive separate
@@ -860,8 +861,9 @@ including `bad_debt_recovery_drag`, `arbitrage_recovery_strength` and
 `min_recovery_confidence`, is a legacy ablation rather than part of the new
 mode. The recovery band and duration, material threshold, continuous burden,
 ETH stress, equal stress weights, tab-pressure role and coefficient
-normalisation are resolved. The SMM methodology is now pre-registered, but
-fitting still requires separate authorisation. The executable
+normalisation are resolved. The SMM methodology is pre-registered and the
+256-candidate subset search is complete, but no candidate passes the
+all-moment MCSE gate and fitting remains blocked. The executable
 [conditional event design](confidence_event_simulation.md) now supplies the
 dormant standardised state and recovery gates without changing production
 behaviour or adopting a Stage 2 value.
