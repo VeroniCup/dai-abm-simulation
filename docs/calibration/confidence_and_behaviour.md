@@ -11,7 +11,10 @@ parameters, adopt new values or authorise executable changes.
 The companion [confidence estimation design](confidence_estimation.md) fixes
 the outcome, sample, liquidation reconstruction, estimator and evidence
 ownership. Its feasibility result is deliberately separate from this mechanism
-design.
+design. The subsequent [constrained simulated-moments
+design](confidence_simulated_moments.md) closes the methodological gap between
+the historical evidence and a future bounded implementation. It pre-registers
+moments, bounds, weighting and validation without fitting parameters.
 
 Confidence is a latent modelling state. It is not an observed Maker variable,
 a wallet label or a survey measure. Historical DAI prices, collateral returns,
@@ -417,42 +420,37 @@ recovery drag, long-run confidence scarring, arbitrage-capacity constraints and
 agent-level participation probabilities remain optional sensitivity or
 future-data mechanisms.
 
-### 5.2 Observable stress model
+### 5.2 Observable stress input
 
 \[
-E[B_t^{(6)}\mid X_t]
+\widehat S_t
 =
-\operatorname{logit}^{-1}\left(
-\beta_0+\beta^\top X_t
-\right).
+\operatorname{clip}_{[0,1]}
+\left[
+0.5s(g^-_{t-1})+0.5s(R^-_t)
+\right].
 \]
 
-The proposed primary target is the mean capped downside shortfall over hours
-\(t,\ldots,t+5\), measured relative to the fixed 0.995 material threshold and
-scaled so that a price at or below 0.99 contributes one. Origins are the
-deterministic 00:00, 06:00, 12:00 and 18:00 UTC grid, not selected by an
-episode or outcome. All predictors are lagged through \(t-1\).
+The primary stress input now uses equal weights on the frozen sparse-scaled
+lagged below-peg gap and lagged 24-hour ETH downside. The equal split is fixed
+before SMM; 0.25/0.75 and 0.75/0.25 splits are sensitivities. A freely
+estimated share would confound stress composition with adjustment, while the
+observed conditional burden gradients are non-monotone and do not support a
+data-derived ratio.
 
-This fractional-logistic conditional mean is a bounded observable stress
-target, not observed confidence. The existing binary \(Y_t^{(6)}\) is retained
-as a severe-persistence diagnostic and audit record. The exact target,
-sampling, partition and feasibility rules are in the
-[evidence redesign](confidence_evidence_redesign.md).
+The earlier binary and fractional-logistic designs remain audit records in the
+[estimation design](confidence_estimation.md), [evidence
+redesign](confidence_evidence_redesign.md) and [historical evidence
+pass](confidence_historical_market_evidence.md). Designs A–C do not authorise
+a predictive coefficient. The regression route is closed and is not replaced
+by a renamed regression.
 
-Designs A and B do not pass the burden or transformation gates. The subsequent
-[historical market evidence pass](confidence_historical_market_evidence.md)
-instantiates Design C with one complete 2019–2024 DAI/ETH methodology. Its
-primary predictors pass the sparse scaling gates, but its largest episode
-supplies 56.55% of calibration burden against the fixed 25% ceiling. No
-coefficient is therefore fitted. The predictive route is closed and tab
-pressure remains a pre-registered sensitivity and possible recovery gate.
-
-Bad debt is excluded from the primary proxy until its coverage and variation
-pass the pre-registered data-quality gate. It may then enter as a
-pre-registered sensitivity interaction, not an automatically included fourth
-primary predictor. Gas may condition an alternative liquidation-pressure
-measure, but is not an independent primary confidence coefficient without
-incremental predictive evidence.
+The [SMM specification](confidence_simulated_moments.md) uses equal-event
+severity and recovery moments to estimate only
+\((\alpha_d,\alpha_r,C_{\min},\kappa_P)\). Tab pressure remains a sensitivity
+and possible recovery gate. Bad debt is excluded from the stress state and
+primary objective and is classified as a recovery-gate mechanism only.
+Behavioural implementation remains unauthorised.
 
 ## 6. Candidate model designs
 
@@ -485,7 +483,7 @@ aggregate DAI correction, not individual arbitrage decisions.
 
 ### 7.1 State equation
 
-Let \(\widehat S_t\in[0,1]\) be the pre-estimated observable stress proxy and
+Let \(\widehat S_t\in[0,1]\) be the fixed observable stress input and
 \(C_t^\ast=1-\widehat S_t\). Use asymmetric adjustment:
 
 \[
@@ -522,17 +520,19 @@ requires it.
 
 ### 7.2 Stress inputs
 
-The primary stress proxy uses the smallest validated set:
+The primary stress input uses the smallest validated set:
 
 - below-peg deviation;
-- lagged 24-hour ETH downside stress; and
-- lagged liquidation backlog-to-clearance pressure.
+- lagged 24-hour ETH downside stress.
 
-The portfolio-weighted ETH/WBTC measure is a sensitivity, not an alternative
-primary estimate. Bad-debt ratio is included only after coverage validation.
-Repeated-stress history can be represented by the state equation rather than an
-additional coefficient. Peg thresholds and liquidatable-share thresholds remain
-observable classification rules rather than latent confidence values.
+Each channel receives weight 0.5 after positive-Q95 scaling. Liquidation
+backlog-to-clearance pressure may close recovery or enter a sensitivity, but it
+does not enter the primary stress input. The portfolio-weighted ETH/WBTC
+measure is a sensitivity, not an alternative primary estimate. Bad debt is a
+recovery-gate mechanism only. Repeated-stress history is represented by the
+state equation rather than another coefficient. Peg thresholds and
+liquidatable-share thresholds remain observable classification rules rather
+than latent confidence values.
 
 ### 7.3 DAI response
 
@@ -557,13 +557,13 @@ current data do not identify them.
 | \(\alpha_r\) | Statistically/SMM estimated | Recovery half-life and sustained recovery | Constrained minimum distance or SMM | Profile interval and leave-one-episode-out |
 | Stability period \(k\) | Fixed primary specification | 24 qualifying stable hours | Pre-registered at 24 hours; test only the 12- and 48-hour sensitivities | No selection after validation |
 | Confidence floor \(C_{\min}\) | Calibrated behavioural parameter | Severe-depeg depth and weak arbitrage response | Profiled bounded SMM | Wide interval; stress test rather than false precision |
-| Effective below-peg response \(\kappa_-\) | Statistically estimated then SMM-refined | One-step correction, duration and overshoot below peg | Asymmetric autoregression followed by SMM | Block bootstrap and withheld FTX interval |
-| Effective above-peg response \(\kappa_+\) | Statistically estimated then SMM-refined | One-step correction and overshoot above peg | Same asymmetric model | Test restricted symmetric model first |
+| Effective below-peg response \(\kappa_-\) | Statistically estimated and fixed before SMM | One-step correction below peg in ordinary and mild observations | Asymmetric direct estimator outside Stage 2 | Calendar-block bootstrap and quiet validation |
+| Effective above-peg response \(\kappa_+\) | Statistically estimated and fixed before SMM | One-step correction above peg in ordinary and mild observations | Same asymmetric direct estimator | Test restricted symmetric model first |
 | Effective panic response | Calibrated behavioural parameter | Tail depth, area below peg and persistence | One normalised coefficient in constrained SMM | Leave-one-stress-window-out and ablation |
 | Residual noise | Distributionally estimated | Residual hourly DAI innovation | Residual empirical distribution or regime-scaled standard deviation | Autocorrelation, tails and simulated coverage |
 | Peg target | Protocol/design constant | USD target | No estimator | Formula and unit tests |
 | Price bounds | Experimental scenario parameters | Numerical safeguard | No estimator | Binding-frequency sensitivity |
-| Bad-debt response | Sensitivity unless data gate passes | Recovery conditional on defensible bad-debt ratio | Interaction in proxy/SMM only after coverage check | Report omission and wide bounds |
+| Bad-debt response | Recovery-gate mechanism only | Absence of a severe condition during recovery | No primary coefficient | Severe-condition definition remains an implementation blocker |
 | Agent participation/capacity | Additional-data dependency | DAI arbitrage flow, volume and depth | Not estimated now | No implementation without new evidence |
 
 All estimation uses lagged covariates to avoid contemporaneous look-ahead.
@@ -602,20 +602,20 @@ heterogeneity is not required unless the row says otherwise.
 | `enable_peg_recovery` | Optional mechanism switch; Boolean | Nested-model recovery performance | Paired ablation on C and V | Model-selection uncertainty; no heterogeneity | Profiles/factory → recovery function | Stress-test parameter pending replacement decision |
 | `arbitrage_recovery_strength` | Legacy additional below-peg response | Incremental recovery beyond base arbitrage | Not estimated in the new mode; review as a legacy ablation | Retained only for legacy compatibility | Profiles/factory → recovery function | Superseded in the new mode; removal candidate after protected implementation |
 | `policy_feedback_strength` | Stylised policy response; dimensionless | Recovery aligned with effective protocol actions | Not causally identified; event evidence only | Literature/scenario range; no heterogeneity | Profiles/factory → recovery function | Literature-informed prior or stress-test parameter |
-| `bad_debt_recovery_drag` | Recovery impairment; dimensionless | Recovery conditional on bad-debt ratio | Interaction SMM only if data gate passes | Wide profile interval; no heterogeneity | Profiles/factory → recovery discount | Stress-test parameter unless statistically identified |
+| `bad_debt_recovery_drag` | Legacy recovery impairment; dimensionless | Recovery conditional on bad-debt ratio | Not estimated in the new mode | Retained only for legacy ablation | Profiles/factory → recovery discount | Superseded by the recovery-gate-only treatment |
 | `min_recovery_confidence` | Recovery activation boundary; index | Recovery/non-recovery classification | Current design: profiled threshold; future design uses stability gate | Scale-dependent interval; no heterogeneity | Profiles/factory → recovery discount | Unnecessary under recommended stability gate |
 | Hard-coded liquidatable-share coefficient | Direct selling response; pressure/share | DAI move conditional on unresolved pressure | Consolidate into stress proxy/panic coefficient | Not separately identifiable; no heterogeneity | No owner → simulation systemic pressure | Unnecessary and removable in current form |
 | Hard-coded bad-debt-ratio coefficient | Direct selling response; pressure/ratio | DAI move conditional on defensible bad-debt ratio | Include only after data gate and consolidation | Sparse-tail uncertainty; no heterogeneity | No owner → simulation systemic pressure | Unnecessary in current form; sensitivity if supported |
 | Stress-proxy peg coefficient \(\beta_p\) | Predictive stress loading; log-odds per standardised gap | Six-hour future downside burden; lagged below-peg gap | Not fitted: Design C fails the fixed episode-dominance gate | No coefficient interval; system-wide evidence retained for diagnosis | Closed predictive route | Not estimable under Designs A–C |
 | Stress-proxy collateral coefficient \(\beta_r\) | Predictive stress loading; log-odds per standardised downside measure | Six-hour future downside burden; lagged 24-hour ETH downside stress | Not fitted: Design C fails the fixed episode-dominance gate | No coefficient interval; portfolio composite remains a sensitivity only | Closed predictive route | Not estimable under Designs A–C |
 | Stress-proxy liquidation coefficient \(\beta_l\) | Optional predictive stress loading; log-odds per transformed pressure | Six-hour future downside burden; lagged backlog-to-clearance ratio | Excluded from the primary model after the sparse-variation gate; retain as a supported-subperiod sensitivity | Coverage and block uncertainty; no agent heterogeneity | Future calibration sensitivity → confidence target | Sensitivity predictor; not currently estimable |
-| Stress-proxy bad-debt coefficient \(\beta_b\) | Optional predictive loading; log-odds per standardised ratio | Continued depeg; defensible bad-debt ratio | Estimate only after coverage gate; otherwise S-only | Sparse-event interval; no agent heterogeneity | Future calibration candidate → confidence target | Stress-test parameter unless data support estimation |
+| Stress-proxy bad-debt coefficient \(\beta_b\) | Historical optional predictive loading | Continued depeg; defensible bad-debt ratio | Not estimated; predictive route closed | Sparse evidence retained for diagnosis | Closed predictive route | Unsupported in the primary design |
 | Deterioration adjustment \(\alpha_d\) | Downward state adjustment; fraction per hour | Depeg onset speed, depth and cumulative deviation | Constrained SMM on C; validate V | Profile interval; no agent heterogeneity | Future confidence config → state update | Statistically estimated |
 | Recovery adjustment \(\alpha_r\) | Upward state adjustment; fraction per hour | Recovery half-life and sustained recovery | Constrained SMM on C; validate V, test S | Profile/episode-bootstrap interval; no agent heterogeneity | Future confidence config → state update | Statistically estimated |
 | Stability period \(k\) | Delay before confidence recovery; hours | 24 qualifying stable hours plus the confidence gate | Fixed at 24 hours; test 12 and 48 hours only as pre-registered sensitivities | No post-validation selection; no agent heterogeneity | Future confidence config → state update | Fixed primary specification |
 | Confidence floor \(C_{\min}\) | Lower bounded latent response; index | Severe depth and weak correction | Profiled bounded SMM on C; stress check S | Wide tail range; no agent heterogeneity | Future confidence config → state update | Statistically estimated with stress-test bounds |
-| Effective below-peg response \(\kappa_-\) | Aggregate stabilising response; price change per gap per hour | Subsequent DAI correction; lagged negative gap and confidence | Asymmetric regression then SMM on C; validate V | Block-bootstrap/profile interval; aggregate only | Future market config → demand pressure | Statistically estimated |
-| Effective above-peg response \(\kappa_+\) | Aggregate supply response; price change per gap per hour | Subsequent DAI correction; lagged positive gap | Asymmetric regression then SMM on C; validate V | Block-bootstrap/profile interval; aggregate only | Future market config → supply pressure | Statistically estimated |
+| Effective below-peg response \(\kappa_-\) | Aggregate stabilising response; price change per gap per hour | Subsequent DAI correction in ordinary and mild states | Direct Stage 1 estimator, fixed before SMM | Calendar-block interval; aggregate only | Future market config → demand pressure | Statistically estimated outside Stage 2 |
+| Effective above-peg response \(\kappa_+\) | Aggregate supply response; price change per gap per hour | Subsequent DAI correction in ordinary and mild states | Direct Stage 1 estimator, fixed before SMM | Calendar-block interval; aggregate only | Future market config → supply pressure | Statistically estimated outside Stage 2 |
 | Effective panic response | Aggregate downside response; price change per panic signal per hour | Tail depth, duration and area | One-coefficient constrained SMM on C; test S | Wide profile interval; no agent heterogeneity | Future market config → panic supply | Statistically estimated with stress bounds |
 | Arbitrage participation probability | Agent action probability | DAI participant/flow observations | No estimator with current data | Heterogeneity would be required | No current owner → Candidate B | Additional-data dependency; do not add |
 | Arbitrage capacity | Bounded DAI buying capacity | DAI depth, volume and capital | No estimator with current data | Participant and liquidity heterogeneity required | No current owner → Candidate B | Additional-data dependency; do not add |
@@ -737,7 +737,8 @@ semantic owners are:
 | `src/dai_sim/model/market.py` | DAI demand and supply equations | Consume effective response coefficients and remove or normalise duplicate panic/recovery products |
 | `src/dai_sim/model/simulation.py` | Step ordering and state persistence | Carry confidence and stability counter between steps; pass backlog/bad-debt inputs without changing liquidation mechanics |
 | `src/dai_sim/model/metrics.py` | General outcome definitions | Add sustained recovery, confidence recovery, cumulative pressure and bound-binding metrics |
-| `src/dai_sim/calibration/market.py` | Existing market calibration owner | Construct episodes, fit proxy/asymmetric response models and write compact candidates |
+| `src/dai_sim/calibration/market.py` | Existing market calibration owner | Construct episodes and ordinary-market quantities and write compact candidates |
+| `src/dai_sim/calibration/simulated_moments.py` | Future substantive SMM owner, if existing responsibilities would otherwise become unclear | Own conditional event simulation, objective evaluation, seed registry and bounded search; do not create it as a wrapper |
 | `src/dai_sim/calibration/validation.py` | Calibration validation owner | Add blocked-window, profile-likelihood, ablation and moment checks |
 | `src/dai_sim/experiments/scenarios.py` | Semantic scenario factories | Add explicitly named behavioural specification and uncertainty variants while retaining legacy factories |
 | `src/dai_sim/experiments/summaries.py` | Experiment reporting | Add the approved sustained-recovery and pressure metrics |
@@ -830,10 +831,11 @@ Behavioural implementation is ready for authorisation only when:
 2. the tab reconstruction remains valid and its sensitivity/recovery-gate
    role is preserved unless new evidence independently passes the variation
    gate;
-3. bad-debt treatment, including the severe-condition definition, is fixed;
-4. the constrained simulated-moments fallback is separately pre-registered
-   without changing the fixed burden target or validation partitions;
-5. the SMM design produces identified effective parameters, uncertainty
+3. the separately pre-registered recovery-gate role for bad debt is preserved
+   and its severe-condition definition is fixed before implementation;
+4. the constrained simulated-moments specification is implemented without
+   changing the fixed burden target or validation partitions;
+5. the future SMM run produces identified effective parameters, uncertainty
    intervals, ablations and provenance records without reviving the closed
    predictive route;
 6. the exact legacy/new-mode configuration interface is reviewed;
@@ -845,22 +847,16 @@ Behavioural implementation is ready for authorisation only when:
 
 - Keep tab pressure as a sensitivity predictor and recovery-gate variable
   unless future evidence independently passes every sparse-variation gate.
-- Decide whether bad debt passes the primary-data gate or remains sensitivity
-  only, including its severe-condition definition.
-- Decide whether policy feedback remains a sensitivity mechanism.
-- Decide whether the optional recovery equation is removed, retained only as an
-  ablation, or re-expressed by the confidence recovery state; it is not part
-  of the new primary response equation.
+- Define the severe bad-debt condition required by its recovery-gate-only role.
 - Produce the parameter estimates and uncertainty intervals.
 - Decide whether the empirical profile opts into the new mechanism after
   validation while the legacy profile remains unchanged.
 
-The recovery band and duration, material-depeg threshold, continuous six-hour
-burden target, deterministic UTC grid, ETH-only primary collateral stress,
-tab-based backlog-to-clearance measure and effective-coefficient scale
-normalisation are resolved specifications, not unresolved choices. The tab
-reconstruction gate passes, but tab variation and all three predictive
-evidence designs fail their estimation gates. Coding a new confidence
-mechanism would therefore require guessed parameters. The next methodological
-task is the pre-registered constrained simulated-moments fallback, not another
-predictive-target redesign.
+Bad debt is a recovery-gate mechanism only; policy feedback is a
+literature-informed sensitivity; and the current optional recovery equation,
+including `bad_debt_recovery_drag`, `arbitrage_recovery_strength` and
+`min_recovery_confidence`, is a legacy ablation rather than part of the new
+mode. The recovery band and duration, material threshold, continuous burden,
+ETH stress, equal stress weights, tab-pressure role and coefficient
+normalisation are resolved. The SMM methodology is now pre-registered, but
+executable infrastructure and fitting still require separate authorisation.

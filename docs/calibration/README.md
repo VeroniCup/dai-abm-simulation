@@ -19,6 +19,10 @@ Active calibration guidance is organised by evidence and decision:
 - [Historical confidence market evidence](confidence_historical_market_evidence.md)
   — the adopted 2019–2024 DAI/ETH extension, sparse scaling gates and final
   no-fit Design C decision.
+- [Constrained confidence simulated moments](confidence_simulated_moments.md)
+  — staged direct/SMM ownership, equal-event moments, bounds, weighting,
+  optimisation, identification and blocked validation. This is a no-fit
+  methodological specification, not completed behavioural calibration.
 - [Representative vaults](vaults.md)
 - [Liquidations](liquidations.md)
 - [Protocol parameters](protocol.md)

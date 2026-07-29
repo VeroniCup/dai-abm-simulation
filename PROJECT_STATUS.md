@@ -142,10 +142,29 @@ Design C is nevertheless not eligible for fitting. It has 321 non-zero
 calibration origins and 74 contributing episodes, but one December 2020–
 January 2021 episode contributes 56.55% of total burden against the fixed 25%
 ceiling. The final evidence-extension stop rule therefore closes the
-predictive stress-proxy regression route. No coefficient was fitted.
-Behavioural implementation remains unauthorised; the next methodological
-boundary is a separately specified constrained simulated-moments calibration
-with blocked and leave-one-event-out validation.
+predictive stress-proxy regression route permanently. No coefficient was
+fitted.
+
+The [constrained simulated-moments
+specification](docs/calibration/confidence_simulated_moments.md) is complete.
+It fixes equal weights on scaled lagged peg-gap and ETH-downside stress,
+separates direct estimation of \(\kappa_-\), \(\kappa_+\) and residual
+innovations from the Stage 2 vector
+\((\alpha_d,\alpha_r,C_{\min},\kappa_P)\), and selects eight core moments in
+four equally weighted groups. All selected moments pass the declared
+event-count, non-zero-scale and event-concentration feasibility gates. The
+catalogue contains 74 calibration events, all beginning in 2020–21, plus one
+untouched USDC/SVB final-stress event. This temporal concentration is retained
+as an identification and validation risk.
+
+Bad debt is classified as a recovery-gate mechanism only. Policy feedback is
+a literature-informed sensitivity, and the current optional recovery equation
+is retained only as a legacy ablation. The SMM design includes explicit
+bounds, common-random-number replication, Sobol search, nested boundary
+models, Jacobian diagnostics, event bootstrap, leave-one-event-out checks and
+quiet/final blocked validation. It fits no parameter. Executable
+infrastructure, Stage 1 estimation, SMM fitting and behavioural implementation
+all remain pending separate authorisation.
 
 The remaining empirical work is adoption and validation of defensible
 parameter candidates, followed by calibrated counterfactual experiments.

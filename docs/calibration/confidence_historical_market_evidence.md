@@ -256,10 +256,12 @@ gate is episode dominance. It may not be weakened after observing Design C,
 and a more favourable start date may not be searched. No fractional model,
 coefficient, penalty or interaction has been fitted.
 
-The predictive target-extension route is now closed. The authorised next
-methodological boundary is the already declared constrained SMM fallback,
-using the continuous burden distribution, deterioration and recovery moments,
-blocked validation and leave-one-event-out checks.
+The predictive target-extension route is now closed. The next methodological
+boundary is now pre-registered in the [constrained simulated-moments
+design](confidence_simulated_moments.md). It uses equal-event deterioration
+and recovery moments, fixed equal-weight stress inputs, blocked validation and
+leave-one-event-out checks. The design pass fits no coefficient and does not
+authorise behavioural implementation.
 
 ## 17. Evidence and provenance ownership
 
@@ -284,7 +286,7 @@ both the original four-asset acquisition and this two-asset extension.
 ## 18. Remaining boundary
 
 No further market acquisition, threshold redesign or regression fitting is
-required for this predictive route. A separately authorised SMM pass must
-still specify its moments, weighting, bounds, blocked validation and
-leave-one-event-out diagnostics before estimating behavioural parameters or
-changing simulator behaviour.
+required for this predictive route. The SMM moments, weighting, bounds,
+blocked validation and leave-one-event-out diagnostics are now specified.
+Executable infrastructure, Stage 1 estimation, SMM fitting and any simulator
+change remain separately unauthorised.
