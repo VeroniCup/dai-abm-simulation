@@ -9,8 +9,11 @@ Active calibration guidance is organised by evidence and decision:
 - [Parameter adoption](parameter_adoption.md) — semantic compatibility and
   model-interface decisions.
 - [Market and gas](market_and_gas.md)
-- [Confidence and behaviour](confidence_and_behaviour.md) — active planning
-  and calibration design for latent confidence, DAI response and recovery.
+- [Confidence and behaviour](confidence_and_behaviour.md) — mechanism design
+  for latent confidence, DAI response and sustained recovery.
+- [Confidence estimation](confidence_estimation.md) — fixed outcome, sample,
+  liquidation reconstruction, estimator, feasibility gates and future evidence
+  ownership for the observable stress proxy.
 - [Representative vaults](vaults.md)
 - [Liquidations](liquidations.md)
 - [Protocol parameters](protocol.md)

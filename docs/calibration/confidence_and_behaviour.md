@@ -8,6 +8,11 @@ mechanism, identifies what the existing empirical evidence can support, and
 specifies a bounded future implementation. It does not estimate behavioural
 parameters, adopt new values or authorise executable changes.
 
+The companion [confidence estimation design](confidence_estimation.md) fixes
+the outcome, sample, liquidation reconstruction, estimator and evidence
+ownership. Its feasibility result is deliberately separate from this mechanism
+design.
+
 Confidence is a latent modelling state. It is not an observed Maker variable,
 a wallet label or a survey measure. Historical DAI prices, collateral returns,
 liquidation conditions and protocol outcomes can identify reduced-form
@@ -336,13 +341,12 @@ It is a liquidation-system pressure measure, not the simulated unsafe-vault
 share.
 
 Only information available before the hour-\(t\) behavioural update may be
-used: completions during hour \(t\) are excluded. The remaining-tab form is
-admissible only if at least 95% of unresolved-auction observations have usable
-remaining-tab values, there is no material time-window or ilk-specific
-coverage break, and units and aggregation reconcile with completed-tab
-measures. The source-state check above establishes usable Kick/Take fields for
-the current six-ilk evidence; the hourly reconstruction and reconciliation
-remain an explicit estimation gate.
+used: completions during hour \(t\) are excluded. The event-level feasibility
+reconstruction in the [estimation design](confidence_estimation.md) passes the
+declared coverage, reconciliation, state-validity and temporal gates. The
+tab-based ratio is therefore selected as the empirical liquidation-pressure
+measure. This selection records the best-supported measure; it does not imply
+that the predictor varies sufficiently at eligible estimation origins.
 
 If that gate fails, the fixed fallback for the estimation design is the count
 analogue
@@ -353,14 +357,14 @@ L_t^{\mathrm{count}} =
 {N_{t-1}^{\mathrm{unresolved}}+N_{t-1}^{\mathrm{completed,24h}}+1}.
 \]
 
-This is a documented fallback specification, not an automatic runtime
-fallback. The selected form must be fixed before fitting. Estimate
-recovery-compatible and severe thresholds as the calibration-sample 75th and
-95th percentiles respectively, then apply them unchanged to validation and
-stress windows. Failed Take attempts, Redos, gas cost, initiated-auction count
-and auction duration are excluded as independent primary coefficients; they
-remain valid ablation, alternative-definition, data-quality or sensitivity
-inputs.
+This remains the documented count sensitivity and rejected primary fallback,
+not an automatic runtime fallback. Estimate recovery-compatible and severe
+thresholds as the calibration-sample 75th and 95th percentiles respectively
+only after a valid estimation sample exists, then apply them unchanged to
+validation and stress windows. Failed Take attempts, Redos, gas cost,
+initiated-auction count and auction duration are excluded as independent
+primary coefficients; they remain valid ablation, alternative-definition,
+data-quality or sensitivity inputs.
 
 #### Coefficient-normalised DAI response
 
@@ -409,18 +413,20 @@ future-data mechanisms.
 ### 5.2 Observable stress model
 
 \[
-\Pr(Y_{t+h}=1)
+\Pr(Y_t^{(6)}=1)
 =
 \operatorname{logit}^{-1}\left(
 \beta_0+\beta_p z(g_{t-1}^-)+\beta_r z(R_t^-)+\beta_l z(L_t)
-\right),
+\right).
 \]
 
-where \(Y_{t+h}\) denotes continued material depeg over a fixed horizon,
-all predictors are lagged, and \(z\) denotes the calibration-sample
-transformation described above. This probability is a stress proxy, not
-observed confidence. The prediction horizon and material-depeg threshold
-remain to be fixed before fitting.
+An origin requires \(p_{t-1}<0.995\). The outcome is one when at least four of
+hours \(t,\ldots,t+5\), including hour \(t+5\), remain below 0.995. The
+three- and 12-hour horizons and the \(p<0.99\) threshold are pre-registered
+sensitivities. All predictors are lagged, and \(z\) denotes the
+calibration-sample transformation described above. This probability is a
+stress proxy, not observed confidence. The exact episode and non-overlapping
+origin rules are fixed in the [estimation design](confidence_estimation.md).
 
 Bad debt is excluded from the primary proxy until its coverage and variation
 pass the pre-registered data-quality gate. It may then enter as a
@@ -601,7 +607,7 @@ The existing empirical policy withholds 1–21 November 2022 from primary
 candidate estimation. The same half-open FTX interval remains the principal
 out-of-sample validation window for behavioural calibration.
 
-The proposed split is:
+The fixed split is:
 
 - **calibration**: the continuous hourly sample from 1 June 2021 to 1 July
   2024 excluding the withheld interval and the stress windows below; ordinary
@@ -624,6 +630,15 @@ Time-series cross-validation uses contiguous blocks, not shuffled hours.
 Bootstrap resampling uses day or episode blocks long enough to preserve serial
 dependence. Named windows are descriptive labels and robustness sets, not
 targets for manual path matching.
+
+The feasibility construction produces 25,104 calibration hours but only 27
+eligible non-overlapping origins across 24 episodes: zero positive and 27
+negative six-hour outcomes. The validation interval has no eligible origin,
+and tab pressure has zero median absolute deviation at the calibration origins.
+The stress-proxy coefficients are therefore not estimable under the fixed
+sample. Stress observations are not moved into calibration, and no coefficient
+is fitted. Full results and the required future redesign boundary are in the
+[confidence estimation design](confidence_estimation.md).
 
 ## 10. Peg-recovery outcomes and experiments
 
@@ -757,7 +772,9 @@ The following block stronger behavioural claims:
 
 These gaps mean arbitrage capacity, agent participation heterogeneity,
 long-lived scarring and policy feedback remain sensitivity or future-data
-questions. They do not block the recommended aggregate bounded-state design.
+questions. They do not invalidate the recommended aggregate bounded-state
+mechanism, but the observed outcome-class shortfall blocks its current
+stress-proxy coefficient fit.
 
 ## 14. Risks, acceptance criteria and unresolved decisions
 
@@ -778,14 +795,15 @@ questions. They do not block the recommended aggregate bounded-state design.
 
 Implementation is ready for authorisation only when:
 
-1. the material-depeg outcome threshold and prediction horizon are fixed;
-2. remaining-tab coverage passes its gate or the pre-registered count proxy is
-   selected before fitting;
+1. the fixed material-depeg outcome and episode construction remain
+   reproducible;
+2. the selected tab proxy continues to pass its declared gate;
 3. bad-debt treatment, including the severe-condition definition, is fixed;
-4. the stress-proxy model passes calibration, sign, stability and ablation
-   diagnostics;
-5. effective coefficient estimates, uncertainty intervals and provenance
-   records exist;
+4. a separately pre-registered sample redesign supplies adequate positive and
+   negative calibration origins without weakening withheld evidence;
+5. the stress-proxy model passes calibration, sign, stability and ablation
+   diagnostics and produces effective coefficient estimates, uncertainty
+   intervals and provenance records;
 6. the exact legacy/new-mode configuration interface is reviewed;
 7. the legacy behavioural mode and frozen regressions remain mandatory; and
 8. the bounded executable files and tests in Section 11 receive separate
@@ -793,8 +811,11 @@ Implementation is ready for authorisation only when:
 
 ### Unresolved decisions
 
-- Fix the prediction horizon for continued material depeg and the exact
-  material-depeg classification threshold used as the proxy outcome.
+- Resolve the inadequate one-class calibration outcome through a separate,
+  pre-registered sampling or evidence design; the fixed threshold and horizon
+  must not be changed opportunistically.
+- Decide whether zero-variation tab pressure remains a sensitivity or becomes
+  estimable with defensible additional calibration evidence.
 - Decide whether bad debt passes the primary-data gate or remains sensitivity
   only, including its severe-condition definition.
 - Decide whether policy feedback remains a sensitivity mechanism.
@@ -805,9 +826,11 @@ Implementation is ready for authorisation only when:
 - Decide whether the empirical profile opts into the new mechanism after
   validation while the legacy profile remains unchanged.
 
-The recovery band and duration, ETH-only primary collateral stress,
-backlog-to-clearance liquidation pressure and effective-coefficient scale
-normalisation are resolved specifications, not unresolved choices. Until the
-remaining decisions and estimates exist, coding a new confidence mechanism
+The recovery band and duration, material-depeg threshold and six-hour label,
+ETH-only primary collateral stress, tab-based backlog-to-clearance measure and
+effective-coefficient scale normalisation are resolved specifications, not
+unresolved choices. The tab gate passes, but the current calibration sample
+fails class-balance and predictor-variation gates. Until a pre-registered
+redesign and subsequent estimates exist, coding a new confidence mechanism
 would require guessed parameter values. This planning pass therefore stops
 before executable implementation.

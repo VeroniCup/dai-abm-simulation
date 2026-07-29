@@ -104,12 +104,23 @@ backlog-to-clearance ratio; and the new behavioural DAI response uses directly
 estimated effective coefficients after scale normalisation.
 
 These are pre-registered estimation choices, not adopted behavioural values.
-Executable implementation remains unauthorised pending the remaining outcome,
-bad-debt and proxy-gate decisions, calibration diagnostics, coefficient
-estimates and uncertainty intervals, and separate bounded implementation
-authorisation. The next model-development milestone is the empirical-estimation
-design pass, followed only then by explicitly authorised implementation of
-confidence, behavioural DAI demand and peg recovery.
+The [confidence estimation design](docs/calibration/confidence_estimation.md)
+now fixes material downside at \(p<0.995\), defines the six-hour persistence
+outcome, selects the tab-based backlog-to-clearance proxy after its
+reconstruction gate passes, and records the penalised logistic estimation and
+diagnostic protocol.
+
+Actual coefficient fitting is not ready: the fixed calibration sample contains
+27 eligible origins across 24 episodes, with zero positive outcomes, and tab
+pressure has no variation at those origins. Validation contains no eligible
+origin. Stress observations remain withheld rather than being reassigned to
+calibration. A separate pre-registered sampling or evidence redesign is
+therefore required before estimation.
+
+Executable implementation remains unauthorised pending that redesign, the
+bad-debt and optional-mechanism decisions, calibration diagnostics, coefficient
+estimates and uncertainty intervals, legacy/new-mode interface review, and
+separate bounded implementation authorisation.
 
 The remaining empirical work is adoption and validation of defensible
 parameter candidates, followed by calibrated counterfactual experiments.
