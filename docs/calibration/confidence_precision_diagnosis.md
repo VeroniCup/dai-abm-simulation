@@ -236,3 +236,8 @@ The later
 [objective-identification review](confidence_objective_identification.md)
 shows that removing the unsupported conditional channel is insufficient:
 only one of five active moments passes the fixed R=256 precision-count gate.
+
+The subsequent [partial-identification design](confidence_partial_identification.md)
+uses the verified analytic hierarchical MCSE to construct fixed 90 per cent
+Monte Carlo intervals. It neither weakens the precision gate nor rehabilitates
+the failed point objective.

@@ -28,6 +28,7 @@ def test_help_does_not_require_the_ignored_panel() -> None:
     assert "smm-precision" in result.stdout
     assert "recovery-redesign" in result.stdout
     assert "objective-identification" in result.stdout
+    assert "partial-identification" in result.stdout
 
 
 def test_confidence_operation_requires_explicit_input(monkeypatch) -> None:
@@ -78,6 +79,65 @@ def test_workflow_has_no_live_acquisition_import() -> None:
     assert "requests" not in source
     assert "dune" not in source.lower()
     assert "dai_sim.model.simulation" not in source
+
+
+def test_partial_identification_forwards_bounded_grid_controls(
+    monkeypatch, tmp_path
+) -> None:
+    observed = {}
+
+    def fake_run(**kwargs):
+        observed.update(kwargs)
+        return {"status": "passed"}
+
+    monkeypatch.setattr(
+        market_gas_protocol, "run_partial_identification_review", fake_run
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "market_gas_protocol.py",
+            "partial-identification",
+            "--partial-identification-action",
+            "resume-grid",
+            "--partial-identification-root",
+            str(tmp_path / "partial"),
+            "--precision-root",
+            str(tmp_path / "cache"),
+            "--workers",
+            "3",
+            "--recover-stale-lock",
+        ],
+    )
+    assert market_gas_protocol.main() == 0
+    assert observed["action"] == "resume-grid"
+    assert observed["workers"] == 3
+    assert observed["recover_stale_lock"]
+    assert observed["root"] == (tmp_path / "partial").resolve()
+    assert observed["cache_dir"] == (tmp_path / "cache").resolve()
+
+
+def test_partial_identification_constructs_the_five_registered_bands() -> None:
+    result = market_gas_protocol.run_partial_identification_review(
+        action="construct-bands"
+    )
+    assert result["status"] == "passed"
+    assert result["constraint_count"] == 5
+    assert all(
+        row["classification_rule"].startswith("inner iff")
+        for row in result["constraints"]
+    )
+
+
+@pytest.mark.parametrize(
+    "unsupported",
+    ("--objective", "--rank", "--top-16", "--powell", "--registry-b"),
+)
+def test_partial_identification_rejects_optimisation_flags(unsupported) -> None:
+    parser = market_gas_protocol.build_parser()
+    with pytest.raises(SystemExit):
+        parser.parse_args(["partial-identification", unsupported])
 
 
 @pytest.mark.parametrize("event_action", ["validate", "smoke", "benchmark"])

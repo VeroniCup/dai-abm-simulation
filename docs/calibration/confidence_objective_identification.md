@@ -191,10 +191,11 @@ fit or runtime adoption follows.
 
 ## 19. Authorised next boundary
 
-Any continuation requires a separately pre-registered review of active-moment
-precision or evidence design. A new Sobol search is not authorised under this
-five-moment proposal, and the historical eight-moment objective must not be
-searched again.
+The authorised continuation is the separately pre-registered
+[grid-based partial-identification pass](confidence_partial_identification.md).
+It treats the five behavioural summaries as broad compatibility constraints
+over the unchanged objective-blind Sobol domain. It does not rescue the
+five-moment objective, rank candidates or resume the historical search.
 
 ## 20. Production and validation boundaries
 

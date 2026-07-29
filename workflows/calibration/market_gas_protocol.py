@@ -57,6 +57,10 @@ from dai_sim.calibration.simulated_moments_diagnostics import (
     validate_completed_diagnosis,
     validate_diagnostic_cache,
 )
+from dai_sim.calibration.partial_identification import (
+    DEFAULT_ROOT as DEFAULT_PARTIAL_IDENTIFICATION_ROOT,
+    run_partial_identification_review,
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -79,6 +83,7 @@ def build_parser() -> argparse.ArgumentParser:
             "smm-precision",
             "recovery-redesign",
             "objective-identification",
+            "partial-identification",
         ),
         default="phase2a",
     )
@@ -238,6 +243,31 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         help="Ignored output directory for bounded identification diagnostics.",
     )
+    parser.add_argument(
+        "--partial-identification-action",
+        choices=(
+            "validate-inputs",
+            "construct-bands",
+            "validate-cache",
+            "run-grid",
+            "resume-grid",
+            "summarise-sets",
+            "select-representatives",
+            "reconstruct-evidence",
+            "validate",
+        ),
+        default="validate",
+        help=(
+            "Fixed-grid compatibility-set operation; never evaluates a scalar "
+            "objective, ranks candidates or adopts runtime values."
+        ),
+    )
+    parser.add_argument(
+        "--partial-identification-root",
+        type=Path,
+        default=DEFAULT_PARTIAL_IDENTIFICATION_ROOT,
+        help="Ignored root for resumable partial-identification checkpoints.",
+    )
     return parser
 
 
@@ -245,6 +275,27 @@ def main() -> int:
     """Execute once and print only compact provenance, never input rows."""
     parser = build_parser()
     args = parser.parse_args()
+    if args.operation == "partial-identification":
+        workers = args.workers or 4
+        if workers < 1 or workers > 6:
+            parser.error("--workers must be between 1 and 6")
+        result = run_partial_identification_review(
+            action=args.partial_identification_action,
+            root=args.partial_identification_root.resolve(),
+            evidence_dir=args.evidence_dir.resolve(),
+            cache_dir=(
+                None
+                if args.precision_root is None
+                else args.precision_root.resolve()
+            ),
+            workers=workers,
+            recover_stale_lock=args.recover_stale_lock,
+            register_manifest=(
+                args.evidence_dir.resolve() == CONFIDENCE_EVIDENCE.resolve()
+            ),
+        )
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return 0
     if args.operation == "objective-identification":
         keyword_arguments = {
             "action": args.identification_action,

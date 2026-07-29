@@ -231,3 +231,19 @@ moment. At 256 replications, active-moment MCSE pass counts are 10/16, 3/16,
 gate. The result is **seven-moment specification not operational**. No
 anchors, Jacobians, parameter profiles, restricted model, new search or
 Stage 2 estimate were evaluated, and production behaviour remains unchanged.
+
+The authorised methodological continuation is a
+[finite-grid partial-identification analysis](docs/calibration/confidence_partial_identification.md).
+It reuses the fixed 256-vector Sobol domain and all-event registry-A cache,
+classifies vectors by inner and outer empirical compatibility, and constructs
+objective-blind representatives solely for later robustness experiments. It
+does not calculate a scalar objective, estimate or rank a Stage 2 vector, use
+final-validation evidence, or alter production behaviour.
+
+The completed 256-vector pass retains no inner or outer candidate and rejects
+all 256 vectors. Its pre-registered classification is **model–evidence
+incompatibility**. All structural and Stage 1 gates pass; the incompatibility
+arises from the five empirical compatibility constraints, with 203 candidates
+also failing the numerical-bound gate. No representative vector exists. The
+next authorised boundary is a review of structural assumptions or empirical
+support-band design, not point fitting, ranking or runtime adoption.

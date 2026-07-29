@@ -445,6 +445,111 @@
     },
     {
       "classification": "snapshot",
+      "context": "Finite-grid partial-identification evidence for dormant persistent-confidence parameters; no estimate or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/partial_identification_benchmark.json",
+      "producer": "dai_sim.calibration.partial_identification",
+      "schema": "Compact partial-identification evidence.",
+      "semantic_name": "partial_identification_benchmark",
+      "sha256": "843100d4faa7925710465cac9a9bf003f448333d32dd21cf929aa1b223098382",
+      "size_bytes": 489,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/objective_simplification_moments.csv",
+        "data/provenance/calibration/confidence/monte_carlo_precision_specification.json",
+        "data/provenance/calibration/confidence/sobol_search_specification.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Finite-grid partial-identification evidence for dormant persistent-confidence parameters; no estimate or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/partial_identification_candidates.csv",
+      "producer": "dai_sim.calibration.partial_identification",
+      "schema": "Compact partial-identification evidence.",
+      "semantic_name": "partial_identification_candidates",
+      "sha256": "5a1cd02f7c1a788ee3972e566b041f5d12d561fd0067a13264460ca65e2b4a8d",
+      "size_bytes": 369278,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/objective_simplification_moments.csv",
+        "data/provenance/calibration/confidence/monte_carlo_precision_specification.json",
+        "data/provenance/calibration/confidence/sobol_search_specification.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Finite-grid partial-identification evidence for dormant persistent-confidence parameters; no estimate or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/partial_identification_constraints.csv",
+      "producer": "dai_sim.calibration.partial_identification",
+      "schema": "Compact partial-identification evidence.",
+      "semantic_name": "partial_identification_constraints",
+      "sha256": "4f441ac5ed347644dd82b3ee2f70d2c1f347ee8931749b1a468c3cc14fed6fb8",
+      "size_bytes": 1768,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/objective_simplification_moments.csv",
+        "data/provenance/calibration/confidence/monte_carlo_precision_specification.json",
+        "data/provenance/calibration/confidence/sobol_search_specification.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Finite-grid partial-identification evidence for dormant persistent-confidence parameters; no estimate or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/partial_identification_representatives.json",
+      "producer": "dai_sim.calibration.partial_identification",
+      "schema": "Compact partial-identification evidence.",
+      "semantic_name": "partial_identification_representatives",
+      "sha256": "fcaca1a5abd9023fd2532b41c7059c6995f5516e0db9ed590cd94060b7882a26",
+      "size_bytes": 644,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/objective_simplification_moments.csv",
+        "data/provenance/calibration/confidence/monte_carlo_precision_specification.json",
+        "data/provenance/calibration/confidence/sobol_search_specification.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Finite-grid partial-identification evidence for dormant persistent-confidence parameters; no estimate or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/partial_identification_reproducibility.json",
+      "producer": "dai_sim.calibration.partial_identification",
+      "schema": "Compact partial-identification evidence.",
+      "semantic_name": "partial_identification_reproducibility",
+      "sha256": "3a8533aecc0bb5eb67aca1c00607d58e4f603902a767925b1983917badb452da",
+      "size_bytes": 20974,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/objective_simplification_moments.csv",
+        "data/provenance/calibration/confidence/monte_carlo_precision_specification.json",
+        "data/provenance/calibration/confidence/sobol_search_specification.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Finite-grid partial-identification evidence for dormant persistent-confidence parameters; no estimate or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/partial_identification_set.json",
+      "producer": "dai_sim.calibration.partial_identification",
+      "schema": "Compact partial-identification evidence.",
+      "semantic_name": "partial_identification_set",
+      "sha256": "a42ae42f3cb55ac215e3d76d373d8be1c4f45656f32669d69a5e98bfa075e7ae",
+      "size_bytes": 15654,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/objective_simplification_moments.csv",
+        "data/provenance/calibration/confidence/monte_carlo_precision_specification.json",
+        "data/provenance/calibration/confidence/sobol_search_specification.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Finite-grid partial-identification evidence for dormant persistent-confidence parameters; no estimate or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/partial_identification_specification.json",
+      "producer": "dai_sim.calibration.partial_identification",
+      "schema": "Compact partial-identification evidence.",
+      "semantic_name": "partial_identification_specification",
+      "sha256": "347e47bc4c36bf7804320f823abf728096256fab1bc2706fefd0f2a66552f82c",
+      "size_bytes": 5964,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/objective_simplification_moments.csv",
+        "data/provenance/calibration/confidence/monte_carlo_precision_specification.json",
+        "data/provenance/calibration/confidence/sobol_search_specification.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
       "context": "Pre-registered Monte Carlo precision and recovery-censoring diagnosis; no parameter selection or runtime adoption.",
       "path": "data/provenance/calibration/confidence/recovery_censoring_diagnosis.json",
       "producer": "dai_sim.calibration.simulated_moments_diagnostics",

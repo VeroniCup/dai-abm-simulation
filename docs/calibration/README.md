@@ -43,6 +43,10 @@ Active calibration guidance is organised by evidence and decision:
   — seven reported moments, a proposed equally weighted five-moment Stage 2
   objective and its operationality gate. Four active moments fail the fixed
   R=256 MCSE count, so no numerical identification or new search follows.
+- [Persistent-confidence partial identification](confidence_partial_identification.md)
+  — fixed-grid empirical compatibility bands, inner and outer admissibility,
+  and objective-blind representatives for robustness analysis. Retained
+  vectors are not estimates and no persistent-confidence value is adopted.
 - [Representative vaults](vaults.md)
 - [Liquidations](liquidations.md)
 - [Protocol parameters](protocol.md)

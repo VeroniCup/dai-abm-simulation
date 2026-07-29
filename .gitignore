@@ -114,6 +114,13 @@ data/provenance/calibration/confidence/*
 !data/provenance/calibration/confidence/objective_identification_decision.json
 !data/provenance/calibration/confidence/identification_reproducibility.json
 !data/provenance/calibration/confidence/identification_benchmark.json
+!data/provenance/calibration/confidence/partial_identification_specification.json
+!data/provenance/calibration/confidence/partial_identification_constraints.csv
+!data/provenance/calibration/confidence/partial_identification_candidates.csv
+!data/provenance/calibration/confidence/partial_identification_set.json
+!data/provenance/calibration/confidence/partial_identification_representatives.json
+!data/provenance/calibration/confidence/partial_identification_reproducibility.json
+!data/provenance/calibration/confidence/partial_identification_benchmark.json
 
 # Domain-owned provenance. Detailed operational records stay ignored; selected
 # durable entry points remain tracked.

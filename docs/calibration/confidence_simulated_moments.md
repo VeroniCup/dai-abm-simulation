@@ -741,3 +741,8 @@ object. A subsequent
 the unsupported conditional recovery channel, but four active moments fail
 the pre-registered operationality gate. Neither objective is authorised for
 another search.
+
+A separately pre-registered
+[grid-based partial-identification analysis](confidence_partial_identification.md)
+uses the five summaries as compatibility constraints rather than objective
+terms. It calculates no weighted discrepancy and ranks no candidate.

@@ -882,3 +882,9 @@ The latest
 retains the two Stage 1 preservation constraints and proposes five equally
 weighted Stage 2 moments. Four fail the fixed operationality gate, so no
 parameter vector is selected and production behaviour remains unchanged.
+
+The separately pre-registered
+[partial-identification pass](confidence_partial_identification.md) therefore
+treats those summaries as compatibility constraints over the unchanged Sobol
+domain. Retained vectors and objective-blind representatives support
+robustness analysis only; they are not estimates.

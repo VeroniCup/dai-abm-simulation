@@ -35,7 +35,7 @@ def _is_ignored(relative_path: str) -> bool:
 def test_tracked_calibration_evidence_is_content_addressed() -> None:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     assert manifest["schema_version"] == 1
-    assert len(manifest["artefacts"]) == 59
+    assert len(manifest["artefacts"]) == 66
     for record in manifest["artefacts"]:
         path = REPOSITORY_ROOT / record["path"]
         assert path.is_file(), record["semantic_name"]
@@ -176,3 +176,46 @@ def test_objective_identification_evidence_records_the_operationality_stop() -> 
     assert reproducibility["usdc_svb_simulations"] == 0
     assert reproducibility["powell_evaluations"] == 0
     assert reproducibility["full_search_evaluations"] == 0
+
+
+def test_partial_identification_evidence_is_set_valued_and_non_adopted() -> None:
+    root = REPOSITORY_ROOT / "data/provenance/calibration/confidence"
+    specification = json.loads(
+        (root / "partial_identification_specification.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    set_summary = json.loads(
+        (root / "partial_identification_set.json").read_text(encoding="utf-8")
+    )
+    representatives = json.loads(
+        (root / "partial_identification_representatives.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    reproducibility = json.loads(
+        (root / "partial_identification_reproducibility.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    with (
+        root / "partial_identification_candidates.csv"
+    ).open(encoding="utf-8", newline="") as handle:
+        candidates = list(csv.DictReader(handle))
+
+    assert len(candidates) == 256
+    assert {int(row["candidate_index"]) for row in candidates} == set(range(256))
+    assert not any(
+        token in column.lower()
+        for column in candidates[0]
+        for token in ("objective", "rank")
+    )
+    assert specification["scalar_objective"] is None
+    assert set_summary["parameter_estimate"] is None
+    assert representatives["parameter_estimate"] is None
+    assert not representatives["candidate_62_preference"]
+    assert representatives["representative_count"] <= 24
+    assert not reproducibility["parameter_selected"]
+    assert not reproducibility["runtime_adopted"]
+    assert not reproducibility["registry_b_used"]
+    assert not reproducibility["validation_data_used"]

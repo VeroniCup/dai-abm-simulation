@@ -215,3 +215,8 @@ The subsequent
 reuses the candidate-invariant all-event cache without copying it or
 generating new event simulations. Its operationality failure leaves this
 mechanism dormant.
+
+The same validated mechanism and cache now support the
+[partial-identification pass](confidence_partial_identification.md) over all
+74 calibration events. Cache reuse changes neither event mechanics nor the
+production boundary.

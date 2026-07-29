@@ -157,3 +157,7 @@ The subsequent
 excludes every conditional recovery moment but finds that four of five
 remaining active moments fail the fixed operationality gate. The proposed
 simplified objective therefore does not authorise a new search.
+
+The [partial-identification pass](confidence_partial_identification.md)
+retains the existing 792-hour completion convention as a broad compatibility
+constraint. Censoring is diagnostic and no new recovery moment is introduced.

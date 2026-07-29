@@ -45,6 +45,33 @@ SOBOL_SEARCH_EVIDENCE_FILES = (
     "sobol_search_reproducibility.json",
     "sobol_search_benchmark.json",
 )
+PARTIAL_IDENTIFICATION_EVIDENCE_FILES = (
+    "partial_identification_specification.json",
+    "partial_identification_constraints.csv",
+    "partial_identification_candidates.csv",
+    "partial_identification_set.json",
+    "partial_identification_representatives.json",
+    "partial_identification_reproducibility.json",
+    "partial_identification_benchmark.json",
+)
+
+
+def validate_partial_identification_record(
+    evidence_dir: Path,
+    manifest_path: Path,
+) -> dict[str, Any]:
+    """Validate non-ranked partial-identification evidence and ownership."""
+    from .partial_identification import validate_partial_identification_evidence
+
+    expected_manifest = PROJECT_ROOT / "data/provenance/calibration/manifest.json"
+    if Path(manifest_path).resolve() != expected_manifest.resolve():
+        raise ValueError("Partial-identification validation requires the canonical manifest.")
+    result = validate_partial_identification_evidence(
+        evidence_dir=Path(evidence_dir)
+    )
+    if result["candidate_selected"] or result["runtime_adopted"]:
+        raise ValueError("Partial-identification evidence cannot select or adopt.")
+    return result
 
 
 def validate_conditional_event_evidence(
