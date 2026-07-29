@@ -27,6 +27,7 @@ def test_help_does_not_require_the_ignored_panel() -> None:
     assert "smm-search" in result.stdout
     assert "smm-precision" in result.stdout
     assert "recovery-redesign" in result.stdout
+    assert "objective-identification" in result.stdout
 
 
 def test_confidence_operation_requires_explicit_input(monkeypatch) -> None:
@@ -368,3 +369,54 @@ def test_recovery_redesign_rejects_search_and_optimisation_operations(
     parser = market_gas_protocol.build_parser()
     with pytest.raises(SystemExit):
         parser.parse_args(["recovery-redesign", unsupported])
+
+
+def test_objective_identification_forwards_only_local_gated_controls(
+    monkeypatch, tmp_path
+) -> None:
+    observed = {}
+    monkeypatch.setattr(
+        market_gas_protocol,
+        "run_objective_identification_review",
+        lambda **kwargs: observed.update(kwargs)
+        or {"status": "seven_moment_specification_not_operational"},
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "market_gas_protocol.py",
+            "objective-identification",
+            "--identification-action",
+            "resume-jacobian-evaluation",
+            "--precision-root",
+            str(tmp_path / "checkpoints"),
+            "--evidence-dir",
+            str(tmp_path / "evidence"),
+            "--identification-diagnostics-dir",
+            str(tmp_path / "diagnostics"),
+        ],
+    )
+    assert market_gas_protocol.main() == 0
+    assert observed["action"] == "resume-jacobian-evaluation"
+    assert observed["run_dir"] == (tmp_path / "checkpoints").resolve()
+    assert observed["diagnostics_dir"] == (tmp_path / "diagnostics").resolve()
+    assert not observed["register_manifest"]
+
+
+@pytest.mark.parametrize(
+    "unsupported",
+    [
+        "--powell",
+        "--registry-b",
+        "--final-validation",
+        "--search-action",
+        "--optimise",
+    ],
+)
+def test_objective_identification_rejects_search_and_adoption_operations(
+    unsupported,
+) -> None:
+    parser = market_gas_protocol.build_parser()
+    with pytest.raises(SystemExit):
+        parser.parse_args(["objective-identification", unsupported])

@@ -35,7 +35,7 @@ def _is_ignored(relative_path: str) -> bool:
 def test_tracked_calibration_evidence_is_content_addressed() -> None:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     assert manifest["schema_version"] == 1
-    assert len(manifest["artefacts"]) == 48
+    assert len(manifest["artefacts"]) == 59
     for record in manifest["artefacts"]:
         path = REPOSITORY_ROOT / record["path"]
         assert path.is_file(), record["semantic_name"]
@@ -146,4 +146,33 @@ def test_recovery_redesign_evidence_is_compact_and_non_adopted() -> None:
     assert not reproducibility["objective_values_used"]
     assert not reproducibility["final_validation_data_used"]
     assert not reproducibility["registry_b_used"]
+    assert reproducibility["full_search_evaluations"] == 0
+
+
+def test_objective_identification_evidence_records_the_operationality_stop() -> None:
+    root = REPOSITORY_ROOT / "data/provenance/calibration/confidence"
+    decision = json.loads(
+        (root / "objective_identification_decision.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    design = json.loads(
+        (root / "identification_design.json").read_text(encoding="utf-8")
+    )
+    reproducibility = json.loads(
+        (root / "identification_reproducibility.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert decision["status"] == "seven_moment_specification_not_operational"
+    assert decision["stage2_estimate"] is None
+    assert not decision["candidate_selected"]
+    assert not decision["runtime_adopted"]
+    assert not design["selection_performed"]
+    assert design["anchor_indices"] == []
+    assert reproducibility["new_simulation_evaluations"] == 0
+    assert not reproducibility["candidate_objective_ranking"]
+    assert not reproducibility["registry_b_used"]
+    assert reproducibility["usdc_svb_simulations"] == 0
+    assert reproducibility["powell_evaluations"] == 0
     assert reproducibility["full_search_evaluations"] == 0

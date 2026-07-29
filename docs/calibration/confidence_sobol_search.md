@@ -167,3 +167,9 @@ all-event checkpoints without objective values or new simulations. It
 classifies both bounded replacements as unsupported. This historical search
 therefore remains audit evidence under its original moment schema and does not
 authorise a new search.
+
+The completed
+[objective-simplification review](confidence_objective_identification.md)
+does not rerank the 256 candidates. The registered 16-point panel is used
+only for objective-blind operationality evidence, which blocks numerical
+identification before anchor selection.

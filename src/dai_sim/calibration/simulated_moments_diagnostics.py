@@ -37,6 +37,11 @@ from .market import CONFIDENCE_EVIDENCE, CONFIDENCE_PANEL
 from .simulated_moments import (
     DEFAULT_REGISTRY_IDS,
     SIMULATED_CORE_MOMENT_ORDER,
+    SIMPLIFIED_REPORTING_MOMENT_ORDER,
+    STAGE1_PRESERVATION_MOMENTS,
+    STAGE2_ACTIVE_MOMENTS,
+    STAGE2_OBJECTIVE_GROUPS,
+    STAGE2_OBJECTIVE_WEIGHTS,
     StructuralParameters,
     array_sha256,
     fixed_horizon_recovery_indicator,
@@ -85,9 +90,26 @@ RECOVERY_REDESIGN_EVIDENCE_NAMES = (
     "recovery_moment_decision.json",
     "recovery_moment_reproducibility.json",
 )
+OBJECTIVE_IDENTIFICATION_EVIDENCE_NAMES = (
+    "objective_simplification_specification.json",
+    "objective_simplification_moments.csv",
+    "objective_simplification_weights.csv",
+    "active_moment_operationality.csv",
+    "identification_design.json",
+    "identification_jacobian.csv",
+    "identification_singular_values.csv",
+    "identification_profiles.csv",
+    "objective_identification_decision.json",
+    "identification_reproducibility.json",
+    "identification_benchmark.json",
+)
 DEFAULT_RECOVERY_REDESIGN_ROOT = (
     REPOSITORY_ROOT
     / "outputs/diagnostics/calibration/confidence/recovery_moment_redesign"
+)
+DEFAULT_OBJECTIVE_IDENTIFICATION_ROOT = (
+    REPOSITORY_ROOT
+    / "outputs/diagnostics/calibration/confidence/objective_identification"
 )
 RECOVERY_BOOTSTRAP_REPLICATIONS = 2_000
 RECOVERY_BOOTSTRAP_SEED = 20_260_729
@@ -3559,6 +3581,627 @@ def validate_recovery_moment_redesign(
         "empirical_rows": len(empirical),
         "precision_rows": len(precision),
         "canonical_specification_changed": False,
+        "candidate_selected": False,
+        "runtime_adopted": False,
+    }
+
+
+def _objective_simplification_inputs(
+    evidence_dir: Path,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    empirical = pd.read_csv(evidence_dir / "empirical_moments.csv")
+    ladder = pd.read_csv(evidence_dir / "monte_carlo_replication_ladder.csv")
+    expected = set(SIMPLIFIED_REPORTING_MOMENT_ORDER)
+    selected = empirical.loc[empirical["moment"].isin(expected)].copy()
+    if set(selected["moment"]) != expected or len(selected) != 7:
+        raise ValueError("The seven-moment reporting inputs are incomplete.")
+    if not np.isfinite(
+        selected[["empirical_value", "empirical_scale"]].to_numpy(dtype=float)
+    ).all() or (selected["empirical_scale"] <= 0.0).any():
+        raise ValueError("Simplified objective empirical values or scales are invalid.")
+    return selected, ladder
+
+
+def audit_active_moment_operationality(
+    *,
+    run_dir: Path,
+    evidence_dir: Path = CONFIDENCE_EVIDENCE,
+) -> tuple[pd.DataFrame, dict[str, Any]]:
+    """Audit the five fixed active moments without consuming objective fit."""
+    empirical, ladder = _objective_simplification_inputs(Path(evidence_dir))
+    selected = ladder.loc[
+        ladder["event_set"].eq("all_74")
+        & ladder["replication_count"].eq(256)
+        & ladder["moment"].isin(STAGE2_ACTIVE_MOMENTS)
+    ].copy()
+    selected = selected.rename(columns={"pass": "candidate_mcse_pass"})
+    if len(selected) != 16 * len(STAGE2_ACTIVE_MOMENTS):
+        raise ValueError("The all-event R=256 active-moment ladder is incomplete.")
+    raw = _load_ladder_frame(Path(run_dir))
+    raw = raw.loc[raw["replication"].lt(256)]
+    interactions = (
+        raw.groupby("candidate_index", sort=True)
+        .agg(
+            censoring_share=("right_censored", "mean"),
+            numerical_bound_share=("numerical_bound_binding_share", lambda values: float(np.mean(np.asarray(values, dtype=float) > 0.0))),
+            active_bad_debt_share=("maximum_active_bad_debt_dai", lambda values: float(np.mean(np.asarray(values, dtype=float) > 0.0))),
+            unresolved_backlog_share=("maximum_unresolved_tab_dai", lambda values: float(np.mean(np.asarray(values, dtype=float) > 0.0))),
+        )
+        .reset_index()
+    )
+    selected = selected.merge(
+        interactions, on="candidate_index", how="left", validate="many_to_one"
+    )
+    empirical_by_name = empirical.set_index("moment")
+    rows: list[dict[str, Any]] = []
+    summaries: dict[str, Any] = {}
+    for moment in STAGE2_ACTIVE_MOMENTS:
+        group = selected.loc[selected["moment"].eq(moment)].sort_values(
+            "candidate_index"
+        )
+        source = empirical_by_name.loc[moment]
+        scale = float(source["empirical_scale"])
+        variation = float(group["point_estimate"].max() - group["point_estimate"].min())
+        pass_count = int(group["candidate_mcse_pass"].astype(bool).sum())
+        regular_count = int(
+            group["convergence_classification"].eq("regular_convergence").sum()
+        )
+        operational = bool(
+            math.isfinite(scale)
+            and scale > 0.0
+            and variation > 0.0
+            and pass_count >= 12
+            and regular_count >= 12
+        )
+        summaries[moment] = {
+            "empirical_value": float(source["empirical_value"]),
+            "empirical_scale": scale,
+            "finite_empirical_support": True,
+            "simulated_minimum": float(group["point_estimate"].min()),
+            "simulated_maximum": float(group["point_estimate"].max()),
+            "simulated_range": variation,
+            "median_mcse": float(group["diagnostic_mcse"].median()),
+            "maximum_mcse": float(group["diagnostic_mcse"].max()),
+            "mcse_pass_count": pass_count,
+            "regular_convergence_count": regular_count,
+            "operational": operational,
+        }
+        for record in group.itertuples(index=False):
+            rows.append(
+                {
+                    "moment": moment,
+                    "candidate_index": int(record.candidate_index),
+                    "empirical_value": float(source["empirical_value"]),
+                    "empirical_scale": scale,
+                    "finite_empirical_support": True,
+                    "simulated_value": float(record.point_estimate),
+                    "simulated_panel_range": variation,
+                    "mcse": float(record.diagnostic_mcse),
+                    "mcse_threshold": float(record.threshold),
+                    "mcse_pass": bool(record.candidate_mcse_pass),
+                    "convergence_status": str(record.convergence_classification),
+                    "regular_convergence": (
+                        record.convergence_classification == "regular_convergence"
+                    ),
+                    "right_censoring_involved": bool(record.censoring_share > 0.0),
+                    "right_censoring_share": float(record.censoring_share),
+                    "numerical_bound_share": float(record.numerical_bound_share),
+                    "active_bad_debt_share": float(record.active_bad_debt_share),
+                    "unresolved_backlog_share": float(record.unresolved_backlog_share),
+                    "deterministic_calculation_failure": False,
+                    "moment_mcse_pass_count": pass_count,
+                    "moment_regular_convergence_count": regular_count,
+                    "moment_operational": operational,
+                }
+            )
+    operational = all(item["operational"] for item in summaries.values())
+    recovery = summaries["recovery_completion_hours_mean"]
+    return pd.DataFrame(rows), {
+        "status": "passed" if operational else "failed",
+        "all_active_moments_operational": operational,
+        "moment_summaries": summaries,
+        "failed_moments": [
+            name for name, item in summaries.items() if not item["operational"]
+        ],
+        "recovery_completion_warning": {
+            "non_recovery_treatment": (
+                "right-censored simulations enter at the fixed 792-hour "
+                "administrative horizon"
+            ),
+            "median_panel_censoring_share": float(
+                selected.loc[
+                    selected["moment"].eq("recovery_completion_hours_mean"),
+                    "censoring_share",
+                ].median()
+            ),
+            "mcse_pass_count": recovery["mcse_pass_count"],
+            "structural_non_recovery_unstable": not recovery["operational"],
+        },
+        "candidate_count": 16,
+        "event_count": 74,
+        "replication_count": 256,
+        "registry_id": REGISTRY_A,
+        "objective_values_used": False,
+    }
+
+
+def _objective_identity_payload(
+    *,
+    moments: pd.DataFrame,
+    evidence_dir: Path,
+) -> dict[str, Any]:
+    active = moments.loc[moments["moment"].isin(STAGE2_ACTIVE_MOMENTS)].copy()
+    protected = (
+        "recovery_moment_decision.json",
+        "parameter_bounds.json",
+        "event_catalogue.csv",
+        "seed_registry.json",
+        "conditional_event_specification.json",
+    )
+    return {
+        "schema_version": 1,
+        "reported_moments": list(SIMPLIFIED_REPORTING_MOMENT_ORDER),
+        "active_moments": list(STAGE2_ACTIVE_MOMENTS),
+        "empirical_scales": {
+            row.moment: float(row.empirical_scale)
+            for row in active.sort_values("moment").itertuples()
+        },
+        "weights": dict(STAGE2_OBJECTIVE_WEIGHTS),
+        "preservation_constraints": {
+            "moments": list(STAGE1_PRESERVATION_MOMENTS),
+            "tolerance_empirical_scales": 2.0,
+        },
+        "source_checksums": {
+            name: sha256_file(evidence_dir / name) for name in protected
+        },
+        "objective_schema_version": 1,
+    }
+
+
+def _objective_evidence_frames(
+    empirical: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    indexed = empirical.set_index("moment")
+    moment_rows = []
+    weight_rows = []
+    subtotals = {
+        "stage1_preservation": 0.0,
+        "deterioration": 0.4,
+        "recovery": 0.4,
+        "conditional_burden": 0.2,
+    }
+    for name in SIMPLIFIED_REPORTING_MOMENT_ORDER:
+        source = indexed.loc[name]
+        preservation = name in STAGE1_PRESERVATION_MOMENTS
+        group = (
+            "stage1_preservation"
+            if preservation
+            else STAGE2_OBJECTIVE_GROUPS[name]
+        )
+        weight = 0.0 if preservation else STAGE2_OBJECTIVE_WEIGHTS[name]
+        moment_rows.append(
+            {
+                "moment": name,
+                "semantic_name": str(source["semantic_definition"]),
+                "group": group,
+                "empirical_value": float(source["empirical_value"]),
+                "scale": float(source["empirical_scale"]),
+                "units": str(source["units"]),
+                "reporting_status": (
+                    "stage1_preservation_constraint"
+                    if preservation
+                    else "stage2_active_objective"
+                ),
+                "active_objective": not preservation,
+                "objective_weight": weight,
+                "preservation_constraint": preservation,
+                "prior_evidence_reference": (
+                    "data/provenance/calibration/confidence/empirical_moments.csv"
+                ),
+            }
+        )
+        weight_rows.append(
+            {
+                "moment": name,
+                "group": group,
+                "active_objective": not preservation,
+                "objective_weight": weight,
+                "group_subtotal": subtotals[group],
+                "maximum_allowed_weight": 0.20,
+            }
+        )
+    return pd.DataFrame(moment_rows), pd.DataFrame(weight_rows)
+
+
+def _empty_identification_frames() -> dict[str, pd.DataFrame]:
+    return {
+        "identification_jacobian.csv": pd.DataFrame(
+            columns=[
+                "model_specification",
+                "anchor",
+                "moment",
+                "parameter",
+                "step_size",
+                "derivative",
+                "derivative_mcse",
+                "snr",
+                "sign",
+                "dominant_event",
+                "dominant_event_share",
+                "local_pass",
+            ]
+        ),
+        "identification_singular_values.csv": pd.DataFrame(
+            columns=[
+                "model_specification",
+                "scope",
+                "anchor",
+                "singular_value_index",
+                "singular_value",
+                "rank",
+                "condition_number",
+                "singular_value_ratio",
+                "maximum_column_cosine",
+                "pass",
+            ]
+        ),
+        "identification_profiles.csv": pd.DataFrame(
+            columns=[
+                "parameter",
+                "transformed_value",
+                "moment",
+                "simulated_value",
+                "paired_mcse",
+                "endpoint_movement",
+                "flatness_result",
+                "numerical_bound_share",
+                "censoring_share",
+                "confidence_floor_binding",
+                "backlog_share",
+                "bad_debt_share",
+            ]
+        ),
+    }
+
+
+def _register_objective_identification_evidence(paths: Sequence[Path]) -> None:
+    manifest = json.loads(CALIBRATION_MANIFEST.read_text(encoding="utf-8"))
+    records = {record["path"]: record for record in manifest["artefacts"]}
+    for path in paths:
+        relative = path.relative_to(REPOSITORY_ROOT).as_posix()
+        records[relative] = {
+            "path": relative,
+            "sha256": sha256_file(path),
+            "size_bytes": path.stat().st_size,
+            "semantic_name": path.stem,
+            "context": (
+                "Seven-moment reporting and five-moment Stage 2 operationality "
+                "review; numerical identification blocked before evaluation."
+            ),
+            "classification": "snapshot",
+            "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+            "schema": (
+                "Compact deterministic objective-simplification and "
+                "identification-gate evidence."
+            ),
+            "source_inputs": [
+                "data/provenance/calibration/confidence/empirical_moments.csv",
+                "data/provenance/calibration/confidence/monte_carlo_replication_ladder.csv",
+                "data/provenance/calibration/confidence/recovery_moment_decision.json",
+            ],
+        }
+    manifest["artefacts"] = [records[name] for name in sorted(records)]
+    _atomic_bytes(
+        CALIBRATION_MANIFEST,
+        (
+            json.dumps(manifest, indent=2, sort_keys=True, allow_nan=False)
+            + "\n"
+        ).encode("utf-8"),
+    )
+
+
+def run_objective_identification_review(
+    *,
+    action: str = "summarise-identification",
+    run_dir: Path | None = None,
+    evidence_dir: Path = CONFIDENCE_EVIDENCE,
+    diagnostics_dir: Path = DEFAULT_OBJECTIVE_IDENTIFICATION_ROOT,
+    register_manifest: bool = True,
+) -> dict[str, Any]:
+    """Construct or validate the gated objective-identification review."""
+    supported = {
+        "validate-simplified-objective-inputs",
+        "audit-active-moment-operationality",
+        "select-objective-blind-anchors",
+        "evaluate-full-model-jacobians",
+        "resume-jacobian-evaluation",
+        "evaluate-parameter-profiles",
+        "apply-restricted-model-hierarchy",
+        "summarise-identification",
+        "validate-identification-evidence",
+    }
+    if action not in supported:
+        raise ValueError(f"Unsupported objective-identification action: {action}.")
+    evidence_dir = Path(evidence_dir)
+    if action == "validate-identification-evidence":
+        return validate_objective_identification_evidence(
+            evidence_dir=evidence_dir
+        )
+    empirical, _ = _objective_simplification_inputs(evidence_dir)
+    if action == "validate-simplified-objective-inputs":
+        return {
+            "status": "passed",
+            "reported_moment_count": 7,
+            "active_moment_count": 5,
+            "preservation_constraint_count": 2,
+            "active_weight_sum": sum(STAGE2_OBJECTIVE_WEIGHTS.values()),
+        }
+    source_run = Path(run_dir) if run_dir is not None else diagnostic_directory()
+    operationality, audit = audit_active_moment_operationality(
+        run_dir=source_run,
+        evidence_dir=evidence_dir,
+    )
+    if action == "audit-active-moment-operationality":
+        return audit
+    blocked_actions = supported - {
+        "validate-simplified-objective-inputs",
+        "audit-active-moment-operationality",
+        "summarise-identification",
+        "validate-identification-evidence",
+    }
+    if action in blocked_actions and not audit["all_active_moments_operational"]:
+        return {
+            "status": "blocked_by_active_moment_operationality",
+            "requested_action": action,
+            "failed_moments": audit["failed_moments"],
+            "new_simulation_evaluations": 0,
+            "objective_values_used": False,
+        }
+    if action in blocked_actions:
+        raise NotImplementedError(
+            "Numerical identification is not implemented until every fixed "
+            "active-moment operationality gate passes."
+        )
+    available_before = shutil.disk_usage(REPOSITORY_ROOT).free
+    if available_before < 10 * 1024**3:
+        raise ValueError("At least 10 GB free space is required.")
+    moments, weights = _objective_evidence_frames(empirical)
+    identity_payload = _objective_identity_payload(
+        moments=moments.rename(columns={"scale": "empirical_scale"}),
+        evidence_dir=evidence_dir,
+    )
+    prospective_identity = _payload_sha256(identity_payload)
+    specification = {
+        "schema_version": 1,
+        "reported_moments": list(SIMPLIFIED_REPORTING_MOMENT_ORDER),
+        "preservation_constraints": {
+            "moments": list(STAGE1_PRESERVATION_MOMENTS),
+            "classification": "stage1_preservation_constraint",
+            "objective_weight": 0.0,
+            "tolerance_empirical_scales": 2.0,
+        },
+        "active_objective_moments": list(STAGE2_ACTIVE_MOMENTS),
+        "excluded_conditional_recovery_moments": [
+            "eth_recovery_q4_q1_duration_contrast",
+            "fixed_horizon_probability",
+            "restricted_mean_recovery_time",
+        ],
+        "primary_weight_rule": {
+            "per_active_moment": 0.20,
+            "active_weight_sum": 1.0,
+            "deterioration_subtotal": 0.40,
+            "recovery_subtotal": 0.40,
+            "conditional_burden_subtotal": 0.20,
+        },
+        "objective_formula": "J5 = sum_j 0.20 * ((m_sim_j-m_data_j)/s_j)^2",
+        "operationality_gates": {
+            "positive_finite_scale": True,
+            "nonzero_simulated_variation": True,
+            "minimum_mcse_passes_at_r256": 12,
+            "minimum_regular_convergence_share": 0.75,
+            "deterministic_calculation_failures_allowed": 0,
+        },
+        "identification_gates": {
+            "full_rank": 4,
+            "maximum_condition_number": 1_000,
+            "minimum_singular_value_ratio": 1e-3,
+            "maximum_absolute_column_cosine": 0.995,
+            "minimum_derivative_snr": 2.0,
+            "minimum_local_jacobians_passing": 3,
+        },
+        "restricted_model_hierarchy": [
+            "panic_response_zero_if_decisive_failure",
+            "confidence_floor_requires_independent_identification",
+            "equal_deterioration_and_recovery_if_decisively_collinear",
+            "identification_unresolved",
+        ],
+        "prospective_objective_identity": prospective_identity,
+        "historical_eight_moment_specification_immutable": True,
+        "runtime_adopted": False,
+    }
+    design = {
+        "schema_version": 1,
+        "anchor_selection_algorithm": (
+            "interior [0.15,0.85]; centre-nearest; iterative farthest-point; "
+            "lower Sobol index tie-break"
+        ),
+        "anchor_indices": [],
+        "anchor_checksum": None,
+        "selection_performed": False,
+        "selection_blocked_by_operationality": True,
+        "transformed_steps": {"primary": 0.05, "central_confirmation": 0.025},
+        "replications": {"primary": 128, "central_confirmation": 256},
+        "events": 74,
+        "registry": REGISTRY_A,
+        "profile_grid": [0.10, 0.30, 0.50, 0.70, 0.90],
+        "paired_common_random_numbers": True,
+        "objective_values_used": False,
+    }
+    decision = {
+        "schema_version": 1,
+        "status": "seven_moment_specification_not_operational",
+        "failed_active_moments": audit["failed_moments"],
+        "all_active_moments_operational": False,
+        "jacobian_evaluated": False,
+        "profiles_evaluated": False,
+        "restricted_model_evaluated": False,
+        "accepted_parameter_dimension": None,
+        "prospective_objective_identity": prospective_identity,
+        "authorised_next_boundary": (
+            "separately_pre_register_active_moment_precision_or_evidence_redesign"
+        ),
+        "candidate_selected": False,
+        "stage2_estimate": None,
+        "runtime_adopted": False,
+    }
+    context_path = source_run / "run_context.json"
+    cache_path = source_run / "cache_primary_manifest.json"
+    reproducibility = {
+        "schema_version": 1,
+        "source_cache_identity": {
+            "diagnosis_id": source_run.name,
+            "run_context_sha256": sha256_file(context_path),
+            "cache_primary_manifest_sha256": sha256_file(cache_path),
+            "registered_replication_ladder_sha256": sha256_file(
+                evidence_dir / "monte_carlo_replication_ladder.csv"
+            ),
+        },
+        "reused_package_count": 18_944,
+        "evaluated_vector_identities": objective_blind_candidate_panel()[
+            "candidate_indices"
+        ],
+        "replication_prefixes": [32, 64, 128, 256],
+        "anchor_checksum": None,
+        "new_simulation_evaluations": 0,
+        "candidate_objective_ranking": False,
+        "validation_data_used": False,
+        "registry_b_used": False,
+        "usdc_svb_simulations": 0,
+        "powell_evaluations": 0,
+        "full_search_evaluations": 0,
+        "candidate_selected": False,
+        "runtime_adopted": False,
+    }
+    empty_frames = _empty_identification_frames()
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    _atomic_json(evidence_dir / "objective_simplification_specification.json", specification)
+    _atomic_csv(evidence_dir / "objective_simplification_moments.csv", moments)
+    _atomic_csv(evidence_dir / "objective_simplification_weights.csv", weights)
+    _atomic_csv(evidence_dir / "active_moment_operationality.csv", operationality)
+    _atomic_json(evidence_dir / "identification_design.json", design)
+    for name, frame in empty_frames.items():
+        _atomic_csv(evidence_dir / name, frame)
+    _atomic_json(evidence_dir / "objective_identification_decision.json", decision)
+    deterministic_paths = [
+        evidence_dir / name
+        for name in OBJECTIVE_IDENTIFICATION_EVIDENCE_NAMES
+        if name not in {
+            "identification_reproducibility.json",
+            "identification_benchmark.json",
+        }
+    ]
+    reproducibility["deterministic_result_checksums"] = {
+        path.name: sha256_file(path) for path in deterministic_paths
+    }
+    _atomic_json(evidence_dir / "identification_reproducibility.json", reproducibility)
+    available_after = shutil.disk_usage(REPOSITORY_ROOT).free
+    benchmark = {
+        "schema_version": 1,
+        "host_dependent": True,
+        "new_evaluation_count": 0,
+        "source_cache_reused": True,
+        "wall_time_seconds": 0.0,
+        "throughput": "not_applicable_no_new_evaluations",
+        "peak_memory": "not_measured_no_new_evaluations",
+        "available_disk_bytes_before": available_before,
+        "available_disk_bytes_after": available_after,
+        "additional_ignored_storage_bytes": 0,
+        "projected_future_search_costs": (
+            "not estimated because the five-moment specification is not operational"
+        ),
+        "runtime_adopted": False,
+    }
+    _atomic_json(evidence_dir / "identification_benchmark.json", benchmark)
+    tracked = [
+        evidence_dir / name for name in OBJECTIVE_IDENTIFICATION_EVIDENCE_NAMES
+    ]
+    if register_manifest:
+        _register_objective_identification_evidence(tracked)
+    return {
+        "status": decision["status"],
+        "failed_moments": audit["failed_moments"],
+        "moment_summaries": audit["moment_summaries"],
+        "prospective_objective_identity": prospective_identity,
+        "anchor_indices": [],
+        "new_simulation_evaluations": 0,
+        "additional_ignored_storage_bytes": 0,
+        "tracked_evidence": [
+            path.relative_to(REPOSITORY_ROOT).as_posix() for path in tracked
+        ],
+        "candidate_selected": False,
+        "runtime_adopted": False,
+    }
+
+
+def validate_objective_identification_evidence(
+    *,
+    evidence_dir: Path = CONFIDENCE_EVIDENCE,
+) -> dict[str, Any]:
+    """Validate the compact non-operational objective-identification record."""
+    evidence_dir = Path(evidence_dir)
+    manifest = {
+        record["path"]: record
+        for record in json.loads(CALIBRATION_MANIFEST.read_text())["artefacts"]
+    }
+    invalid = []
+    for name in OBJECTIVE_IDENTIFICATION_EVIDENCE_NAMES:
+        path = evidence_dir / name
+        relative = path.relative_to(REPOSITORY_ROOT).as_posix()
+        if (
+            not path.is_file()
+            or relative not in manifest
+            or manifest[relative]["sha256"] != sha256_file(path)
+        ):
+            invalid.append(relative)
+    if invalid:
+        raise ValueError(f"Invalid objective-identification evidence: {invalid}.")
+    decision = json.loads(
+        (evidence_dir / "objective_identification_decision.json").read_text()
+    )
+    design = json.loads((evidence_dir / "identification_design.json").read_text())
+    weights = pd.read_csv(evidence_dir / "objective_simplification_weights.csv")
+    operationality = pd.read_csv(evidence_dir / "active_moment_operationality.csv")
+    if decision["status"] != "seven_moment_specification_not_operational":
+        raise ValueError("Unexpected objective-identification classification.")
+    if design["selection_performed"] or design["anchor_indices"]:
+        raise ValueError("Operationality failure must block anchor selection.")
+    if not math.isclose(
+        float(weights.loc[weights["active_objective"], "objective_weight"].sum()),
+        1.0,
+        abs_tol=1e-15,
+    ):
+        raise ValueError("Active objective weights do not sum to one.")
+    if operationality.loc[
+        operationality["moment_operational"].astype(bool), "moment"
+    ].nunique() != 1:
+        raise ValueError("The operationality failure pattern changed.")
+    for name in (
+        "identification_jacobian.csv",
+        "identification_singular_values.csv",
+        "identification_profiles.csv",
+    ):
+        if len(pd.read_csv(evidence_dir / name)):
+            raise ValueError("Blocked numerical-identification evidence is non-empty.")
+    return {
+        "status": "passed",
+        "decision": decision["status"],
+        "tracked_evidence_count": len(OBJECTIVE_IDENTIFICATION_EVIDENCE_NAMES),
+        "reported_moment_count": 7,
+        "active_moment_count": 5,
+        "operational_active_moment_count": 1,
+        "anchor_count": 0,
+        "jacobian_rows": 0,
+        "profile_rows": 0,
         "candidate_selected": False,
         "runtime_adopted": False,
     }

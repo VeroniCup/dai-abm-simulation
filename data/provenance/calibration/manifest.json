@@ -35,6 +35,21 @@
     },
     {
       "classification": "snapshot",
+      "context": "Seven-moment reporting and five-moment Stage 2 operationality review; numerical identification blocked before evaluation.",
+      "path": "data/provenance/calibration/confidence/active_moment_operationality.csv",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic objective-simplification and identification-gate evidence.",
+      "semantic_name": "active_moment_operationality",
+      "sha256": "b5cc7addd5f17e2e7dfb8199aaad65b0a165a818625b242a0e8c5bbc7080d32c",
+      "size_bytes": 23697,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/empirical_moments.csv",
+        "data/provenance/calibration/confidence/monte_carlo_replication_ladder.csv",
+        "data/provenance/calibration/confidence/recovery_moment_decision.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
       "context": "Conditional, non-exact historical experiment; not runtime adopted.",
       "path": "data/provenance/calibration/confidence/conditional_event_specification.json",
       "producer": "dai_sim.calibration.event_simulation",
@@ -166,6 +181,96 @@
     },
     {
       "classification": "snapshot",
+      "context": "Seven-moment reporting and five-moment Stage 2 operationality review; numerical identification blocked before evaluation.",
+      "path": "data/provenance/calibration/confidence/identification_benchmark.json",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic objective-simplification and identification-gate evidence.",
+      "semantic_name": "identification_benchmark",
+      "sha256": "284d78774f804453626ab5ccfe1b6e6eacbe2364f3e91a480e76ed557effc581",
+      "size_bytes": 467,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/empirical_moments.csv",
+        "data/provenance/calibration/confidence/monte_carlo_replication_ladder.csv",
+        "data/provenance/calibration/confidence/recovery_moment_decision.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Seven-moment reporting and five-moment Stage 2 operationality review; numerical identification blocked before evaluation.",
+      "path": "data/provenance/calibration/confidence/identification_design.json",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic objective-simplification and identification-gate evidence.",
+      "semantic_name": "identification_design",
+      "sha256": "1585d747160f6a66c79fd8c1bfe302911d3341a29f692a3e09feba75c9aab179",
+      "size_bytes": 536,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/empirical_moments.csv",
+        "data/provenance/calibration/confidence/monte_carlo_replication_ladder.csv",
+        "data/provenance/calibration/confidence/recovery_moment_decision.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Seven-moment reporting and five-moment Stage 2 operationality review; numerical identification blocked before evaluation.",
+      "path": "data/provenance/calibration/confidence/identification_jacobian.csv",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic objective-simplification and identification-gate evidence.",
+      "semantic_name": "identification_jacobian",
+      "sha256": "a29b17483d50a02a0c244badfd1f172c86a352b52e45178165412bad7fd1771d",
+      "size_bytes": 137,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/empirical_moments.csv",
+        "data/provenance/calibration/confidence/monte_carlo_replication_ladder.csv",
+        "data/provenance/calibration/confidence/recovery_moment_decision.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Seven-moment reporting and five-moment Stage 2 operationality review; numerical identification blocked before evaluation.",
+      "path": "data/provenance/calibration/confidence/identification_profiles.csv",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic objective-simplification and identification-gate evidence.",
+      "semantic_name": "identification_profiles",
+      "sha256": "eddde91014c00d53662dca6636674ea7ee1e4328fbc4aca87a5de51ac63c6eae",
+      "size_bytes": 189,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/empirical_moments.csv",
+        "data/provenance/calibration/confidence/monte_carlo_replication_ladder.csv",
+        "data/provenance/calibration/confidence/recovery_moment_decision.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Seven-moment reporting and five-moment Stage 2 operationality review; numerical identification blocked before evaluation.",
+      "path": "data/provenance/calibration/confidence/identification_reproducibility.json",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic objective-simplification and identification-gate evidence.",
+      "semantic_name": "identification_reproducibility",
+      "sha256": "ea63d64b6338ae7b0fae1cb4be1d053cad4a037549a4f6b0d995536bdbe22542",
+      "size_bytes": 1814,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/empirical_moments.csv",
+        "data/provenance/calibration/confidence/monte_carlo_replication_ladder.csv",
+        "data/provenance/calibration/confidence/recovery_moment_decision.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Seven-moment reporting and five-moment Stage 2 operationality review; numerical identification blocked before evaluation.",
+      "path": "data/provenance/calibration/confidence/identification_singular_values.csv",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic objective-simplification and identification-gate evidence.",
+      "semantic_name": "identification_singular_values",
+      "sha256": "77d12c6e7ef8760b87d6bbbfaf5786a78f771d18f1da29c1b1336a464acce773",
+      "size_bytes": 139,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/empirical_moments.csv",
+        "data/provenance/calibration/confidence/monte_carlo_replication_ladder.csv",
+        "data/provenance/calibration/confidence/recovery_moment_decision.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
       "context": "Initial objective weights only; no fit-quality reweighting has occurred.",
       "dimensions": [
         8,
@@ -263,6 +368,66 @@
       "source_inputs": [
         "data/provenance/calibration/confidence/sobol_search_specification.json",
         "data/provenance/calibration/confidence/sobol_search_candidates.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Seven-moment reporting and five-moment Stage 2 operationality review; numerical identification blocked before evaluation.",
+      "path": "data/provenance/calibration/confidence/objective_identification_decision.json",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic objective-simplification and identification-gate evidence.",
+      "semantic_name": "objective_identification_decision",
+      "sha256": "03bab361e810a50deba5daa5953f4808c2610a28184ef37f26ae3bd0a37b17e4",
+      "size_bytes": 669,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/empirical_moments.csv",
+        "data/provenance/calibration/confidence/monte_carlo_replication_ladder.csv",
+        "data/provenance/calibration/confidence/recovery_moment_decision.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Seven-moment reporting and five-moment Stage 2 operationality review; numerical identification blocked before evaluation.",
+      "path": "data/provenance/calibration/confidence/objective_simplification_moments.csv",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic objective-simplification and identification-gate evidence.",
+      "semantic_name": "objective_simplification_moments",
+      "sha256": "b6e47ccff2a5fb7fa61d91df14a79866028485a1b829461e4ca999bd416de99c",
+      "size_bytes": 2010,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/empirical_moments.csv",
+        "data/provenance/calibration/confidence/monte_carlo_replication_ladder.csv",
+        "data/provenance/calibration/confidence/recovery_moment_decision.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Seven-moment reporting and five-moment Stage 2 operationality review; numerical identification blocked before evaluation.",
+      "path": "data/provenance/calibration/confidence/objective_simplification_specification.json",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic objective-simplification and identification-gate evidence.",
+      "semantic_name": "objective_simplification_specification",
+      "sha256": "6ccf13a85940e909ad650ff57b83a3f5db298d199fca1866195d8d259f560af7",
+      "size_bytes": 1817,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/empirical_moments.csv",
+        "data/provenance/calibration/confidence/monte_carlo_replication_ladder.csv",
+        "data/provenance/calibration/confidence/recovery_moment_decision.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Seven-moment reporting and five-moment Stage 2 operationality review; numerical identification blocked before evaluation.",
+      "path": "data/provenance/calibration/confidence/objective_simplification_weights.csv",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic objective-simplification and identification-gate evidence.",
+      "semantic_name": "objective_simplification_weights",
+      "sha256": "a215ac9b7ffba3fc5be6d189c60c4ce3e02a8307c974740fb09a444c2e879d59",
+      "size_bytes": 769,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/empirical_moments.csv",
+        "data/provenance/calibration/confidence/monte_carlo_replication_ladder.csv",
+        "data/provenance/calibration/confidence/recovery_moment_decision.json"
       ]
     },
     {

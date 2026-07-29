@@ -876,3 +876,9 @@ all-moment MCSE gate and fitting remains blocked. The executable
 [conditional event design](confidence_event_simulation.md) now supplies the
 dormant standardised state and recovery gates without changing production
 behaviour or adopting a Stage 2 value.
+
+The latest
+[objective-simplification and identification review](confidence_objective_identification.md)
+retains the two Stage 1 preservation constraints and proposes five equally
+weighted Stage 2 moments. Four fail the fixed operationality gate, so no
+parameter vector is selected and production behaviour remains unchanged.

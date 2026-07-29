@@ -734,3 +734,10 @@ aggregation used by the completed bounded Sobol evaluation. This is a
 conditional experiment rather than exact historical replay. The search ranks
 all candidates but selects no valid top 16, fits no Stage 2 value and remains
 outside the production simulation loop.
+
+The historical eight-moment specification remains immutable as an audit
+object. A subsequent
+[seven/five-moment review](confidence_objective_identification.md) excludes
+the unsupported conditional recovery channel, but four active moments fail
+the pre-registered operationality gate. Neither objective is authorised for
+another search.

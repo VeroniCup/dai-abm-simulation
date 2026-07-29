@@ -1,0 +1,8 @@
+moment,group,active_objective,objective_weight,group_subtotal,maximum_allowed_weight
+ordinary_below_mean,stage1_preservation,False,0,0,0.20000000000000001
+ordinary_above_mean,stage1_preservation,False,0,0,0.20000000000000001
+first_six_hour_burden_mean,deterioration,True,0.20000000000000001,0.40000000000000002,0.20000000000000001
+maximum_downside_deviation_mean,deterioration,True,0.20000000000000001,0.40000000000000002,0.20000000000000001
+recovery_completion_hours_mean,recovery,True,0.20000000000000001,0.40000000000000002,0.20000000000000001
+failed_recovery_attempts_mean,recovery,True,0.20000000000000001,0.40000000000000002,0.20000000000000001
+initial_gap_q4_q1_burden_contrast,conditional_burden,True,0.20000000000000001,0.20000000000000001,0.20000000000000001

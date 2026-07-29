@@ -231,3 +231,8 @@ Compact evidence is registered under
 `data/provenance/calibration/confidence/`; generated checkpoints, interaction
 tables and timing detail remain ignored under
 `outputs/diagnostics/calibration/confidence/monte_carlo_precision/`.
+
+The later
+[objective-identification review](confidence_objective_identification.md)
+shows that removing the unsupported conditional channel is insufficient:
+only one of five active moments passes the fixed R=256 precision-count gate.

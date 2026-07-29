@@ -39,6 +39,10 @@ Active calibration guidance is organised by evidence and decision:
   fixed 48-hour probability and 168-hour restricted-mean alternatives,
   checkpoint-only precision evidence and the unsupported conditional-channel
   decision. No replacement, search or runtime adoption follows.
+- [Confidence objective simplification and identification](confidence_objective_identification.md)
+  — seven reported moments, a proposed equally weighted five-moment Stage 2
+  objective and its operationality gate. Four active moments fail the fixed
+  R=256 MCSE count, so no numerical identification or new search follows.
 - [Representative vaults](vaults.md)
 - [Liquidations](liquidations.md)
 - [Protocol parameters](protocol.md)

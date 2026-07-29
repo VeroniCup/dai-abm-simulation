@@ -221,3 +221,13 @@ parameter candidates, followed by calibrated counterfactual experiments.
 Changes to auction execution, confidence mechanics, stable-depeg transmission
 or keeper-capacity allocation require separate modelling decisions and
 authorisation.
+
+The subsequent [objective-simplification and numerical-identification
+gate](docs/calibration/confidence_objective_identification.md) defines seven
+reported moments, including two zero-weight Stage 1 preservation constraints,
+and a proposed five-moment Stage 2 objective with weight 0.20 per active
+moment. At 256 replications, active-moment MCSE pass counts are 10/16, 3/16,
+8/16, 16/16 and 10/16. Four moments therefore fail the fixed operationality
+gate. The result is **seven-moment specification not operational**. No
+anchors, Jacobians, parameter profiles, restricted model, new search or
+Stage 2 estimate were evaluated, and production behaviour remains unchanged.

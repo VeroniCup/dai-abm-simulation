@@ -2057,3 +2057,26 @@ def validate_monte_carlo_precision_evidence(
             "The precision diagnosis selected or adopted a candidate."
         )
     return result
+
+
+def validate_objective_identification_record(
+    *,
+    evidence_dir: Path,
+) -> dict[str, Any]:
+    """Validate the gated seven/five-moment review without ignored state."""
+    from .simulated_moments_diagnostics import (
+        validate_objective_identification_evidence,
+    )
+
+    result = validate_objective_identification_evidence(
+        evidence_dir=evidence_dir,
+    )
+    if result["decision"] != "seven_moment_specification_not_operational":
+        raise ValueError("Unexpected numerical-identification outcome.")
+    if result["anchor_count"] or result["jacobian_rows"] or result["profile_rows"]:
+        raise ValueError(
+            "Failed active-moment operationality did not block identification."
+        )
+    if result["candidate_selected"] or result["runtime_adopted"]:
+        raise ValueError("The identification review selected or adopted a candidate.")
+    return result

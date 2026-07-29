@@ -209,3 +209,9 @@ Persistent confidence remains absent from
 `src/dai_sim/model/simulation.py`. Production integration, runtime adoption,
 parameter fitting, final validation and counterfactual experiments are all
 separate decisions.
+
+The subsequent
+[objective-identification gate](confidence_objective_identification.md)
+reuses the candidate-invariant all-event cache without copying it or
+generating new event simulations. Its operationality failure leaves this
+mechanism dormant.

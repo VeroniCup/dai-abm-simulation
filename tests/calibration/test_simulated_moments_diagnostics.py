@@ -11,6 +11,17 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from dai_sim.calibration.identification import (
+    PROFILE_GRID,
+    central_difference_jacobian,
+    classify_parameter_profile,
+    jacobian_diagnostics,
+    paired_central_derivative,
+    permitted_restriction,
+    select_objective_blind_anchors,
+    stacked_global_jacobian,
+    step_size_stability,
+)
 from dai_sim.calibration.simulated_moments_diagnostics import (
     AGREEMENT_TOLERANCE,
     HORIZON_ONE,
@@ -32,6 +43,7 @@ from dai_sim.calibration.simulated_moments_diagnostics import (
     projected_required_replications,
     quartile_event_sets,
     recovery_empirical_evidence,
+    validate_objective_identification_evidence,
     _recovery_replacement_decision,
 )
 
@@ -457,3 +469,121 @@ def test_precision_benchmark_projections_are_unexecuted() -> None:
         for by_replication in payload["projected_unexecuted_full_search"].values()
         for projection in by_replication.values()
     )
+
+
+def test_objective_blind_anchor_selection_is_interior_and_deterministic() -> None:
+    coordinates = np.array(
+        [
+            [0.50, 0.50, 0.50, 0.50],
+            [0.15, 0.15, 0.15, 0.15],
+            [0.85, 0.15, 0.15, 0.15],
+            [0.15, 0.85, 0.15, 0.15],
+            [0.15, 0.15, 0.85, 0.15],
+            [0.15, 0.15, 0.15, 0.85],
+            [0.01, 0.50, 0.50, 0.50],
+        ]
+    )
+    first = select_objective_blind_anchors(
+        coordinates, candidate_indices=[10, 5, 4, 3, 2, 1, 0]
+    )
+    second = select_objective_blind_anchors(
+        coordinates, candidate_indices=[10, 5, 4, 3, 2, 1, 0]
+    )
+    assert first == second
+    assert first["candidate_indices"][0] == 10
+    assert len(first["candidate_indices"]) == 5
+    assert 0 not in first["candidate_indices"]
+    assert not first["objective_values_used"]
+
+
+def test_paired_central_derivative_uses_common_replication_differences() -> None:
+    result = paired_central_derivative(
+        [2.0, 4.0, 6.0, 8.0],
+        [1.0, 3.0, 5.0, 7.0],
+        step=0.05,
+        scale=2.0,
+    )
+    assert result["derivative"] == pytest.approx(5.0)
+    assert result["derivative_mcse"] == 0.0
+    assert math.isinf(result["snr"])
+
+
+def test_central_jacobian_and_rank_gates_are_exact() -> None:
+    plus = np.eye(4) * 0.1
+    minus = -plus
+    matrix = central_difference_jacobian(
+        plus, minus, scales=np.ones(4), step=0.1
+    )
+    np.testing.assert_allclose(matrix, np.eye(4))
+    diagnostics = jacobian_diagnostics(
+        matrix, derivative_snrs=np.full((4, 4), 3.0)
+    )
+    assert diagnostics["rank"] == 4
+    assert diagnostics["condition_number"] == pytest.approx(1.0)
+    assert diagnostics["singular_value_ratio"] == pytest.approx(1.0)
+    assert diagnostics["pass"]
+
+
+def test_stacked_jacobian_uses_one_over_root_five_scaling() -> None:
+    stacked = stacked_global_jacobian([np.eye(4)] * 5)
+    assert stacked.shape == (20, 4)
+    np.testing.assert_allclose(stacked[:4], np.eye(4) / math.sqrt(5.0))
+
+
+def test_step_size_stability_does_not_choose_the_better_rank() -> None:
+    stable = step_size_stability(np.eye(4), np.eye(4) * 1.1)
+    assert stable["pass"]
+    unstable = step_size_stability(np.eye(4), np.diag([1.0, 1.0, 1.0, 0.0]))
+    assert not unstable["pass"]
+    assert not unstable["rank_unchanged"]
+
+
+def test_profile_grid_and_flatness_gate_are_fixed() -> None:
+    assert PROFILE_GRID == (0.10, 0.30, 0.50, 0.70, 0.90)
+    non_flat = classify_parameter_profile(
+        [0.0, 0.2, 0.4, 0.6, 1.0],
+        empirical_scale=1.0,
+        paired_endpoint_mcse=0.1,
+    )
+    assert non_flat["non_flat"]
+    flat = classify_parameter_profile(
+        [0.0, 0.01, 0.02, 0.01, 0.1],
+        empirical_scale=1.0,
+        paired_endpoint_mcse=0.01,
+    )
+    assert flat["flat"]
+
+
+def test_restricted_model_hierarchy_never_uses_objective_fit() -> None:
+    assert permitted_restriction(
+        flat_parameters=["panic_response"],
+        signal_failures=[],
+        decisive_collinear_pair=None,
+    ) == "panic_response_zero"
+    assert permitted_restriction(
+        flat_parameters=["confidence_floor"],
+        signal_failures=[],
+        decisive_collinear_pair=None,
+    ) == "confidence_floor_requires_independent_identification"
+    assert permitted_restriction(
+        flat_parameters=[],
+        signal_failures=[],
+        decisive_collinear_pair=(
+            "deterioration_adjustment",
+            "recovery_adjustment",
+        ),
+    ) == "equal_deterioration_and_recovery_adjustment"
+    assert permitted_restriction(
+        flat_parameters=["recovery_adjustment"],
+        signal_failures=["deterioration_adjustment"],
+        decisive_collinear_pair=None,
+    ) == "identification_unresolved"
+
+
+def test_non_operational_evidence_blocks_all_numerical_identification() -> None:
+    result = validate_objective_identification_evidence()
+    assert result["decision"] == "seven_moment_specification_not_operational"
+    assert result["operational_active_moment_count"] == 1
+    assert result["anchor_count"] == 0
+    assert result["jacobian_rows"] == 0
+    assert result["profile_rows"] == 0

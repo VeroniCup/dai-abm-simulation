@@ -653,6 +653,32 @@ SIMULATED_CORE_MOMENT_ORDER = (
     "eth_recovery_q4_q1_duration_contrast",
 )
 
+STAGE1_PRESERVATION_MOMENTS = (
+    "ordinary_below_mean",
+    "ordinary_above_mean",
+)
+STAGE2_ACTIVE_MOMENTS = (
+    "first_six_hour_burden_mean",
+    "maximum_downside_deviation_mean",
+    "recovery_completion_hours_mean",
+    "failed_recovery_attempts_mean",
+    "initial_gap_q4_q1_burden_contrast",
+)
+SIMPLIFIED_REPORTING_MOMENT_ORDER = (
+    *STAGE1_PRESERVATION_MOMENTS,
+    *STAGE2_ACTIVE_MOMENTS,
+)
+STAGE2_OBJECTIVE_WEIGHTS = {
+    name: 0.20 for name in STAGE2_ACTIVE_MOMENTS
+}
+STAGE2_OBJECTIVE_GROUPS = {
+    "first_six_hour_burden_mean": "deterioration",
+    "maximum_downside_deviation_mean": "deterioration",
+    "recovery_completion_hours_mean": "recovery",
+    "failed_recovery_attempts_mean": "recovery",
+    "initial_gap_q4_q1_burden_contrast": "conditional_burden",
+}
+
 
 @dataclass(frozen=True)
 class SimulatedCoreMoments:
@@ -665,6 +691,97 @@ class SimulatedCoreMoments:
     equal_event_weighting: bool
     objective_evaluated: bool
     diagnostic_moments_excluded: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class FiveMomentObjective:
+    """Pure five-moment Stage 2 objective with preservation diagnostics."""
+
+    total_objective: float
+    moment_contributions: dict[str, float]
+    standardised_discrepancies: dict[str, float]
+    group_subtotals: dict[str, float]
+    preservation_constraint_status: dict[str, bool]
+    objective_weights: dict[str, float]
+
+
+def validate_stage1_preservation_constraints(
+    *,
+    simulated: Mapping[str, float],
+    empirical: Mapping[str, float],
+    scales: Mapping[str, float],
+    tolerance_scales: float = 2.0,
+) -> dict[str, bool]:
+    """Check fixed Stage 1 moments without adding them to the Stage 2 loss."""
+    expected = set(STAGE1_PRESERVATION_MOMENTS)
+    if any(set(mapping) != expected for mapping in (simulated, empirical, scales)):
+        raise ValueError("Both and only the Stage 1 preservation moments are required.")
+    if not math.isfinite(tolerance_scales) or tolerance_scales <= 0.0:
+        raise ValueError("The preservation tolerance must be finite and positive.")
+    result: dict[str, bool] = {}
+    for name in STAGE1_PRESERVATION_MOMENTS:
+        values = (simulated[name], empirical[name], scales[name])
+        if not all(math.isfinite(float(value)) for value in values):
+            raise ValueError("Preservation inputs must be finite.")
+        if scales[name] <= 0.0:
+            raise ValueError("Preservation scales must be positive.")
+        result[name] = bool(
+            abs(simulated[name] - empirical[name])
+            <= tolerance_scales * scales[name]
+        )
+    return result
+
+
+def five_moment_objective(
+    *,
+    simulated: Mapping[str, float],
+    empirical: Mapping[str, float],
+    scales: Mapping[str, float],
+    preservation_simulated: Mapping[str, float],
+    preservation_empirical: Mapping[str, float],
+    preservation_scales: Mapping[str, float],
+) -> FiveMomentObjective:
+    """Calculate the equally weighted Stage 2 loss, excluding Stage 1 checks."""
+    expected = set(STAGE2_ACTIVE_MOMENTS)
+    if any(set(mapping) != expected for mapping in (simulated, empirical, scales)):
+        raise ValueError("Exactly the five active Stage 2 moments are required.")
+    if set(STAGE2_OBJECTIVE_WEIGHTS) != expected:
+        raise AssertionError("The pre-registered Stage 2 weight map is incomplete.")
+    if not math.isclose(
+        sum(STAGE2_OBJECTIVE_WEIGHTS.values()), 1.0, abs_tol=1e-15
+    ):
+        raise AssertionError("Active Stage 2 weights must sum exactly to one.")
+    discrepancies: dict[str, float] = {}
+    contributions: dict[str, float] = {}
+    subtotals = {
+        "deterioration": 0.0,
+        "recovery": 0.0,
+        "conditional_burden": 0.0,
+    }
+    for name in STAGE2_ACTIVE_MOMENTS:
+        values = (simulated[name], empirical[name], scales[name])
+        if not all(math.isfinite(float(value)) for value in values):
+            raise ValueError("Active moment inputs must be finite.")
+        if scales[name] <= 0.0:
+            raise ValueError("Active empirical scales must be positive.")
+        discrepancy = (simulated[name] - empirical[name]) / scales[name]
+        contribution = STAGE2_OBJECTIVE_WEIGHTS[name] * discrepancy**2
+        discrepancies[name] = float(discrepancy)
+        contributions[name] = float(contribution)
+        subtotals[STAGE2_OBJECTIVE_GROUPS[name]] += float(contribution)
+    preservation = validate_stage1_preservation_constraints(
+        simulated=preservation_simulated,
+        empirical=preservation_empirical,
+        scales=preservation_scales,
+    )
+    return FiveMomentObjective(
+        total_objective=float(sum(contributions.values())),
+        moment_contributions=contributions,
+        standardised_discrepancies=discrepancies,
+        group_subtotals=subtotals,
+        preservation_constraint_status=preservation,
+        objective_weights=dict(STAGE2_OBJECTIVE_WEIGHTS),
+    )
 
 
 def _metric_record(result: Any) -> dict[str, Any]:
@@ -791,6 +908,22 @@ def aggregate_simulated_core_moments(
             "burden_after_first_return",
         ),
     )
+
+
+def simplified_reported_moments(
+    core_moments: Mapping[str, float],
+) -> dict[str, float]:
+    """Return the seven reported moments without conditional recovery."""
+    missing = set(SIMPLIFIED_REPORTING_MOMENT_ORDER) - set(core_moments)
+    if missing:
+        raise ValueError(f"Simplified reporting moments are missing: {sorted(missing)}.")
+    result = {
+        name: float(core_moments[name])
+        for name in SIMPLIFIED_REPORTING_MOMENT_ORDER
+    }
+    if not all(math.isfinite(value) for value in result.values()):
+        raise ValueError("Simplified reporting moments must be finite.")
+    return result
 
 
 def sobol_candidates(

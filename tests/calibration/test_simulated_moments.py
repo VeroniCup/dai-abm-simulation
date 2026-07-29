@@ -16,6 +16,10 @@ from dai_sim.calibration.market import (
 from dai_sim.calibration.simulated_moments import (
     PANIC_RESPONSE_UPPER_BOUND,
     SIMULATED_CORE_MOMENT_ORDER,
+    SIMPLIFIED_REPORTING_MOMENT_ORDER,
+    STAGE1_PRESERVATION_MOMENTS,
+    STAGE2_ACTIVE_MOMENTS,
+    STAGE2_OBJECTIVE_WEIGHTS,
     StructuralParameters,
     aggregate_simulated_core_moments,
     boundary_model_descriptions,
@@ -23,12 +27,15 @@ from dai_sim.calibration.simulated_moments import (
     derive_seed,
     fixed_horizon_recovery_indicator,
     fixed_strata_q4_q1_contrast,
+    five_moment_objective,
     moment_objective,
     restricted_recovery_time,
     select_search_events,
     sobol_candidates,
     structural_to_transformed,
+    simplified_reported_moments,
     transformed_to_structural,
+    validate_stage1_preservation_constraints,
 )
 
 
@@ -312,3 +319,62 @@ def test_simulated_moments_reject_missing_events_and_duplicate_replications() ->
                 "ordinary_above_mean": -0.1,
             },
         )
+
+
+def test_simplified_reporting_schema_has_two_constraints_and_five_active_moments() -> None:
+    assert len(SIMPLIFIED_REPORTING_MOMENT_ORDER) == 7
+    assert len(STAGE1_PRESERVATION_MOMENTS) == 2
+    assert len(STAGE2_ACTIVE_MOMENTS) == 5
+    assert set(SIMPLIFIED_REPORTING_MOMENT_ORDER) == (
+        set(STAGE1_PRESERVATION_MOMENTS) | set(STAGE2_ACTIVE_MOMENTS)
+    )
+    assert "eth_recovery_q4_q1_duration_contrast" not in (
+        SIMPLIFIED_REPORTING_MOMENT_ORDER
+    )
+    assert set(STAGE2_OBJECTIVE_WEIGHTS.values()) == {0.20}
+    assert sum(STAGE2_OBJECTIVE_WEIGHTS.values()) == pytest.approx(1.0)
+
+
+def test_five_moment_objective_has_fixed_contributions_and_group_subtotals() -> None:
+    empirical = {name: 0.0 for name in STAGE2_ACTIVE_MOMENTS}
+    simulated = {name: 1.0 for name in STAGE2_ACTIVE_MOMENTS}
+    scales = {name: 2.0 for name in STAGE2_ACTIVE_MOMENTS}
+    preservation = {name: 0.0 for name in STAGE1_PRESERVATION_MOMENTS}
+    result = five_moment_objective(
+        simulated=simulated,
+        empirical=empirical,
+        scales=scales,
+        preservation_simulated=preservation,
+        preservation_empirical=preservation,
+        preservation_scales={name: 1.0 for name in preservation},
+    )
+    assert result.total_objective == pytest.approx(0.25)
+    assert all(
+        value == pytest.approx(0.05)
+        for value in result.moment_contributions.values()
+    )
+    assert result.group_subtotals == pytest.approx(
+        {"deterioration": 0.10, "recovery": 0.10, "conditional_burden": 0.05}
+    )
+    assert all(result.preservation_constraint_status.values())
+
+
+def test_stage1_preservation_failure_is_a_constraint_not_an_objective_term() -> None:
+    empirical = {name: 0.0 for name in STAGE1_PRESERVATION_MOMENTS}
+    status = validate_stage1_preservation_constraints(
+        simulated={
+            STAGE1_PRESERVATION_MOMENTS[0]: 2.01,
+            STAGE1_PRESERVATION_MOMENTS[1]: 0.0,
+        },
+        empirical=empirical,
+        scales={name: 1.0 for name in STAGE1_PRESERVATION_MOMENTS},
+    )
+    assert not status[STAGE1_PRESERVATION_MOMENTS[0]]
+    assert status[STAGE1_PRESERVATION_MOMENTS[1]]
+
+
+def test_simplified_report_filters_historical_conditional_recovery() -> None:
+    core = {name: float(index) for index, name in enumerate(SIMULATED_CORE_MOMENT_ORDER)}
+    report = simplified_reported_moments(core)
+    assert tuple(report) == SIMPLIFIED_REPORTING_MOMENT_ORDER
+    assert "eth_recovery_q4_q1_duration_contrast" not in report

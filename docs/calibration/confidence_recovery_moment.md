@@ -151,3 +151,9 @@ No runtime profile, sensitivity, experiment definition, recovery gate,
 parameter bound, Stage 1 estimate, residual representation or event
 trajectory changes. Registry B, Powell optimisation and USDC/SVB final
 validation are outside this pass.
+
+The subsequent
+[objective-simplification review](confidence_objective_identification.md)
+excludes every conditional recovery moment but finds that four of five
+remaining active moments fail the fixed operationality gate. The proposed
+simplified objective therefore does not authorise a new search.

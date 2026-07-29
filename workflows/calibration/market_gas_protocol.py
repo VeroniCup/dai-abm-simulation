@@ -52,6 +52,7 @@ from dai_sim.calibration.simulated_moments_diagnostics import (
     run_extended_horizon_diagnosis,
     run_replication_ladder,
     run_recovery_moment_redesign,
+    run_objective_identification_review,
     summarise_precision_diagnosis,
     validate_completed_diagnosis,
     validate_diagnostic_cache,
@@ -77,6 +78,7 @@ def build_parser() -> argparse.ArgumentParser:
             "smm-search",
             "smm-precision",
             "recovery-redesign",
+            "objective-identification",
         ),
         default="phase2a",
     )
@@ -212,6 +214,30 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         help="Ignored output directory for recovery-redesign diagnostics.",
     )
+    parser.add_argument(
+        "--identification-action",
+        choices=(
+            "validate-simplified-objective-inputs",
+            "audit-active-moment-operationality",
+            "select-objective-blind-anchors",
+            "evaluate-full-model-jacobians",
+            "resume-jacobian-evaluation",
+            "evaluate-parameter-profiles",
+            "apply-restricted-model-hierarchy",
+            "summarise-identification",
+            "validate-identification-evidence",
+        ),
+        default="validate-identification-evidence",
+        help=(
+            "Objective-blind simplified-objective identification review; "
+            "operationality failure blocks all numerical evaluations."
+        ),
+    )
+    parser.add_argument(
+        "--identification-diagnostics-dir",
+        type=Path,
+        help="Ignored output directory for bounded identification diagnostics.",
+    )
     return parser
 
 
@@ -219,6 +245,23 @@ def main() -> int:
     """Execute once and print only compact provenance, never input rows."""
     parser = build_parser()
     args = parser.parse_args()
+    if args.operation == "objective-identification":
+        keyword_arguments = {
+            "action": args.identification_action,
+            "evidence_dir": args.evidence_dir.resolve(),
+            "register_manifest": (
+                args.evidence_dir.resolve() == CONFIDENCE_EVIDENCE.resolve()
+            ),
+        }
+        if args.precision_root is not None:
+            keyword_arguments["run_dir"] = args.precision_root.resolve()
+        if args.identification_diagnostics_dir is not None:
+            keyword_arguments["diagnostics_dir"] = (
+                args.identification_diagnostics_dir.resolve()
+            )
+        result = run_objective_identification_review(**keyword_arguments)
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return 0
     if args.operation == "recovery-redesign":
         keyword_arguments = {
             "action": args.recovery_action,
