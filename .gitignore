@@ -91,6 +91,13 @@ data/provenance/calibration/confidence/*
 !data/provenance/calibration/confidence/sobol_search_top16.json
 !data/provenance/calibration/confidence/sobol_search_reproducibility.json
 !data/provenance/calibration/confidence/sobol_search_benchmark.json
+!data/provenance/calibration/confidence/monte_carlo_precision_specification.json
+!data/provenance/calibration/confidence/monte_carlo_estimator_audit.json
+!data/provenance/calibration/confidence/monte_carlo_candidate_panel.json
+!data/provenance/calibration/confidence/monte_carlo_replication_ladder.csv
+!data/provenance/calibration/confidence/recovery_censoring_diagnosis.json
+!data/provenance/calibration/confidence/monte_carlo_precision_decision.json
+!data/provenance/calibration/confidence/monte_carlo_precision_benchmark.json
 
 # Domain-owned provenance. Detailed operational records stay ignored; selected
 # durable entry points remain tracked.

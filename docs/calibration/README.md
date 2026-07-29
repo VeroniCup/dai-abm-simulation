@@ -31,6 +31,10 @@ Active calibration guidance is organised by evidence and decision:
   — immutable candidate-invariant cache, spawned candidate evaluation, atomic
   resume and deterministic ranking. The 256-candidate search is complete, but
   the fixed MCSE gate permits no top-16 all-event follow-up.
+- [Confidence precision diagnosis](confidence_precision_diagnosis.md) —
+  hierarchical MCSE audit, objective-blind replication ladder and
+  recovery-censoring continuation. The recovery moment is not operationally
+  identifiable under the registered design; no candidate is selected.
 - [Representative vaults](vaults.md)
 - [Liquidations](liquidations.md)
 - [Protocol parameters](protocol.md)

@@ -2023,3 +2023,37 @@ def run_phase2a_review(
             else None
         ),
     }
+
+
+def validate_monte_carlo_precision_evidence(
+    *,
+    run_dir: Path,
+    evidence_dir: Path,
+) -> dict[str, Any]:
+    """Validate the bounded confidence precision diagnosis only.
+
+    The import is deliberately local so ordinary Phase 2A validation neither
+    loads ignored diagnosis state nor changes its established behaviour.
+    """
+    from .simulated_moments_diagnostics import validate_completed_diagnosis
+
+    result = validate_completed_diagnosis(
+        run_dir=run_dir,
+        evidence_dir=evidence_dir,
+    )
+    forbidden_nonzero = (
+        "top16_count",
+        "powell_evaluations",
+        "registry_b_evaluations",
+        "usdc_svb_simulations",
+        "final_validation_simulations",
+    )
+    if any(int(result[name]) != 0 for name in forbidden_nonzero):
+        raise ValueError(
+            "The precision diagnosis crossed a protected calibration boundary."
+        )
+    if result["candidate_selected"] or result["runtime_adopted"]:
+        raise ValueError(
+            "The precision diagnosis selected or adopted a candidate."
+        )
+    return result

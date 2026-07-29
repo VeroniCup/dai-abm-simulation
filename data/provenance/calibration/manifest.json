@@ -183,6 +183,90 @@
     },
     {
       "classification": "snapshot",
+      "context": "Pre-registered Monte Carlo precision and recovery-censoring diagnosis; no parameter selection or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/monte_carlo_candidate_panel.json",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic calibration evidence; host timing is confined to the benchmark artefact.",
+      "semantic_name": "monte_carlo_candidate_panel",
+      "sha256": "af802a5a5a152fa80ed53a7711e7e98f2fad19c67de008aef2291fcbc221678b",
+      "size_bytes": 5554,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/sobol_search_specification.json",
+        "data/provenance/calibration/confidence/sobol_search_candidates.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Pre-registered Monte Carlo precision and recovery-censoring diagnosis; no parameter selection or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/monte_carlo_estimator_audit.json",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic calibration evidence; host timing is confined to the benchmark artefact.",
+      "semantic_name": "monte_carlo_estimator_audit",
+      "sha256": "4ca2992ffc789de6ed33ffb159d876358c60e0532e6db7ab5789544ee1be4009",
+      "size_bytes": 8383,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/sobol_search_specification.json",
+        "data/provenance/calibration/confidence/sobol_search_candidates.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Pre-registered Monte Carlo precision and recovery-censoring diagnosis; no parameter selection or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/monte_carlo_precision_benchmark.json",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic calibration evidence; host timing is confined to the benchmark artefact.",
+      "semantic_name": "monte_carlo_precision_benchmark",
+      "sha256": "0eec310099238784dd438782efd3e864f3e1ec5302d5f7bce21035c37f484caa",
+      "size_bytes": 2935,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/sobol_search_specification.json",
+        "data/provenance/calibration/confidence/sobol_search_candidates.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Pre-registered Monte Carlo precision and recovery-censoring diagnosis; no parameter selection or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/monte_carlo_precision_decision.json",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic calibration evidence; host timing is confined to the benchmark artefact.",
+      "semantic_name": "monte_carlo_precision_decision",
+      "sha256": "3fb5451a677b5d62cb0699dc588f82c1bec027f12356fa238de878463199c264",
+      "size_bytes": 470,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/sobol_search_specification.json",
+        "data/provenance/calibration/confidence/sobol_search_candidates.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Pre-registered Monte Carlo precision and recovery-censoring diagnosis; no parameter selection or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/monte_carlo_precision_specification.json",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic calibration evidence; host timing is confined to the benchmark artefact.",
+      "semantic_name": "monte_carlo_precision_specification",
+      "sha256": "8257cf16ad98b778b6840737ceb1be6e1eacc6a369ee4c295a59437ea9a07f59",
+      "size_bytes": 4500,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/sobol_search_specification.json",
+        "data/provenance/calibration/confidence/sobol_search_candidates.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Pre-registered Monte Carlo precision and recovery-censoring diagnosis; no parameter selection or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/monte_carlo_replication_ladder.csv",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic calibration evidence; host timing is confined to the benchmark artefact.",
+      "semantic_name": "monte_carlo_replication_ladder",
+      "sha256": "57aa5b6a055e90f3ee75da6cf64fc17683c44326a5765032cef58444a5ce8131",
+      "size_bytes": 282595,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/sobol_search_specification.json",
+        "data/provenance/calibration/confidence/sobol_search_candidates.csv"
+      ]
+    },
+    {
+      "classification": "snapshot",
       "context": "Contains no Stage 2 parameter estimate and nothing is runtime adopted.",
       "path": "data/provenance/calibration/confidence/parameter_bounds.json",
       "producer": "dai_sim.calibration.market",
@@ -192,6 +276,20 @@
       "size_bytes": 762,
       "source_inputs": [
         "docs/calibration/confidence_simulated_moments.md"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Pre-registered Monte Carlo precision and recovery-censoring diagnosis; no parameter selection or runtime adoption.",
+      "path": "data/provenance/calibration/confidence/recovery_censoring_diagnosis.json",
+      "producer": "dai_sim.calibration.simulated_moments_diagnostics",
+      "schema": "Compact deterministic calibration evidence; host timing is confined to the benchmark artefact.",
+      "semantic_name": "recovery_censoring_diagnosis",
+      "sha256": "1ae97176e609cd16b9aeb950b7e3f3861fbd30b475929c0a4defdecac0aef5eb",
+      "size_bytes": 28120,
+      "source_inputs": [
+        "data/provenance/calibration/confidence/sobol_search_specification.json",
+        "data/provenance/calibration/confidence/sobol_search_candidates.csv"
       ]
     },
     {

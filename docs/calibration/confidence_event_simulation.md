@@ -8,6 +8,11 @@ evaluation. It is owned by
 `src/dai_sim/calibration/event_simulation.py`, is calibration-only and has no
 production caller. No runtime profile enables persistent confidence.
 
+The bounded [precision diagnosis](confidence_precision_diagnosis.md) extends
+the same deterministic paths to diagnose censoring only. Its first 792 hours
+match this simulator exactly; no future observed DAI data, final-validation
+event or runtime integration is introduced.
+
 This implementation validates interfaces and computational feasibility. The
 separate [Sobol-search execution layer](confidence_sobol_search.md) reuses this
 mechanism and its exact event metrics to rank the fixed candidate design. The

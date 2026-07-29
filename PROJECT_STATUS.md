@@ -184,6 +184,17 @@ completed but insufficient valid candidates**; the all-event follow-up,
 Powell, registry B, final validation, a final Stage 2 estimate and behavioural
 runtime integration have not begun.
 
+The subsequent [Monte Carlo precision and recovery-censoring
+diagnosis](docs/calibration/confidence_precision_diagnosis.md) verifies that
+the existing MCSE estimator is the correct conditional hierarchical
+estimator. An objective-blind 16-candidate ladder has regular convergence and
+improves materially when all 74 calibration events are used, but most
+projected requirements exceed 2,048 replications. Only three of 15,603
+792-hour censored runs recover when the same paths are extended. The registered
+recovery moment is therefore **not operationally identifiable** under the
+fixed design. No candidate is selected; a future pass must pre-register any
+simplification or replacement before rerunning a search.
+
 The dormant [conditional event simulation](docs/calibration/confidence_event_simulation.md)
 is also implemented. It uses a standardised 500-vault, 2.5 million DAI
 ETH-core state, observed ETH paths, registered Stage 1 residual blocks and

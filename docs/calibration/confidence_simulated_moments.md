@@ -40,6 +40,13 @@ resumable process parallelism. This remains calibration evidence rather than
 behavioural adoption: it does not fit a final vector, run the all-event
 follow-up or alter production behaviour.
 
+The later [precision and censoring
+diagnosis](confidence_precision_diagnosis.md) leaves this objective unchanged.
+It verifies the hierarchical MCSE estimator, finds regular convergence but
+predominantly structural non-recovery, and classifies the registered recovery
+moment as not operationally identifiable. Any simplification or replacement
+requires a separate pre-registration; no candidate is selected here.
+
 ## 2. Why the predictive route is closed
 
 The binary persistence design has no positive outcome. The continuous
@@ -702,6 +709,12 @@ gate at 32 replications, so the declared top-16 rule cannot authorise an
 all-event follow-up. Any redesign of uncertainty estimation or replication
 count requires a separate methodological decision; it cannot be inferred from
 candidate fit.
+
+The completed precision diagnosis resolves the uncertainty-estimator question:
+the existing estimator is valid, but most all-event replication projections
+exceed 2,048 and horizon extension produces almost no additional recoveries.
+The next boundary is therefore pre-registration of a simplified or replacement
+recovery moment, not an enlarged continuation of this search.
 
 The moment set is feasible for an infrastructure pass, not evidence that the
 four parameters are identified. No behavioural coefficient has been fitted or

@@ -25,6 +25,7 @@ def test_help_does_not_require_the_ignored_panel() -> None:
     assert "confidence-infrastructure" in result.stdout
     assert "event-simulation" in result.stdout
     assert "smm-search" in result.stdout
+    assert "smm-precision" in result.stdout
 
 
 def test_confidence_operation_requires_explicit_input(monkeypatch) -> None:
@@ -231,3 +232,93 @@ def test_search_workflow_rejects_unauthorised_operations(unsupported) -> None:
     parser = market_gas_protocol.build_parser()
     with pytest.raises(SystemExit):
         parser.parse_args(["smm-search", unsupported])
+
+
+def test_precision_audit_is_local_and_objective_blind(monkeypatch, tmp_path) -> None:
+    observed = {}
+    monkeypatch.setattr(
+        market_gas_protocol,
+        "audit_completed_search",
+        lambda: observed.update(called=True) or {"candidate_selected": False},
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "market_gas_protocol.py",
+            "smm-precision",
+            "--precision-action",
+            "audit",
+            "--precision-root",
+            str(tmp_path),
+        ],
+    )
+    assert market_gas_protocol.main() == 0
+    assert observed == {"called": True}
+
+
+def test_precision_resume_forwards_only_fixed_workers(monkeypatch, tmp_path) -> None:
+    observed = {}
+    monkeypatch.setattr(
+        market_gas_protocol,
+        "run_replication_ladder",
+        lambda **kwargs: observed.update(kwargs) or {"status": "passed"},
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "market_gas_protocol.py",
+            "smm-precision",
+            "--precision-action",
+            "resume-ladder",
+            "--precision-root",
+            str(tmp_path),
+            "--workers",
+            "3",
+        ],
+    )
+    assert market_gas_protocol.main() == 0
+    assert observed["run_dir"] == tmp_path.resolve()
+    assert observed["workers"] == 3
+    assert observed["resume"]
+
+
+def test_precision_summary_does_not_select_or_adopt(monkeypatch, tmp_path) -> None:
+    observed = {}
+    monkeypatch.setattr(
+        market_gas_protocol,
+        "summarise_precision_diagnosis",
+        lambda **kwargs: observed.update(kwargs)
+        or {"candidate_selected": False, "runtime_adopted": False},
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "market_gas_protocol.py",
+            "smm-precision",
+            "--precision-action",
+            "summarise",
+            "--precision-root",
+            str(tmp_path / "run"),
+            "--evidence-dir",
+            str(tmp_path / "evidence"),
+        ],
+    )
+    assert market_gas_protocol.main() == 0
+    assert observed["run_dir"] == (tmp_path / "run").resolve()
+    assert observed["evidence_dir"] == (tmp_path / "evidence").resolve()
+    assert not observed["register_manifest"]
+
+
+@pytest.mark.parametrize(
+    "unsupported",
+    ["--powell", "--registry-b", "--final-validation", "--optimise"],
+)
+def test_precision_workflow_rejects_optimisation_and_validation_flags(
+    unsupported,
+) -> None:
+    parser = market_gas_protocol.build_parser()
+    with pytest.raises(SystemExit):
+        parser.parse_args(["smm-precision", unsupported])

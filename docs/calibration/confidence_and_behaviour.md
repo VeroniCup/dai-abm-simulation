@@ -19,6 +19,12 @@ interfaces, Stage 1 estimator, event catalogue and search infrastructure are
 implemented. The fixed 256-candidate search is complete, but its all-moment
 MCSE gate admits no candidate, so Stage 2 fitting and runtime integration
 remain blocked. See the [Sobol search record](confidence_sobol_search.md).
+The subsequent [precision and recovery-censoring
+diagnosis](confidence_precision_diagnosis.md) verifies the MCSE calculation
+but finds predominantly structural non-recovery and an operationally
+impractical replication requirement. It selects no candidate and authorises
+only a future pre-registered simplification or replacement of the recovery
+moment.
 
 Confidence is a latent modelling state. It is not an observed Maker variable,
 a wallet label or a survey measure. Historical DAI prices, collateral returns,

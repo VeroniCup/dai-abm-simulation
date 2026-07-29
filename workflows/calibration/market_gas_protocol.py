@@ -42,6 +42,19 @@ from dai_sim.calibration.simulated_moments_search import (
     validate_search_cache,
     validate_serial_parallel,
 )
+from dai_sim.calibration.simulated_moments_diagnostics import (
+    HORIZON_TWO,
+    PRIMARY_HORIZON,
+    audit_completed_search,
+    diagnostic_directory,
+    objective_blind_candidate_panel,
+    prepare_diagnostic_cache,
+    run_extended_horizon_diagnosis,
+    run_replication_ladder,
+    summarise_precision_diagnosis,
+    validate_completed_diagnosis,
+    validate_diagnostic_cache,
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -61,6 +74,7 @@ def build_parser() -> argparse.ArgumentParser:
             "confidence-infrastructure",
             "event-simulation",
             "smm-search",
+            "smm-precision",
         ),
         default="phase2a",
     )
@@ -148,6 +162,32 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Explicitly recover a verified stale search lock.",
     )
+    parser.add_argument(
+        "--precision-action",
+        choices=(
+            "audit",
+            "panel",
+            "prepare-cache",
+            "validate-cache",
+            "run-ladder",
+            "resume-ladder",
+            "prepare-extended-cache",
+            "run-extended",
+            "resume-extended",
+            "summarise",
+            "validate",
+        ),
+        default="validate",
+        help=(
+            "Explicit Monte Carlo precision operation; never selects, "
+            "optimises or validates a final parameter vector."
+        ),
+    )
+    parser.add_argument(
+        "--precision-root",
+        type=Path,
+        help="Ignored root containing resumable precision-diagnosis state.",
+    )
     return parser
 
 
@@ -155,6 +195,73 @@ def main() -> int:
     """Execute once and print only compact provenance, never input rows."""
     parser = build_parser()
     args = parser.parse_args()
+    if args.operation == "smm-precision":
+        run_dir = (
+            args.precision_root.resolve()
+            if args.precision_root is not None
+            else diagnostic_directory(evidence_dir=args.evidence_dir.resolve())
+        )
+        workers = args.workers or 4
+        if workers < 1 or workers > 6:
+            parser.error("--workers must be between 1 and 6")
+        if args.precision_action == "audit":
+            result = audit_completed_search()
+        elif args.precision_action == "panel":
+            result = objective_blind_candidate_panel()
+        elif args.precision_action == "prepare-cache":
+            if args.input is None:
+                parser.error("smm-precision prepare-cache requires --input")
+            result = prepare_diagnostic_cache(
+                run_dir=run_dir,
+                panel_path=args.input.resolve(),
+                evidence_dir=args.evidence_dir.resolve(),
+                workers=workers,
+                horizon=PRIMARY_HORIZON,
+            )
+        elif args.precision_action == "validate-cache":
+            result = validate_diagnostic_cache(
+                run_dir, horizon=PRIMARY_HORIZON
+            )
+        elif args.precision_action in {"run-ladder", "resume-ladder"}:
+            result = run_replication_ladder(
+                run_dir=run_dir,
+                workers=workers,
+                resume=args.precision_action == "resume-ladder",
+            )
+        elif args.precision_action == "prepare-extended-cache":
+            if args.input is None:
+                parser.error(
+                    "smm-precision prepare-extended-cache requires --input"
+                )
+            result = prepare_diagnostic_cache(
+                run_dir=run_dir,
+                panel_path=args.input.resolve(),
+                evidence_dir=args.evidence_dir.resolve(),
+                workers=workers,
+                horizon=HORIZON_TWO,
+            )
+        elif args.precision_action in {"run-extended", "resume-extended"}:
+            result = run_extended_horizon_diagnosis(
+                run_dir=run_dir,
+                workers=workers,
+                resume=args.precision_action == "resume-extended",
+            )
+        elif args.precision_action == "summarise":
+            result = summarise_precision_diagnosis(
+                run_dir=run_dir,
+                evidence_dir=args.evidence_dir.resolve(),
+                register_manifest=(
+                    args.evidence_dir.resolve()
+                    == CONFIDENCE_EVIDENCE.resolve()
+                ),
+            )
+        else:
+            result = validate_completed_diagnosis(
+                run_dir=run_dir,
+                evidence_dir=args.evidence_dir.resolve(),
+            )
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return 0
     if args.operation == "smm-search":
         identity, _ = load_search_identity(args.evidence_dir.resolve())
         run_dir = search_directory(identity, args.search_root.resolve())

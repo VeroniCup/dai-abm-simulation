@@ -149,3 +149,15 @@ candidates**.
 No replication was added, no threshold was relaxed and no candidate was
 retried in response to this result. The all-event stage, Powell, registry B,
 final validation and runtime adoption remain blocked.
+
+## 13. Subsequent precision diagnosis
+
+The bounded [Monte Carlo precision and recovery-censoring
+diagnosis](confidence_precision_diagnosis.md) verifies the existing
+replication-index estimator against the analytic hierarchical formula. A
+16-candidate objective-blind ladder shows regular \(R^{-1/2}\) convergence and
+material improvement from 32 to 74 events, but most projected requirements
+remain above 2,048 replications. Only three of 15,603 primary-horizon censored
+runs recover under extension to 1,584 or 2,376 hours. The recovery moment is
+therefore classified as not operationally identifiable under the registered
+design. The top-16 population remains empty and no candidate is selected.
