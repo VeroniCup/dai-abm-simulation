@@ -1,0 +1,20 @@
+{
+  "confidence_calibration_rescue_closed": true,
+  "multi_collateral_experiment_authorised_in_this_pass": false,
+  "next_authorised_boundary": "Pre-register the ETH-only recovery experiment matrix, then use the same scenarios as a multi-collateral robustness dimension.",
+  "no_scenario_represents_truth": true,
+  "production_baseline": "stage1_only",
+  "runtime_adopted": false,
+  "scenario_count": 4,
+  "scenario_order": [
+    "stage1_only",
+    "confidence_resilient",
+    "confidence_central",
+    "confidence_fragile"
+  ],
+  "scenario_ranked": false,
+  "scenario_selected": null,
+  "schema_version": 1,
+  "second_coordinate": "recovery_ratio",
+  "substantive_recovery_experiment_authorised_in_this_pass": false
+}

@@ -54,6 +54,10 @@ Active calibration guidance is organised by evidence and decision:
   — objective-blind interactions among the three partial-signal families,
   including the uniform MCSE precision extension. No compatible cell is found;
   calibration rescue for the present formulation ends without selection.
+- [Persistent-confidence scenarios](../experiments/confidence_scenarios.md) —
+  four pre-registered experimental bundles reconstructed from the unchanged
+  coupled domain transform. They are scenario-defined, not calibrated,
+  ranked, selected or runtime adopted.
 - [Representative vaults](vaults.md)
 - [Liquidations](liquidations.md)
 - [Protocol parameters](protocol.md)

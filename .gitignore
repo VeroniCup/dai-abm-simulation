@@ -42,6 +42,15 @@ data/*/processed/**
 data/provenance/*
 !data/provenance/index.json
 !data/provenance/data_manifest.csv
+!data/provenance/experiments/
+data/provenance/experiments/*
+!data/provenance/experiments/manifest.json
+!data/provenance/experiments/confidence/
+data/provenance/experiments/confidence/*
+!data/provenance/experiments/confidence/confidence_scenario_specification.json
+!data/provenance/experiments/confidence/confidence_scenario_registry.csv
+!data/provenance/experiments/confidence/confidence_scenario_reproducibility.json
+!data/provenance/experiments/confidence/confidence_scenario_decision.json
 !data/provenance/calibration/
 data/provenance/calibration/*
 !data/provenance/calibration/manifest.json

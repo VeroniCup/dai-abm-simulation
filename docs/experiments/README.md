@@ -7,6 +7,9 @@ The established experiments are implemented in
 - [Oracle delay](oracle_delay.md)
 - [Shock severity](shock_severity.md)
 - [Confidence sensitivity](confidence.md)
+- [Persistent-confidence scenario registry](confidence_scenarios.md) —
+  dormant, scenario-defined Stage 2 bundles for future explicitly authorised
+  experiments; no bundle is calibrated, ranked or runtime adopted.
 - [Peg recovery](peg_recovery.md)
 - [Multi-collateral portfolios and shocks](multi_collateral.md)
 

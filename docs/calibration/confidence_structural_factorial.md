@@ -174,11 +174,14 @@ confidence remains dormant and `runtime_adopted` remains false.
 ## 19. Authorised next boundary
 
 The empirical calibration-rescue programme for the present confidence
-formulation ends. Confidence parameters may remain transparent,
-pre-specified scenario dimensions. A future structural formulation would
-require independent economic justification and a new versioned design; this
-factorial result does not authorise direct adoption or another behavioural
-search.
+formulation ends. Confidence parameters may remain transparent, pre-specified
+scenario dimensions. That boundary is now implemented by the
+[persistent-confidence scenario registry](../experiments/confidence_scenarios.md),
+which reconstructs fixed quartile bundles from the original coupled transform.
+It does not select a factorial cell or use interaction results to determine
+scenario values. A future structural formulation would require independent
+economic justification and a new versioned design; this factorial result does
+not authorise direct adoption or another behavioural search.
 
 ## 20. Limitations of the panel
 

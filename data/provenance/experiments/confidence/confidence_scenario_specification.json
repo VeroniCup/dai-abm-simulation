@@ -1,0 +1,119 @@
+{
+  "authoritative_inverse_transform": {
+    "confidence_floor": "C_min = u_C",
+    "deterioration_adjustment": "alpha_d = u_d",
+    "panic_response": "kappa_P = 2.75454 * u_P",
+    "recovery_adjustment": "alpha_r = alpha_d * rho_r",
+    "recovery_ratio": "rho_r = u_r"
+  },
+  "calibration_closure": {
+    "classification": "factorial_interactions_reveal_tradeoffs",
+    "factorial_decision_sha256": "f9ac6758dcff3597f2541c3ac68f28cb23fe66c1072b025fabf41b141443f8b9",
+    "factorial_identity": "4558b97de3c092b8cec70b9117407333527f517559b7126fa0428c5e9059ad00",
+    "precision_identity": "107c5698528ad433371a7d7f49ffde533691c30c032b92edf47b1cf5611cac52"
+  },
+  "default_scenario": "stage1_only",
+  "final_validation_used": false,
+  "fixed_scenarios": [
+    {
+      "confidence_floor": null,
+      "deterioration_adjustment": null,
+      "enabled": false,
+      "identifier": "stage1_only",
+      "interpretation": "Production baseline with accepted Stage 1 responses and residual blocks; persistent confidence and its panic term are inactive.",
+      "order": 1,
+      "panic_response": null,
+      "recovery_adjustment": null,
+      "recovery_ratio": null,
+      "scenario_defined": true,
+      "source_domain_sha256": "6e1fcb4dcc3047b03bd24d290946fa532cab70412a867bc640fac8929fb4feda",
+      "status": "core",
+      "u_C": null,
+      "u_P": null,
+      "u_d": null,
+      "u_r": null
+    },
+    {
+      "confidence_floor": "0.75",
+      "deterioration_adjustment": "0.25",
+      "enabled": true,
+      "identifier": "confidence_resilient",
+      "interpretation": "Slow deterioration, strong recovery relative to deterioration, a high confidence floor and weak panic amplification.",
+      "order": 2,
+      "panic_response": "0.688635",
+      "recovery_adjustment": "0.1875",
+      "recovery_ratio": "0.75",
+      "scenario_defined": true,
+      "source_domain_sha256": "6e1fcb4dcc3047b03bd24d290946fa532cab70412a867bc640fac8929fb4feda",
+      "status": "core",
+      "u_C": "0.75",
+      "u_P": "0.25",
+      "u_d": "0.25",
+      "u_r": "0.75"
+    },
+    {
+      "confidence_floor": "0.50",
+      "deterioration_adjustment": "0.50",
+      "enabled": true,
+      "identifier": "confidence_central",
+      "interpretation": "Componentwise midpoint of the original canonical search coordinates; it is not an estimate, empirical mean or preferred scenario.",
+      "order": 3,
+      "panic_response": "1.37727",
+      "recovery_adjustment": "0.25",
+      "recovery_ratio": "0.50",
+      "scenario_defined": true,
+      "source_domain_sha256": "6e1fcb4dcc3047b03bd24d290946fa532cab70412a867bc640fac8929fb4feda",
+      "status": "core",
+      "u_C": "0.50",
+      "u_P": "0.50",
+      "u_d": "0.50",
+      "u_r": "0.50"
+    },
+    {
+      "confidence_floor": "0.25",
+      "deterioration_adjustment": "0.75",
+      "enabled": true,
+      "identifier": "confidence_fragile",
+      "interpretation": "Rapid deterioration, weak recovery relative to deterioration, a low confidence floor and strong panic amplification.",
+      "order": 4,
+      "panic_response": "2.065905",
+      "recovery_adjustment": "0.1875",
+      "recovery_ratio": "0.25",
+      "scenario_defined": true,
+      "source_domain_sha256": "6e1fcb4dcc3047b03bd24d290946fa532cab70412a867bc640fac8929fb4feda",
+      "status": "core",
+      "u_C": "0.25",
+      "u_P": "0.75",
+      "u_d": "0.75",
+      "u_r": "0.25"
+    }
+  ],
+  "no_empirical_estimate_claim": true,
+  "no_model_selection": true,
+  "purpose": "Pre-register four transparent confidence scenarios after closure of empirical calibration rescue.",
+  "raw_recovery_adjustment_ordering": "central > resilient = fragile; no resilient-to-fragile ordering is required",
+  "recovery_ratio_interpretation": "Independent canonical recovery strength relative to the same scenario's deterioration adjustment.",
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "source_domain": {
+    "path": "data/provenance/calibration/confidence/parameter_bounds.json",
+    "sha256": "6e1fcb4dcc3047b03bd24d290946fa532cab70412a867bc640fac8929fb4feda",
+    "transform_owner": "src/dai_sim/calibration/simulated_moments.py"
+  },
+  "structural_formulation": {
+    "active_bad_debt_condition": "retained",
+    "price_stability_condition": "retained",
+    "recovery_gate": "full",
+    "residual_process": "accepted_24_hour_moving_blocks",
+    "stability_hours": 24,
+    "stress_construction": "registered_equal_weight",
+    "unresolved_backlog_condition": "retained",
+    "vault_state": "production_default"
+  },
+  "valid_ordering": {
+    "confidence_floor": "resilient > central > fragile",
+    "deterioration": "fragile > central > resilient",
+    "panic_response": "fragile > central > resilient",
+    "recovery_ratio": "resilient > central > fragile"
+  }
+}

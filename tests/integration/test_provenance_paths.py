@@ -36,6 +36,23 @@ DURABLE_PROVENANCE = (
     "data/provenance/data_manifest.csv",
     "data/provenance/index.json",
     "data/provenance/calibration/manifest.json",
+    "data/provenance/experiments/manifest.json",
+    (
+        "data/provenance/experiments/confidence/"
+        "confidence_scenario_specification.json"
+    ),
+    (
+        "data/provenance/experiments/confidence/"
+        "confidence_scenario_registry.csv"
+    ),
+    (
+        "data/provenance/experiments/confidence/"
+        "confidence_scenario_reproducibility.json"
+    ),
+    (
+        "data/provenance/experiments/confidence/"
+        "confidence_scenario_decision.json"
+    ),
     "data/gas/provenance/dune_ethereum_hourly_gas_chunk_ledger.json",
     "data/liquidations/provenance/manifest.json",
     "data/protocol/provenance/manifest.json",
@@ -61,7 +78,12 @@ def test_root_provenance_contains_only_cross_domain_entry_points() -> None:
         for path in (DATA_ROOT / "provenance").iterdir()
         if path.name != ".DS_Store"
     }
-    assert entries == {"calibration", "data_manifest.csv", "index.json"}
+    assert entries == {
+        "calibration",
+        "experiments",
+        "data_manifest.csv",
+        "index.json",
+    }
 
 
 def test_provenance_index_uses_resolvable_domain_first_paths() -> None:

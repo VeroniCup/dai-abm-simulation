@@ -219,6 +219,7 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
         "tests/calibration/test_tracked_calibration_evidence.py": 9,
         "tests/calibration/test_confidence_evidence.py": 10,
         "tests/calibration/test_confidence_infrastructure_evidence.py": 11,
+        "tests/calibration/test_confidence_scenarios.py": 37,
         "tests/calibration/test_event_simulation.py": 6,
         "tests/calibration/test_partial_identification.py": 24,
         "tests/calibration/test_simulated_moments.py": 17,

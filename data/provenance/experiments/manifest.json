@@ -1,0 +1,35 @@
+{
+  "artefact_count": 4,
+  "artefacts": [
+    {
+      "classification": "scenario_defined_experimental_design",
+      "path": "data/provenance/experiments/confidence/confidence_scenario_decision.json",
+      "runtime_adopted": false,
+      "sha256": "b66124cffea3177f5343a91e3529afde29bdf143e189ec358ddf8c5ee198aa4d",
+      "size_bytes": 719
+    },
+    {
+      "classification": "scenario_defined_experimental_design",
+      "path": "data/provenance/experiments/confidence/confidence_scenario_registry.csv",
+      "runtime_adopted": false,
+      "sha256": "d455306fd7b7553f113099b6d51f962939d8b4793439a02c4638c646a63b25da",
+      "size_bytes": 1521
+    },
+    {
+      "classification": "scenario_defined_experimental_design",
+      "path": "data/provenance/experiments/confidence/confidence_scenario_reproducibility.json",
+      "runtime_adopted": false,
+      "sha256": "b5a2f84babe6ed11bad9fa5200e8b003582023c8766ac22ad4a2c123b9b878ef",
+      "size_bytes": 4139
+    },
+    {
+      "classification": "scenario_defined_experimental_design",
+      "path": "data/provenance/experiments/confidence/confidence_scenario_specification.json",
+      "runtime_adopted": false,
+      "sha256": "d9f3de40aa1d9852c3fb1a51edc172ebf7eafc802a3b4547b003213dc7843adc",
+      "size_bytes": 4761
+    }
+  ],
+  "purpose": "Content-addressed experimental-design evidence; no parameter estimate or selected scenario.",
+  "schema_version": 1
+}

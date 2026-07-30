@@ -900,3 +900,32 @@ tests interactions among the three partial-signal families after a uniform
 constraint and therefore ends calibration rescue for the present formulation.
 Confidence remains a dormant, transparent scenario mechanism rather than an
 empirically adopted runtime process.
+
+## 15. Transparent scenario continuation
+
+Following calibration closure, the
+[persistent-confidence scenario registry](../experiments/confidence_scenarios.md)
+pre-registers `stage1_only`, `confidence_resilient`,
+`confidence_central` and `confidence_fragile`. These cases preserve the
+original parameter domain and the coupled inverse transform
+
+\[
+\alpha_d=u_d,\qquad
+\rho_r=u_r,\qquad
+\alpha_r=\alpha_d\rho_r,\qquad
+C_{\min}=u_C,\qquad
+\kappa_P=2.75454u_P.
+\]
+
+The second independent coordinate is the recovery-to-deterioration ratio
+\(\rho_r\), not raw recovery \(\alpha_r\). The fixed quartile construction
+therefore gives raw recovery 0.25 in the central scenario and 0.1875 in both
+the resilient and fragile scenarios. This does not contradict the holistic
+labels: relative recovery, deterioration, floor and panic amplification retain
+their intended joint ordering.
+
+The registry does not use candidate performance, compatibility, factorial-cell
+or final-validation outcomes to determine its values. No scenario is
+calibrated, ranked, selected or runtime adopted. Missing configuration and
+explicit `stage1_only` preserve the current production behaviour exactly; the
+three active bundles require explicit future experiment activation.

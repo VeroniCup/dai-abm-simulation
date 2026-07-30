@@ -274,3 +274,15 @@ there are no synergistic interactions, while materially mixed and
 antagonistic interactions remain. The calibration-rescue programme for the
 present confidence formulation therefore ends. No candidate, cell, parameter
 or structural model is selected, and production behaviour remains unchanged.
+
+The transparent
+[persistent-confidence scenario registry](docs/experiments/confidence_scenarios.md)
+is now pre-registered as the methodological continuation. It contains the
+unchanged Stage 1-only default plus three explicitly activated quartile
+bundles reconstructed from the original coupled Stage 2 transform. The second
+canonical coordinate is relative recovery
+\(\rho_r=\alpha_r/\alpha_d\); consequently raw recovery is 0.25 for the
+central bundle and 0.1875 for both resilient and fragile bundles. No scenario
+is calibrated, ranked, selected or adopted by a runtime profile. Substantive
+recovery and multi-collateral experiments remain future, separately
+authorised work.

@@ -4,7 +4,10 @@
 
 `data/provenance/` is the cross-domain index. It contains the authoritative
 data manifest, links into domain provenance, and compact canonical calibration
-evidence under `data/provenance/calibration/`. Each domain owns its query,
+evidence under `data/provenance/calibration/`. Compact, scenario-defined
+experiment evidence is separately owned under
+`data/provenance/experiments/`; it must not be presented as estimated
+calibration evidence. Each domain owns its query,
 execution, acquisition, processing and validation records under
 `data/<domain>/provenance/`.
 

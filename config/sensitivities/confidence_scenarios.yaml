@@ -1,0 +1,105 @@
+schema_version: 1
+registry_id: persistent-confidence-scenarios-v1
+purpose: >-
+  Transparent, pre-registered persistent-confidence scenarios for later
+  recovery and multi-collateral robustness experiments. These values are
+  scenario assumptions, not calibrated estimates.
+
+source_domain:
+  path: data/provenance/calibration/confidence/parameter_bounds.json
+  sha256: 6e1fcb4dcc3047b03bd24d290946fa532cab70412a867bc640fac8929fb4feda
+  transform_owner: src/dai_sim/calibration/simulated_moments.py
+  panic_response_upper_bound: "2.75454"
+  inverse_transform:
+    deterioration_adjustment: "alpha_d = u_d"
+    recovery_ratio: "rho_r = u_r"
+    recovery_adjustment: "alpha_r = alpha_d * rho_r"
+    confidence_floor: "C_min = u_C"
+    panic_response: "kappa_P = 2.75454 * u_P"
+
+structural_formulation:
+  vault_state: production_default
+  residual_process: accepted_24_hour_moving_blocks
+  recovery_gate: full
+  unresolved_backlog_condition: retained
+  active_bad_debt_condition: retained
+  price_stability_condition: retained
+  stress_construction: registered_equal_weight
+  stability_hours: 24
+
+scenarios:
+  - order: 1
+    identifier: stage1_only
+    enabled: false
+    canonical:
+      u_d: null
+      u_r: null
+      u_C: null
+      u_P: null
+    derived:
+      deterioration_adjustment: null
+      recovery_ratio: null
+      recovery_adjustment: null
+      confidence_floor: null
+      panic_response: null
+    interpretation: >-
+      Production baseline with accepted Stage 1 responses and residual blocks;
+      persistent confidence and its panic term are inactive.
+    status: core
+
+  - order: 2
+    identifier: confidence_resilient
+    enabled: true
+    canonical:
+      u_d: "0.25"
+      u_r: "0.75"
+      u_C: "0.75"
+      u_P: "0.25"
+    derived:
+      deterioration_adjustment: "0.25"
+      recovery_ratio: "0.75"
+      recovery_adjustment: "0.1875"
+      confidence_floor: "0.75"
+      panic_response: "0.688635"
+    interpretation: >-
+      Slow deterioration, strong recovery relative to deterioration, a high
+      confidence floor and weak panic amplification.
+    status: core
+
+  - order: 3
+    identifier: confidence_central
+    enabled: true
+    canonical:
+      u_d: "0.50"
+      u_r: "0.50"
+      u_C: "0.50"
+      u_P: "0.50"
+    derived:
+      deterioration_adjustment: "0.50"
+      recovery_ratio: "0.50"
+      recovery_adjustment: "0.25"
+      confidence_floor: "0.50"
+      panic_response: "1.37727"
+    interpretation: >-
+      Componentwise midpoint of the original canonical search coordinates;
+      it is not an estimate, empirical mean or preferred scenario.
+    status: core
+
+  - order: 4
+    identifier: confidence_fragile
+    enabled: true
+    canonical:
+      u_d: "0.75"
+      u_r: "0.25"
+      u_C: "0.25"
+      u_P: "0.75"
+    derived:
+      deterioration_adjustment: "0.75"
+      recovery_ratio: "0.25"
+      recovery_adjustment: "0.1875"
+      confidence_floor: "0.25"
+      panic_response: "2.065905"
+    interpretation: >-
+      Rapid deterioration, weak recovery relative to deterioration, a low
+      confidence floor and strong panic amplification.
+    status: core

@@ -3,6 +3,7 @@
   "purpose": "Concise entry point to authoritative empirical-data manifests after the structural data-hierarchy migration.",
   "checksum_policy": "Authoritative raw, assembled and processed artefacts are identified by SHA-256 in the detailed manifests or validation records; this index does not duplicate their complete contents.",
   "calibration_evidence_manifest": "data/provenance/calibration/manifest.json",
+  "experiment_evidence_manifest": "data/provenance/experiments/manifest.json",
   "categories": [
     {
       "category": "Phase 1A market prices",

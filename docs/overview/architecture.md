@@ -59,10 +59,14 @@ Complete user-facing profiles are:
 - `config/profiles/empirical.yaml`;
 - `config/profiles/empirical_stress.yaml`.
 
-Partial overrides live under `config/sensitivities/`. Protocol mappings and
-fixed protocol settings live under `config/protocol/`. Established experiment
-scenarios are defined in Python rather than in separate experiment
-configuration files.
+Partial overrides live under `config/sensitivities/`. The explicit dormant
+persistent-confidence scenario registry also lives there; it is an
+experiment-design owner and is not merged into a complete profile by default.
+Its activation and provenance contract is documented in
+[`confidence_scenarios.md`](../experiments/confidence_scenarios.md). Protocol
+mappings and fixed protocol settings live under `config/protocol/`.
+Established experiments remain defined in Python rather than in separate
+experiment configuration files.
 
 ## Workflows and SQL
 
