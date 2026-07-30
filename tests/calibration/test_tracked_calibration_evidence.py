@@ -35,7 +35,7 @@ def _is_ignored(relative_path: str) -> bool:
 def test_tracked_calibration_evidence_is_content_addressed() -> None:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     assert manifest["schema_version"] == 1
-    assert len(manifest["artefacts"]) == 75
+    assert len(manifest["artefacts"]) == 90
     structural_paths = {
         (
             "data/provenance/calibration/confidence/"
@@ -51,6 +51,21 @@ def test_tracked_calibration_evidence_is_content_addressed() -> None:
             "structural_incompatibility_decision.json",
             "structural_incompatibility_reproducibility.json",
             "structural_incompatibility_benchmark.json",
+            "structural_factorial_specification.json",
+            "structural_factorial_registry.json",
+            "structural_factorial_cells.csv",
+            "structural_factorial_effects.csv",
+            "structural_factorial_interactions.csv",
+            "structural_factorial_cell_summary.json",
+            "structural_factorial_interaction_summary.json",
+            "structural_factorial_decision.json",
+            "structural_factorial_reproducibility.json",
+            "structural_factorial_benchmark.json",
+            "structural_factorial_precision_specification.json",
+            "structural_factorial_precision_audit.csv",
+            "structural_factorial_precision_decision.json",
+            "structural_factorial_precision_reproducibility.json",
+            "structural_factorial_precision_benchmark.json",
         )
     }
     assert structural_paths.issubset(

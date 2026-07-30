@@ -130,6 +130,21 @@ data/provenance/calibration/confidence/*
 !data/provenance/calibration/confidence/structural_incompatibility_decision.json
 !data/provenance/calibration/confidence/structural_incompatibility_reproducibility.json
 !data/provenance/calibration/confidence/structural_incompatibility_benchmark.json
+!data/provenance/calibration/confidence/structural_factorial_specification.json
+!data/provenance/calibration/confidence/structural_factorial_registry.json
+!data/provenance/calibration/confidence/structural_factorial_cells.csv
+!data/provenance/calibration/confidence/structural_factorial_effects.csv
+!data/provenance/calibration/confidence/structural_factorial_interactions.csv
+!data/provenance/calibration/confidence/structural_factorial_cell_summary.json
+!data/provenance/calibration/confidence/structural_factorial_interaction_summary.json
+!data/provenance/calibration/confidence/structural_factorial_decision.json
+!data/provenance/calibration/confidence/structural_factorial_reproducibility.json
+!data/provenance/calibration/confidence/structural_factorial_benchmark.json
+!data/provenance/calibration/confidence/structural_factorial_precision_specification.json
+!data/provenance/calibration/confidence/structural_factorial_precision_audit.csv
+!data/provenance/calibration/confidence/structural_factorial_precision_decision.json
+!data/provenance/calibration/confidence/structural_factorial_precision_reproducibility.json
+!data/provenance/calibration/confidence/structural_factorial_precision_benchmark.json
 
 # Domain-owned provenance. Detailed operational records stay ignored; selected
 # durable entry points remain tracked.

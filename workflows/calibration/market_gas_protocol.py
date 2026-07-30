@@ -65,6 +65,10 @@ from dai_sim.calibration.structural_incompatibility import (
     DEFAULT_ROOT as DEFAULT_STRUCTURAL_DIAGNOSIS_ROOT,
     run_structural_review,
 )
+from dai_sim.calibration.structural_factorial import (
+    DEFAULT_PARENT as DEFAULT_STRUCTURAL_FACTORIAL_PARENT,
+    run_factorial_review,
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -89,6 +93,7 @@ def build_parser() -> argparse.ArgumentParser:
             "objective-identification",
             "partial-identification",
             "structural-diagnosis",
+            "structural-factorial",
         ),
         default="phase2a",
     )
@@ -300,6 +305,41 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_STRUCTURAL_DIAGNOSIS_ROOT,
         help="Ignored root for atomic structural-diagnosis checkpoints.",
     )
+    parser.add_argument(
+        "--factorial-action",
+        choices=(
+            "validate-inputs",
+            "validate-reused-cells",
+            "build-registry",
+            "run-missing-cells",
+            "resume",
+            "calculate-effects",
+            "calculate-additive-predictions",
+            "classify-interactions",
+            "classify-cells",
+            "summarise-mechanisms",
+            "reconstruct-evidence",
+            "summarise",
+            "validate",
+            "precision-validate-inputs",
+            "precision-audit-r64",
+            "precision-extend",
+            "precision-resume",
+            "precision-summarise",
+            "precision-validate",
+        ),
+        default="validate",
+        help=(
+            "Objective-blind 2^3 structural factorial diagnosis; never ranks, "
+            "optimises, selects or adopts a candidate, cell or parameter."
+        ),
+    )
+    parser.add_argument(
+        "--factorial-root",
+        type=Path,
+        default=DEFAULT_STRUCTURAL_FACTORIAL_PARENT,
+        help="Ignored parent for atomic structural-factorial checkpoints.",
+    )
     return parser
 
 
@@ -307,6 +347,18 @@ def main() -> int:
     """Execute once and print only compact provenance, never input rows."""
     parser = build_parser()
     args = parser.parse_args()
+    if args.operation == "structural-factorial":
+        workers = args.workers or 4
+        if workers < 1 or workers > 6:
+            parser.error("--workers must be between 1 and 6")
+        result = run_factorial_review(
+            action=args.factorial_action,
+            parent=args.factorial_root.resolve(),
+            evidence_dir=args.evidence_dir.resolve(),
+            workers=workers,
+        )
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return 0
     if args.operation == "structural-diagnosis":
         workers = args.workers or 4
         if workers < 1 or workers > 6:

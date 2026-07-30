@@ -224,6 +224,7 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
         "tests/calibration/test_simulated_moments.py": 17,
         "tests/calibration/test_simulated_moments_search.py": 21,
         "tests/calibration/test_simulated_moments_diagnostics.py": 38,
+        "tests/calibration/test_structural_factorial.py": 70,
         "tests/calibration/test_structural_incompatibility.py": 44,
         "tests/model/test_confidence.py": 10,
         "tests/model/test_market.py": 7,

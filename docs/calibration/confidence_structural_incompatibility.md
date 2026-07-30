@@ -233,11 +233,12 @@ is authoritative.
 
 ## 16. Authorised next boundary
 
-The only authorised methodological continuation is to pre-register a small,
-objective-blind factorial structural experiment. This pass does not authorise
-that experiment, combine variants, extend the behavioural domain, rerun a
-parameter grid or fit any value. A structural finding cannot itself authorise
-runtime adoption.
+The authorised continuation was the separately pre-registered
+[objective-blind structural factorial](confidence_structural_factorial.md).
+It combined only the three partial-signal families and preserved every
+one-factor result. The completed factorial found no compatible cell and no
+resolved constraint, so the calibration-rescue programme for the present
+confidence formulation now ends. Neither pass authorises runtime adoption.
 
 ## 17. Limitations
 

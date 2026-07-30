@@ -893,3 +893,10 @@ The subsequent [structural incompatibility
 diagnosis](confidence_structural_incompatibility.md) treats vault state,
 capacity, residuals, stress construction and recovery gates as objective-blind
 diagnostic interventions. No intervention is a revised behavioural model.
+
+The completed [structural factorial](confidence_structural_factorial.md)
+tests interactions among the three partial-signal families after a uniform
+128-replication MCSE reconciliation. It finds no compatible cell or resolved
+constraint and therefore ends calibration rescue for the present formulation.
+Confidence remains a dormant, transparent scenario mechanism rather than an
+empirically adopted runtime process.

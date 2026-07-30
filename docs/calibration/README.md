@@ -50,6 +50,10 @@ Active calibration guidance is organised by evidence and decision:
 - [Persistent-confidence structural incompatibility](confidence_structural_incompatibility.md)
   — baseline mismatch directions and a fixed, one-factor, paired structural
   panel. Diagnostic interventions are not ranked, selected or runtime adopted.
+- [Persistent-confidence structural factorial](confidence_structural_factorial.md)
+  — objective-blind interactions among the three partial-signal families,
+  including the uniform MCSE precision extension. No compatible cell is found;
+  calibration rescue for the present formulation ends without selection.
 - [Representative vaults](vaults.md)
 - [Liquidations](liquidations.md)
 - [Protocol parameters](protocol.md)

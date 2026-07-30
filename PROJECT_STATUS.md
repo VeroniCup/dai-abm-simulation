@@ -260,6 +260,17 @@ selects a candidate, structural model or runtime configuration. The completed
 diagnosis is **multiple structural families contribute**: the lower-SCR vault
 state, zero-residual mechanism diagnostic and removal of the unresolved-backlog
 gate each partially explain downside and recovery mismatches, but no variant
-resolves a constraint. The next boundary is pre-registration of a small
-objective-blind factorial structural experiment, not another behavioural
-parameter search.
+resolves a constraint.
+
+The resulting [objective-blind structural
+factorial](docs/calibration/confidence_structural_factorial.md) is complete.
+Its fixed MCSE gate initially failed at 64 replications for three candidates;
+an estimator-ownership audit found no formula error, and the pre-registered
+uniform extension to 128 replications brought every moment–effect combination
+to at least 15/16 agreement without changing the threshold. No cell has an
+inner- or outer-compatible candidate and no empirical constraint is resolved.
+The final classification is **factorial interactions reveal trade-offs**:
+there are no synergistic interactions, while materially mixed and
+antagonistic interactions remain. The calibration-rescue programme for the
+present confidence formulation therefore ends. No candidate, cell, parameter
+or structural model is selected, and production behaviour remains unchanged.

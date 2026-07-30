@@ -241,3 +241,7 @@ The subsequent [structural incompatibility
 diagnosis](confidence_structural_incompatibility.md) preserves this empty-set
 result and uses it only to decompose directional failures. It does not revise
 the support bands, rank the rejected vectors or create a new admissible set.
+Its three partial-signal families were then evaluated in the
+[objective-blind structural factorial](confidence_structural_factorial.md).
+No combined cell restores compatibility, so the empty-set conclusion remains
+unchanged and no further calibration-rescue search is authorised.
