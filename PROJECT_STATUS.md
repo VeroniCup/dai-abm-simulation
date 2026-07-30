@@ -70,13 +70,14 @@ present, and the overall classification is
 `recovery_effect_capacity_dependent`. No capacity or confidence scenario was
 selected and no runtime default changed.
 
-Two operational maintenance items remain intentionally separate from the
-registered result: the convenience reconstruction CLI has a keyword-only
-argument invocation defect, and parallel profile loading has a temporary-file
-race. They must be repaired in a separate maintenance commit with regression
-tests, without changing the experiment result or regenerating evidence under
-altered scientific code. The completed experiment used the safe serial
-execution path.
+The separate
+[experiment-infrastructure maintenance](docs/validation/experiment_infrastructure_maintenance.md)
+is complete. The convenience reconstruction CLI now respects the keyword-only
+API, and semantic profile resolution no longer materialises a shared
+temporary file during parallel worker startup. One hundred profile
+resolutions across four spawned workers completed deterministically. No
+experiment result, compact-evidence checksum, checkpoint, profile, seed,
+parameter or production default changed, and no substantive simulation ran.
 
 Detailed current guidance:
 
@@ -140,10 +141,8 @@ review reproduced all of them without changing executable behaviour.
 
 ## Next research work
 
-The next immediate implementation pass is the two-item constrained-recovery
-maintenance hardening described above. After that, the next scientific
-boundary is to freeze final multi-collateral empirical inputs and validate the
-shared-capacity multi-collateral integration contract.
+The next scientific boundary is to freeze final multi-collateral empirical
+inputs and validate the shared-capacity multi-collateral integration contract.
 Population-scale robustness, oracle-delay closure, final multi-collateral
 execution and final validation remain outstanding. Keeper candidates and the
 integrated profile remain opt-in evidence rather than adopted defaults.

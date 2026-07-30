@@ -16,7 +16,6 @@ import json
 
 import numpy as np
 import pandas as pd
-import yaml
 
 from dai_sim.model.collateral import CollateralPortfolioConfig
 from dai_sim.model.simulation import SimulationConfig, create_initial_vaults
@@ -24,8 +23,8 @@ from dai_sim.model.vault import Vault, create_vault_from_target_cr, vaults_to_da
 
 from .configuration import (
     REPOSITORY_ROOT,
+    build_empirical_configuration_bundle,
     load_configuration_payload,
-    load_empirical_configuration_bundle,
     sha256_file,
     verify_adoption_review_checksums,
 )
@@ -256,18 +255,11 @@ def load_tranche_b_configuration(
     if raw.get("mode") not in {"legacy", "empirical", "empirical_stress"}:
         raise ValueError("Tranche B mode must be a semantic profile mode.")
 
-    base_payload = dict(raw)
-    base_payload.pop("vault_initialisation", None)
-    base_payload.pop("market_process", None)
-    base_payload.pop("gas_process", None)
-    base_payload.pop("liquidation_demand", None)
-    temporary = config_path.with_suffix(".base_for_validation.yaml")
-    try:
-        temporary.write_text(yaml.safe_dump(base_payload, sort_keys=False), encoding="utf-8")
-        base_bundle = load_empirical_configuration_bundle(temporary)
-    finally:
-        if temporary.exists():
-            temporary.unlink()
+    base_bundle = build_empirical_configuration_bundle(
+        raw,
+        config_path=config_path,
+        verify_registry_checksums=False,
+    )
 
     return TrancheBConfigurationBundle(
         bundle_name=str(raw["bundle_name"]),

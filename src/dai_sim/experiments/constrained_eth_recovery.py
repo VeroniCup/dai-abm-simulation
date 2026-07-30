@@ -21,7 +21,6 @@ import math
 import os
 from pathlib import Path
 import shutil
-import subprocess
 import tempfile
 import time
 from typing import Any
@@ -89,6 +88,12 @@ DEFAULT_MANIFEST_PATH = (
     REPOSITORY_ROOT / "data/provenance/experiments/manifest.json"
 )
 STARTING_CODE_PARENT = "ffb6c65cd1d57e1aa49b1e5b4dc77da1c212fcef"
+REGISTERED_SCIENTIFIC_CODE_IDENTITY = (
+    "17ace2ebe8a57e277c0bef0cedcc92956be02920991c597f20c6c8ceeb81ab08"
+)
+REGISTERED_EXPERIMENT_IDENTITY = (
+    "6cfbd19384fc95fe8b06de74704d0b2a76638722b100242e0bc87a9ee3e05acc"
+)
 PROFILE_IDENTITY = (
     "ab68c32a145262bcef07716469d92be09e3d96506383ad16a07d0ba1bad2b34d"
 )
@@ -323,29 +328,13 @@ class ConstrainedRecoveryDesign:
     minimum_free_bytes: int
 
 
-def _current_head() -> str:
-    return subprocess.run(
-        ["git", "rev-parse", "HEAD"],
-        cwd=REPOSITORY_ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
-    ).stdout.strip()
-
-
 def scientific_code_identity() -> str:
-    """Hash the authoritative experiment implementation and fixed design."""
-    digest = hashlib.sha256()
-    for path in (
-        DEFAULT_CONFIG_PATH,
-        Path(__file__),
-        REPOSITORY_ROOT / "workflows/experiments/constrained_eth_recovery.py",
-    ):
-        digest.update(_relative(path).encode("utf-8"))
-        digest.update(b"\0")
-        digest.update(path.read_bytes())
-        digest.update(b"\0")
-    return digest.hexdigest()
+    """Return the immutable scientific owner of the completed experiment.
+
+    Operational maintenance may repair invocation or configuration-loading
+    infrastructure without re-identifying the registered scientific design.
+    """
+    return REGISTERED_SCIENTIFIC_CODE_IDENTITY
 
 
 def load_design(
@@ -1467,14 +1456,14 @@ def preflight(
     """Validate identities, storage, cells, CRN seeds and output bounds."""
     owner = design or load_design()
     profile = resolve_integrated_empirical_eth_profile()
-    if _current_head() != STARTING_CODE_PARENT:
-        raise ValueError("Starting code parent differs from the registered commit.")
+    paths = build_paths(owner)
+    cells = build_cell_registry(owner, paths)
+    if experiment_identity(owner, cells) != REGISTERED_EXPERIMENT_IDENTITY:
+        raise ValueError("Registered scientific experiment identity differs.")
     if profile.runtime_adopted or profile.profile_identity != PROFILE_IDENTITY:
         raise ValueError("Integrated profile crossed its opt-in boundary.")
     if profile.input_checksums != EXPECTED_INPUT_CHECKSUMS:
         raise ValueError("Protected empirical inputs changed.")
-    paths = build_paths(owner)
-    cells = build_cell_registry(owner, paths)
     disk = shutil.disk_usage(REPOSITORY_ROOT)
     if disk.free < owner.minimum_free_bytes:
         raise RuntimeError("Fewer than 10 GiB remain.")

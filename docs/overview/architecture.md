@@ -74,12 +74,24 @@ Compact integration-validation evidence is owned by
 `data/provenance/validation/`; detailed validation runs remain ignored under
 `outputs/diagnostics/validation/`.
 
+Semantic profile loaders validate the original immutable profile path through
+each configuration layer. They do not materialise shared
+`.base_for_validation.yaml` files. This keeps serial and concurrent worker
+initialisation semantically identical and prevents one worker from deleting a
+profile resource still needed by another. Resolved provenance paths remain
+repository-relative.
+
 ## Workflows and SQL
 
 Acquisition, processing, reconstruction, model-input construction,
 calibration and validation entry points live under `workflows/`. Historical
 diagnostic and repair tools are bounded under
 `workflows/maintenance/archive/`.
+
+Experiment evidence workflows are operational interfaces around immutable
+scientific owners. Repairing a workflow invocation does not re-identify a
+completed experiment; registered treatment, metric, seed and evidence owners
+remain frozen.
 
 Hand-maintained SQL lives in `sql/<domain>/templates/`. Executed historical or
 deterministically generated SQL lives in `sql/<domain>/generated/`, with

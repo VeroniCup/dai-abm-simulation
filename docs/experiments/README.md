@@ -16,6 +16,9 @@ The established experiments are implemented in
 - [Constrained-liquidation ETH recovery](constrained_eth_recovery.md) — the
   completed 24-cell controlled recovery × system-wide capacity × confidence
   experiment using the validated integrated empirical ETH profile.
+- [Experiment infrastructure maintenance](../validation/experiment_infrastructure_maintenance.md)
+  — operational hardening of evidence reconstruction and concurrent profile
+  initialisation with scientific evidence held immutable.
 - [Peg recovery](peg_recovery.md)
 - [Multi-collateral portfolios and shocks](multi_collateral.md)
 

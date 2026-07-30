@@ -287,15 +287,14 @@ safe execution used one worker after a four-worker host attempt exposed an
 existing temporary profile-loader race before any checkpoint was written.
 The completed run used 12,000,298 bytes and retained more than 237 GB free.
 
-The convenience workflow's `reconstruct-evidence` branch still passes its
-keyword-only `design` argument positionally. The authoritative
-`write_evidence` function was used directly and reconstructed the compact
-payloads deterministically. This wrapper issue is operational only and was
-intentionally not repaired after registration. The four-worker launch also
-exposed a temporary profile-loader race before any checkpoint was written, so
-the final unchanged-design run used one worker. Both issues require a
-separate maintenance commit with regression tests and no evidence
-regeneration under altered scientific code.
+The subsequent
+[experiment-infrastructure maintenance](../validation/experiment_infrastructure_maintenance.md)
+corrected the convenience workflow's keyword-only invocation and removed the
+unnecessary shared temporary profile used during worker initialisation.
+Four-worker profile resolution now passes without changing the registered
+scientific identity, any compact evidence byte or any checkpoint. The
+completed scientific run remains the unchanged serial execution described
+above; maintenance did not rerun it.
 
 ## 23. Comparison boundary
 
@@ -306,12 +305,8 @@ cross-study effect estimate is reported.
 
 ## 24. Next boundary
 
-The immediate maintenance boundary is to repair the reconstruction CLI call
-and synchronise the temporary profile-loader hand-off for safe parallel
-workers. That pass must not change results, regenerate evidence under altered
-scientific code, or run substantive simulations.
-
-After that maintenance pass, the next scientific boundary is:
+The operational maintenance boundary is complete. The next scientific
+boundary is:
 
 > Freeze final multi-collateral empirical inputs and validate the
 > shared-capacity multi-collateral integration contract.

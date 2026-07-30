@@ -13,8 +13,6 @@ from typing import Any
 import hashlib
 import json
 
-import yaml
-
 from .configuration import (
     REPOSITORY_ROOT,
     load_configuration_payload,
@@ -226,17 +224,10 @@ def load_tranche_c_configuration(
     if raw.get("mode") not in VALID_SEMANTIC_PROFILE_MODES:
         raise ValueError("Tranche C mode must be a semantic profile mode.")
 
-    base_payload = dict(raw)
-    base_payload.pop("market_process", None)
-    base_payload.pop("gas_process", None)
-    base_payload.pop("liquidation_demand", None)
-    temporary = config_path.with_suffix(".base_for_validation.yaml")
-    try:
-        temporary.write_text(yaml.safe_dump(base_payload, sort_keys=False), encoding="utf-8")
-        tranche_b_bundle = load_tranche_b_configuration(temporary)
-    finally:
-        if temporary.exists():
-            temporary.unlink()
+    tranche_b_bundle = load_tranche_b_configuration(
+        config_path,
+        sensitivity_paths=sensitivity_paths,
+    )
 
     return TrancheCConfigurationBundle(
         bundle_name=str(raw["bundle_name"]),
@@ -261,15 +252,10 @@ def load_tranche_d_configuration(
     if raw.get("mode") not in VALID_SEMANTIC_PROFILE_MODES:
         raise ValueError("Tranche D mode must be a semantic profile mode.")
 
-    base_payload = dict(raw)
-    base_payload.pop("liquidation_demand", None)
-    temporary = config_path.with_suffix(".base_for_validation.yaml")
-    try:
-        temporary.write_text(yaml.safe_dump(base_payload, sort_keys=False), encoding="utf-8")
-        tranche_c_bundle = load_tranche_c_configuration(temporary)
-    finally:
-        if temporary.exists():
-            temporary.unlink()
+    tranche_c_bundle = load_tranche_c_configuration(
+        config_path,
+        sensitivity_paths=sensitivity_paths,
+    )
 
     return TrancheDConfigurationBundle(
         bundle_name=str(raw["bundle_name"]),

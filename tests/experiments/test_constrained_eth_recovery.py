@@ -3,7 +3,13 @@
 from __future__ import annotations
 
 from dataclasses import replace
+from concurrent.futures import ProcessPoolExecutor
+import hashlib
+import importlib
+import inspect
 import json
+import multiprocessing
+import sys
 
 import numpy as np
 import pandas as pd
@@ -18,12 +24,15 @@ from dai_sim.experiments.constrained_eth_recovery import (
     PROFILE_IDENTITY,
     PROFILE_SHA256,
     RECOVERY_PATH_ORDER,
+    REGISTERED_EXPERIMENT_IDENTITY,
+    REGISTERED_SCIENTIFIC_CODE_IDENTITY,
     SEED_STREAMS,
     _demand_decision,
     _distribution,
     _overall_classification,
     _pair_vault_events,
     _support_classification,
+    build_evidence_payloads,
     build_cell_registry,
     build_paths,
     capacity_contrasts,
@@ -42,6 +51,74 @@ from dai_sim.inputs.integrated_profile import (
     VAULT_COUNT,
     resolve_integrated_empirical_eth_profile,
 )
+from dai_sim.inputs.configuration import REPOSITORY_ROOT, sha256_file
+from dai_sim.inputs.environment import (
+    configuration_behaviour_payload,
+    load_configuration_profile,
+)
+
+
+EXPECTED_CONSTRAINED_EVIDENCE_HASHES = {
+    "constrained_recovery_benchmark.json": (
+        "b6c8bee2c1a399bcacca0f9d765c79a3cd761033cce694f0086fe0a22cf6dcb7"
+    ),
+    "constrained_recovery_capacity_contrasts.csv": (
+        "48d540ec015495d77e5e8b6af85ed29b49727b0eebc5ccb5247fd05b4e1ebb90"
+    ),
+    "constrained_recovery_cell_summary.csv": (
+        "38818ec31c276cfd454c42917ce89d3d374c647a3eb83869fc7de30a1e990ed1"
+    ),
+    "constrained_recovery_decision.json": (
+        "b366f83fe8d217555aa7f56c8f924ad69d55e15be6f0b0a9713be364121103f6"
+    ),
+    "constrained_recovery_interactions.csv": (
+        "476ed578dcc33370b252a4803b46f9d073445dfd7122d3c88141a761492c801a"
+    ),
+    "constrained_recovery_recovery_contrasts.csv": (
+        "119a905a058d414bd063dc9fe95c620eba8892f34c88a815e0a3f52c410e4bc4"
+    ),
+    "constrained_recovery_registry.csv": (
+        "4395b90e5e57585dcee81c5f6898233e3c1deab64473601b6f5829b83e2bffb7"
+    ),
+    "constrained_recovery_reproducibility.json": (
+        "4acb1fb01a2de68c695e0ef54e21323077fadbb76b8d74d452ad0e12851adc05"
+    ),
+    "constrained_recovery_specification.json": (
+        "4016d213eed7cde1262af2cb7cc2318bcb27efd282f35669cdf8f8cb12d0ab70"
+    ),
+    "constrained_recovery_vault_rescue.csv": (
+        "7c8ef81f874a41451b111087d4890c04ae5cd525e0d9d236c31cfd4c2ac72c06"
+    ),
+}
+
+
+def _payload_checksum(payload: object) -> str:
+    encoded = (
+        json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n"
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _resolve_profiles_for_worker(_: int) -> dict[str, object]:
+    """Resolve both public profile layers in a serialisable worker target."""
+    integrated = resolve_integrated_empirical_eth_profile()
+    generic = load_configuration_profile(integrated.profile_path)
+    base_path = generic.tranche_c_bundle.tranche_b_bundle.base_bundle.config_path
+    return {
+        "profile_identity": integrated.profile_identity,
+        "profile_checksum": integrated.profile_checksum,
+        "owner_paths": dict(integrated.owner_paths),
+        "base_profile_path": base_path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "behaviour_checksum": _payload_checksum(
+            configuration_behaviour_payload(generic)
+        ),
+    }
+
+
+def _resolve_profile_path_for_worker(path: str) -> str:
+    """Resolve a caller-supplied profile so worker failures remain observable."""
+    bundle = load_configuration_profile(path)
+    return _payload_checksum(configuration_behaviour_payload(bundle))
 
 
 def _design():
@@ -336,7 +413,13 @@ def test_specification_is_result_blind_and_forbids_selection() -> None:
 def test_scientific_identity_is_deterministic_and_parent_bound() -> None:
     design = _design()
     assert experiment_identity(design) == experiment_identity(design)
-    assert len(experiment_identity(design)) == 64
+    assert experiment_identity(design) == REGISTERED_EXPERIMENT_IDENTITY
+    assert REGISTERED_EXPERIMENT_IDENTITY == (
+        "6cfbd19384fc95fe8b06de74704d0b2a76638722b100242e0bc87a9ee3e05acc"
+    )
+    assert REGISTERED_SCIENTIFIC_CODE_IDENTITY == (
+        "17ace2ebe8a57e277c0bef0cedcc92956be02920991c597f20c6c8ceeb81ab08"
+    )
     assert specification_payload(design)["starting_code_parent"] == (
         "ffb6c65cd1d57e1aa49b1e5b4dc77da1c212fcef"
     )
@@ -453,3 +536,155 @@ def test_configuration_cannot_change_capacity(tmp_path) -> None:
     changed.write_text(payload, encoding="utf-8")
     with pytest.raises(ValueError, match="capacity"):
         load_design(changed)
+
+
+def test_reconstruct_evidence_cli_uses_keyword_only_boundary(
+    monkeypatch, capsys, tmp_path
+) -> None:
+    workflow = importlib.import_module(
+        "workflows.experiments.constrained_eth_recovery"
+    )
+    calls: list[tuple[object, dict[str, object]]] = []
+    design = type("Design", (), {"evidence_dir": tmp_path})()
+    benchmark = {"wall_time_seconds": 1.0, "host_dependent": True}
+
+    def keyword_only_writer(
+        *,
+        design: object,
+        benchmark: dict[str, object],
+    ) -> dict[str, object]:
+        calls.append((design, benchmark))
+        return {
+            "operation": "reconstruct-evidence",
+            "deterministic_reconstruction": True,
+        }
+
+    monkeypatch.setattr(workflow, "load_design", lambda: design)
+    monkeypatch.setattr(workflow, "_benchmark", lambda path, owner: benchmark)
+    monkeypatch.setattr(workflow, "write_evidence", keyword_only_writer)
+    monkeypatch.setattr(
+        workflow,
+        "run_matrix",
+        lambda *args, **kwargs: pytest.fail("CLI ran a simulation."),
+    )
+    for _ in range(2):
+        monkeypatch.setattr(
+            sys,
+            "argv",
+            ["constrained_eth_recovery.py", "reconstruct-evidence"],
+        )
+        assert workflow.main() == 0
+    assert calls == [(design, benchmark), (design, benchmark)]
+    assert capsys.readouterr().out.count("deterministic_reconstruction") == 2
+
+
+def test_reconstruct_evidence_cli_rejects_invalid_operation() -> None:
+    workflow = importlib.import_module(
+        "workflows.experiments.constrained_eth_recovery"
+    )
+    with pytest.raises(SystemExit):
+        workflow.build_parser().parse_args(["not-an-operation"])
+
+
+def test_authoritative_evidence_builder_remains_keyword_only() -> None:
+    from dai_sim.experiments.constrained_eth_recovery import write_evidence
+
+    signature = inspect.signature(write_evidence)
+    assert all(
+        parameter.kind is inspect.Parameter.KEYWORD_ONLY
+        for parameter in signature.parameters.values()
+    )
+
+
+def test_evidence_payloads_reconstruct_committed_bytes_without_simulation() -> None:
+    design = _design()
+    benchmark = json.loads(
+        (
+            design.evidence_dir / "constrained_recovery_benchmark.json"
+        ).read_text(encoding="utf-8")
+    )
+    first = build_evidence_payloads(design=design, benchmark=benchmark)
+    second = build_evidence_payloads(design=design, benchmark=benchmark)
+    assert first == second
+    for name, payload in first.items():
+        assert payload == (design.evidence_dir / name).read_bytes()
+    assert {
+        name: sha256_file(design.evidence_dir / name)
+        for name in EXPECTED_CONSTRAINED_EVIDENCE_HASHES
+    } == EXPECTED_CONSTRAINED_EVIDENCE_HASHES
+
+
+def test_profile_loading_has_no_shared_temporary_materialisation() -> None:
+    inputs_root = REPOSITORY_ROOT / "src/dai_sim/inputs"
+    source = "\n".join(
+        (inputs_root / name).read_text(encoding="utf-8")
+        for name in ("vaults.py", "environment.py")
+    )
+    assert ".base_for_validation.yaml" not in source
+    assert not list((REPOSITORY_ROOT / "config/profiles").glob(
+        "*.base_for_validation.yaml"
+    ))
+
+
+def test_serial_profile_resolution_is_deterministic_and_path_stable() -> None:
+    first = _resolve_profiles_for_worker(0)
+    second = _resolve_profiles_for_worker(1)
+    assert first == second
+    assert first["profile_identity"] == PROFILE_IDENTITY
+    assert first["profile_checksum"] == PROFILE_SHA256
+    assert first["base_profile_path"] == (
+        "config/profiles/empirical_integrated_eth.yaml"
+    )
+    serialised = json.dumps(first, sort_keys=True)
+    assert str(REPOSITORY_ROOT) not in serialised
+    assert "/tmp/" not in serialised
+    assert ".base_for_validation.yaml" not in serialised
+
+
+def test_four_worker_profile_resolution_is_deterministic_and_race_free() -> None:
+    try:
+        context = multiprocessing.get_context("spawn")
+        executor = ProcessPoolExecutor(max_workers=4, mp_context=context)
+    except (PermissionError, OSError) as exc:
+        pytest.skip(
+            "Host sandbox denies process semaphores required for the "
+            f"profile-resolution stress test: {exc}"
+        )
+    try:
+        results = list(executor.map(_resolve_profiles_for_worker, range(100)))
+        missing = (
+            REPOSITORY_ROOT / "config/profiles/does_not_exist.yaml"
+        ).as_posix()
+        with pytest.raises(FileNotFoundError):
+            executor.submit(_resolve_profile_path_for_worker, missing).result()
+        recovered = executor.submit(_resolve_profiles_for_worker, 100).result()
+    finally:
+        executor.shutdown(wait=True, cancel_futures=True)
+    assert len(results) == 25 * 4
+    assert all(result == results[0] for result in results)
+    assert recovered == results[0] == _resolve_profiles_for_worker(100)
+    assert not list((REPOSITORY_ROOT / "config/profiles").glob(
+        "*.base_for_validation.yaml"
+    ))
+
+
+def test_profile_only_worker_smoke_preserves_cells_seeds_and_checkpoints() -> None:
+    design = _design()
+    identity = experiment_identity(design)
+    checkpoint_dir = design.output_root / identity / "checkpoints"
+    before = {
+        path.name: sha256_file(path)
+        for path in sorted(checkpoint_dir.glob("replication_*.json"))
+    }
+    cells = [cell.identifier for cell in build_cell_registry(design)]
+    seed = seed_record(0)
+    result = _resolve_profiles_for_worker(0)
+    after = {
+        path.name: sha256_file(path)
+        for path in sorted(checkpoint_dir.glob("replication_*.json"))
+    }
+    assert result["profile_identity"] == PROFILE_IDENTITY
+    assert [cell.identifier for cell in build_cell_registry(design)] == cells
+    assert seed_record(0) == seed
+    assert len(before) == 128
+    assert after == before

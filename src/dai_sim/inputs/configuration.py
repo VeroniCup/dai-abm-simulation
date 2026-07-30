@@ -477,26 +477,20 @@ def load_configuration_payload(
     return apply_configuration_overrides(profile, sensitivities)
 
 
-def load_empirical_configuration_bundle(
-    path: Path | str = DEFAULT_EMPIRICAL_CONFIG_PATH,
+def build_empirical_configuration_bundle(
+    raw: dict[str, Any],
     *,
+    config_path: Path | str,
     base_simulation_config: SimulationConfig | None = None,
     base_liquidation_config: LiquidationConfig | None = None,
     base_confidence_config: ConfidenceConfig | None = None,
     base_dai_market_config: DAIMarketConfig | None = None,
     verify_registry_checksums: bool = True,
 ) -> EmpiricalConfigurationBundle:
-    """
-    Load the explicit Tranche A empirical bundle.
-
-    Missing simulator fields inherit supplied base objects or dataclass
-    defaults. No default experiment path calls this function.
-    """
-    config_path = Path(path).resolve()
+    """Build one validated empirical bundle from an in-memory profile."""
+    owner_path = Path(config_path).resolve()
     if verify_registry_checksums:
         verify_adoption_review_checksums()
-
-    raw = _load_yaml_mapping(config_path, "Empirical configuration")
     _reject_unknown_keys(raw, SUPPORTED_BUNDLE_KEYS, "bundle")
 
     bundle_name = str(raw.get("bundle_name", "")).strip()
@@ -535,8 +529,8 @@ def load_empirical_configuration_bundle(
 
     return EmpiricalConfigurationBundle(
         bundle_name=bundle_name,
-        config_path=config_path,
-        config_sha256=sha256_file(config_path),
+        config_path=owner_path,
+        config_sha256=sha256_file(owner_path),
         manifest_path=manifest_path,
         manifest_sha256=(
             None if manifest_path is None else sha256_file(manifest_path)
@@ -545,6 +539,34 @@ def load_empirical_configuration_bundle(
         liquidation_config=liquidation,
         confidence_config=confidence,
         dai_market_config=dai_market,
+    )
+
+
+def load_empirical_configuration_bundle(
+    path: Path | str = DEFAULT_EMPIRICAL_CONFIG_PATH,
+    *,
+    base_simulation_config: SimulationConfig | None = None,
+    base_liquidation_config: LiquidationConfig | None = None,
+    base_confidence_config: ConfidenceConfig | None = None,
+    base_dai_market_config: DAIMarketConfig | None = None,
+    verify_registry_checksums: bool = True,
+) -> EmpiricalConfigurationBundle:
+    """
+    Load the explicit Tranche A empirical bundle.
+
+    Missing simulator fields inherit supplied base objects or dataclass
+    defaults. No default experiment path calls this function.
+    """
+    config_path = Path(path).resolve()
+    raw = _load_yaml_mapping(config_path, "Empirical configuration")
+    return build_empirical_configuration_bundle(
+        raw,
+        config_path=config_path,
+        base_simulation_config=base_simulation_config,
+        base_liquidation_config=base_liquidation_config,
+        base_confidence_config=base_confidence_config,
+        base_dai_market_config=base_dai_market_config,
+        verify_registry_checksums=verify_registry_checksums,
     )
 
 

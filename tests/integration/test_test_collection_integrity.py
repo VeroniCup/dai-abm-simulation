@@ -232,7 +232,7 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
         "tests/model/test_market.py": 7,
         "tests/workflows/test_confidence_calibration.py": 40,
         "tests/experiments/test_eth_recovery.py": 36,
-        "tests/experiments/test_constrained_eth_recovery.py": 33,
+        "tests/experiments/test_constrained_eth_recovery.py": 41,
         "tests/integration/test_integrated_empirical_eth.py": 17,
     }
     assert len(nodeids) == 420 + len(additions)

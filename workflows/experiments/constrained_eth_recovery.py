@@ -133,7 +133,7 @@ def main() -> int:
         }
     elif operation == "reconstruct-evidence":
         result = write_evidence(
-            design,
+            design=design,
             benchmark=_benchmark(args.benchmark_json, design.evidence_dir),
         )
     else:

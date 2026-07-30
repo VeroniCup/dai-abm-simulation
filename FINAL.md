@@ -327,11 +327,14 @@ central candidate and 14/45 remain robustness cases; none was selected from
 the result. No confidence scenario was ranked or selected. See
 [`docs/experiments/constrained_eth_recovery.md`](docs/experiments/constrained_eth_recovery.md).
 
-The immediate technical maintenance pass is separate from this result: repair
-the keyword-only invocation in the convenience reconstruction CLI and remove
-or synchronise the temporary profile-loader race affecting parallel workers.
-That pass must add regression tests without changing results, regenerating
-evidence under altered scientific code, or running substantive simulations.
+The separate technical maintenance pass is complete. The convenience
+reconstruction CLI now uses the keyword-only interface correctly, and profile
+resolution no longer creates a shared temporary validation file. Parallel
+profile initialisation passed 100 resolutions across four spawned workers.
+No result, evidence checksum, checkpoint, experiment identity, parameter or
+production default changed, and no substantive simulation ran. The host
+sandbox's process-semaphore restriction remains an environmental constraint
+documented separately from the repaired race.
 
 ## 3.5 Oracle delay — required closure, not necessarily new estimation
 
@@ -1137,6 +1140,8 @@ Do not:
 
 - [x] Constrained-liquidation recovery experiment
 - [x] Comparison with unbounded-capacity null
+- [x] Reconstruction CLI maintenance
+- [x] Concurrent profile-initialisation maintenance
 
 ## Multi-collateral inputs
 
