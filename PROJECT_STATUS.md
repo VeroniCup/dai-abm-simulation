@@ -58,6 +58,26 @@ caveats. The profile uses system-wide capacity 26, `direct_cost_only`,
 Stage 1-only confidence and a transparent zero-delay oracle baseline. It is
 experiment-ready but not runtime adopted.
 
+The pre-registered
+[constrained-liquidation ETH recovery experiment](docs/experiments/constrained_eth_recovery.md)
+is complete: 24 cells × 128 replications produced 3,072 valid simulations
+with common random numbers and no numerical failures. Low and central
+system-wide capacities were operational. Full-week recovery avoided mean
+liquidation debt of 7,214, 5,579 and 5,238 DAI at capacities 14, 26 and 45,
+and lowered backlog area at every capacity. Primary Stage 1-only peg outcomes
+did not change. H5a is supported, H5b is not supported, H5c and H5d are
+present, and the overall classification is
+`recovery_effect_capacity_dependent`. No capacity or confidence scenario was
+selected and no runtime default changed.
+
+Two operational maintenance items remain intentionally separate from the
+registered result: the convenience reconstruction CLI has a keyword-only
+argument invocation defect, and parallel profile loading has a temporary-file
+race. They must be repaired in a separate maintenance commit with regression
+tests, without changing the experiment result or regenerating evidence under
+altered scientific code. The completed experiment used the safe serial
+execution path.
+
 Detailed current guidance:
 
 - [Empirical framework](empirical.md)
@@ -120,12 +140,13 @@ review reproduced all of them without changing executable behaviour.
 
 ## Next research work
 
-The next authorised experimental boundary is the separately pre-registered
-constrained-liquidation recovery experiment using the validated integrated
-ETH-only profile. Population-scale robustness, oracle-delay calibration,
-multi-collateral execution and final validation remain outstanding. Keeper
-candidates and the integrated profile remain opt-in evidence rather than
-adopted defaults.
+The next immediate implementation pass is the two-item constrained-recovery
+maintenance hardening described above. After that, the next scientific
+boundary is to freeze final multi-collateral empirical inputs and validate the
+shared-capacity multi-collateral integration contract.
+Population-scale robustness, oracle-delay closure, final multi-collateral
+execution and final validation remain outstanding. Keeper candidates and the
+integrated profile remain opt-in evidence rather than adopted defaults.
 
 The behavioural-confidence calibration planning pass has resolved four core
 specification choices in the [confidence and behavioural calibration

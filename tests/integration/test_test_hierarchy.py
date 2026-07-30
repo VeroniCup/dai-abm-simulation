@@ -141,6 +141,7 @@ POST_RESTRUCTURING_FEATURE_MODULES = {
     "tests/model/test_market.py",
     "tests/workflows/test_confidence_calibration.py",
     "tests/experiments/test_eth_recovery.py",
+    "tests/experiments/test_constrained_eth_recovery.py",
     "tests/integration/test_integrated_empirical_eth.py",
 }
 EXPECTED_FIXTURES = {
@@ -206,7 +207,7 @@ def test_no_test_module_remains_at_suite_root() -> None:
 
 def test_no_placeholder_or_duplicate_test_module_exists() -> None:
     modules = sorted(TESTS_ROOT.rglob("test_*.py"))
-    assert len(modules) == 58
+    assert len(modules) == 59
     assert all(path.stat().st_size > 100 for path in modules)
     assert len({path.resolve() for path in modules}) == len(modules)
 

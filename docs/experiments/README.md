@@ -13,6 +13,9 @@ The established experiments are implemented in
 - [ETH-only peg-recovery matrix](eth_recovery_matrix.md) — the pre-registered
   16-cell recovery-path × confidence-scenario experiment using paired common
   random numbers and censored sustained-recovery estimands.
+- [Constrained-liquidation ETH recovery](constrained_eth_recovery.md) — the
+  completed 24-cell controlled recovery × system-wide capacity × confidence
+  experiment using the validated integrated empirical ETH profile.
 - [Peg recovery](peg_recovery.md)
 - [Multi-collateral portfolios and shocks](multi_collateral.md)
 

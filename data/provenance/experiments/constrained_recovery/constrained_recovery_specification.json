@@ -1,0 +1,231 @@
+{
+  "capacity": {
+    "hurdle_profile": "direct_cost_only",
+    "profiles": {
+      "shared_keeper_capacity_central": 26,
+      "shared_keeper_capacity_high": 45,
+      "shared_keeper_capacity_low": 14
+    },
+    "risk_cost_rate": 0.0,
+    "selected_profile": null,
+    "semantics": "system_wide_shared_capacity"
+  },
+  "capacity_operationality": {
+    "central_any_binding": true,
+    "central_maximum_attempts": 26,
+    "low_positive_demand_binding_share": 0.01,
+    "low_rejection_positive_replication_share": 0.25,
+    "low_replication_binding_share": 0.1
+  },
+  "cell_order": [
+    "persistent_trough__capacity_14__stage1_only",
+    "persistent_trough__capacity_14__confidence_resilient",
+    "persistent_trough__capacity_14__confidence_central",
+    "persistent_trough__capacity_14__confidence_fragile",
+    "persistent_trough__capacity_26__stage1_only",
+    "persistent_trough__capacity_26__confidence_resilient",
+    "persistent_trough__capacity_26__confidence_central",
+    "persistent_trough__capacity_26__confidence_fragile",
+    "persistent_trough__capacity_45__stage1_only",
+    "persistent_trough__capacity_45__confidence_resilient",
+    "persistent_trough__capacity_45__confidence_central",
+    "persistent_trough__capacity_45__confidence_fragile",
+    "full_week__capacity_14__stage1_only",
+    "full_week__capacity_14__confidence_resilient",
+    "full_week__capacity_14__confidence_central",
+    "full_week__capacity_14__confidence_fragile",
+    "full_week__capacity_26__stage1_only",
+    "full_week__capacity_26__confidence_resilient",
+    "full_week__capacity_26__confidence_central",
+    "full_week__capacity_26__confidence_fragile",
+    "full_week__capacity_45__stage1_only",
+    "full_week__capacity_45__confidence_resilient",
+    "full_week__capacity_45__confidence_central",
+    "full_week__capacity_45__confidence_fragile"
+  ],
+  "classification_hierarchy": [
+    "constrained_recovery_experiment_invalid",
+    "constrained_recovery_not_operational",
+    "recovery_effect_capacity_dependent",
+    "recovery_improves_solvency_not_peg",
+    "recovery_matters_under_constrained_execution",
+    "capacity_dominates_recovery",
+    "no_clear_constrained_recovery_effect"
+  ],
+  "confidence": {
+    "primary": "stage1_only",
+    "ranked": false,
+    "robustness": [
+      "confidence_resilient",
+      "confidence_central",
+      "confidence_fragile"
+    ],
+    "selected": null
+  },
+  "contrasts": {
+    "capacity": [
+      "26 - 14",
+      "45 - 26",
+      "45 - 14"
+    ],
+    "confidence": [
+      "confidence_resilient - stage1_only",
+      "confidence_central - stage1_only",
+      "confidence_fragile - stage1_only"
+    ],
+    "interactions": [
+      "recovery(14) - recovery(45)",
+      "recovery(26) - recovery(45)",
+      "recovery(14) - recovery(26)"
+    ],
+    "recovery": "full_week - persistent_trough"
+  },
+  "controlled_price_boundary": {
+    "historical_replay": false,
+    "isolates_collateral_recovery": true,
+    "path_checksums": {
+      "full_week": "f175c9111380499b2b7d71d32a4ac6f42cc3f8bc3d196c7fded95cb87a2c4d3b",
+      "persistent_trough": "fbe1e92c038a60f662e59178e77d7fcbfa0571a76d6c90494f7ec8b05f5239f5"
+    },
+    "preserves_unconditional_eth_gas_joint_distribution": false,
+    "shock_sha256": "f7370b9f2faa6c2e97ca5dddf7b28d3ccfa109ee52f635d9ff43a8893f683ea5"
+  },
+  "experiment_identity": "6cfbd19384fc95fe8b06de74704d0b2a76638722b100242e0bc87a9ee3e05acc",
+  "final_validation_data_used": false,
+  "horizon": {
+    "confirmation_tail": false,
+    "post_shock_hours": 720,
+    "pre_shock_hours": 48,
+    "total_hours": 768
+  },
+  "hypotheses": [
+    "H5a",
+    "H5b",
+    "H5c",
+    "H5d"
+  ],
+  "integrated_profile": {
+    "identifier": "empirical_integrated_eth",
+    "identity": "ab68c32a145262bcef07716469d92be09e3d96506383ad16a07d0ba1bad2b34d",
+    "runtime_adopted": false,
+    "sha256": "ea0e08f263210af3c3041843537f975ebd886fcf5130c617b0edb189218b3862",
+    "total_debt_dai": 2500000.0,
+    "vault_count": 500
+  },
+  "materiality": {
+    "backlog_area_dai_hours": 10000.0,
+    "below_peg_burden": 0.01,
+    "maximum_unresolved_tab_dai": 1000.0,
+    "paired_avoided_debt_dai": 1000.0,
+    "restricted_mean_recovery_time_hours": 24.0
+  },
+  "multi_collateral_execution": false,
+  "primary_outcomes": [
+    "paired_avoided_debt_dai",
+    "backlog_area_dai_hours",
+    "maximum_unresolved_tab_dai",
+    "cumulative_realised_bad_debt_dai",
+    "below_peg_burden",
+    "restricted_mean_recovery_time"
+  ],
+  "protected_inputs": {
+    "confidence_configuration": "86c33147f167d708e4a18191e50c39bec5056a680b13e682551317ba9b916e85",
+    "confidence_registry": "d455306fd7b7553f113099b6d51f962939d8b4793439a02c4638c646a63b25da",
+    "keeper_configuration": "e1d590508bb3e95ec6bdc2a30c41580fe211831a673dd447e793a0053a7fa848",
+    "keeper_gas": "37a5f49f4cc273b9d0d9526609be7f14b91b78939acf26e4dce00b66443e1594",
+    "keeper_registry": "58c5754ed95dead1ad283a7961fb0588496804a94f58ddb0e196a57601ee1e1b",
+    "liquidation_arrival": "cc29435bb0434237aba438ee98bded77f086704c7400bb5016e2b58703258c8a",
+    "liquidation_sequence_sensitivity": "9fdd5f3b5fb97e2dd41d0201bad34909ad05e423ad6b52f65219f49f02a1c7ed",
+    "market_gas": "b69276801bacf789f8ae91789983cc98a8a6d42d0a992940c0bcfa109ca25b7d",
+    "stage1_residual_blocks": "6f55b51acfc1da23836b3d847153bd4f68e4a38fc33fd967e9d3b795737bf28c",
+    "stage1_residual_sequence": "3fa2319cee9e1749405c0dc477e0f11ef9c31dd83c371b619bd33eda23c37c30",
+    "vault_initialisation": "5230a30aa2c2aebe69ef859ccdcbb785eb44f20a691b431f2fd01b0d16558892"
+  },
+  "recovery_definition": {
+    "band": [
+      0.995,
+      1.005
+    ],
+    "consecutive_hours": 24,
+    "restricted_mean_cap_hours": 720
+  },
+  "replications_per_cell": 128,
+  "rescue_definitions": {
+    "paired_additional_liquidation": "closed under full_week and open under persistent_trough",
+    "paired_liquidation_avoided": "closed under persistent_trough and open under full_week",
+    "recovered_before_closure": "unsafe, open, then safe before successful closure",
+    "recovered_before_execution": "unsafe, open, then safe before first selected attempt"
+  },
+  "result_blind": true,
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "scientific_code_identity": "17ace2ebe8a57e277c0bef0cedcc92956be02920991c597f20c6c8ceeb81ab08",
+  "scientific_purpose": "Test whether controlled ETH recovery rescues unsafe vaults under empirical liquidation arrivals and system-wide keeper constraints.",
+  "secondary_outcomes": [
+    "backlog_area_dai_hours",
+    "maximum_unresolved_tab_dai",
+    "cumulative_realised_bad_debt_dai",
+    "below_peg_burden",
+    "restricted_mean_recovery_time",
+    "unsafe_vault_count",
+    "peak_unsafe_share",
+    "newly_unsafe_count",
+    "cumulative_arrival_count",
+    "cumulative_attempts",
+    "cumulative_successful_closures",
+    "cumulative_capacity_rejected",
+    "cumulative_unprofitable_attempts",
+    "binding_hours",
+    "positive_demand_hours",
+    "mean_capacity_utilisation",
+    "maximum_capacity_utilisation",
+    "maximum_attempts_one_hour",
+    "cumulative_debt_repaid_dai",
+    "completed_liquidation_count",
+    "unresolved_vault_count",
+    "unresolved_tab_at_horizon_dai",
+    "maximum_backlog_duration",
+    "active_bad_debt_at_horizon_dai",
+    "maximum_active_bad_debt_dai",
+    "keeper_profit_dai",
+    "recovered_before_execution_count",
+    "recovered_before_closure_count",
+    "minimum_dai_price",
+    "maximum_negative_peg_deviation",
+    "mean_absolute_peg_deviation",
+    "hours_below_0995",
+    "hours_above_1005",
+    "first_return_time",
+    "failed_recovery_attempts",
+    "recovery_probability_168h",
+    "recovery_probability_336h",
+    "recovery_probability_720h",
+    "final_dai_price",
+    "final_peg_band_status",
+    "minimum_confidence",
+    "mean_confidence_loss",
+    "confidence_at_horizon",
+    "hours_at_confidence_floor",
+    "hours_recovery_gate_closed",
+    "first_recovery_gate_open",
+    "recovery_gate_reopenings",
+    "cumulative_panic_contribution",
+    "maximum_panic_contribution"
+  ],
+  "seed_ownership": {
+    "common_random_numbers": true,
+    "registry_id": "constrained_eth_recovery_v1",
+    "seed_registry_sha256": "fcd4b17789da5684bbbcbc3f3fcbf7825328bf593c0cf06bb4b40ffd75948b5c",
+    "streams": [
+      "vault_sampling",
+      "market_gas_blocks",
+      "keeper_gas_units",
+      "liquidation_arrivals",
+      "stage1_residual_blocks"
+    ]
+  },
+  "specification_identity": "5f0b6123c152894a2fefc76e8eb462fd3330758962bb9c8f02504dee69dd3095",
+  "starting_code_parent": "ffb6c65cd1d57e1aa49b1e5b4dc77da1c212fcef",
+  "substantive_simulations": 3072,
+  "usdc_svb_used": false
+}

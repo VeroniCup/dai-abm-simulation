@@ -150,10 +150,14 @@ not a recovery experiment.
 - Experiment ready: true
 - Runtime adopted: false
 
-The classification authorises a separately pre-registered constrained-
-liquidation recovery experiment. It does not authorise parameter tuning,
-population-scale robustness, oracle calibration, multi-collateral execution
-or final validation.
+The authorised
+[constrained-liquidation recovery experiment](../experiments/constrained_eth_recovery.md)
+is now complete. It passed all ownership and numerical gates and found a
+capacity-dependent solvency channel without a primary Stage 1 peg effect.
+This validates the profile's intended experimental use but does not change its
+`runtime_adopted: false` status or authorise parameter tuning,
+population-scale robustness, oracle calibration, final multi-collateral
+execution or final validation.
 
 The central integration treatment is capacity 26 with `direct_cost_only`.
 Capacities 14 and 45, positive hurdle candidates, population sizes 250 and
@@ -171,6 +175,7 @@ They occupy 290,413 bytes, below the 300 MB cap. The deterministic compact
 payloads were constructed twice and matched byte-for-byte, excluding only
 the explicitly host-dependent benchmark fields.
 
-No parameter or confidence coefficient was estimated, no recovery matrix or
+No parameter or confidence coefficient was estimated by this validation, no
 multi-collateral experiment ran, no final-validation observation was used,
-and no production profile or default was changed.
+and no production profile or default was changed. The later constrained
+recovery matrix used this profile without modifying it.

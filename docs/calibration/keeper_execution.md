@@ -199,11 +199,13 @@ Important limitations are:
 
 ## Next experimental boundary
 
-The separately authorised
-[integrated ETH-only validation](../validation/integrated_empirical_eth.md)
-has now assembled 500 empirical vaults, empirical market, gas and
-liquidation-arrival inputs, shared central capacity 26,
-`direct_cost_only`, and the accepted Stage 1 response/confidence settings.
-It is experiment-ready with caveats and remains opt-in. The validation
-preserves this study's candidate-only provenance and continues to describe
-the capacity as system-wide rather than collateral-specific.
+The [integrated ETH-only validation](../validation/integrated_empirical_eth.md)
+assembled 500 empirical vaults, empirical market, gas and
+liquidation-arrival inputs, shared central capacity 26, `direct_cost_only`,
+and the accepted Stage 1 response. The subsequent
+[constrained-liquidation recovery experiment](../experiments/constrained_eth_recovery.md)
+confirmed that capacities 14, 26 and 45 are operational mechanism treatments:
+higher capacity reduces backlog, while slower execution allows more vaults to
+be rescued by ETH recovery. This does not identify or select a physical
+capacity. All three values retain their candidate roles and the constraint
+remains system-wide rather than collateral-specific.

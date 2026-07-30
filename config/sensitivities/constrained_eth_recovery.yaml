@@ -1,0 +1,86 @@
+schema_version: 1
+experiment_id: constrained_eth_recovery_v1
+purpose: >-
+  Controlled ETH-only experiment testing whether collateral-price recovery
+  rescues unsafe vaults when liquidation arrivals and system-wide keeper
+  capacity are empirically constrained.
+
+integrated_profile:
+  identifier: empirical_integrated_eth
+  path: config/profiles/empirical_integrated_eth.yaml
+  identity: ab68c32a145262bcef07716469d92be09e3d96506383ad16a07d0ba1bad2b34d
+  sha256: ea0e08f263210af3c3041843537f975ebd886fcf5130c617b0edb189218b3862
+
+recovery_owner:
+  configuration: config/sensitivities/eth_recovery_matrix.yaml
+  shock_sha256: f7370b9f2faa6c2e97ca5dddf7b28d3ccfa109ee52f635d9ff43a8893f683ea5
+  paths:
+    - order: 1
+      identifier: persistent_trough
+      sha256: fbe1e92c038a60f662e59178e77d7fcbfa0571a76d6c90494f7ec8b05f5239f5
+    - order: 2
+      identifier: full_week
+      sha256: f175c9111380499b2b7d71d32a4ac6f42cc3f8bc3d196c7fded95cb87a2c4d3b
+
+keeper:
+  registry: config/sensitivities/keeper_execution.yaml
+  registry_sha256: e1d590508bb3e95ec6bdc2a30c41580fe211831a673dd447e793a0053a7fa848
+  evidence_registry_sha256: 58c5754ed95dead1ad283a7961fb0588496804a94f58ddb0e196a57601ee1e1b
+  semantics: system_wide_shared_capacity
+  hurdle_profile: direct_cost_only
+  risk_cost_rate: 0.0
+  capacities:
+    - order: 1
+      profile: shared_keeper_capacity_low
+      value: 14
+    - order: 2
+      profile: shared_keeper_capacity_central
+      value: 26
+    - order: 3
+      profile: shared_keeper_capacity_high
+      value: 45
+
+confidence:
+  registry: config/sensitivities/confidence_scenarios.yaml
+  configuration_sha256: 86c33147f167d708e4a18191e50c39bec5056a680b13e682551317ba9b916e85
+  evidence_registry_sha256: d455306fd7b7553f113099b6d51f962939d8b4793439a02c4638c646a63b25da
+  primary: stage1_only
+  order:
+    - stage1_only
+    - confidence_resilient
+    - confidence_central
+    - confidence_fragile
+
+randomness:
+  registry_id: constrained_eth_recovery_v1
+  replications_per_cell: 128
+  common_random_numbers: true
+  streams:
+    - vault_sampling
+    - market_gas_blocks
+    - keeper_gas_units
+    - liquidation_arrivals
+    - stage1_residual_blocks
+
+horizon:
+  pre_shock_hours: 48
+  post_shock_hours: 720
+  total_hours: 768
+  recovery_band_lower: 0.995
+  recovery_band_upper: 1.005
+  sustained_recovery_hours: 24
+  restricted_mean_cap_hours: 720
+
+materiality:
+  paired_avoided_debt_dai: 1000.0
+  backlog_area_dai_hours: 10000.0
+  maximum_unresolved_tab_dai: 1000.0
+  below_peg_burden: 0.01
+  restricted_mean_recovery_time_hours: 24.0
+
+output:
+  root: outputs/experiments/constrained_eth_recovery
+  compact_evidence: data/provenance/experiments/constrained_recovery
+  maximum_new_bytes: 786432000
+  minimum_free_bytes: 10737418240
+  runtime_adopted: false

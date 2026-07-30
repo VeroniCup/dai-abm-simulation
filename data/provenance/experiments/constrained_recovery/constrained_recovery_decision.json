@@ -1,0 +1,32 @@
+{
+  "H5a": "supported",
+  "H5b": "not_supported",
+  "H5c": "present",
+  "H5d": "present",
+  "authorised_next_boundary": "freeze_multi_collateral_empirical_inputs_and_validate_shared_capacity_contract",
+  "capacity_mechanism_classification": "higher_capacity_reduces_backlog",
+  "capacity_operationality": {
+    "central_capacity_operational": true,
+    "low_binding_replication_share": 0.99609375,
+    "low_capacity_operational": true,
+    "low_positive_demand_binding_share": 0.13980729265067068,
+    "low_rejection_positive_replication_share": 0.99609375,
+    "meaningful_unresolved_inventory": true
+  },
+  "capacity_selected": null,
+  "confidence_scenario_ranked": false,
+  "confidence_scenario_selected": null,
+  "no_capacity_selection": true,
+  "no_confidence_selection": true,
+  "no_parameter_recalibration": true,
+  "no_positive_hurdle": true,
+  "overall_classification": "recovery_effect_capacity_dependent",
+  "qualitative_unbounded_comparison": "The committed legacy unbounded experiment liquidated nearly all unsafe vaults immediately; this design tests the missing empirical-arrival and constrained-capacity waiting channel without a formal cross-experiment estimate.",
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "unresolved_caveats": [
+    "Controlled ETH paths break unconditional ETH-return/gas dependence.",
+    "Shared keeper capacities are partially identified.",
+    "Oracle delay and population robustness remain unresolved."
+  ]
+}

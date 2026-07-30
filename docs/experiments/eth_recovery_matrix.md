@@ -213,6 +213,12 @@ No final-validation data, USDC/SVB event, registry B, confidence calibration
 search or multi-collateral simulation enters this experiment. None of its
 scenario values is runtime adopted.
 
+The subsequent
+[constrained-liquidation experiment](constrained_eth_recovery.md) has now
+tested the missing waiting channel with empirical arrivals and shared
+capacities 14, 26 and 45. Its capacity-dependent rescue result does not revise
+this experiment's conditional unbounded-capacity null.
+
 ## 13. Reproducibility
 
 The YAML owner is

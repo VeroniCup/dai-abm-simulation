@@ -1,0 +1,157 @@
+record_type,recovery_path,capacity_profile,capacity,confidence_scenario,metric,replication_count,mean,standard_error,ci95_lower,ci95_upper,median,p05,p25,p75,p90,p95,minimum,maximum,positive_share
+within_cell,persistent_trough,shared_keeper_capacity_low,14,stage1_only,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,persistent_trough,shared_keeper_capacity_low,14,stage1_only,recovered_before_execution,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_low,14,stage1_only,recovered_before_closure,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_low,14,stage1_only,unresolved_open_vaults,128,0.1484375,0.0744813462137,0.0024540614211,0.294420938579,0,0,0,0,0,0,0,6,0.03125
+within_cell,persistent_trough,shared_keeper_capacity_low,14,confidence_resilient,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,persistent_trough,shared_keeper_capacity_low,14,confidence_resilient,recovered_before_execution,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_low,14,confidence_resilient,recovered_before_closure,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_low,14,confidence_resilient,unresolved_open_vaults,128,0.1484375,0.0744813462137,0.0024540614211,0.294420938579,0,0,0,0,0,0,0,6,0.03125
+within_cell,persistent_trough,shared_keeper_capacity_low,14,confidence_central,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,persistent_trough,shared_keeper_capacity_low,14,confidence_central,recovered_before_execution,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_low,14,confidence_central,recovered_before_closure,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_low,14,confidence_central,unresolved_open_vaults,128,0.1484375,0.0744813462137,0.0024540614211,0.294420938579,0,0,0,0,0,0,0,6,0.03125
+within_cell,persistent_trough,shared_keeper_capacity_low,14,confidence_fragile,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,persistent_trough,shared_keeper_capacity_low,14,confidence_fragile,recovered_before_execution,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_low,14,confidence_fragile,recovered_before_closure,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_low,14,confidence_fragile,unresolved_open_vaults,128,0.1484375,0.0744813462137,0.0024540614211,0.294420938579,0,0,0,0,0,0,0,6,0.03125
+within_cell,persistent_trough,shared_keeper_capacity_central,26,stage1_only,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,persistent_trough,shared_keeper_capacity_central,26,stage1_only,recovered_before_execution,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_central,26,stage1_only,recovered_before_closure,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_central,26,stage1_only,unresolved_open_vaults,128,0.109375,0.0639443107475,-0.015955849065,0.234705849065,0,0,0,0,0,0,0,6,0.0234375
+within_cell,persistent_trough,shared_keeper_capacity_central,26,confidence_resilient,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,persistent_trough,shared_keeper_capacity_central,26,confidence_resilient,recovered_before_execution,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_central,26,confidence_resilient,recovered_before_closure,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_central,26,confidence_resilient,unresolved_open_vaults,128,0.109375,0.0639443107475,-0.015955849065,0.234705849065,0,0,0,0,0,0,0,6,0.0234375
+within_cell,persistent_trough,shared_keeper_capacity_central,26,confidence_central,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,persistent_trough,shared_keeper_capacity_central,26,confidence_central,recovered_before_execution,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_central,26,confidence_central,recovered_before_closure,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_central,26,confidence_central,unresolved_open_vaults,128,0.109375,0.0639443107475,-0.015955849065,0.234705849065,0,0,0,0,0,0,0,6,0.0234375
+within_cell,persistent_trough,shared_keeper_capacity_central,26,confidence_fragile,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,persistent_trough,shared_keeper_capacity_central,26,confidence_fragile,recovered_before_execution,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_central,26,confidence_fragile,recovered_before_closure,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_central,26,confidence_fragile,unresolved_open_vaults,128,0.109375,0.0639443107475,-0.015955849065,0.234705849065,0,0,0,0,0,0,0,6,0.0234375
+within_cell,persistent_trough,shared_keeper_capacity_high,45,stage1_only,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,persistent_trough,shared_keeper_capacity_high,45,stage1_only,recovered_before_execution,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_high,45,stage1_only,recovered_before_closure,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_high,45,stage1_only,unresolved_open_vaults,128,0.109375,0.0639443107475,-0.015955849065,0.234705849065,0,0,0,0,0,0,0,6,0.0234375
+within_cell,persistent_trough,shared_keeper_capacity_high,45,confidence_resilient,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,persistent_trough,shared_keeper_capacity_high,45,confidence_resilient,recovered_before_execution,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_high,45,confidence_resilient,recovered_before_closure,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_high,45,confidence_resilient,unresolved_open_vaults,128,0.109375,0.0639443107475,-0.015955849065,0.234705849065,0,0,0,0,0,0,0,6,0.0234375
+within_cell,persistent_trough,shared_keeper_capacity_high,45,confidence_central,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,persistent_trough,shared_keeper_capacity_high,45,confidence_central,recovered_before_execution,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_high,45,confidence_central,recovered_before_closure,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_high,45,confidence_central,unresolved_open_vaults,128,0.109375,0.0639443107475,-0.015955849065,0.234705849065,0,0,0,0,0,0,0,6,0.0234375
+within_cell,persistent_trough,shared_keeper_capacity_high,45,confidence_fragile,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,persistent_trough,shared_keeper_capacity_high,45,confidence_fragile,recovered_before_execution,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_high,45,confidence_fragile,recovered_before_closure,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,persistent_trough,shared_keeper_capacity_high,45,confidence_fragile,unresolved_open_vaults,128,0.109375,0.0639443107475,-0.015955849065,0.234705849065,0,0,0,0,0,0,0,6,0.0234375
+within_cell,full_week,shared_keeper_capacity_low,14,stage1_only,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,full_week,shared_keeper_capacity_low,14,stage1_only,recovered_before_execution,128,27.6484375,0.902587449942,25.8793660981,29.4175089019,28,10.35,20.75,34,39.6,44,7,62,1
+within_cell,full_week,shared_keeper_capacity_low,14,stage1_only,recovered_before_closure,128,32.0859375,1.06586875308,29.996834744,34.175040256,32,13,23,41,48,51,8,62,1
+within_cell,full_week,shared_keeper_capacity_low,14,stage1_only,unresolved_open_vaults,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,full_week,shared_keeper_capacity_low,14,confidence_resilient,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,full_week,shared_keeper_capacity_low,14,confidence_resilient,recovered_before_execution,128,27.6484375,0.902587449942,25.8793660981,29.4175089019,28,10.35,20.75,34,39.6,44,7,62,1
+within_cell,full_week,shared_keeper_capacity_low,14,confidence_resilient,recovered_before_closure,128,32.0859375,1.06586875308,29.996834744,34.175040256,32,13,23,41,48,51,8,62,1
+within_cell,full_week,shared_keeper_capacity_low,14,confidence_resilient,unresolved_open_vaults,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,full_week,shared_keeper_capacity_low,14,confidence_central,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,full_week,shared_keeper_capacity_low,14,confidence_central,recovered_before_execution,128,27.6484375,0.902587449942,25.8793660981,29.4175089019,28,10.35,20.75,34,39.6,44,7,62,1
+within_cell,full_week,shared_keeper_capacity_low,14,confidence_central,recovered_before_closure,128,32.0859375,1.06586875308,29.996834744,34.175040256,32,13,23,41,48,51,8,62,1
+within_cell,full_week,shared_keeper_capacity_low,14,confidence_central,unresolved_open_vaults,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,full_week,shared_keeper_capacity_low,14,confidence_fragile,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,full_week,shared_keeper_capacity_low,14,confidence_fragile,recovered_before_execution,128,27.6484375,0.902587449942,25.8793660981,29.4175089019,28,10.35,20.75,34,39.6,44,7,62,1
+within_cell,full_week,shared_keeper_capacity_low,14,confidence_fragile,recovered_before_closure,128,32.0859375,1.06586875308,29.996834744,34.175040256,32,13,23,41,48,51,8,62,1
+within_cell,full_week,shared_keeper_capacity_low,14,confidence_fragile,unresolved_open_vaults,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,full_week,shared_keeper_capacity_central,26,stage1_only,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,full_week,shared_keeper_capacity_central,26,stage1_only,recovered_before_execution,128,20.328125,0.930013372964,18.505298789,22.150951211,20,4.35,12,27.25,33,38.3,1,55,1
+within_cell,full_week,shared_keeper_capacity_central,26,stage1_only,recovered_before_closure,128,26.1171875,1.15546145668,23.8524830449,28.3818919551,24.5,6.35,16,34.25,45,48,1,56,1
+within_cell,full_week,shared_keeper_capacity_central,26,stage1_only,unresolved_open_vaults,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,full_week,shared_keeper_capacity_central,26,confidence_resilient,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,full_week,shared_keeper_capacity_central,26,confidence_resilient,recovered_before_execution,128,20.328125,0.930013372964,18.505298789,22.150951211,20,4.35,12,27.25,33,38.3,1,55,1
+within_cell,full_week,shared_keeper_capacity_central,26,confidence_resilient,recovered_before_closure,128,26.1171875,1.15546145668,23.8524830449,28.3818919551,24.5,6.35,16,34.25,45,48,1,56,1
+within_cell,full_week,shared_keeper_capacity_central,26,confidence_resilient,unresolved_open_vaults,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,full_week,shared_keeper_capacity_central,26,confidence_central,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,full_week,shared_keeper_capacity_central,26,confidence_central,recovered_before_execution,128,20.328125,0.930013372964,18.505298789,22.150951211,20,4.35,12,27.25,33,38.3,1,55,1
+within_cell,full_week,shared_keeper_capacity_central,26,confidence_central,recovered_before_closure,128,26.1171875,1.15546145668,23.8524830449,28.3818919551,24.5,6.35,16,34.25,45,48,1,56,1
+within_cell,full_week,shared_keeper_capacity_central,26,confidence_central,unresolved_open_vaults,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,full_week,shared_keeper_capacity_central,26,confidence_fragile,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,full_week,shared_keeper_capacity_central,26,confidence_fragile,recovered_before_execution,128,20.328125,0.930013372964,18.505298789,22.150951211,20,4.35,12,27.25,33,38.3,1,55,1
+within_cell,full_week,shared_keeper_capacity_central,26,confidence_fragile,recovered_before_closure,128,26.1171875,1.15546145668,23.8524830449,28.3818919551,24.5,6.35,16,34.25,45,48,1,56,1
+within_cell,full_week,shared_keeper_capacity_central,26,confidence_fragile,unresolved_open_vaults,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,full_week,shared_keeper_capacity_high,45,stage1_only,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,full_week,shared_keeper_capacity_high,45,stage1_only,recovered_before_execution,128,17.921875,0.975626273663,16.0096475036,19.8341024964,17,3,10,24,31.3,38.3,0,55,0.984375
+within_cell,full_week,shared_keeper_capacity_high,45,stage1_only,recovered_before_closure,128,24.390625,1.21881545731,22.0017467037,26.7795032963,22,5,14,34.25,44,47.65,0,56,0.9921875
+within_cell,full_week,shared_keeper_capacity_high,45,stage1_only,unresolved_open_vaults,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,full_week,shared_keeper_capacity_high,45,confidence_resilient,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,full_week,shared_keeper_capacity_high,45,confidence_resilient,recovered_before_execution,128,17.921875,0.975626273663,16.0096475036,19.8341024964,17,3,10,24,31.3,38.3,0,55,0.984375
+within_cell,full_week,shared_keeper_capacity_high,45,confidence_resilient,recovered_before_closure,128,24.390625,1.21881545731,22.0017467037,26.7795032963,22,5,14,34.25,44,47.65,0,56,0.9921875
+within_cell,full_week,shared_keeper_capacity_high,45,confidence_resilient,unresolved_open_vaults,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,full_week,shared_keeper_capacity_high,45,confidence_central,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,full_week,shared_keeper_capacity_high,45,confidence_central,recovered_before_execution,128,17.921875,0.975626273663,16.0096475036,19.8341024964,17,3,10,24,31.3,38.3,0,55,0.984375
+within_cell,full_week,shared_keeper_capacity_high,45,confidence_central,recovered_before_closure,128,24.390625,1.21881545731,22.0017467037,26.7795032963,22,5,14,34.25,44,47.65,0,56,0.9921875
+within_cell,full_week,shared_keeper_capacity_high,45,confidence_central,unresolved_open_vaults,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+within_cell,full_week,shared_keeper_capacity_high,45,confidence_fragile,unsafe_vault_count,128,137.671875,0.881382052638,135.944366177,139.399383823,138,122,131,144.25,150,152,104,156,1
+within_cell,full_week,shared_keeper_capacity_high,45,confidence_fragile,recovered_before_execution,128,17.921875,0.975626273663,16.0096475036,19.8341024964,17,3,10,24,31.3,38.3,0,55,0.984375
+within_cell,full_week,shared_keeper_capacity_high,45,confidence_fragile,recovered_before_closure,128,24.390625,1.21881545731,22.0017467037,26.7795032963,22,5,14,34.25,44,47.65,0,56,0.9921875
+within_cell,full_week,shared_keeper_capacity_high,45,confidence_fragile,unresolved_open_vaults,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,stage1_only,paired_liquidations_avoided,128,31.953125,1.06389494898,29.8678909,34.0383591,32,13,22.75,41,47.3,51,8,62,1
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,stage1_only,paired_additional_liquidations,128,0.015625,0.015625,-0.015,0.04625,0,0,0,0,0,0,0,2,0.0078125
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,stage1_only,paired_avoided_debt_dai,128,7213.86534133,504.29387039,6225.44935536,8202.28132729,6331.52611658,1378.36536341,3646.43992583,8460.2145719,13304.0433509,16449.2071365,718.728155542,41009.2981633,1
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,stage1_only,paired_additional_debt_dai,128,0.354171445056,0.354171445056,-0.340004587254,1.04834747737,0,0,0,0,0,0,0,45.3339449672,0.0078125
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,stage1_only,closure_time_difference_mean,128,-1.47543523647,0.111404820884,-1.69378868541,-1.25708178754,-1.19128100972,-3.77582605858,-2.00998931624,-0.652264381885,-0.0661616161616,0.0238487750967,-7.83870967742,0.436781609195,0.0625
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,confidence_resilient,paired_liquidations_avoided,128,31.953125,1.06389494898,29.8678909,34.0383591,32,13,22.75,41,47.3,51,8,62,1
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,confidence_resilient,paired_additional_liquidations,128,0.015625,0.015625,-0.015,0.04625,0,0,0,0,0,0,0,2,0.0078125
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,confidence_resilient,paired_avoided_debt_dai,128,7213.86534133,504.29387039,6225.44935536,8202.28132729,6331.52611658,1378.36536341,3646.43992583,8460.2145719,13304.0433509,16449.2071365,718.728155542,41009.2981633,1
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,confidence_resilient,paired_additional_debt_dai,128,0.354171445056,0.354171445056,-0.340004587254,1.04834747737,0,0,0,0,0,0,0,45.3339449672,0.0078125
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,confidence_resilient,closure_time_difference_mean,128,-1.47543523647,0.111404820884,-1.69378868541,-1.25708178754,-1.19128100972,-3.77582605858,-2.00998931624,-0.652264381885,-0.0661616161616,0.0238487750967,-7.83870967742,0.436781609195,0.0625
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,confidence_central,paired_liquidations_avoided,128,31.953125,1.06389494898,29.8678909,34.0383591,32,13,22.75,41,47.3,51,8,62,1
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,confidence_central,paired_additional_liquidations,128,0.015625,0.015625,-0.015,0.04625,0,0,0,0,0,0,0,2,0.0078125
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,confidence_central,paired_avoided_debt_dai,128,7213.86534133,504.29387039,6225.44935536,8202.28132729,6331.52611658,1378.36536341,3646.43992583,8460.2145719,13304.0433509,16449.2071365,718.728155542,41009.2981633,1
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,confidence_central,paired_additional_debt_dai,128,0.354171445056,0.354171445056,-0.340004587254,1.04834747737,0,0,0,0,0,0,0,45.3339449672,0.0078125
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,confidence_central,closure_time_difference_mean,128,-1.47543523647,0.111404820884,-1.69378868541,-1.25708178754,-1.19128100972,-3.77582605858,-2.00998931624,-0.652264381885,-0.0661616161616,0.0238487750967,-7.83870967742,0.436781609195,0.0625
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,confidence_fragile,paired_liquidations_avoided,128,31.953125,1.06389494898,29.8678909,34.0383591,32,13,22.75,41,47.3,51,8,62,1
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,confidence_fragile,paired_additional_liquidations,128,0.015625,0.015625,-0.015,0.04625,0,0,0,0,0,0,0,2,0.0078125
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,confidence_fragile,paired_avoided_debt_dai,128,7213.86534133,504.29387039,6225.44935536,8202.28132729,6331.52611658,1378.36536341,3646.43992583,8460.2145719,13304.0433509,16449.2071365,718.728155542,41009.2981633,1
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,confidence_fragile,paired_additional_debt_dai,128,0.354171445056,0.354171445056,-0.340004587254,1.04834747737,0,0,0,0,0,0,0,45.3339449672,0.0078125
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_low,14,confidence_fragile,closure_time_difference_mean,128,-1.47543523647,0.111404820884,-1.69378868541,-1.25708178754,-1.19128100972,-3.77582605858,-2.00998931624,-0.652264381885,-0.0661616161616,0.0238487750967,-7.83870967742,0.436781609195,0.0625
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,stage1_only,paired_liquidations_avoided,128,26.0078125,1.14985107377,23.7541043954,28.2615206046,24,6.35,16,34.25,45,47.65,1,56,1
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,stage1_only,paired_additional_liquidations,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,stage1_only,paired_avoided_debt_dai,128,5579.37531173,430.982234575,4734.65013196,6424.1004915,4380.03778786,884.603264637,2636.75010349,6505.93556744,10590.2355059,15120.6000979,49.5036582458,28943.5251513,1
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,stage1_only,paired_additional_debt_dai,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,stage1_only,closure_time_difference_mean,128,-0.997635399648,0.117361505443,-1.22766395032,-0.767606848979,-0.750469294717,-2.59164540816,-1.30939826303,-0.264148622047,-0.0147368421053,0.0596031554375,-12.7830188679,0.613636363636,0.078125
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,confidence_resilient,paired_liquidations_avoided,128,26.0078125,1.14985107377,23.7541043954,28.2615206046,24,6.35,16,34.25,45,47.65,1,56,1
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,confidence_resilient,paired_additional_liquidations,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,confidence_resilient,paired_avoided_debt_dai,128,5579.37531173,430.982234575,4734.65013196,6424.1004915,4380.03778786,884.603264637,2636.75010349,6505.93556744,10590.2355059,15120.6000979,49.5036582458,28943.5251513,1
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,confidence_resilient,paired_additional_debt_dai,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,confidence_resilient,closure_time_difference_mean,128,-0.997635399648,0.117361505443,-1.22766395032,-0.767606848979,-0.750469294717,-2.59164540816,-1.30939826303,-0.264148622047,-0.0147368421053,0.0596031554375,-12.7830188679,0.613636363636,0.078125
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,confidence_central,paired_liquidations_avoided,128,26.0078125,1.14985107377,23.7541043954,28.2615206046,24,6.35,16,34.25,45,47.65,1,56,1
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,confidence_central,paired_additional_liquidations,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,confidence_central,paired_avoided_debt_dai,128,5579.37531173,430.982234575,4734.65013196,6424.1004915,4380.03778786,884.603264637,2636.75010349,6505.93556744,10590.2355059,15120.6000979,49.5036582458,28943.5251513,1
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,confidence_central,paired_additional_debt_dai,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,confidence_central,closure_time_difference_mean,128,-0.997635399648,0.117361505443,-1.22766395032,-0.767606848979,-0.750469294717,-2.59164540816,-1.30939826303,-0.264148622047,-0.0147368421053,0.0596031554375,-12.7830188679,0.613636363636,0.078125
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,confidence_fragile,paired_liquidations_avoided,128,26.0078125,1.14985107377,23.7541043954,28.2615206046,24,6.35,16,34.25,45,47.65,1,56,1
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,confidence_fragile,paired_additional_liquidations,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,confidence_fragile,paired_avoided_debt_dai,128,5579.37531173,430.982234575,4734.65013196,6424.1004915,4380.03778786,884.603264637,2636.75010349,6505.93556744,10590.2355059,15120.6000979,49.5036582458,28943.5251513,1
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,confidence_fragile,paired_additional_debt_dai,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_central,26,confidence_fragile,closure_time_difference_mean,128,-0.997635399648,0.117361505443,-1.22766395032,-0.767606848979,-0.750469294717,-2.59164540816,-1.30939826303,-0.264148622047,-0.0147368421053,0.0596031554375,-12.7830188679,0.613636363636,0.078125
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,stage1_only,paired_liquidations_avoided,128,24.28125,1.21227205321,21.9051967757,26.6573032243,22,5,14,34.25,44,47,0,56,0.9921875
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,stage1_only,paired_additional_liquidations,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,stage1_only,paired_avoided_debt_dai,128,5237.86042989,431.753625399,4391.62332411,6084.09753567,3907.34055828,500.734187684,2325.91369852,6328.47320259,9635.08836408,15120.6000979,0,28943.5251513,0.9921875
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,stage1_only,paired_additional_debt_dai,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,stage1_only,closure_time_difference_mean,128,-0.818247548989,0.102136404194,-1.01843490121,-0.618060196768,-0.500342090859,-2.39407210669,-1.21395761562,-0.206762802208,0.030366547293,0.12045,-10.3490566038,1.25510204082,0.125
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,confidence_resilient,paired_liquidations_avoided,128,24.28125,1.21227205321,21.9051967757,26.6573032243,22,5,14,34.25,44,47,0,56,0.9921875
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,confidence_resilient,paired_additional_liquidations,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,confidence_resilient,paired_avoided_debt_dai,128,5237.86042989,431.753625399,4391.62332411,6084.09753567,3907.34055828,500.734187684,2325.91369852,6328.47320259,9635.08836408,15120.6000979,0,28943.5251513,0.9921875
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,confidence_resilient,paired_additional_debt_dai,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,confidence_resilient,closure_time_difference_mean,128,-0.818247548989,0.102136404194,-1.01843490121,-0.618060196768,-0.500342090859,-2.39407210669,-1.21395761562,-0.206762802208,0.030366547293,0.12045,-10.3490566038,1.25510204082,0.125
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,confidence_central,paired_liquidations_avoided,128,24.28125,1.21227205321,21.9051967757,26.6573032243,22,5,14,34.25,44,47,0,56,0.9921875
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,confidence_central,paired_additional_liquidations,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,confidence_central,paired_avoided_debt_dai,128,5237.86042989,431.753625399,4391.62332411,6084.09753567,3907.34055828,500.734187684,2325.91369852,6328.47320259,9635.08836408,15120.6000979,0,28943.5251513,0.9921875
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,confidence_central,paired_additional_debt_dai,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,confidence_central,closure_time_difference_mean,128,-0.818247548989,0.102136404194,-1.01843490121,-0.618060196768,-0.500342090859,-2.39407210669,-1.21395761562,-0.206762802208,0.030366547293,0.12045,-10.3490566038,1.25510204082,0.125
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,confidence_fragile,paired_liquidations_avoided,128,24.28125,1.21227205321,21.9051967757,26.6573032243,22,5,14,34.25,44,47,0,56,0.9921875
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,confidence_fragile,paired_additional_liquidations,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,confidence_fragile,paired_avoided_debt_dai,128,5237.86042989,431.753625399,4391.62332411,6084.09753567,3907.34055828,500.734187684,2325.91369852,6328.47320259,9635.08836408,15120.6000979,0,28943.5251513,0.9921875
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,confidence_fragile,paired_additional_debt_dai,128,0,0,0,0,0,0,0,0,0,0,0,0,0
+paired_recovery,full_week - persistent_trough,shared_keeper_capacity_high,45,confidence_fragile,closure_time_difference_mean,128,-0.818247548989,0.102136404194,-1.01843490121,-0.618060196768,-0.500342090859,-2.39407210669,-1.21395761562,-0.206762802208,0.030366547293,0.12045,-10.3490566038,1.25510204082,0.125

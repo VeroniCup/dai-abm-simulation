@@ -1,0 +1,18 @@
+{
+  "attempted_worker_count": 4,
+  "checkpoint_count": 128,
+  "completed_replications": 128,
+  "completed_simulations": 3072,
+  "failed_simulations": 0,
+  "free_storage_bytes": 237854326784,
+  "host_dependent": true,
+  "output_size_bytes": 12000298,
+  "parallel_attempt_status": "blocked_by_profile_loader_temporary_file_race_before_checkpoint",
+  "rerun_simulations": 0,
+  "resumed_simulations": 0,
+  "reused_simulations": 0,
+  "schema_version": 1,
+  "throughput_simulations_per_second": 3.489341122267604,
+  "wall_time_seconds": 880.3954363749945,
+  "worker_count": 1
+}

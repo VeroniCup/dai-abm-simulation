@@ -29,10 +29,13 @@ Completed in the current end-stage pass:
 - keeper scenario registry: completed as candidate-only, opt-in evidence.
 - integrated empirical ETH-only profile: completed and experiment-ready with caveats;
 - integrated input and dynamic distributional validation: completed.
+- constrained-liquidation recovery experiment: completed and operational;
+- qualitative comparison with the unbounded-capacity null: completed.
 
-Stages 1 and 2 are complete. The next stage is the separately pre-registered
-constrained-liquidation recovery experiment; no multi-collateral matrix should
-run before that bounded comparison is reviewed.
+Stages 1–3 are complete. The next stage is to freeze final multi-collateral
+empirical inputs and validate the shared-capacity multi-collateral integration
+contract; no final multi-collateral matrix should run before that contract is
+reviewed.
 
 ---
 
@@ -305,19 +308,30 @@ dynamic comparisons lack like-for-like historical references. The profile is
 experiment-ready but `runtime_adopted: false`. See
 [`docs/validation/integrated_empirical_eth.md`](docs/validation/integrated_empirical_eth.md).
 
-## 3.4 Recovery under constrained execution — essential
+## 3.4 Recovery under constrained execution — completed
 
-The completed recovery experiment used unbounded capacity.
+The 24-cell constrained experiment used the validated
+`empirical_integrated_eth` profile, empirical arrivals and gas,
+`direct_cost_only`, capacities 14/26/45, two controlled ETH paths and four
+fixed confidence scenarios. All 3,072 simulations completed without numerical
+failure.
 
-A second, narrower recovery experiment must test whether ETH recovery matters where:
+The result is `recovery_effect_capacity_dependent`. H5a is supported, H5b is
+not supported, H5c is present and H5d is present. Full-week recovery avoids
+closures and reduces backlog, with the largest rescue effect at capacity 14,
+but primary Stage 1-only peg outcomes are unchanged. Higher capacity reduces
+backlog while reducing the number of positions available for later recovery.
 
-- arrivals are empirical;
-- keeper capacity is bounded;
-- unresolved vaults persist;
-- backlog can interact with the full recovery gate;
-- bad debt may remain active.
+Capacity remains one system-wide constraint. Capacity 26 remains the existing
+central candidate and 14/45 remain robustness cases; none was selected from
+the result. No confidence scenario was ranked or selected. See
+[`docs/experiments/constrained_eth_recovery.md`](docs/experiments/constrained_eth_recovery.md).
 
-This is required before interpreting recovery in the multi-collateral model.
+The immediate technical maintenance pass is separate from this result: repair
+the keyword-only invocation in the convenience reconstruction CLI and remove
+or synchronise the temporary profile-loader race affecting parallel workers.
+That pass must add regression tests without changing results, regenerating
+evidence under altered scientific code, or running substantive simulations.
 
 ## 3.5 Oracle delay — required closure, not necessarily new estimation
 
@@ -1121,8 +1135,8 @@ Do not:
 
 ## Recovery
 
-- [ ] Constrained-liquidation recovery experiment
-- [ ] Comparison with unbounded-capacity null
+- [x] Constrained-liquidation recovery experiment
+- [x] Comparison with unbounded-capacity null
 
 ## Multi-collateral inputs
 
@@ -1166,7 +1180,8 @@ Do not:
 
 The next authorised pass is:
 
-> **Pre-register and run the bounded constrained-liquidation recovery experiment using the validated `empirical_integrated_eth` profile, without tuning the profile, changing production defaults, using final-validation data or running a multi-collateral matrix.**
+> **Freeze final multi-collateral empirical inputs and validate the
+> shared-capacity multi-collateral integration contract.**
 
 The central integration treatment remains system-wide capacity 26 with
 `direct_cost_only`. Population, positive-hurdle and oracle-delay cases remain

@@ -1,5 +1,5 @@
 {
-  "artefact_count": 13,
+  "artefact_count": 23,
   "artefacts": [
     {
       "classification": "scenario_defined_experimental_design",
@@ -28,6 +28,76 @@
       "runtime_adopted": false,
       "sha256": "d9f3de40aa1d9852c3fb1a51edc172ebf7eafc802a3b4547b003213dc7843adc",
       "size_bytes": 4761
+    },
+    {
+      "classification": "pre_registered_constrained_eth_recovery_experiment",
+      "path": "data/provenance/experiments/constrained_recovery/constrained_recovery_benchmark.json",
+      "runtime_adopted": false,
+      "sha256": "b6c8bee2c1a399bcacca0f9d765c79a3cd761033cce694f0086fe0a22cf6dcb7",
+      "size_bytes": 572
+    },
+    {
+      "classification": "pre_registered_constrained_eth_recovery_experiment",
+      "path": "data/provenance/experiments/constrained_recovery/constrained_recovery_capacity_contrasts.csv",
+      "runtime_adopted": false,
+      "sha256": "48d540ec015495d77e5e8b6af85ed29b49727b0eebc5ccb5247fd05b4e1ebb90",
+      "size_bytes": 228383
+    },
+    {
+      "classification": "pre_registered_constrained_eth_recovery_experiment",
+      "path": "data/provenance/experiments/constrained_recovery/constrained_recovery_cell_summary.csv",
+      "runtime_adopted": false,
+      "sha256": "38818ec31c276cfd454c42917ce89d3d374c647a3eb83869fc7de30a1e990ed1",
+      "size_bytes": 281765
+    },
+    {
+      "classification": "pre_registered_constrained_eth_recovery_experiment",
+      "path": "data/provenance/experiments/constrained_recovery/constrained_recovery_decision.json",
+      "runtime_adopted": false,
+      "sha256": "b366f83fe8d217555aa7f56c8f924ad69d55e15be6f0b0a9713be364121103f6",
+      "size_bytes": 1462
+    },
+    {
+      "classification": "pre_registered_constrained_eth_recovery_experiment",
+      "path": "data/provenance/experiments/constrained_recovery/constrained_recovery_interactions.csv",
+      "runtime_adopted": false,
+      "sha256": "476ed578dcc33370b252a4803b46f9d073445dfd7122d3c88141a761492c801a",
+      "size_bytes": 12362
+    },
+    {
+      "classification": "pre_registered_constrained_eth_recovery_experiment",
+      "path": "data/provenance/experiments/constrained_recovery/constrained_recovery_recovery_contrasts.csv",
+      "runtime_adopted": false,
+      "sha256": "119a905a058d414bd063dc9fe95c620eba8892f34c88a815e0a3f52c410e4bc4",
+      "size_bytes": 120450
+    },
+    {
+      "classification": "pre_registered_constrained_eth_recovery_experiment",
+      "path": "data/provenance/experiments/constrained_recovery/constrained_recovery_registry.csv",
+      "runtime_adopted": false,
+      "sha256": "4395b90e5e57585dcee81c5f6898233e3c1deab64473601b6f5829b83e2bffb7",
+      "size_bytes": 10306
+    },
+    {
+      "classification": "pre_registered_constrained_eth_recovery_experiment",
+      "path": "data/provenance/experiments/constrained_recovery/constrained_recovery_reproducibility.json",
+      "runtime_adopted": false,
+      "sha256": "4acb1fb01a2de68c695e0ef54e21323077fadbb76b8d74d452ad0e12851adc05",
+      "size_bytes": 3035
+    },
+    {
+      "classification": "pre_registered_constrained_eth_recovery_experiment",
+      "path": "data/provenance/experiments/constrained_recovery/constrained_recovery_specification.json",
+      "runtime_adopted": false,
+      "sha256": "4016d213eed7cde1262af2cb7cc2318bcb27efd282f35669cdf8f8cb12d0ab70",
+      "size_bytes": 8618
+    },
+    {
+      "classification": "pre_registered_constrained_eth_recovery_experiment",
+      "path": "data/provenance/experiments/constrained_recovery/constrained_recovery_vault_rescue.csv",
+      "runtime_adopted": false,
+      "sha256": "7c8ef81f874a41451b111087d4890c04ae5cd525e0d9d236c31cfd4c2ac72c06",
+      "size_bytes": 30170
     },
     {
       "classification": "pre_registered_eth_recovery_experiment",
@@ -93,6 +163,6 @@
       "size_bytes": 4633
     }
   ],
-  "purpose": "Content-addressed experimental-design and ETH recovery evidence; no confidence scenario is selected or adopted.",
+  "purpose": "Content-addressed experimental evidence; no keeper capacity or confidence scenario is selected or adopted.",
   "schema_version": 1
 }
