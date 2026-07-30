@@ -1067,6 +1067,233 @@
     },
     {
       "classification": "snapshot",
+      "context": "Compact pre-registered keeper-execution calibration evidence; candidate-only and not runtime adopted.",
+      "dimensions": [
+        18,
+        30
+      ],
+      "path": "data/provenance/calibration/keeper/keeper_capacity_frontier.csv",
+      "producer": "dai_sim.calibration.keeper_execution",
+      "schema": "Deterministic compact keeper capacity/profit-hurdle evidence.",
+      "semantic_name": "keeper_execution_keeper_capacity_frontier",
+      "sha256": "f9e35a22b3c82a55cfbe440bf0d4c717f59f901d09b4a2c0f8522732718c63a6",
+      "size_bytes": 4296,
+      "source_inputs": [
+        "data/liquidations/processed/liquidation_actions_2021-06-01_2024-06-30.csv",
+        "data/liquidations/processed/liquidation_hourly_by_ilk_2021-06-01_2024-06-30.csv",
+        "data/market/processed/combined/hourly_market_gas_panel.csv",
+        "data/protocol/processed/hourly_protocol_parameters.csv",
+        "data/vaults/processed/representative_regimes/terra_cefi_2022-05-05_2022-06-20/stress_tail_diagnostics.csv",
+        "outputs/diagnostics/calibration/market_gas_protocol/liquidations/liquidation_transaction_gas.csv",
+        "outputs/diagnostics/calibration/vaults/liquidatable_share/hourly_liquidatable_share.csv",
+        "src/dai_sim/calibration/keeper_execution.py",
+        "src/dai_sim/inputs/keeper_execution.py",
+        "src/dai_sim/model/liquidation.py",
+        "workflows/calibration/keeper_execution.py"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Compact pre-registered keeper-execution calibration evidence; candidate-only and not runtime adopted.",
+      "dimensions": [
+        7,
+        16
+      ],
+      "path": "data/provenance/calibration/keeper/keeper_collateral_comparability.csv",
+      "producer": "dai_sim.calibration.keeper_execution",
+      "schema": "Deterministic compact keeper capacity/profit-hurdle evidence.",
+      "semantic_name": "keeper_execution_keeper_collateral_comparability",
+      "sha256": "11ebe1915137b384510c7142232b04cdd067656bb5d6f0256c4d40d8b7d7b21e",
+      "size_bytes": 2828,
+      "source_inputs": [
+        "data/liquidations/processed/liquidation_actions_2021-06-01_2024-06-30.csv",
+        "data/liquidations/processed/liquidation_hourly_by_ilk_2021-06-01_2024-06-30.csv",
+        "data/market/processed/combined/hourly_market_gas_panel.csv",
+        "data/protocol/processed/hourly_protocol_parameters.csv",
+        "data/vaults/processed/representative_regimes/terra_cefi_2022-05-05_2022-06-20/stress_tail_diagnostics.csv",
+        "outputs/diagnostics/calibration/market_gas_protocol/liquidations/liquidation_transaction_gas.csv",
+        "outputs/diagnostics/calibration/vaults/liquidatable_share/hourly_liquidatable_share.csv",
+        "src/dai_sim/calibration/keeper_execution.py",
+        "src/dai_sim/inputs/keeper_execution.py",
+        "src/dai_sim/model/liquidation.py",
+        "workflows/calibration/keeper_execution.py"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Compact pre-registered keeper-execution calibration evidence; candidate-only and not runtime adopted.",
+      "path": "data/provenance/calibration/keeper/keeper_execution_benchmark.json",
+      "producer": "dai_sim.calibration.keeper_execution",
+      "schema": "Deterministic compact keeper capacity/profit-hurdle evidence.",
+      "semantic_name": "keeper_execution_keeper_execution_benchmark",
+      "sha256": "f718eb7929e807a82e26e5f0d516b42f2ad15e67fcf161a1c7821239b62373be",
+      "size_bytes": 725,
+      "source_inputs": [
+        "data/liquidations/processed/liquidation_actions_2021-06-01_2024-06-30.csv",
+        "data/liquidations/processed/liquidation_hourly_by_ilk_2021-06-01_2024-06-30.csv",
+        "data/market/processed/combined/hourly_market_gas_panel.csv",
+        "data/protocol/processed/hourly_protocol_parameters.csv",
+        "data/vaults/processed/representative_regimes/terra_cefi_2022-05-05_2022-06-20/stress_tail_diagnostics.csv",
+        "outputs/diagnostics/calibration/market_gas_protocol/liquidations/liquidation_transaction_gas.csv",
+        "outputs/diagnostics/calibration/vaults/liquidatable_share/hourly_liquidatable_share.csv",
+        "src/dai_sim/calibration/keeper_execution.py",
+        "src/dai_sim/inputs/keeper_execution.py",
+        "src/dai_sim/model/liquidation.py",
+        "workflows/calibration/keeper_execution.py"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Compact pre-registered keeper-execution calibration evidence; candidate-only and not runtime adopted.",
+      "path": "data/provenance/calibration/keeper/keeper_execution_decision.json",
+      "producer": "dai_sim.calibration.keeper_execution",
+      "schema": "Deterministic compact keeper capacity/profit-hurdle evidence.",
+      "semantic_name": "keeper_execution_keeper_execution_decision",
+      "sha256": "5a2ee0ac6b46a13bfa74c171fd2d399742813b1f3b406fea2b2f922887e4a289",
+      "size_bytes": 8727,
+      "source_inputs": [
+        "data/liquidations/processed/liquidation_actions_2021-06-01_2024-06-30.csv",
+        "data/liquidations/processed/liquidation_hourly_by_ilk_2021-06-01_2024-06-30.csv",
+        "data/market/processed/combined/hourly_market_gas_panel.csv",
+        "data/protocol/processed/hourly_protocol_parameters.csv",
+        "data/vaults/processed/representative_regimes/terra_cefi_2022-05-05_2022-06-20/stress_tail_diagnostics.csv",
+        "outputs/diagnostics/calibration/market_gas_protocol/liquidations/liquidation_transaction_gas.csv",
+        "outputs/diagnostics/calibration/vaults/liquidatable_share/hourly_liquidatable_share.csv",
+        "src/dai_sim/calibration/keeper_execution.py",
+        "src/dai_sim/inputs/keeper_execution.py",
+        "src/dai_sim/model/liquidation.py",
+        "workflows/calibration/keeper_execution.py"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Compact pre-registered keeper-execution calibration evidence; candidate-only and not runtime adopted.",
+      "dimensions": [
+        3,
+        21
+      ],
+      "path": "data/provenance/calibration/keeper/keeper_execution_registry.csv",
+      "producer": "dai_sim.calibration.keeper_execution",
+      "schema": "Deterministic compact keeper capacity/profit-hurdle evidence.",
+      "semantic_name": "keeper_execution_keeper_execution_registry",
+      "sha256": "58c5754ed95dead1ad283a7961fb0588496804a94f58ddb0e196a57601ee1e1b",
+      "size_bytes": 2345,
+      "source_inputs": [
+        "data/liquidations/processed/liquidation_actions_2021-06-01_2024-06-30.csv",
+        "data/liquidations/processed/liquidation_hourly_by_ilk_2021-06-01_2024-06-30.csv",
+        "data/market/processed/combined/hourly_market_gas_panel.csv",
+        "data/protocol/processed/hourly_protocol_parameters.csv",
+        "data/vaults/processed/representative_regimes/terra_cefi_2022-05-05_2022-06-20/stress_tail_diagnostics.csv",
+        "outputs/diagnostics/calibration/market_gas_protocol/liquidations/liquidation_transaction_gas.csv",
+        "outputs/diagnostics/calibration/vaults/liquidatable_share/hourly_liquidatable_share.csv",
+        "src/dai_sim/calibration/keeper_execution.py",
+        "src/dai_sim/inputs/keeper_execution.py",
+        "src/dai_sim/model/liquidation.py",
+        "workflows/calibration/keeper_execution.py"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Compact pre-registered keeper-execution calibration evidence; candidate-only and not runtime adopted.",
+      "path": "data/provenance/calibration/keeper/keeper_execution_reproducibility.json",
+      "producer": "dai_sim.calibration.keeper_execution",
+      "schema": "Deterministic compact keeper capacity/profit-hurdle evidence.",
+      "semantic_name": "keeper_execution_keeper_execution_reproducibility",
+      "sha256": "1e592f9aacca4ee778e6545647b81e18717246de75d7d212f5082fda46542198",
+      "size_bytes": 3262,
+      "source_inputs": [
+        "data/liquidations/processed/liquidation_actions_2021-06-01_2024-06-30.csv",
+        "data/liquidations/processed/liquidation_hourly_by_ilk_2021-06-01_2024-06-30.csv",
+        "data/market/processed/combined/hourly_market_gas_panel.csv",
+        "data/protocol/processed/hourly_protocol_parameters.csv",
+        "data/vaults/processed/representative_regimes/terra_cefi_2022-05-05_2022-06-20/stress_tail_diagnostics.csv",
+        "outputs/diagnostics/calibration/market_gas_protocol/liquidations/liquidation_transaction_gas.csv",
+        "outputs/diagnostics/calibration/vaults/liquidatable_share/hourly_liquidatable_share.csv",
+        "src/dai_sim/calibration/keeper_execution.py",
+        "src/dai_sim/inputs/keeper_execution.py",
+        "src/dai_sim/model/liquidation.py",
+        "workflows/calibration/keeper_execution.py"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Compact pre-registered keeper-execution calibration evidence; candidate-only and not runtime adopted.",
+      "path": "data/provenance/calibration/keeper/keeper_execution_specification.json",
+      "producer": "dai_sim.calibration.keeper_execution",
+      "schema": "Deterministic compact keeper capacity/profit-hurdle evidence.",
+      "semantic_name": "keeper_execution_keeper_execution_specification",
+      "sha256": "5b0ac9d1372dd1306f8dea9490f5acc3ab80e9044f89de059f069acf2789ba7a",
+      "size_bytes": 8976,
+      "source_inputs": [
+        "data/liquidations/processed/liquidation_actions_2021-06-01_2024-06-30.csv",
+        "data/liquidations/processed/liquidation_hourly_by_ilk_2021-06-01_2024-06-30.csv",
+        "data/market/processed/combined/hourly_market_gas_panel.csv",
+        "data/protocol/processed/hourly_protocol_parameters.csv",
+        "data/vaults/processed/representative_regimes/terra_cefi_2022-05-05_2022-06-20/stress_tail_diagnostics.csv",
+        "outputs/diagnostics/calibration/market_gas_protocol/liquidations/liquidation_transaction_gas.csv",
+        "outputs/diagnostics/calibration/vaults/liquidatable_share/hourly_liquidatable_share.csv",
+        "src/dai_sim/calibration/keeper_execution.py",
+        "src/dai_sim/inputs/keeper_execution.py",
+        "src/dai_sim/model/liquidation.py",
+        "workflows/calibration/keeper_execution.py"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Compact pre-registered keeper-execution calibration evidence; candidate-only and not runtime adopted.",
+      "dimensions": [
+        19,
+        45
+      ],
+      "path": "data/provenance/calibration/keeper/keeper_hourly_panel_summary.csv",
+      "producer": "dai_sim.calibration.keeper_execution",
+      "schema": "Deterministic compact keeper capacity/profit-hurdle evidence.",
+      "semantic_name": "keeper_execution_keeper_hourly_panel_summary",
+      "sha256": "d9fc66be7350683ed5249e0eaeeed6eba3e47fe47f64851251bc21f27221f30b",
+      "size_bytes": 7947,
+      "source_inputs": [
+        "data/liquidations/processed/liquidation_actions_2021-06-01_2024-06-30.csv",
+        "data/liquidations/processed/liquidation_hourly_by_ilk_2021-06-01_2024-06-30.csv",
+        "data/market/processed/combined/hourly_market_gas_panel.csv",
+        "data/protocol/processed/hourly_protocol_parameters.csv",
+        "data/vaults/processed/representative_regimes/terra_cefi_2022-05-05_2022-06-20/stress_tail_diagnostics.csv",
+        "outputs/diagnostics/calibration/market_gas_protocol/liquidations/liquidation_transaction_gas.csv",
+        "outputs/diagnostics/calibration/vaults/liquidatable_share/hourly_liquidatable_share.csv",
+        "src/dai_sim/calibration/keeper_execution.py",
+        "src/dai_sim/inputs/keeper_execution.py",
+        "src/dai_sim/model/liquidation.py",
+        "workflows/calibration/keeper_execution.py"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Compact pre-registered keeper-execution calibration evidence; candidate-only and not runtime adopted.",
+      "dimensions": [
+        9,
+        22
+      ],
+      "path": "data/provenance/calibration/keeper/keeper_profit_hurdle.csv",
+      "producer": "dai_sim.calibration.keeper_execution",
+      "schema": "Deterministic compact keeper capacity/profit-hurdle evidence.",
+      "semantic_name": "keeper_execution_keeper_profit_hurdle",
+      "sha256": "6f5dc4f761e8c18d33d327a9e0dd6ba10afc4c748cd94ec3f6bd2ff49cee06c0",
+      "size_bytes": 3313,
+      "source_inputs": [
+        "data/liquidations/processed/liquidation_actions_2021-06-01_2024-06-30.csv",
+        "data/liquidations/processed/liquidation_hourly_by_ilk_2021-06-01_2024-06-30.csv",
+        "data/market/processed/combined/hourly_market_gas_panel.csv",
+        "data/protocol/processed/hourly_protocol_parameters.csv",
+        "data/vaults/processed/representative_regimes/terra_cefi_2022-05-05_2022-06-20/stress_tail_diagnostics.csv",
+        "outputs/diagnostics/calibration/market_gas_protocol/liquidations/liquidation_transaction_gas.csv",
+        "outputs/diagnostics/calibration/vaults/liquidatable_share/hourly_liquidatable_share.csv",
+        "src/dai_sim/calibration/keeper_execution.py",
+        "src/dai_sim/inputs/keeper_execution.py",
+        "src/dai_sim/model/liquidation.py",
+        "workflows/calibration/keeper_execution.py"
+      ]
+    },
+    {
+      "classification": "snapshot",
       "context": "Canonical liquidation and stress-tail candidate evidence used by parameter-adoption reconciliation.",
       "path": "data/provenance/calibration/liquidations/candidate_parameters.json",
       "producer": "dai_sim.calibration.liquidations",

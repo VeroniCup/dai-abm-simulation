@@ -75,3 +75,18 @@ Keeper profitability is a proxy because capital costs, private order flow,
 bundling and off-chain operational costs are not fully observed. Sparse events
 create wide uncertainty for conditional tails and collateral-specific
 estimates.
+
+## System-wide execution calibration
+
+The subsequent
+[system-wide keeper execution study](keeper_execution.md) uses reconstructed
+start-of-hour unsafe inventory rather than positive closures as its demand
+denominator. It confirms that `max_liquidations_per_step` is one global hourly
+count after cross-collateral ranking. Calendar instability, wide bootstrap
+uncertainty and an underpowered mixed-versus-dominant composition comparison
+leave the candidate range partially identified.
+
+Clean successful-Take economics likewise support only revealed lower-bound
+sensitivities for `risk_cost_rate`; failed decoded calls do not identify
+rejected economic opportunities. The resulting registry is candidate-only and
+is not imported by any established runtime profile.

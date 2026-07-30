@@ -35,7 +35,7 @@ def _is_ignored(relative_path: str) -> bool:
 def test_tracked_calibration_evidence_is_content_addressed() -> None:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     assert manifest["schema_version"] == 1
-    assert len(manifest["artefacts"]) == 90
+    assert len(manifest["artefacts"]) == 99
     structural_paths = {
         (
             "data/provenance/calibration/confidence/"
@@ -162,6 +162,55 @@ def test_large_empirical_sources_remain_ignored() -> None:
         "quiet_mature_2024-02-01_2024-03-01/opening_vault_state.csv",
     )
     assert all(_is_ignored(path) for path in ignored)
+
+
+def test_keeper_execution_evidence_is_partial_and_non_adopted() -> None:
+    root = REPOSITORY_ROOT / "data/provenance/calibration/keeper"
+    decision = json.loads(
+        (root / "keeper_execution_decision.json").read_text(encoding="utf-8")
+    )
+    reproducibility = json.loads(
+        (root / "keeper_execution_reproducibility.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    with (
+        root / "keeper_execution_registry.csv"
+    ).open(encoding="utf-8", newline="") as handle:
+        registry = list(csv.DictReader(handle))
+
+    assert decision["capacity"]["classification"] == (
+        "shared_capacity_partially_identified"
+    )
+    assert decision["composition_classification"] == "composition_unresolved"
+    assert decision["profit_hurdle"]["classification"] == (
+        "profit_hurdle_partially_identified"
+    )
+    assert decision["overall_classification"] == (
+        "shared_keeper_execution_registry_ready_with_partial_identification"
+    )
+    assert not decision["runtime_adopted"]
+    assert not decision["final_validation_used"]
+    assert not decision["usdc_svb_used_for_estimation"]
+    assert {row["identifier"] for row in registry} == {
+        "shared_keeper_capacity_low",
+        "shared_keeper_capacity_central",
+        "shared_keeper_capacity_high",
+    }
+    assert [int(row["order"]) for row in registry] == [1, 2, 3]
+    assert {row["hurdle_identifier"] for row in registry} == {
+        "direct_cost_only",
+        "keeper_hurdle_low",
+        "keeper_hurdle_high",
+    }
+    assert all(
+        row["population_mapping"] == "direct_system_count"
+        for row in registry
+    )
+    assert {row["runtime_adopted"] for row in registry} == {"False"}
+    assert not reproducibility["runtime_adopted"]
+    assert not reproducibility["network_access"]
+    assert not reproducibility["final_validation_used"]
 
 
 def test_recovery_redesign_evidence_is_compact_and_non_adopted() -> None:

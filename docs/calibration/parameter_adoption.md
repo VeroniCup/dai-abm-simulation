@@ -134,6 +134,21 @@ set because each requires a declared scalar reduction from a distribution.
 `max_stress_liquidatable_share` requires a regime decision rather than a
 single pooled number.
 
+The later
+[system-wide keeper execution calibration](keeper_execution.md) performs that
+reduction without changing this historical adoption decision. It registers
+three shared count sensitivities and three proportional hurdle candidates,
+all behind an explicit resolver with `runtime_adopted: false`. Calendar
+instability, wide uncertainty, unresolved composition comparability and absent
+rejected-opportunity economics prevent point adoption into `legacy`,
+`empirical` or `empirical_stress`.
+
+For a future integrated ETH-only empirical profile, the declared planning
+boundary is 500 vaults, empirical market/gas/arrival inputs, the system-wide
+central count candidate and one explicitly named hurdle profile. This is an
+experiment plan, not an amendment to an existing profile, and has not been
+run.
+
 ## Protocol constants: replay and generic experiments
 
 Four authoritative subsections are protocol-constant ready: collateral

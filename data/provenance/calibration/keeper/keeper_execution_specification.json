@@ -1,0 +1,204 @@
+{
+  "capacity_identification_hierarchy": {
+    "shared_capacity_not_identified_use_sensitivity": "retains count scale without claiming a frontier",
+    "shared_capacity_partially_identified": {
+      "minimum_high_demand_hours": 10,
+      "minimum_slack_hours": 5
+    },
+    "shared_effective_capacity_frontier_identified": {
+      "minimum_high_demand_hours": 20,
+      "minimum_slack_hours": 10,
+      "requires": [
+        "episode_block_bootstrap",
+        "observation_bootstrap",
+        "demand_threshold_robustness",
+        "calendar_block_stability",
+        "stable_upper_count_clustering",
+        "narrow_bootstrap_uncertainty",
+        "no_material_composition_instability"
+      ]
+    }
+  },
+  "capacity_profile_rule": {
+    "adequate_regime_samples": "low=stress p90, central=pooled p90, high=non-stress p95",
+    "composition_groups": {
+      "mixed_collateral": "positive closures and largest collateral closure share below 0.90",
+      "no_closure": "zero observed protocol closures",
+      "single_collateral_dominant": "positive closures and largest collateral closure share at or above 0.90"
+    },
+    "composition_widening": "if mixed and single-collateral-dominant p90s differ by at least two and 25 per cent with at least ten hours each, lower low to the smaller composition p90 and raise high to the largest robustness p95",
+    "inadequate_regime_samples": "low=pooled p75, central=pooled p90, high=pooled p95",
+    "integer_rule": "nearest_rank empirical integer quantiles",
+    "level1_stability_rules": {
+      "bootstrap_narrowness": "primary day-block p90 interval width no greater than both two opportunities and 25 per cent of the estimate",
+      "stable_upper_clustering": "at least three repetitions of a common upper-quartile completed count",
+      "threshold_robustness": "p90 range below both two opportunities and 25 per cent"
+    },
+    "physical_maximum_claim": false
+  },
+  "design": {
+    "bootstrap_replications": 2000,
+    "calendar_instability_absolute": 2,
+    "calendar_instability_relative": 0.25,
+    "capacity_level2_minimum_hours": 10,
+    "capacity_level2_minimum_slack_hours": 5,
+    "composition_instability_absolute": 2,
+    "composition_instability_relative": 0.25,
+    "downside_quantile": 0.05,
+    "frontier_threshold_robustness_absolute": 2,
+    "frontier_threshold_robustness_relative": 0.25,
+    "high_gas_quantile": 0.9,
+    "high_volatility_quantile": 0.9,
+    "maximum_bootstrap_interval_absolute": 2,
+    "maximum_bootstrap_interval_relative": 0.25,
+    "maximum_compact_file_bytes": 26214400,
+    "maximum_diagnostic_bytes": 262144000,
+    "maximum_total_output_bytes": 10737418240,
+    "minimum_composition_group_hours": 10,
+    "minimum_high_demand_hours_level1": 20,
+    "minimum_negative_profit_observations_level1": 20,
+    "minimum_positive_profit_observations_level1": 50,
+    "minimum_regime_hours": 10,
+    "minimum_repeated_upper_count": 3,
+    "minimum_slack_hours_level1": 10,
+    "primary_high_demand_quantile": 0.75,
+    "random_seed": 20260730,
+    "robustness_high_demand_quantiles": [
+      0.67,
+      0.9
+    ],
+    "simulation_step_hours": 1,
+    "specification_version": 1
+  },
+  "execution_stress_definition": {
+    "crypto_downside": "minimum ETH/WBTC 24-hour log return <= calibration q05",
+    "high_gas": "median effective gas price >= calibration q90",
+    "high_volatility": "maximum ETH/WBTC realised hourly-return volatility over 24 hours >= calibration q90",
+    "stress_rule": "at least two of the three conditions"
+  },
+  "high_demand_definition": {
+    "denominator": "positive start-of-hour unsafe system inventory",
+    "primary_quantile": 0.75,
+    "prohibition": "positive observed closures are not a substitute denominator",
+    "quantile_rule": "nearest_rank",
+    "robustness_quantiles": [
+      0.67,
+      0.9
+    ]
+  },
+  "no_final_validation_use": true,
+  "no_runtime_adoption": true,
+  "output_classifications": {
+    "capacity": [
+      "shared_capacity_not_identified_use_sensitivity",
+      "shared_capacity_partially_identified",
+      "shared_effective_capacity_frontier_identified",
+      "shared_keeper_capacity_calibration_invalid"
+    ],
+    "composition": [
+      "composition_sensitive_shared_capacity",
+      "composition_stable",
+      "composition_unresolved"
+    ],
+    "hurdle": [
+      "profit_hurdle_calibration_invalid",
+      "profit_hurdle_estimated",
+      "profit_hurdle_not_identified",
+      "profit_hurdle_partially_identified"
+    ],
+    "overall": [
+      "shared_keeper_execution_registry_ready",
+      "shared_keeper_execution_registry_ready_with_partial_identification",
+      "shared_keeper_execution_registry_ready_with_sensitivity_only_hurdle",
+      "shared_keeper_execution_calibration_blocked",
+      "shared_keeper_execution_calibration_invalid"
+    ]
+  },
+  "population_scaling_hierarchy": {
+    "direct_system_count": "direct system-capacity count",
+    "level_b": "population-scaled only when source and target vault denominators are both valid",
+    "level_c": "raw primary count plus later 250/500/1000-vault sensitivities"
+  },
+  "profit_equation": {
+    "historical_direct_proxy": "direct_profit = Take.owe_dai * effective liquidation penalty - clean top-level transaction gas cost USD",
+    "negative_evidence_rule": "a failed decoded call is not a rejected economic opportunity; Level 1 requires observable full economics for a rejected or genuinely negative decision",
+    "simulator": "debt_repaid = vault.debt_dai * max_close_factor; gross_reward = debt_repaid * liquidation_penalty; risk_cost = debt_repaid * risk_cost_rate; expected_profit = gross_reward - gas_cost - risk_cost; execute iff expected_profit > 0"
+  },
+  "profit_hurdle_hierarchy": {
+    "level1": {
+      "minimum_genuinely_negative_or_rejected": 20,
+      "minimum_positive": 50
+    },
+    "level3": "zero central and low, with one separately sourced conservative scenario only",
+    "successful_only_level2": {
+      "direct_cost_only_hurdle": 0.0,
+      "interpretation": "non-negative lower-bound sensitivities, not rejection threshold estimates",
+      "keeper_hurdle_high": "nearest-rank p25 successful direct-profit margin",
+      "keeper_hurdle_low": "nearest-rank p05 successful direct-profit margin"
+    }
+  },
+  "runtime_semantic_audit": {
+    "capacity_scope": "global shared count after cross-collateral ranking",
+    "capacity_unit": "liquidation opportunities per simulation step",
+    "equation": "expected_profit = debt_repaid * liquidation_penalty - gas_cost - debt_repaid * risk_cost_rate",
+    "execution_rule": "expected_profit > 0",
+    "hidden_capacity_field_found": false,
+    "legacy_capacity_default": "unbounded_none",
+    "operation_order": [
+      "liquidatable inventory",
+      "empirical demand selection when enabled",
+      "global expected-profit ranking",
+      "shared capacity attempt budget",
+      "profitability outcome"
+    ],
+    "simulation_step_hours": 1,
+    "verified": true
+  },
+  "scope": {
+    "capacity_scope": "one system-wide shared hourly count cap",
+    "capacity_unit": "protocol-level liquidation opportunities per one-hour simulation step",
+    "eligible_windows": {
+      "quiet_mature": [
+        "2024-02-01T00:00:00+00:00",
+        "2024-03-01T00:00:00+00:00"
+      ],
+      "terra_cefi": [
+        "2022-05-05T00:00:00+00:00",
+        "2022-06-20T00:00:00+00:00"
+      ]
+    },
+    "excluded_estimation_windows": {
+      "usdc_svb": [
+        "2023-03-06T00:00:00+00:00",
+        "2023-03-20T00:00:00+00:00"
+      ],
+      "withheld_final_validation": [
+        "2022-11-01T00:00:00+00:00",
+        "2022-11-21T00:00:00+00:00"
+      ]
+    },
+    "target_ilks": [
+      "ETH-A",
+      "ETH-B",
+      "ETH-C",
+      "WBTC-A",
+      "WBTC-B",
+      "WBTC-C"
+    ]
+  },
+  "source_checksums": {
+    "keeper_calibration_source": "b635bf14022e2df2b615ce04e805168c973bc37abe01039b362cf9436c0e74f6",
+    "keeper_resolver_source": "792a05ff83dac75b5fbf5def97a9e6d65efec7c81ce2d4c077ef6d32666f86bb",
+    "keeper_workflow_source": "91fbb0e6131b11bd9889ecae941e88a59bdbb6566ef9736274861edaef1dc1c8",
+    "liquidation_actions": "3e90f564ca55b4c6c33fe3d8106a3c2a72983853bdd2d370b9b8aefdd34361dd",
+    "liquidation_hourly": "8a0f38d09d5bab50f6434e3190c9dc7e8f8d88ac1f738e2b3b45f332b5016f3e",
+    "liquidation_model_source": "616f4031b8e66a28c10060d08c559d47d7afe294a75c0fd1e6b718bdfbae1f59",
+    "liquidation_transaction_gas": "137a17b8752bc90b0ac83b2f9593684781d598d340bb6be65afcab6b624c03a0",
+    "market_gas_hourly": "86ed2ac5a5d364cc57e8b41e137ef369a0fce7a393d386b4b38fc1ebd1be0545",
+    "protocol_hourly": "8190f1aa9f63a6ebd41ef5eb38ee33b64523631161199e37224ce859cb71f195",
+    "representative_liquidatable_share": "cb9f7a8db2300d96b7e9c42ca42ea17c4c0fe75853c713796e843ba8f2070bf7",
+    "terra_unsafe_inventory": "d83c82ddda0e7dfe46849b75206f85a1587896355ffde75264566e60e2b8356b"
+  },
+  "status": "pre_registered_before_estimation",
+  "study": "system_wide_keeper_execution_calibration"
+}

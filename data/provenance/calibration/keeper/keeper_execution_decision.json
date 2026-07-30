@@ -1,0 +1,239 @@
+{
+  "candidate_registry_written": true,
+  "capacity": {
+    "active_liquidator_evidence": {
+      "correlation_with_closures": 0.7049770885275395,
+      "correlation_with_median_gas_cost": null,
+      "correlation_with_network_median_gas_price": 0.21404928209428084,
+      "correlation_with_volatility": 0.2951135446760873,
+      "distribution": {
+        "count": 36,
+        "index_of_dispersion": 0.8106060606060607,
+        "maximum": 3.0,
+        "mean": 0.9166666666666666,
+        "median": 1.0,
+        "minimum": 0.0,
+        "p25": 0.0,
+        "p75": 1.0,
+        "p90": 2.0,
+        "p95": 3.0,
+        "standard_deviation": 0.8620067027323833,
+        "zero_share": 0.3611111111111111
+      },
+      "identity_semantics": "distinct Bark kpr where decoded, otherwise Bark event transaction sender, per hour; a protocol liquidator identity proxy rather than all Take participants",
+      "largest_hour_closure_concentration": 0.12813370473537605,
+      "mixed_hour_mean": 1.5263157894736843,
+      "positive_closure_hour_distribution": {
+        "count": 23,
+        "index_of_dispersion": 0.29249011857707513,
+        "maximum": 3.0,
+        "mean": 1.434782608695652,
+        "median": 1.0,
+        "minimum": 1.0,
+        "p25": 1.0,
+        "p75": 2.0,
+        "p90": 2.0,
+        "p95": 3.0,
+        "standard_deviation": 0.6478114967717974,
+        "zero_share": 0.0
+      },
+      "supporting_evidence_only": true
+    },
+    "aggregate_inventory_utilisation": {
+      "count": 36,
+      "index_of_dispersion": 0.28924054667929033,
+      "interpretation": "aggregate execution-to-starting-unsafe-inventory ratio; arrivals and profitability may also bind",
+      "maximum": 1.0,
+      "mean": 0.24965368370778818,
+      "median": 0.175,
+      "minimum": 0.0,
+      "p25": 0.0,
+      "p75": 0.42424242424242425,
+      "p90": 0.6666666666666666,
+      "p95": 0.7931034482758621,
+      "standard_deviation": 0.2687191246564697,
+      "zero_share": 0.3611111111111111
+    },
+    "bootstrap_uncertainty_narrow": false,
+    "calendar_block_count": 2,
+    "calendar_block_p90_values": [
+      45,
+      26
+    ],
+    "calendar_instability_absolute": 19,
+    "calendar_instability_relative": 0.4222222222222222,
+    "calendar_stable": false,
+    "capacity_scale": "direct_system_count",
+    "classification": "shared_capacity_partially_identified",
+    "completed_collateral_value_distribution": {
+      "count": 36,
+      "index_of_dispersion": 6909564.018749263,
+      "maximum": 17952026.711348638,
+      "mean": 1696926.0204102641,
+      "median": 374161.1119426915,
+      "minimum": 0.0,
+      "p25": 0.0,
+      "p75": 1601338.7521225996,
+      "p90": 5678621.21017259,
+      "p95": 8704089.137264088,
+      "standard_deviation": 3424181.5041124993,
+      "zero_share": 0.3611111111111111
+    },
+    "completed_count_distribution": {
+      "count": 36,
+      "index_of_dispersion": 15.835577220674718,
+      "maximum": 46.0,
+      "mean": 9.972222222222221,
+      "median": 5.0,
+      "minimum": 0.0,
+      "p25": 0.0,
+      "p75": 14.0,
+      "p90": 26.0,
+      "p95": 45.0,
+      "standard_deviation": 12.566459129831618,
+      "zero_share": 0.3611111111111111
+    },
+    "completed_debt_distribution": {
+      "count": 36,
+      "index_of_dispersion": 6003362.328032819,
+      "maximum": 15586355.114125501,
+      "mean": 1480090.5751786213,
+      "median": 322098.51282956946,
+      "minimum": 0.0,
+      "p25": 0.0,
+      "p75": 1409694.8506884428,
+      "p90": 4768674.180185826,
+      "p95": 7686115.739635604,
+      "standard_deviation": 2980858.9368005595,
+      "zero_share": 0.3611111111111111
+    },
+    "composition_classification": "composition_unresolved",
+    "composition_difference": 40,
+    "composition_estimates": {
+      "mixed_collateral": {
+        "active_liquidator_p90": 3,
+        "completed_debt_dai_p90": 7686115.739635604,
+        "hours": 19,
+        "median_gas_cost_dai": null,
+        "p75": 23,
+        "p90": 45,
+        "p95": 46
+      },
+      "no_closure": {
+        "active_liquidator_p90": 0,
+        "completed_debt_dai_p90": 0.0,
+        "hours": 13,
+        "median_gas_cost_dai": null,
+        "p75": 0,
+        "p90": 0,
+        "p95": 0
+      },
+      "single_collateral_dominant": {
+        "active_liquidator_p90": 1,
+        "completed_debt_dai_p90": 430512.0705512114,
+        "hours": 4,
+        "median_gas_cost_dai": null,
+        "p75": 2,
+        "p90": 5,
+        "p95": 5
+      }
+    },
+    "composition_relative_difference": 0.8888888888888888,
+    "demand_categories": {
+      "category_a_demand_insufficient_hours": 1764,
+      "category_b_plausibly_high_demand_hours": 36,
+      "category_c_demand_slack_hours": 35,
+      "category_d_saturation_supported": false
+    },
+    "high_demand_hours": 36,
+    "interpretation": "Observed upper-tail execution sensitivities under identified unsafe demand; not a physical keeper-network maximum.",
+    "non_stress_hours": 7,
+    "physical_maximum_claim": false,
+    "positive_inventory_hours": 138,
+    "pre_composition_widening": {
+      "central": 26,
+      "high": 45,
+      "low": 14
+    },
+    "primary_inventory_threshold": 17,
+    "primary_p90_day_block_bootstrap_relative_width": 1.1923076923076923,
+    "primary_p90_day_block_bootstrap_width": 31.0,
+    "profile_basis": "pooled_insufficient_regime_samples",
+    "profiles": {
+      "central": 26,
+      "high": 45,
+      "low": 14
+    },
+    "regime_samples_adequate": false,
+    "repeated_upper_value_max_frequency": 2,
+    "slack_hours": 35,
+    "stable_upper_clustering": false,
+    "stress_hours": 29,
+    "threshold_p90_range": 21,
+    "threshold_p90_relative_range": 0.4666666666666667,
+    "threshold_p90_values": {
+      "primary_q75": 26,
+      "robustness_q67": 24,
+      "robustness_q90": 45
+    },
+    "threshold_robust": false
+  },
+  "composition_classification": "composition_unresolved",
+  "default_profiles_changed": false,
+  "eth_only_validation_boundary": "apply the same system-wide count registry as an explicit validation harness; do not recalibrate it to ETH",
+  "final_experiment_run": false,
+  "final_validation_used": false,
+  "liquidation_demand_used_as_capacity": false,
+  "multi_collateral_shared_capacity_boundary": "all collateral opportunities enter one global ranking and their combined selected count must not exceed the resolved cap",
+  "next_boundary": "An integrated ETH-only empirical profile may be run separately with 500 vaults, empirical market/gas/arrival inputs, the central system cap, the registered hurdle and accepted Stage 1 response/confidence settings. It is not run here.",
+  "no_collateral_specific_independent_caps": true,
+  "no_physical_maximum_claim": true,
+  "overall_classification": "shared_keeper_execution_registry_ready_with_partial_identification",
+  "profit_hurdle": {
+    "classification": "profit_hurdle_partially_identified",
+    "debt_to_gas_cost_turnover": {
+      "median": 489.6187439244428,
+      "minimum": 2.7607072359416787,
+      "p05": 40.162094986953356,
+      "p10": 83.49998079283343,
+      "p25": 179.5898762604209
+    },
+    "direct_cost_only_hurdle": 0.0,
+    "direct_profit_dai": {
+      "median": 2974.8414441938453,
+      "minimum": -1976.4803316679681,
+      "p05": 665.3740058904538,
+      "p10": 774.9549633494871,
+      "p25": 1639.2135015026345
+    },
+    "direct_profit_margin": {
+      "median": 0.12795759453164568,
+      "minimum": -0.2322260220066036,
+      "p05": 0.1051009004802948,
+      "p10": 0.11802394934100588,
+      "p25": 0.12443175739733829
+    },
+    "eligible_successful_opportunities": 1064,
+    "failed_take_call_count_not_negative_choice_evidence": 733,
+    "gas_share_of_gross_reward": {
+      "median": 0.015693689453644626,
+      "minimum": 0.0,
+      "p05": 0.001127521676472863,
+      "p10": 0.0022215529692009863,
+      "p25": 0.005660261007795112
+    },
+    "genuinely_negative_or_rejected_evidence_count": 0,
+    "mapping": "risk_cost_rate is the only present proportional keeper hurdle; p05 and p25 direct-margin profiles are revealed lower-bound sensitivities, not estimated rejection thresholds.",
+    "negative_direct_profit_proxy_count": 6,
+    "positive_direct_profit_proxy_count": 1058,
+    "risk_cost_rate_profiles": {
+      "direct_cost_only": 0.0,
+      "keeper_hurdle_high": 0.12443175739733829,
+      "keeper_hurdle_low": 0.1051009004802948
+    },
+    "threshold_non_negative_explanation": "The observations are successful executions. A negative realised direct-cost proxy does not reveal a pre-trade rejection threshold, so candidate hurdle support is constrained to non-negative rates."
+  },
+  "runtime_adopted": false,
+  "study": "system_wide_keeper_execution_calibration",
+  "usdc_svb_used_for_estimation": false
+}

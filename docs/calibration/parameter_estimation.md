@@ -79,6 +79,13 @@ existing keeper-profit and capacity rules are applied. The implementation is
 documented in
 [the liquidation-arrival and capacity report](../archive/tranche_reports/tranche_d_liquidation_arrival_and_capacity_report.md).
 
+The later
+[system-wide keeper execution calibration](keeper_execution.md) now provides
+the missing direct review of the shared count cap and the current proportional
+keeper hurdle. It uses start-of-hour unsafe inventory, not positive closures,
+and classifies both candidate families as partially identified. No value is
+runtime adopted.
+
 The first Phase 1E-B tranche is documented in the
 [quiet-mature acquisition report](../archive/phase_reports/phase1e_b_tranche1_acquisition_report.md).
 Its quiet-mature reconstruction is complete after the bounded Method B rate
@@ -1006,6 +1013,12 @@ parameter.
 **Notes.** An accounting residual is not automatically keeper profit or risk
 cost. Omitted components must be listed.
 
+The pre-registered keeper study maps clean successful-Take direct margins to
+this existing proportional interface. Because it observes successful
+executions but no sufficiently complete rejected-opportunity sample, zero
+remains the direct-cost-only candidate and p05/p25 margins are lower-bound
+sensitivities rather than estimated rejection thresholds.
+
 #### 4.4.5 `max_close_factor`
 
 **Purpose.** Caps the share of one vault's debt repaid in one simulated
@@ -1059,6 +1072,12 @@ liquidation-arrival demand. In the opt-in hurdle-count mode,
 already been truncated to simulated unsafe-vault inventory; in legacy mode,
 all eligible liquidatable vaults continue to be considered by the existing
 liquidation routine.
+
+The system-wide keeper study confirms that the field is one shared count per
+hour across ETH and WBTC opportunities. The direct system-scale evidence
+produces a partially identified low/central/high sensitivity range after
+calendar and composition diagnostics. These observed upper-tail counts are
+not presented as a physical maximum.
 
 ### 4.5 Confidence-regime parameters
 

@@ -60,6 +60,9 @@ Active calibration guidance is organised by evidence and decision:
   ranked, selected or runtime adopted.
 - [Representative vaults](vaults.md)
 - [Liquidations](liquidations.md)
+- [System-wide keeper execution](keeper_execution.md) — pre-registered shared
+  hourly capacity and proportional profit-hurdle candidates. Both are
+  partially identified and remain opt-in, non-adopted sensitivities.
 - [Protocol parameters](protocol.md)
 
 Candidate estimation and adoption are separate. A statistically estimated

@@ -1,0 +1,21 @@
+{
+  "execution_mode": "local_deterministic_single_process",
+  "figures_generated": 0,
+  "host_dependent_status": "runtime and memory excluded from deterministic compact evidence",
+  "ignored_diagnostic_size_bytes": 18832500,
+  "input_size_bytes": 119303945,
+  "live_acquisition_calls": 0,
+  "network_access": false,
+  "output_size_bytes_excluding_benchmark_and_reproducibility": 38432,
+  "peak_memory_bytes": null,
+  "runtime_seconds": null,
+  "scientific_identity": "fdd850ce10ed893a",
+  "simulation_experiment_run": false,
+  "workload": {
+    "bootstrap_interval_count": 54,
+    "bootstrap_replications_per_interval": 2000,
+    "frontier_rows": 18,
+    "hourly_panel_rows": 12600,
+    "profit_opportunity_rows": 1289
+  }
+}

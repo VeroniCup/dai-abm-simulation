@@ -83,6 +83,17 @@ data/provenance/calibration/vaults/*
 !data/provenance/calibration/liquidations/
 data/provenance/calibration/liquidations/*
 !data/provenance/calibration/liquidations/candidate_parameters.json
+!data/provenance/calibration/keeper/
+data/provenance/calibration/keeper/*
+!data/provenance/calibration/keeper/keeper_execution_specification.json
+!data/provenance/calibration/keeper/keeper_collateral_comparability.csv
+!data/provenance/calibration/keeper/keeper_hourly_panel_summary.csv
+!data/provenance/calibration/keeper/keeper_capacity_frontier.csv
+!data/provenance/calibration/keeper/keeper_profit_hurdle.csv
+!data/provenance/calibration/keeper/keeper_execution_registry.csv
+!data/provenance/calibration/keeper/keeper_execution_decision.json
+!data/provenance/calibration/keeper/keeper_execution_reproducibility.json
+!data/provenance/calibration/keeper/keeper_execution_benchmark.json
 !data/provenance/calibration/parameter_readiness/
 data/provenance/calibration/parameter_readiness/*
 !data/provenance/calibration/parameter_readiness/representative_vault_parameter_readiness.csv

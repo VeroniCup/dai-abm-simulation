@@ -36,6 +36,14 @@ Legacy initialisation, market, gas and liquidation-demand behaviour remain the
 defaults. Candidate estimation does not itself adopt values or authorise new
 mechanics.
 
+The pre-registered
+[system-wide keeper execution calibration](docs/calibration/keeper_execution.md)
+is complete. The shared hourly capacity and the current proportional
+profit-hurdle interface are both partially identified; the pre-registered
+mixed-versus-dominant composition comparison is underpowered and therefore
+unresolved. A candidate-only registry and typed opt-in resolver exist, but no
+runtime profile imports them and no established experiment has changed.
+
 Detailed current guidance:
 
 - [Empirical framework](empirical.md)
@@ -97,6 +105,13 @@ review reproduced all of them without changing executable behaviour.
   evidence rather than final conclusions.
 
 ## Next research work
+
+The next authorised experimental boundary after the keeper study is a
+separate integrated ETH-only empirical profile: 500 vaults, empirical market,
+gas and liquidation arrivals, the system-wide central capacity, an explicitly
+registered hurdle profile, and the accepted Stage 1 response/confidence
+settings. It has not been run. The keeper candidates remain review evidence,
+not adopted defaults.
 
 The behavioural-confidence calibration planning pass has resolved four core
 specification choices in the [confidence and behavioural calibration
