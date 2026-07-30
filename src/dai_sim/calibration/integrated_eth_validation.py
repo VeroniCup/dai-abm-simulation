@@ -71,6 +71,7 @@ EVIDENCE_DIR = (
     REPOSITORY_ROOT / "data/provenance/validation/integrated_empirical_eth"
 )
 VALIDATION_MANIFEST = REPOSITORY_ROOT / "data/provenance/validation/manifest.json"
+VALIDATION_SEMANTIC_OWNER = "integrated_empirical_eth_validation"
 DEFAULT_DIAGNOSTIC_ROOT = (
     REPOSITORY_ROOT / "outputs/diagnostics/validation/integrated_empirical_eth"
 )
@@ -1586,26 +1587,78 @@ def _compact_payloads(
     return payloads
 
 
-def _manifest_payload(evidence_dir: Path) -> dict[str, Any]:
-    entries = []
+def _manifest_payload(
+    evidence_dir: Path,
+    *,
+    manifest_path: Path = VALIDATION_MANIFEST,
+) -> dict[str, Any]:
+    """Merge this validator's entries into the shared validation manifest."""
+    existing: dict[str, Any] = {}
+    if manifest_path.exists():
+        loaded = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if not isinstance(loaded, dict):
+            raise ValueError("Validation manifest must be a JSON object.")
+        if loaded.get("schema_version") != 1:
+            raise ValueError("Validation manifest schema version differs.")
+        if loaded.get("domain") != "validation":
+            raise ValueError("Validation manifest domain differs.")
+        if not isinstance(loaded.get("entries"), list):
+            raise ValueError("Validation manifest entries must be a list.")
+        if any(not isinstance(entry, dict) for entry in loaded["entries"]):
+            raise ValueError("Validation manifest entries must be JSON objects.")
+        existing = loaded
+
+    owned_entries = []
     for name in COMPACT_FILENAMES:
         path = evidence_dir / name
-        entries.append(
+        owned_entries.append(
             {
                 "path": _relative(path),
                 "sha256": sha256_file(path),
                 "bytes": path.stat().st_size,
-                "semantic_owner": "integrated_empirical_eth_validation",
+                "semantic_owner": VALIDATION_SEMANTIC_OWNER,
                 "runtime_input": False,
             }
         )
-    return {
-        "schema_version": 1,
-        "domain": "validation",
-        "entries": entries,
-        "entry_count": len(entries),
-        "duplicate_paths": 0,
-    }
+
+    retained_entries = [
+        dict(entry)
+        for entry in existing.get("entries", [])
+        if entry.get("semantic_owner") != VALIDATION_SEMANTIC_OWNER
+    ]
+    owned_paths = {entry["path"] for entry in owned_entries}
+    collisions = [
+        entry.get("path")
+        for entry in retained_entries
+        if entry.get("path") in owned_paths
+    ]
+    if collisions:
+        raise ValueError(
+            "Validation manifest path ownership conflict: "
+            f"{sorted(collisions)}."
+        )
+
+    entries = sorted(
+        [*retained_entries, *owned_entries],
+        key=lambda entry: str(entry.get("path", "")),
+    )
+    paths = [entry.get("path") for entry in entries]
+    if any(not isinstance(path, str) or not path for path in paths):
+        raise ValueError("Validation manifest entries require non-empty paths.")
+    if len(set(paths)) != len(paths):
+        raise ValueError("Validation manifest contains duplicate paths.")
+
+    payload = dict(existing)
+    payload.update(
+        {
+            "schema_version": 1,
+            "domain": "validation",
+            "entries": entries,
+            "entry_count": len(entries),
+            "duplicate_paths": 0,
+        }
+    )
+    return payload
 
 
 def execute_integrated_validation(
@@ -1673,7 +1726,8 @@ def execute_integrated_validation(
             for name in COMPACT_FILENAMES
         },
         "validation_manifest": _relative(VALIDATION_MANIFEST),
-        "validation_manifest_entry_count": len(manifest["entries"]),
+        "validation_manifest_entry_count": len(COMPACT_FILENAMES),
+        "validation_manifest_total_entry_count": len(manifest["entries"]),
         "diagnostic_path": _relative(diagnostic_path),
         "diagnostic_size_bytes": output_size,
         "wall_time_seconds": elapsed,
@@ -1684,6 +1738,8 @@ def execute_integrated_validation(
 
 def validate_compact_evidence(
     evidence_dir: Path = EVIDENCE_DIR,
+    *,
+    manifest_path: Path = VALIDATION_MANIFEST,
 ) -> dict[str, Any]:
     """Validate compact evidence schemas, classifications and manifest links."""
     missing = [
@@ -1741,15 +1797,39 @@ def validate_compact_evidence(
     ]
     if len(maximum_attempts) != 1 or float(maximum_attempts.iloc[0]) > 26:
         raise ValueError("Shared capacity validation failed.")
-    manifest = json.loads(VALIDATION_MANIFEST.read_text(encoding="utf-8"))
-    if manifest["entry_count"] != len(COMPACT_FILENAMES):
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    entries = manifest.get("entries")
+    if not isinstance(entries, list):
+        raise ValueError("Validation manifest entries must be a list.")
+    if any(not isinstance(entry, dict) for entry in entries):
+        raise ValueError("Validation manifest entries must be JSON objects.")
+    if manifest.get("entry_count") != len(entries):
         raise ValueError("Validation manifest entry count differs.")
-    if len({entry["path"] for entry in manifest["entries"]}) != len(
-        manifest["entries"]
-    ):
+    paths = [entry.get("path") for entry in entries]
+    if any(not isinstance(path, str) or not path for path in paths):
+        raise ValueError("Validation manifest entries require non-empty paths.")
+    if len(set(paths)) != len(paths):
         raise ValueError("Validation manifest contains duplicate paths.")
-    for entry in manifest["entries"]:
-        path = REPOSITORY_ROOT / entry["path"]
+    expected_owned_paths = {
+        _relative(evidence_dir / name) for name in COMPACT_FILENAMES
+    }
+    owned_entries = [
+        entry
+        for entry in entries
+        if entry.get("semantic_owner") == VALIDATION_SEMANTIC_OWNER
+    ]
+    if {entry["path"] for entry in owned_entries} != expected_owned_paths:
+        raise ValueError("Integrated validation manifest ownership differs.")
+    if len(owned_entries) != len(COMPACT_FILENAMES):
+        raise ValueError("Integrated validation manifest entry count differs.")
+    for entry in entries:
+        path = (REPOSITORY_ROOT / entry["path"]).resolve()
+        try:
+            path.relative_to(REPOSITORY_ROOT)
+        except ValueError as error:
+            raise ValueError(
+                f"Validation manifest path escapes the repository: {entry['path']}."
+            ) from error
         if sha256_file(path) != entry["sha256"]:
             raise ValueError(f"Manifest checksum mismatch: {entry['path']}.")
     return {
@@ -1759,7 +1839,8 @@ def validate_compact_evidence(
         "input_classification": decision["input_classification"],
         "output_classification": decision["output_classification"],
         "overall_classification": decision["overall_classification"],
-        "manifest_entry_count": manifest["entry_count"],
+        "manifest_entry_count": len(owned_entries),
+        "validation_manifest_total_entry_count": len(entries),
         "deterministic_reconstruction": reproducibility[
             "deterministic_reconstruction"
         ],

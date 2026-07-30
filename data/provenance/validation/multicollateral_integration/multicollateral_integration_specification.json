@@ -1,0 +1,351 @@
+{
+  "acceptance_rules": {
+    "accounting_failures_allowed": 0,
+    "capacity_may_not_exceed": 26,
+    "debt_share_tolerance": 1e-10,
+    "fallback_allowed": false,
+    "initially_unsafe_allowed": 0,
+    "price_leakage_allowed": false,
+    "system_collateral_ratio_tolerance": 1e-10,
+    "total_debt_tolerance": 1e-06,
+    "vault_count": 500
+  },
+  "classifications": {
+    "collateral": [
+      "final_collateral_universe_ready",
+      "final_collateral_universe_ready_with_counterfactual_stable",
+      "final_collateral_universe_crypto_ready_stable_blocked",
+      "final_collateral_universe_invalid"
+    ],
+    "overall": [
+      "final_multicollateral_inputs_ready",
+      "final_multicollateral_inputs_ready_with_caveats",
+      "final_multicollateral_inputs_blocked",
+      "final_multicollateral_inputs_invalid"
+    ],
+    "portfolio": [
+      "final_portfolio_registry_ready",
+      "final_portfolio_registry_ready_with_blocked_stable_cases",
+      "final_portfolio_registry_invalid"
+    ],
+    "shared_capacity": [
+      "shared_capacity_contract_valid",
+      "shared_capacity_contract_valid_with_caveats",
+      "shared_capacity_contract_blocked",
+      "shared_capacity_contract_invalid"
+    ],
+    "shock": [
+      "final_shock_registry_ready",
+      "final_shock_registry_ready_with_counterfactual_stable_depegs",
+      "final_shock_registry_blocked",
+      "final_shock_registry_invalid"
+    ],
+    "starting_core": "multicollateral_core_compatible_with_repairs"
+  },
+  "collateral_decision_hierarchy": {
+    "family_order": [
+      "ETH",
+      "WBTC",
+      "STABLE"
+    ],
+    "required_volatile": [
+      "ETH",
+      "WBTC"
+    ],
+    "stable_admission_rule": "documented existing counterfactual owner only",
+    "stable_owner_status": "counterfactual_stable_proxy",
+    "stable_preference": "existing tracked generic stable proxy"
+  },
+  "confidence_recalibration": false,
+  "configuration_checksums": {
+    "collateral_registry": "75268fed6b3db5a80a822a80b8629291491cd73ce62b4c3e6cf3975060b4eb6d",
+    "portfolio_registry": "76aa03afa352d86be76fbc7e0153981589f50798c52aed7dfad897061b7960b1",
+    "profile": "a2da654cdc9fc053c50f13aacb18e63ce7854bf47d6ad1519352467f6c7986fc",
+    "shock_registry": "a98df90e3e743fc22d9f92c38d53cf46a893928d3fe48eda9e609a20aa108581"
+  },
+  "controlled_recovery": {
+    "adverse": "persistent_trough",
+    "partial_week_core": false,
+    "principal": "full_week",
+    "rapid_full_core": false
+  },
+  "exact_ilks": {
+    "ETH": [
+      "ETH-A",
+      "ETH-B",
+      "ETH-C"
+    ],
+    "WBTC": [
+      "WBTC-A",
+      "WBTC-B",
+      "WBTC-C"
+    ]
+  },
+  "exclusions": {
+    "ftx": {
+      "end_exclusive_utc": "2022-11-21T00:00:00Z",
+      "start_utc": "2022-11-01T00:00:00Z"
+    },
+    "usdc_svb": {
+      "end_exclusive_utc": "2023-03-20T00:00:00Z",
+      "start_utc": "2023-03-06T00:00:00Z"
+    }
+  },
+  "final_validation_data_used": false,
+  "joint_stress_rule": {
+    "lambda": 0.5,
+    "score": "-z(ETH 24h log return) - z(WBTC 24h log return) + 0.5*z(24h median gas)",
+    "selection_uses_model_outcomes": false
+  },
+  "keeper_recalibration": false,
+  "multicollateral_integration_parent": "8d5ea2829f1481cc57e2760422d11fd452905bad",
+  "ordinary_price_owners": {
+    "ETH_WBTC": "joint clean empirical 168-hour blocks",
+    "gas_alignment": "same sampled hourly rows",
+    "market_pool_path": "data/market/model_inputs/multicollateral_blocks/pool.csv",
+    "stable": "clean local USDC returns as proxy ordinary path"
+  },
+  "parameter_recalibration": false,
+  "parent_subject": "Harden experiment infrastructure",
+  "population": {
+    "collateral_ratio_normalisation": "one portfolio-wide collateral-value scale",
+    "common_system_collateral_ratio": 3.6089387701260205,
+    "count_allocation": "largest remainder; ties ETH, WBTC, STABLE",
+    "debt_normalisation": "one deterministic multiplicative scale per family",
+    "target_statistic": "median debt-weighted system collateral ratio from the protected 512 integrated ETH initialisations",
+    "total_debt_dai": 2500000.0,
+    "unsafe_initialisation_policy": "reject and resample whole initialisation on deterministic substream",
+    "vault_count": 500
+  },
+  "portfolio_order": [
+    "eth_only",
+    "empirical_crypto",
+    "balanced_crypto",
+    "stable_supported",
+    "stable_heavy"
+  ],
+  "portfolio_ranking": false,
+  "portfolio_rules": {
+    "collateral_ratio_rule": {
+      "common_system_target": 3.6089387701260205,
+      "definition": "median_debt_weighted_system_collateral_ratio",
+      "population": "protected_512_integrated_eth_initialisations",
+      "reference_seed_registry_checksum": "2d077d4ce51fdbb6243bc2dde2d46aaeb998f7efb325a3f7b504fdd2ff5eb38d"
+    },
+    "count_allocation_rule": "largest_remainder_in_family_order",
+    "debt_normalisation_rule": "exact_target_family_debt_shares",
+    "empirical_crypto_shares": {
+      "ETH": 0.8483941126796408,
+      "WBTC": 0.1516058873203592
+    },
+    "family_order": [
+      "ETH",
+      "WBTC",
+      "STABLE"
+    ],
+    "portfolios": {
+      "balanced_crypto": {
+        "description": "Equal ETH and WBTC debt shares.",
+        "expected_vault_counts": {
+          "ETH": 250,
+          "STABLE": 0,
+          "WBTC": 250
+        },
+        "status": "transparent_counterfactual_diversification",
+        "target_debt_shares": {
+          "ETH": 0.5,
+          "STABLE": 0.0,
+          "WBTC": 0.5
+        }
+      },
+      "empirical_crypto": {
+        "description": "Quiet-mature empirical ETH/WBTC family mix.",
+        "expected_vault_counts": {
+          "ETH": 424,
+          "STABLE": 0,
+          "WBTC": 76
+        },
+        "status": "empirical_composition",
+        "target_debt_shares": {
+          "ETH": 0.8483941126796408,
+          "STABLE": 0.0,
+          "WBTC": 0.1516058873203592
+        }
+      },
+      "eth_only": {
+        "description": "ETH-only reference portfolio.",
+        "expected_vault_counts": {
+          "ETH": 500,
+          "STABLE": 0,
+          "WBTC": 0
+        },
+        "status": "benchmark",
+        "target_debt_shares": {
+          "ETH": 1.0,
+          "STABLE": 0.0,
+          "WBTC": 0.0
+        }
+      },
+      "stable_heavy": {
+        "description": "Fifty per cent counterfactual stable collateral with the remaining debt split by the empirical crypto mix.",
+        "expected_vault_counts": {
+          "ETH": 212,
+          "STABLE": 250,
+          "WBTC": 38
+        },
+        "status": "stable_heavy_counterfactual_sensitivity",
+        "target_debt_shares": {
+          "ETH": 0.4241970563398204,
+          "STABLE": 0.5,
+          "WBTC": 0.0758029436601796
+        }
+      },
+      "stable_supported": {
+        "description": "Twenty-five per cent counterfactual stable collateral with the remaining debt split by the empirical crypto mix.",
+        "expected_vault_counts": {
+          "ETH": 318,
+          "STABLE": 125,
+          "WBTC": 57
+        },
+        "status": "moderate_stable_supported_counterfactual",
+        "target_debt_shares": {
+          "ETH": 0.6362955845097307,
+          "STABLE": 0.25,
+          "WBTC": 0.11370441549026941
+        }
+      }
+    },
+    "registry_id": "final_multicollateral_portfolio_registry",
+    "runtime_adopted": false,
+    "schema_version": 1,
+    "total_debt_dai": 2500000.0,
+    "total_vaults": 500
+  },
+  "profile_identifier": "empirical_integrated_multicollateral",
+  "protected_regressions": {
+    "arrival_input_sha256": "cc29435bb0434237aba438ee98bded77f086704c7400bb5016e2b58703258c8a",
+    "arrival_sequence_sha256": "9fdd5f3b5fb97e2dd41d0201bad34909ad05e423ad6b52f65219f49f02a1c7ed",
+    "confidence_registry_sha256": "d455306fd7b7553f113099b6d51f962939d8b4793439a02c4638c646a63b25da",
+    "empirical_smoke_sha256": "078cf6713e1d5a69f8c9a5e274809b2f8326023100070960493ff44a569bf53b",
+    "experiment_1_sha256": "30090453c211f15f8e574000aec075bcb9acda4d7abf1685bdf4b2f28c0395da",
+    "experiment_2_sha256": "f7c9494e9d02011b06cda2fc590e0bd801a3e5a010f23ab8930b5dddba3ac761",
+    "experiment_3_sha256": "1f0207385a8f8741fbcf2326d1c6bfaab484d41a9a2f9406b65ab27868a85c6d",
+    "experiment_4_sha256": "73ccf5d2676c0bb5f3e901399d72d1dd52fbfe7d0f0d43e915e0105b9309f237",
+    "experiment_5_sha256": "b843906b7d2395bc984432704e7a460e85d6636febd1d16b9f853464c5d6c339",
+    "hurdle_smoke_sha256": "bbe69f0bb5e7d5be46c871f18ca48b6e4c30cf3dc01bb143ec7e23262f5cfbc1",
+    "integrated_eth_profile_identity": "ab68c32a145262bcef07716469d92be09e3d96506383ad16a07d0ba1bad2b34d",
+    "integrated_eth_profile_sha256": "ea0e08f263210af3c3041843537f975ebd886fcf5130c617b0edb189218b3862",
+    "keeper_configuration_sha256": "e1d590508bb3e95ec6bdc2a30c41580fe211831a673dd447e793a0053a7fa848",
+    "keeper_gas_input_sha256": "37a5f49f4cc273b9d0d9526609be7f14b91b78939acf26e4dce00b66443e1594",
+    "keeper_registry_sha256": "58c5754ed95dead1ad283a7961fb0588496804a94f58ddb0e196a57601ee1e1b",
+    "legacy_smoke_sha256": "5f7bb277d1a9d6c1c91576645986fc717f7176253977360b47ebd4ce6ed5fa64",
+    "multicollateral_smoke_sha256": "a8913dff6e9956c4235b5710468eb32229af7aeb83c4dfb5581e7872435fbbf9",
+    "stage1_residual_blocks_sha256": "6f55b51acfc1da23836b3d847153bd4f68e4a38fc33fd967e9d3b795737bf28c",
+    "stage1_residual_sequence_sha256": "3fa2319cee9e1749405c0dc477e0f11ef9c31dd83c371b619bd33eda23c37c30",
+    "vault_input_sha256": "5230a30aa2c2aebe69ef859ccdcbb785eb44f20a691b431f2fd01b0d16558892"
+  },
+  "protocol_parameter_rules": {
+    "debt_ceiling": "retained for provenance; not operational in model",
+    "exact_ilk_retained": true,
+    "liquidation_penalty": "directly observed at 2024-02-01 boundary",
+    "liquidation_ratio": "directly observed at 2024-02-01 boundary",
+    "result_based_choice": false
+  },
+  "purpose": "final multi-collateral input freeze and integration validation",
+  "result_fields_excluded": true,
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "scientific_code_identity": "4e514cad4deac4cd32cd7e2c4c3d9fec83f52688d80ade9a7760262a08712632",
+  "seed_registry": {
+    "derivation": "sha256(namespace|replication|stream) first 64 bits modulo 2^32",
+    "dynamic_replications_per_portfolio": 32,
+    "existing_experiment_seeds_reused": false,
+    "final_validation_seeds_reused": false,
+    "initialisations_per_portfolio": 256,
+    "portfolio_order": [
+      "eth_only",
+      "empirical_crypto",
+      "balanced_crypto",
+      "stable_supported",
+      "stable_heavy"
+    ],
+    "reference_registry_id": "multicollateral-integration-reference-v1",
+    "registry_id": "multicollateral-integration-v1",
+    "schema_version": 1,
+    "streams": [
+      "vault_sampling",
+      "stable_vault_sampling",
+      "market_gas_blocks",
+      "keeper_gas_units",
+      "liquidation_arrivals",
+      "stage1_residual_blocks",
+      "shared_capacity_smoke"
+    ]
+  },
+  "shared_capacity_contract": {
+    "capacity": 26,
+    "collateral_first_tie_break": false,
+    "hurdle": "direct_cost_only",
+    "ranking": [
+      "expected_profit_descending",
+      "debt_at_risk_descending",
+      "vault_id_ascending"
+    ],
+    "risk_cost_rate": 0.0,
+    "semantics": "one system-wide budget"
+  },
+  "shock_order": [
+    "eth_idiosyncratic_severe",
+    "wbtc_idiosyncratic_severe",
+    "joint_crypto_empirical_stress",
+    "joint_crypto_high_correlation",
+    "stable_depeg_moderate",
+    "stable_depeg_severe",
+    "joint_crypto_stable_stress"
+  ],
+  "shock_ranking_by_model_outcome": false,
+  "specification_identity": "2fa5fe41e6c510d9a3a4a69e5c72067ba99e131bbd044e37bc966d21d10895d9",
+  "stable_depegs": {
+    "moderate": {
+      "floor_usd": 0.95,
+      "recovery_hours": 72
+    },
+    "severe": {
+      "floor_usd": 0.9,
+      "recovery_hours": 168
+    },
+    "status": "transparent_counterfactual",
+    "uses_usdc_svb": false
+  },
+  "substantive_final_experiment": false,
+  "usdc_svb_used": false,
+  "validation_design": {
+    "A": "registry and owner validation",
+    "B": {
+      "initialisations_per_portfolio": 256,
+      "portfolio_count": 5,
+      "total_initialisations": 1280
+    },
+    "C": {
+      "hours": 168,
+      "portfolio_count": 5,
+      "replications_per_portfolio": 32,
+      "total_replications": 160
+    },
+    "D": {
+      "maximum_hours_per_smoke": 48,
+      "smoke_count": 6
+    }
+  },
+  "volatile_tail_rule": {
+    "estimator": "nearest-rank",
+    "horizon_hours": 24,
+    "minimum_primary": false,
+    "registered_quantile": 0.01,
+    "reported_quantiles": [
+      0.05,
+      0.01
+    ],
+    "sample": "negative calibration-pool log returns only"
+  }
+}

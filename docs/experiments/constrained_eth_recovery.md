@@ -305,11 +305,18 @@ cross-study effect estimate is reported.
 
 ## 24. Next boundary
 
-The operational maintenance boundary is complete. The next scientific
-boundary is:
+The operational maintenance boundary and the subsequent
+[final multi-collateral input freeze and integration
+validation](../validation/multicollateral_integration.md) are complete. That
+validation retained the same one-system capacity contract under simultaneous
+ETH, WBTC and counterfactual stable-proxy demand. The next scientific boundary
+is:
 
-> Freeze final multi-collateral empirical inputs and validate the
-> shared-capacity multi-collateral integration contract.
+> Pre-register and execute the final hierarchical multi-collateral
+> experiments: idiosyncratic diversification, stress correlation,
+> stable-collateral trade-off and shared keeper capacity.
 
 Oracle-delay closure, population robustness, final multi-collateral
-experiments and held-out final validation remain incomplete.
+experiments and held-out final validation remain incomplete. The constrained
+ETH evidence remains a historical single-collateral result and is not a
+portfolio ranking.

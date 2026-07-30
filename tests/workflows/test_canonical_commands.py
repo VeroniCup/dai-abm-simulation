@@ -25,6 +25,7 @@ CLI_WORKFLOWS = (
     "maintenance/archive/diagnose_vat_activation.py",
     "maintenance/archive/discover_vault_events.py",
     "gas/process.py",
+    "inputs/validate_multicollateral.py",
     "market/process.py",
     "maintenance/archive/repair_quiet_rates.py",
     "maintenance/retrieve_result.py",

@@ -1,0 +1,116 @@
+{
+  "acquisition_calls": 0,
+  "confidence_recalibration": false,
+  "deterministic_reconstruction": true,
+  "final_validation_data_used": false,
+  "keeper_recalibration": false,
+  "live_network_calls": 0,
+  "market_pool": {
+    "columns": 22,
+    "manifest_path": "data/market/model_inputs/multicollateral_blocks/manifest.json",
+    "manifest_sha256": "4018f9f84e76abbf07cbb1edb275222670f6277a4bdc8f492ea42337ee73774c",
+    "path": "data/market/model_inputs/multicollateral_blocks/pool.csv",
+    "rows": 26208,
+    "sha256": "e97570b94b2140f9a6dc6436b386ba0ea9e91d9de73b755cc38d8e971d91ed2e"
+  },
+  "parameter_recalibration": false,
+  "portfolio_ranking": false,
+  "profile_checksum": "a2da654cdc9fc053c50f13aacb18e63ce7854bf47d6ad1519352467f6c7986fc",
+  "profile_identifier": "empirical_integrated_multicollateral",
+  "profile_identity": "d0241808701d0472532c1f7c502ab6637afd60a50082b94bed9ff66f7ec2d53e",
+  "protected_regression_hashes": {
+    "arrival_input_sha256": "cc29435bb0434237aba438ee98bded77f086704c7400bb5016e2b58703258c8a",
+    "arrival_sequence_sha256": "9fdd5f3b5fb97e2dd41d0201bad34909ad05e423ad6b52f65219f49f02a1c7ed",
+    "confidence_registry_sha256": "d455306fd7b7553f113099b6d51f962939d8b4793439a02c4638c646a63b25da",
+    "empirical_smoke_sha256": "078cf6713e1d5a69f8c9a5e274809b2f8326023100070960493ff44a569bf53b",
+    "experiment_1_sha256": "30090453c211f15f8e574000aec075bcb9acda4d7abf1685bdf4b2f28c0395da",
+    "experiment_2_sha256": "f7c9494e9d02011b06cda2fc590e0bd801a3e5a010f23ab8930b5dddba3ac761",
+    "experiment_3_sha256": "1f0207385a8f8741fbcf2326d1c6bfaab484d41a9a2f9406b65ab27868a85c6d",
+    "experiment_4_sha256": "73ccf5d2676c0bb5f3e901399d72d1dd52fbfe7d0f0d43e915e0105b9309f237",
+    "experiment_5_sha256": "b843906b7d2395bc984432704e7a460e85d6636febd1d16b9f853464c5d6c339",
+    "hurdle_smoke_sha256": "bbe69f0bb5e7d5be46c871f18ca48b6e4c30cf3dc01bb143ec7e23262f5cfbc1",
+    "integrated_eth_profile_identity": "ab68c32a145262bcef07716469d92be09e3d96506383ad16a07d0ba1bad2b34d",
+    "integrated_eth_profile_sha256": "ea0e08f263210af3c3041843537f975ebd886fcf5130c617b0edb189218b3862",
+    "keeper_configuration_sha256": "e1d590508bb3e95ec6bdc2a30c41580fe211831a673dd447e793a0053a7fa848",
+    "keeper_gas_input_sha256": "37a5f49f4cc273b9d0d9526609be7f14b91b78939acf26e4dce00b66443e1594",
+    "keeper_registry_sha256": "58c5754ed95dead1ad283a7961fb0588496804a94f58ddb0e196a57601ee1e1b",
+    "legacy_smoke_sha256": "5f7bb277d1a9d6c1c91576645986fc717f7176253977360b47ebd4ce6ed5fa64",
+    "multicollateral_smoke_sha256": "a8913dff6e9956c4235b5710468eb32229af7aeb83c4dfb5581e7872435fbbf9",
+    "stage1_residual_blocks_sha256": "6f55b51acfc1da23836b3d847153bd4f68e4a38fc33fd967e9d3b795737bf28c",
+    "stage1_residual_sequence_sha256": "3fa2319cee9e1749405c0dc477e0f11ef9c31dd83c371b619bd33eda23c37c30",
+    "vault_input_sha256": "5230a30aa2c2aebe69ef859ccdcbb785eb44f20a691b431f2fd01b0d16558892"
+  },
+  "registry_checksums": {
+    "collateral": "75268fed6b3db5a80a822a80b8629291491cd73ce62b4c3e6cf3975060b4eb6d",
+    "portfolio": "76aa03afa352d86be76fbc7e0153981589f50798c52aed7dfad897061b7960b1",
+    "shock": "a98df90e3e743fc22d9f92c38d53cf46a893928d3fe48eda9e609a20aa108581"
+  },
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "scientific_code_identity": "4e514cad4deac4cd32cd7e2c4c3d9fec83f52688d80ade9a7760262a08712632",
+  "seed_registry": {
+    "derivation": "sha256(namespace|replication|stream) first 64 bits modulo 2^32",
+    "dynamic_replications_per_portfolio": 32,
+    "existing_experiment_seeds_reused": false,
+    "final_validation_seeds_reused": false,
+    "initialisations_per_portfolio": 256,
+    "portfolio_order": [
+      "eth_only",
+      "empirical_crypto",
+      "balanced_crypto",
+      "stable_supported",
+      "stable_heavy"
+    ],
+    "reference_registry_id": "multicollateral-integration-reference-v1",
+    "registry_id": "multicollateral-integration-v1",
+    "schema_version": 1,
+    "streams": [
+      "vault_sampling",
+      "stable_vault_sampling",
+      "market_gas_blocks",
+      "keeper_gas_units",
+      "liquidation_arrivals",
+      "stage1_residual_blocks",
+      "shared_capacity_smoke"
+    ]
+  },
+  "shock_ranking_by_model_outcome": false,
+  "specification_identity": "2fa5fe41e6c510d9a3a4a69e5c72067ba99e131bbd044e37bc966d21d10895d9",
+  "substantive_final_experiment": false,
+  "tail_derivation": {
+    "ETH": {
+      "minimum_log_return": -0.24992659983947993,
+      "negative_observation_count": 12748,
+      "q01_log_return": -0.12483514310239592,
+      "q05_log_return": -0.07771029477038699,
+      "registered_percentage_change": -0.11735759972107962,
+      "registered_price_multiplier": 0.8826424002789204
+    },
+    "WBTC": {
+      "minimum_log_return": -0.19663909902391202,
+      "negative_observation_count": 12705,
+      "q01_log_return": -0.09859374041712803,
+      "q05_log_return": -0.062162287516442295,
+      "registered_percentage_change": -0.0938892505665877,
+      "registered_price_multiplier": 0.9061107494334123
+    },
+    "joint_empirical": {
+      "eth_24h_log_return": -0.24992659983947993,
+      "eth_price_multiplier": 0.7788579492718739,
+      "gas_24h_mean_gwei": 180.334618793675,
+      "lambda": 0.5,
+      "score": 13.650920252292819,
+      "selection_timestamp_utc": "2022-05-12T06:00:00+00:00",
+      "selection_uses_model_outcomes": false,
+      "wbtc_24h_log_return": -0.14702698632635303,
+      "wbtc_price_multiplier": 0.8632706805976554
+    }
+  },
+  "usdc_svb_used": false,
+  "validation_counts": {
+    "dynamic_hours_per_replication": 168,
+    "dynamic_replications": 160,
+    "initialisations": 1280,
+    "shared_capacity_smokes": 6
+  }
+}

@@ -1,0 +1,80 @@
+schema_version: 1
+registry_id: final_multicollateral_portfolio_registry
+runtime_adopted: false
+family_order:
+  - ETH
+  - WBTC
+  - STABLE
+total_vaults: 500
+total_debt_dai: 2500000.0
+empirical_crypto_shares:
+  ETH: 0.8483941126796408
+  WBTC: 0.1516058873203592
+count_allocation_rule: largest_remainder_in_family_order
+debt_normalisation_rule: exact_target_family_debt_shares
+collateral_ratio_rule:
+  common_system_target: 3.6089387701260205
+  definition: median_debt_weighted_system_collateral_ratio
+  population: protected_512_integrated_eth_initialisations
+  reference_seed_registry_checksum: 2d077d4ce51fdbb6243bc2dde2d46aaeb998f7efb325a3f7b504fdd2ff5eb38d
+
+portfolios:
+  eth_only:
+    description: ETH-only reference portfolio.
+    status: benchmark
+    target_debt_shares:
+      ETH: 1.0
+      WBTC: 0.0
+      STABLE: 0.0
+    expected_vault_counts:
+      ETH: 500
+      WBTC: 0
+      STABLE: 0
+
+  empirical_crypto:
+    description: Quiet-mature empirical ETH/WBTC family mix.
+    status: empirical_composition
+    target_debt_shares:
+      ETH: 0.8483941126796408
+      WBTC: 0.1516058873203592
+      STABLE: 0.0
+    expected_vault_counts:
+      ETH: 424
+      WBTC: 76
+      STABLE: 0
+
+  balanced_crypto:
+    description: Equal ETH and WBTC debt shares.
+    status: transparent_counterfactual_diversification
+    target_debt_shares:
+      ETH: 0.5
+      WBTC: 0.5
+      STABLE: 0.0
+    expected_vault_counts:
+      ETH: 250
+      WBTC: 250
+      STABLE: 0
+
+  stable_supported:
+    description: Twenty-five per cent counterfactual stable collateral with the remaining debt split by the empirical crypto mix.
+    status: moderate_stable_supported_counterfactual
+    target_debt_shares:
+      ETH: 0.6362955845097307
+      WBTC: 0.11370441549026941
+      STABLE: 0.25
+    expected_vault_counts:
+      ETH: 318
+      WBTC: 57
+      STABLE: 125
+
+  stable_heavy:
+    description: Fifty per cent counterfactual stable collateral with the remaining debt split by the empirical crypto mix.
+    status: stable_heavy_counterfactual_sensitivity
+    target_debt_shares:
+      ETH: 0.4241970563398204
+      WBTC: 0.0758029436601796
+      STABLE: 0.5
+    expected_vault_counts:
+      ETH: 212
+      WBTC: 38
+      STABLE: 250

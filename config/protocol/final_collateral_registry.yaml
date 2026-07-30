@@ -1,0 +1,167 @@
+schema_version: 1
+registry_id: final_multicollateral_collateral_registry
+runtime_adopted: false
+family_order:
+  - ETH
+  - WBTC
+  - STABLE
+
+families:
+  ETH:
+    registry_order: 1
+    asset_class: volatile
+    evidence_status: empirical
+    simulator_collateral_name: ETH
+    underlying_asset: ETH
+    initial_price_usd: 2000.0
+    liquidation_ratio: 1.5782613190190967
+    liquidation_penalty_rate: 0.13
+    max_close_factor: 1.0
+    market_price_owner:
+      status: empirical
+      ordinary_pool_path: data/market/model_inputs/multicollateral_blocks/pool.csv
+      price_column: eth_price_usd
+      return_column: eth_log_return
+      source_pool_path: data/market/model_inputs/environment_blocks/pool.csv
+      source_pool_sha256: b69276801bacf789f8ae91789983cc98a8a6d42d0a992940c0bcfa109ca25b7d
+    initial_price_owner: controlled_central_model_convention
+    protocol_parameter_mode: exact_ilk
+    family_aggregate_status: mechanically_debt_weighted
+    debt_ceiling_treatment: not_operational
+    final_validation_boundary: excludes_ftx_and_usdc_svb
+    quiet_mature_family_debt_share: 0.8483941126796408
+    initialisation:
+      mode: empirical_joint
+      owner: dai_sim.inputs.vaults
+      pool_path: data/vaults/model_inputs/initialisation/pool.csv
+      pool_sha256: 5230a30aa2c2aebe69ef859ccdcbb785eb44f20a691b431f2fd01b0d16558892
+      source_window: quiet_mature_2024-02-01_2024-03-01
+      exact_ilk_pool_rows: 1555
+      exact_ilk_selection: debt_weighted_within_family
+    exact_ilks:
+      ETH-A:
+        quiet_mature_debt_weight: 0.3151974147207501
+        pool_rows: 1029
+        liquidation_ratio: 1.45
+        liquidation_penalty_rate: 0.13
+        debt_ceiling_dai: 428458674.3748652
+        minimum_debt_dai: 7500.0
+      ETH-B:
+        quiet_mature_debt_weight: 0.10734831825178935
+        pool_rows: 137
+        liquidation_ratio: 1.30
+        liquidation_penalty_rate: 0.13
+        debt_ceiling_dai: 100404308.53013456
+        minimum_debt_dai: 25000.0
+      ETH-C:
+        quiet_mature_debt_weight: 0.5774542670274606
+        pool_rows: 389
+        liquidation_ratio: 1.70
+        liquidation_penalty_rate: 0.13
+        debt_ceiling_dai: 549279584.9871001
+        minimum_debt_dai: 3500.0
+    provenance:
+      protocol_hourly_path: data/protocol/processed/hourly_protocol_parameters.csv
+      protocol_hourly_sha256: 8190f1aa9f63a6ebd41ef5eb38ee33b64523631161199e37224ce859cb71f195
+      parameter_boundary_utc: "2024-02-01T00:00:00Z"
+      candidate_path: data/provenance/calibration/vaults/candidate_parameters.json
+      candidate_sha256: f345ded318fe5fb18c36106e4812dff8e1d64edd1bba9fd9b2b090522d0f0049
+
+  WBTC:
+    registry_order: 2
+    asset_class: volatile
+    evidence_status: empirical
+    simulator_collateral_name: BTC
+    underlying_asset: WBTC
+    initial_price_usd: 30000.0
+    liquidation_ratio: 1.536329241517256
+    liquidation_penalty_rate: 0.13
+    max_close_factor: 1.0
+    market_price_owner:
+      status: empirical
+      ordinary_pool_path: data/market/model_inputs/multicollateral_blocks/pool.csv
+      price_column: wbtc_price_usd
+      return_column: wbtc_log_return
+      source_pool_path: data/market/model_inputs/environment_blocks/pool.csv
+      source_pool_sha256: b69276801bacf789f8ae91789983cc98a8a6d42d0a992940c0bcfa109ca25b7d
+    initial_price_owner: controlled_central_model_convention
+    protocol_parameter_mode: exact_ilk
+    family_aggregate_status: mechanically_debt_weighted
+    debt_ceiling_treatment: not_operational
+    final_validation_boundary: excludes_ftx_and_usdc_svb
+    quiet_mature_family_debt_share: 0.1516058873203592
+    initialisation:
+      mode: empirical_joint
+      owner: dai_sim.inputs.vaults
+      pool_path: data/vaults/model_inputs/initialisation/pool.csv
+      pool_sha256: 5230a30aa2c2aebe69ef859ccdcbb785eb44f20a691b431f2fd01b0d16558892
+      source_window: quiet_mature_2024-02-01_2024-03-01
+      exact_ilk_pool_rows: 331
+      exact_ilk_selection: debt_weighted_within_family
+    exact_ilks:
+      WBTC-A:
+        quiet_mature_debt_weight: 0.3839463868669127
+        pool_rows: 162
+        liquidation_ratio: 1.45
+        liquidation_penalty_rate: 0.13
+        debt_ceiling_dai: 53422807.487565525
+        minimum_debt_dai: 7500.0
+      WBTC-B:
+        quiet_mature_debt_weight: 0.218859649828156
+        pool_rows: 55
+        liquidation_ratio: 1.30
+        liquidation_penalty_rate: 0.13
+        debt_ceiling_dai: 31500670.72061268
+        minimum_debt_dai: 25000.0
+      WBTC-C:
+        quiet_mature_debt_weight: 0.3971939633049313
+        pool_rows: 114
+        liquidation_ratio: 1.75
+        liquidation_penalty_rate: 0.13
+        debt_ceiling_dai: 55114489.672565565
+        minimum_debt_dai: 3500.0
+    provenance:
+      protocol_hourly_path: data/protocol/processed/hourly_protocol_parameters.csv
+      protocol_hourly_sha256: 8190f1aa9f63a6ebd41ef5eb38ee33b64523631161199e37224ce859cb71f195
+      parameter_boundary_utc: "2024-02-01T00:00:00Z"
+      candidate_path: data/provenance/calibration/vaults/candidate_parameters.json
+      candidate_sha256: f345ded318fe5fb18c36106e4812dff8e1d64edd1bba9fd9b2b090522d0f0049
+
+  STABLE:
+    registry_order: 3
+    asset_class: stable_proxy
+    evidence_status: counterfactual_stable_proxy
+    simulator_collateral_name: STABLE
+    underlying_asset: stylised_stable_collateral
+    initial_price_usd: 1.0
+    liquidation_ratio: 1.10
+    liquidation_penalty_rate: 0.05
+    max_close_factor: 1.0
+    market_price_owner:
+      status: empirical_ordinary_price_counterfactual_collateral_use
+      ordinary_pool_path: data/market/model_inputs/multicollateral_blocks/pool.csv
+      price_column: usdc_price_usd
+      return_column: usdc_log_return
+      source_panel_path: data/market/processed/dune_hourly_market_prices_processed.csv
+      source_panel_sha256: 43f8a23aff2ec995a4e1ad5e8fc66f4b5223e8dcc9c8a36bd272d733ae1d4e25
+    initial_price_owner: stylised_stable_collateral_convention
+    protocol_parameter_mode: counterfactual_family_bundle
+    debt_ceiling_treatment: not_operational
+    final_validation_boundary: excludes_ftx_and_usdc_svb
+    quiet_mature_family_debt_share: null
+    initialisation:
+      mode: stylised_parametric
+      owner: dai_sim.model.vault.generate_portfolio_vaults
+      empirical_pool_used: false
+      debt_mean_dai: 5000.0
+      debt_standard_deviation_dai: 1000.0
+      collateral_ratio_mean: 2.0
+      collateral_ratio_standard_deviation: 0.25
+      minimum_liquidation_buffer: 0.05
+    exact_ilks: {}
+    provenance:
+      collateral_owner_path: src/dai_sim/model/collateral.py
+      collateral_owner_sha256: 520604266197cc6e8a21e2667a23bb5cb8534c827ac2d96d0d3ee802cdffbc7b
+      vault_owner_path: src/dai_sim/model/vault.py
+      vault_owner_sha256: bb2d38c9641361324b3621b7e6d605d9744e503960e1bab8aebd966686aa4db4
+      caveat: Counterfactual simulator proxy; not an empirical Maker collateral estimate.

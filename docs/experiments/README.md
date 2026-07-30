@@ -22,6 +22,14 @@ The established experiments are implemented in
 - [Peg recovery](peg_recovery.md)
 - [Multi-collateral portfolios and shocks](multi_collateral.md)
 
+The established multi-collateral runner above is a legacy stylised experiment
+and remains operational for regression compatibility. Its five historical
+portfolio names and five historical shock names are not the newly frozen
+final design. The final, still unexecuted design has five portfolios and seven
+shocks registered by the
+[multi-collateral integration validation](../validation/multicollateral_integration.md).
+No final portfolio or shock has been ranked or selected.
+
 Established scenario definitions are Python configuration factories in
 `scenarios.py`, with execution functions in `runner.py`. The new opt-in ETH
 recovery matrix has a dedicated versioned YAML design and resumable workflow;

@@ -14,7 +14,8 @@ The simplified DAI model supports:
 
 Experiments 1–5 remain established ETH-only baselines. The multi-collateral
 portfolio and shock experiment is implemented in
-`src/dai_sim/experiments/runner.py`.
+`src/dai_sim/experiments/runner.py`; it is the historical stylised runner, not
+the newly frozen final empirical-input design.
 
 ## Empirical inputs and calibration
 
@@ -70,6 +71,20 @@ present, and the overall classification is
 `recovery_effect_capacity_dependent`. No capacity or confidence scenario was
 selected and no runtime default changed.
 
+The
+[final multi-collateral input freeze and integration
+validation](docs/validation/multicollateral_integration.md) is complete. The
+final collateral universe is ETH and WBTC with empirical owners plus an
+explicitly counterfactual stable proxy. Its registry fixes five portfolios,
+seven result-blind shocks, 500 vaults, 2.5 million DAI and common initial
+system collateralisation of 3.6089387701260205. All 1,280 initialisations, 160
+ordinary 168-hour replications and six shared-capacity smokes passed. The
+central system-wide cap remains 26, and simultaneous three-family demand
+selected 26 opportunities in total rather than 26 per family. The overall
+classification is `final_multicollateral_inputs_ready_with_caveats`.
+The profile is experiment-ready, opt-in and not runtime adopted. No portfolio
+or shock was ranked or selected.
+
 The separate
 [experiment-infrastructure maintenance](docs/validation/experiment_infrastructure_maintenance.md)
 is complete. The convenience reconstruction CLI now respects the keyword-only
@@ -109,10 +124,9 @@ self-containment correction are also complete. Temporary compatibility
 interfaces have been removed. The Stage 12 working and tracked-only checkouts
 each passed the then-current 491-test suite. The pre-infrastructure working
 suite contained 501 passing tests after the historical confidence-evidence
-additions. The behavioural-confidence infrastructure raises the current suite
-to 536 passing tests through substantive model, calibration, workflow and
-evidence tests; runtime inputs, smoke checks and Experiments 1–5 retain their
-frozen integrity evidence.
+additions. The current multi-collateral integration pass collects 997 tests
+and completes with 996 passing and one documented skip; runtime inputs, smoke
+checks and Experiments 1–5 retain their frozen integrity evidence.
 
 Repository restructuring is closed. The
 [final restructuring review](docs/validation/repository_restructuring.md)
@@ -131,7 +145,7 @@ review reproduced all of them without changing executable behaviour.
 
 - The simulator is not a full Maker auction engine.
 - Stable collateral has no direct confidence or DAI-demand transmission
-  channel.
+  channel, and its final vault and protocol owners are counterfactual.
 - One oracle delay applies to all collateral paths.
 - Behavioural confidence parameters remain incompletely identified.
 - Representative vault windows do not identify unconditional event
@@ -141,11 +155,14 @@ review reproduced all of them without changing executable behaviour.
 
 ## Next research work
 
-The next scientific boundary is to freeze final multi-collateral empirical
-inputs and validate the shared-capacity multi-collateral integration contract.
-Population-scale robustness, oracle-delay closure, final multi-collateral
-execution and final validation remain outstanding. Keeper candidates and the
-integrated profile remain opt-in evidence rather than adopted defaults.
+The next scientific boundary is to pre-register and execute the final
+hierarchical multi-collateral experiments: idiosyncratic diversification,
+stress correlation, stable-collateral trade-off and shared keeper capacity.
+Population-scale robustness, oracle-delay closure and held-out final
+validation, including USDC/SVB, remain outstanding. The five portfolios and
+seven shocks are frozen inputs, not result-based selections. Keeper candidates
+and both integrated profiles remain opt-in evidence rather than adopted
+defaults.
 
 The behavioural-confidence calibration planning pass has resolved four core
 specification choices in the [confidence and behavioural calibration

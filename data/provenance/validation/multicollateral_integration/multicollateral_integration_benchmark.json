@@ -1,0 +1,14 @@
+{
+  "dynamic_hours": 168,
+  "dynamic_validation_count": 160,
+  "free_storage_bytes": 236014198784,
+  "host_dependent": true,
+  "ignored_output_size_bytes": 6209401,
+  "initialisation_count": 1280,
+  "minimum_free_storage_bytes": 10737418240,
+  "output_cap_bytes": 314572800,
+  "schema_version": 1,
+  "smoke_count": 6,
+  "wall_time_seconds": 70.38885070898687,
+  "workers": 1
+}

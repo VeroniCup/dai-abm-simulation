@@ -58,6 +58,15 @@ WORKFLOW_MAPPING = {
     "validate_dune_market_prices.py": "market/validate.py",
 }
 
+POST_RESTRUCTURING_WORKFLOWS = {
+    "calibration/keeper_execution.py",
+    "experiments/constrained_eth_recovery.py",
+    "experiments/eth_recovery.py",
+    "inputs/validate_integrated_eth.py",
+    "inputs/validate_multicollateral.py",
+    "market/process_historical_evidence.py",
+}
+
 EXPECTED_CATEGORIES = {
     "calibration",
     "experiments",
@@ -81,6 +90,12 @@ def test_exactly_27_unique_authoritative_workflows_exist() -> None:
     assert not (ROOT / "scripts").exists()
     for target in WORKFLOW_MAPPING.values():
         assert (ROOT / "workflows" / target).is_file()
+    actual = {
+        path.relative_to(ROOT / "workflows").as_posix()
+        for path in (ROOT / "workflows").rglob("*.py")
+        if path.name != "_bootstrap.py"
+    }
+    assert set(WORKFLOW_MAPPING.values()) | POST_RESTRUCTURING_WORKFLOWS == actual
 
 
 def test_protocol_and_vault_workflow_responsibilities_remain_distinct() -> None:

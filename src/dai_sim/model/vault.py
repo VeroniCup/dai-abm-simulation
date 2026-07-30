@@ -49,6 +49,9 @@ class Vault:
         Example: 1.5 means 150%.
     collateral_type:
         Identifier of the single collateral asset held by the vault.
+    exact_ilk:
+        Optional exact Maker collateral identifier, for example ``ETH-A``.
+        This metadata does not alter the collateral-family mechanics.
     is_active:
         Whether the vault is still active.
     is_liquidated:
@@ -63,16 +66,21 @@ class Vault:
     collateral_type: str = "ETH"
     is_active: bool = True
     is_liquidated: bool = False
+    exact_ilk: str | None = None
 
     def __post_init__(self) -> None:
-        """Normalise the collateral identifier and validate the vault."""
+        """Normalise collateral identifiers and validate the vault."""
         self.collateral_type = str(self.collateral_type).strip().upper()
+        if self.exact_ilk is not None:
+            self.exact_ilk = str(self.exact_ilk).strip().upper()
         self.validate()
 
     def validate(self) -> None:
         """Validate vault values."""
         if not self.collateral_type:
             raise ValueError("collateral_type must not be empty.")
+        if self.exact_ilk is not None and not self.exact_ilk:
+            raise ValueError("exact_ilk must not be empty when supplied.")
         if self.collateral_amount < 0:
             raise ValueError("collateral_amount cannot be negative.")
         if self.debt_dai < 0:
@@ -712,6 +720,7 @@ def vaults_to_dataframe(
                 "vault_id": vault.vault_id,
                 "owner_id": vault.owner_id,
                 "collateral_type": vault.collateral_type,
+                "exact_ilk": vault.exact_ilk,
                 "collateral_amount": vault.collateral_amount,
                 "collateral_value": vault.collateral_value(prices),
                 "debt_dai": vault.debt_dai,

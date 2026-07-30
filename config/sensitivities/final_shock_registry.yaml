@@ -1,0 +1,157 @@
+schema_version: 1
+registry_id: final_multicollateral_shock_registry
+runtime_adopted: false
+family_order:
+  - ETH
+  - WBTC
+  - STABLE
+onset_hour: 24
+exclusions:
+  ftx:
+    start_utc: "2022-11-01T00:00:00Z"
+    end_exclusive_utc: "2022-11-21T00:00:00Z"
+  usdc_svb:
+    start_utc: "2023-03-06T00:00:00Z"
+    end_exclusive_utc: "2023-03-20T00:00:00Z"
+volatile_tail_rule:
+  horizon_hours: 24
+  estimator: nearest_rank
+  quantile: 0.01
+  population: negative_24h_log_returns_only
+  reported_statistics:
+    - q05
+    - q01
+    - minimum
+  source_columns:
+    ETH: eth_24h_log_return
+    WBTC: wbtc_24h_log_return
+joint_empirical_stress_rule:
+  gas_weight_lambda: 0.5
+  score: "standardised_ETH_downside + standardised_WBTC_downside + 0.5 * standardised_gas"
+  selection: maximum_joint_stress_score
+volatile_recovery_paths:
+  principal: full_week
+  adverse: persistent_trough
+  source_path: config/sensitivities/eth_recovery_matrix.yaml
+  source_sha256: fc6e3b3b9922cf7185ef7e8033f357b62ea9963cac9f1a43cb146f5872ad489c
+controlled_design:
+  unshocked_asset_path: ordinary_joint_empirical_block
+  common_shock_onset: true
+  scenario_selection_uses_model_outcomes: false
+  final_validation_data_used: false
+
+shocks:
+  eth_idiosyncratic_severe:
+    description: ETH-only severe 24-hour empirical lower-tail shock.
+    principal_recovery_path_id: full_week
+    adverse_recovery_path_id: persistent_trough
+    rules:
+      ETH:
+        rule: historical_24h_nearest_rank_q01
+        magnitude: null
+        status: pending_result_blind_derivation
+      WBTC:
+        rule: none
+        magnitude: 0.0
+      STABLE:
+        rule: none
+        magnitude: 0.0
+
+  wbtc_idiosyncratic_severe:
+    description: WBTC-only severe 24-hour empirical lower-tail shock.
+    principal_recovery_path_id: full_week
+    adverse_recovery_path_id: persistent_trough
+    rules:
+      ETH:
+        rule: none
+        magnitude: 0.0
+      WBTC:
+        rule: historical_24h_nearest_rank_q01
+        magnitude: null
+        status: pending_result_blind_derivation
+      STABLE:
+        rule: none
+        magnitude: 0.0
+
+  joint_crypto_empirical_stress:
+    description: Joint ETH/WBTC episode selected by the pre-registered downside-and-gas score.
+    principal_recovery_path_id: full_week
+    adverse_recovery_path_id: persistent_trough
+    rules:
+      ETH:
+        rule: joint_empirical_stress_episode
+        magnitude: null
+        status: pending_result_blind_derivation
+      WBTC:
+        rule: joint_empirical_stress_episode
+        magnitude: null
+        status: pending_result_blind_derivation
+      STABLE:
+        rule: none
+        magnitude: 0.0
+
+  joint_crypto_high_correlation:
+    description: Simultaneous severe ETH and WBTC tails used as a high-correlation adverse sensitivity.
+    principal_recovery_path_id: full_week
+    adverse_recovery_path_id: persistent_trough
+    rules:
+      ETH:
+        rule: historical_24h_nearest_rank_q01
+        magnitude: null
+        status: pending_result_blind_derivation
+      WBTC:
+        rule: historical_24h_nearest_rank_q01
+        magnitude: null
+        status: pending_result_blind_derivation
+      STABLE:
+        rule: none
+        magnitude: 0.0
+
+  stable_depeg_moderate:
+    description: Counterfactual moderate stable-collateral depeg.
+    rules:
+      ETH:
+        rule: none
+        magnitude: 0.0
+      WBTC:
+        rule: none
+        magnitude: 0.0
+      STABLE:
+        rule: fixed_price_floor
+        magnitude: -0.05
+        price_floor: 0.95
+        duration_hours: 72
+
+  stable_depeg_severe:
+    description: Counterfactual severe and persistent stable-collateral depeg.
+    rules:
+      ETH:
+        rule: none
+        magnitude: 0.0
+      WBTC:
+        rule: none
+        magnitude: 0.0
+      STABLE:
+        rule: fixed_price_floor
+        magnitude: -0.10
+        price_floor: 0.90
+        duration_hours: 168
+
+  joint_crypto_stable_stress:
+    description: Simultaneous severe ETH and WBTC tails with the severe stable-collateral depeg.
+    principal_recovery_path_id: full_week
+    adverse_recovery_path_id: persistent_trough
+    rules:
+      ETH:
+        rule: historical_24h_nearest_rank_q01
+        magnitude: null
+        status: pending_result_blind_derivation
+      WBTC:
+        rule: historical_24h_nearest_rank_q01
+        magnitude: null
+        status: pending_result_blind_derivation
+      STABLE:
+        rule: fixed_price_floor
+        magnitude: -0.10
+        price_floor: 0.90
+        duration_hours: 168

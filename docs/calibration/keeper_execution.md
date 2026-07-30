@@ -209,3 +209,13 @@ higher capacity reduces backlog, while slower execution allows more vaults to
 be rescued by ETH recovery. This does not identify or select a physical
 capacity. All three values retain their candidate roles and the constraint
 remains system-wide rather than collateral-specific.
+
+The subsequent
+[final multi-collateral integration validation](../validation/multicollateral_integration.md)
+has now proved that this contract survives simultaneous ETH, WBTC and stable
+proxy demand. With all three pools presenting 108 unsafe opportunities, one
+global ordering selected 26 in total—9 ETH, 9 WBTC and 8 STABLE—rather than
+allocating 26 to each pool. Selection was permutation-invariant, backlog
+carried forward, and collateral totals reconciled to the system totals.
+Capacity 26 remains central and 14/45 remain robustness treatments; no new
+keeper calibration or physical-maximum claim was made.

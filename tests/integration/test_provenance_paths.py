@@ -71,6 +71,50 @@ DURABLE_PROVENANCE = (
         "integrated_empirical_eth_benchmark.json"
     ),
     (
+        "data/provenance/validation/multicollateral_integration/"
+        "multicollateral_integration_specification.json"
+    ),
+    (
+        "data/provenance/validation/multicollateral_integration/"
+        "final_collateral_registry.csv"
+    ),
+    (
+        "data/provenance/validation/multicollateral_integration/"
+        "final_protocol_parameters.csv"
+    ),
+    (
+        "data/provenance/validation/multicollateral_integration/"
+        "final_portfolio_registry.csv"
+    ),
+    (
+        "data/provenance/validation/multicollateral_integration/"
+        "final_shock_registry.csv"
+    ),
+    (
+        "data/provenance/validation/multicollateral_integration/"
+        "multicollateral_initialisation_validation.csv"
+    ),
+    (
+        "data/provenance/validation/multicollateral_integration/"
+        "multicollateral_shared_capacity_validation.csv"
+    ),
+    (
+        "data/provenance/validation/multicollateral_integration/"
+        "multicollateral_dynamic_validation.csv"
+    ),
+    (
+        "data/provenance/validation/multicollateral_integration/"
+        "multicollateral_integration_decision.json"
+    ),
+    (
+        "data/provenance/validation/multicollateral_integration/"
+        "multicollateral_integration_reproducibility.json"
+    ),
+    (
+        "data/provenance/validation/multicollateral_integration/"
+        "multicollateral_integration_benchmark.json"
+    ),
+    (
         "data/provenance/experiments/confidence/"
         "confidence_scenario_specification.json"
     ),

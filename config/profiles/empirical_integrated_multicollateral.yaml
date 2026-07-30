@@ -1,0 +1,88 @@
+schema_version: 1
+profile_identifier: empirical_integrated_multicollateral
+mode: empirical
+description: Dormant final multi-collateral empirical-input integration profile.
+experiment_ready: true
+runtime_adopted: false
+
+registry_paths:
+  collateral: config/protocol/final_collateral_registry.yaml
+  portfolio: config/sensitivities/final_portfolio_registry.yaml
+  shock: config/sensitivities/final_shock_registry.yaml
+registry_checksums:
+  collateral: 75268fed6b3db5a80a822a80b8629291491cd73ce62b4c3e6cf3975060b4eb6d
+  portfolio: 76aa03afa352d86be76fbc7e0153981589f50798c52aed7dfad897061b7960b1
+  shock: a98df90e3e743fc22d9f92c38d53cf46a893928d3fe48eda9e609a20aa108581
+
+population:
+  total_vaults: 500
+  total_debt_dai: 2500000.0
+  common_system_target_collateral_ratio: 3.6089387701260205
+  target_definition: median_debt_weighted_system_collateral_ratio
+  reference_population: protected_512_integrated_eth_initialisations
+  reference_seed_registry_checksum: 2d077d4ce51fdbb6243bc2dde2d46aaeb998f7efb325a3f7b504fdd2ff5eb38d
+  vault_pool_path: data/vaults/model_inputs/initialisation/pool.csv
+  vault_pool_sha256: 5230a30aa2c2aebe69ef859ccdcbb785eb44f20a691b431f2fd01b0d16558892
+  vault_pool_manifest_path: data/vaults/model_inputs/initialisation/manifest.json
+  vault_pool_manifest_sha256: ca3db6fcd5611c496032a775a453055469e23d9742316b59e3bfd2db70c3659a
+
+keeper:
+  capacity_profile_id: shared_keeper_capacity_central
+  maximum_liquidations_per_step: 26
+  capacity_semantics: system_wide_shared_capacity
+  hurdle_profile_id: direct_cost_only
+  risk_cost_rate: 0.0
+  configuration_path: config/sensitivities/keeper_execution.yaml
+  configuration_sha256: e1d590508bb3e95ec6bdc2a30c41580fe211831a673dd447e793a0053a7fa848
+  evidence_registry_path: data/provenance/calibration/keeper/keeper_execution_registry.csv
+  evidence_registry_sha256: 58c5754ed95dead1ad283a7961fb0588496804a94f58ddb0e196a57601ee1e1b
+
+confidence:
+  scenario_id: stage1_only
+  persistent_confidence_enabled: false
+  below_peg_response: 0.199381
+  above_peg_response: 0.105131
+  panic_response: 0.0
+  registry_path: config/sensitivities/confidence_scenarios.yaml
+  registry_file_sha256: 86c33147f167d708e4a18191e50c39bec5056a680b13e682551317ba9b916e85
+  registry_identity_sha256: d455306fd7b7553f113099b6d51f962939d8b4793439a02c4638c646a63b25da
+
+oracle:
+  delay_steps: 0
+  status: transparent_baseline_not_calibrated
+
+market_process:
+  mode: empirical_multicollateral_block_bootstrap
+  pool_path: data/market/model_inputs/multicollateral_blocks/pool.csv
+  pool_sha256: e97570b94b2140f9a6dc6436b386ba0ea9e91d9de73b755cc38d8e971d91ed2e
+  manifest_path: data/market/model_inputs/multicollateral_blocks/manifest.json
+  manifest_sha256: 4018f9f84e76abbf07cbb1edb275222670f6277a4bdc8f492ea42337ee73774c
+  source_environment_pool_path: data/market/model_inputs/environment_blocks/pool.csv
+  source_environment_pool_sha256: b69276801bacf789f8ae91789983cc98a8a6d42d0a992940c0bcfa109ca25b7d
+  source_market_panel_path: data/market/processed/dune_hourly_market_prices_processed.csv
+  source_market_panel_sha256: 43f8a23aff2ec995a4e1ad5e8fc66f4b5223e8dcc9c8a36bd272d733ae1d4e25
+  block_length_hours: 168
+  return_type: log_return
+  alignment_mode: shared_market_gas
+  shock_overlay_enabled: false
+
+other_empirical_owners:
+  keeper_gas_pool_path: data/liquidations/model_inputs/keeper_gas/pool.csv
+  keeper_gas_pool_sha256: 37a5f49f4cc273b9d0d9526609be7f14b91b78939acf26e4dce00b66443e1594
+  liquidation_arrival_pool_path: data/liquidations/model_inputs/arrival/hourly_pool.csv
+  liquidation_arrival_pool_sha256: cc29435bb0434237aba438ee98bded77f086704c7400bb5016e2b58703258c8a
+
+final_validation_exclusions:
+  ftx:
+    start_utc: "2022-11-01T00:00:00Z"
+    end_exclusive_utc: "2022-11-21T00:00:00Z"
+  usdc_svb:
+    start_utc: "2023-03-06T00:00:00Z"
+    end_exclusive_utc: "2023-03-20T00:00:00Z"
+
+provenance:
+  profile_status: dormant_input_freeze
+  existing_integrated_eth_profile_unchanged: true
+  stable_family_status: counterfactual_stable_proxy
+  final_validation_data_used: false
+  usdc_svb_used: false

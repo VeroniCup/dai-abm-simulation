@@ -1,0 +1,39 @@
+{
+  "authorised_next_boundary": "pre-register and execute the final hierarchical multi-collateral experiments: idiosyncratic diversification, stress correlation, stable-collateral trade-off and shared keeper capacity",
+  "caveats": [
+    "The stable-vault distribution and protocol parameters are an existing transparent counterfactual owner, not empirical Maker stable-collateral evidence.",
+    "The clean local USDC series owns only ordinary stable-price variation and excludes the USDC/SVB interval.",
+    "Shared capacity 26 is partially identified and is not a physical keeper-network maximum.",
+    "Population robustness, oracle-delay robustness and held-out validation remain outstanding."
+  ],
+  "collateral_universe_classification": "final_collateral_universe_ready_with_counterfactual_stable",
+  "experiment_ready": true,
+  "final_validation_data_used": false,
+  "no_confidence_recalibration": true,
+  "no_keeper_recalibration": true,
+  "no_parameter_recalibration": true,
+  "no_portfolio_selected": true,
+  "no_shock_selected_by_model_outcome": true,
+  "no_substantive_experiment": true,
+  "overall_classification": "final_multicollateral_inputs_ready_with_caveats",
+  "portfolio_classification": "final_portfolio_registry_ready",
+  "profile_checksum": "a2da654cdc9fc053c50f13aacb18e63ce7854bf47d6ad1519352467f6c7986fc",
+  "profile_identifier": "empirical_integrated_multicollateral",
+  "profile_identity": "d0241808701d0472532c1f7c502ab6637afd60a50082b94bed9ff66f7ec2d53e",
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "shared_capacity_classification": "shared_capacity_contract_valid",
+  "shock_classification": "final_shock_registry_ready_with_counterfactual_stable_depegs",
+  "stable_collateral_status": "counterfactual_stable_proxy",
+  "stable_ordinary_process": {
+    "excluded_interval_observation_count": 0,
+    "maximum_price_usd": 1.04337666667,
+    "median_price_usd": 1.00071458333,
+    "minimum_price_usd": 0.994866916667,
+    "observation_count": 26208,
+    "owner_status": "empirical_price_proxy_for_counterfactual_stable_collateral",
+    "within_one_percent_of_par_count": 26184,
+    "within_one_percent_of_par_share": 0.9990842490842491
+  },
+  "usdc_svb_used": false
+}

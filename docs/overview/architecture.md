@@ -59,7 +59,10 @@ Complete user-facing profiles are:
 - `config/profiles/empirical.yaml`;
 - `config/profiles/empirical_stress.yaml`; and
 - `config/profiles/empirical_integrated_eth.yaml`, an additive, opt-in
-  integration-validation profile which is never selected implicitly.
+  integration-validation profile which is never selected implicitly; and
+- `config/profiles/empirical_integrated_multicollateral.yaml`, an additive,
+  experiment-ready but non-runtime-adopted profile for the frozen final
+  multi-collateral inputs.
 
 Partial overrides live under `config/sensitivities/`. The explicit dormant
 persistent-confidence scenario registry also lives there; it is an
@@ -73,6 +76,14 @@ experiment configuration files.
 Compact integration-validation evidence is owned by
 `data/provenance/validation/`; detailed validation runs remain ignored under
 `outputs/diagnostics/validation/`.
+
+The final multi-collateral configuration is split by semantic owner:
+`config/protocol/final_collateral_registry.yaml` owns collateral and exact-ilk
+parameters, while `config/sensitivities/final_portfolio_registry.yaml` and
+`final_shock_registry.yaml` own the five treatment portfolios and seven
+result-blind shocks. The stable family remains an explicitly counterfactual
+proxy. These registries do not replace or rename the established stylised
+multi-collateral experiment.
 
 Semantic profile loaders validate the original immutable profile path through
 each configuration layer. They do not materialise shared
@@ -102,8 +113,10 @@ historical instances under `generated/history/` where appropriate.
 The legacy ETH-only path remains the default. Multi-collateral inputs are
 normalised into collateral-specific price mappings and long-format
 collateral-level outputs, while established system-level result columns remain
-available. Compatibility shims are temporary migration aids and must contain
-no business logic.
+available. The final opt-in multi-collateral contract uses one global keeper
+ranking and one shared capacity across all collateral pools; it is documented
+in the
+[integration validation](../validation/multicollateral_integration.md).
 
 ## Further reading
 

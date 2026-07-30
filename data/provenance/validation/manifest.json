@@ -3,32 +3,11 @@
   "duplicate_paths": 0,
   "entries": [
     {
-      "bytes": 6598,
-      "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_specification.json",
+      "bytes": 452,
+      "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_benchmark.json",
       "runtime_input": false,
       "semantic_owner": "integrated_empirical_eth_validation",
-      "sha256": "82b39324f9c15883d8e40e25a14cf43153adb5fad03352ce169a93e9aecf6ca3"
-    },
-    {
-      "bytes": 4806,
-      "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_profile.json",
-      "runtime_input": false,
-      "semantic_owner": "integrated_empirical_eth_validation",
-      "sha256": "411da8a21b0c669eb962979a2e015b93f399b58ba279d7f799d270420ce5f80b"
-    },
-    {
-      "bytes": 5134,
-      "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_input_validation.csv",
-      "runtime_input": false,
-      "semantic_owner": "integrated_empirical_eth_validation",
-      "sha256": "4498ef09c05037787933d4d34309bdb59a2ab2d113620e8fd2106bf1b499f458"
-    },
-    {
-      "bytes": 4565,
-      "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_dynamic_summary.csv",
-      "runtime_input": false,
-      "semantic_owner": "integrated_empirical_eth_validation",
-      "sha256": "8b345fc48c661af4aceff7b5e17582c23625ca12239a5e7b4013e3536adfd68b"
+      "sha256": "1b70d8658cd128479300dda6b24f7dce0df4eb572d204df8c4d8df45f78946d7"
     },
     {
       "bytes": 677,
@@ -45,6 +24,27 @@
       "sha256": "0c9b2ab578725d959a946b737f614ff79bb253f824fd18fad372ff0f18c5e195"
     },
     {
+      "bytes": 4565,
+      "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_dynamic_summary.csv",
+      "runtime_input": false,
+      "semantic_owner": "integrated_empirical_eth_validation",
+      "sha256": "8b345fc48c661af4aceff7b5e17582c23625ca12239a5e7b4013e3536adfd68b"
+    },
+    {
+      "bytes": 5134,
+      "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_input_validation.csv",
+      "runtime_input": false,
+      "semantic_owner": "integrated_empirical_eth_validation",
+      "sha256": "4498ef09c05037787933d4d34309bdb59a2ab2d113620e8fd2106bf1b499f458"
+    },
+    {
+      "bytes": 4806,
+      "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_profile.json",
+      "runtime_input": false,
+      "semantic_owner": "integrated_empirical_eth_validation",
+      "sha256": "411da8a21b0c669eb962979a2e015b93f399b58ba279d7f799d270420ce5f80b"
+    },
+    {
       "bytes": 1610,
       "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_reproducibility.json",
       "runtime_input": false,
@@ -52,13 +52,90 @@
       "sha256": "726c9d4fc0360269a1d133ab83b5b22f86ea8cc264044293abe273b72144070f"
     },
     {
-      "bytes": 452,
-      "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_benchmark.json",
+      "bytes": 6598,
+      "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_specification.json",
       "runtime_input": false,
       "semantic_owner": "integrated_empirical_eth_validation",
-      "sha256": "1b70d8658cd128479300dda6b24f7dce0df4eb572d204df8c4d8df45f78946d7"
+      "sha256": "82b39324f9c15883d8e40e25a14cf43153adb5fad03352ce169a93e9aecf6ca3"
+    },
+    {
+      "bytes": 3080,
+      "path": "data/provenance/validation/multicollateral_integration/final_collateral_registry.csv",
+      "runtime_input": false,
+      "semantic_owner": "multicollateral_integration_validation",
+      "sha256": "a64bce5980a9aca5df64cc3833c90a218611a1c5c94bc4ea6e10d5f844b45e65"
+    },
+    {
+      "bytes": 3600,
+      "path": "data/provenance/validation/multicollateral_integration/final_portfolio_registry.csv",
+      "runtime_input": false,
+      "semantic_owner": "multicollateral_integration_validation",
+      "sha256": "7e51cf3401e09ebdb5c499e2c2e5f1a0060ec3676fb0ac2849f3dd48e4e1cf8e"
+    },
+    {
+      "bytes": 3159,
+      "path": "data/provenance/validation/multicollateral_integration/final_protocol_parameters.csv",
+      "runtime_input": false,
+      "semantic_owner": "multicollateral_integration_validation",
+      "sha256": "d542813adb700fe5db1e625614fb6cc758f063b501095f96c30c57b2e225f829"
+    },
+    {
+      "bytes": 5636,
+      "path": "data/provenance/validation/multicollateral_integration/final_shock_registry.csv",
+      "runtime_input": false,
+      "semantic_owner": "multicollateral_integration_validation",
+      "sha256": "5b5167f93f138cc08ba345f8af687d509da8c620dadbb537befcd4be22f8a750"
+    },
+    {
+      "bytes": 9224,
+      "path": "data/provenance/validation/multicollateral_integration/multicollateral_dynamic_validation.csv",
+      "runtime_input": false,
+      "semantic_owner": "multicollateral_integration_validation",
+      "sha256": "d2d0a6f319b70a89ef0ebaaf8f7c5919abb716ef5d94d32ba37aa672d65c73fe"
+    },
+    {
+      "bytes": 9099,
+      "path": "data/provenance/validation/multicollateral_integration/multicollateral_initialisation_validation.csv",
+      "runtime_input": false,
+      "semantic_owner": "multicollateral_integration_validation",
+      "sha256": "a9e9c05df0bfddd4e31f4fe1ed63f547f4e9403ab8504a19f840b08e102ec335"
+    },
+    {
+      "bytes": 377,
+      "path": "data/provenance/validation/multicollateral_integration/multicollateral_integration_benchmark.json",
+      "runtime_input": false,
+      "semantic_owner": "multicollateral_integration_validation",
+      "sha256": "9bf3a5f5fd4f0206c1a91227201b7cd0427817af1b6fa9649eddb63764aca1df"
+    },
+    {
+      "bytes": 2207,
+      "path": "data/provenance/validation/multicollateral_integration/multicollateral_integration_decision.json",
+      "runtime_input": false,
+      "semantic_owner": "multicollateral_integration_validation",
+      "sha256": "1acee6f2d291d83db083ddc3602df0ec6cb9a5bae9a039401a84190dea8b9f97"
+    },
+    {
+      "bytes": 5654,
+      "path": "data/provenance/validation/multicollateral_integration/multicollateral_integration_reproducibility.json",
+      "runtime_input": false,
+      "semantic_owner": "multicollateral_integration_validation",
+      "sha256": "e57258a9bc81f8d602a6bd7a9dbc306695a8c7bdbace84d5ba26b6b821c361f6"
+    },
+    {
+      "bytes": 12488,
+      "path": "data/provenance/validation/multicollateral_integration/multicollateral_integration_specification.json",
+      "runtime_input": false,
+      "semantic_owner": "multicollateral_integration_validation",
+      "sha256": "ef881d7f1f740e36294dae195ae120d937a7c5027051b3f8a4349c8c23bd0ed2"
+    },
+    {
+      "bytes": 3136,
+      "path": "data/provenance/validation/multicollateral_integration/multicollateral_shared_capacity_validation.csv",
+      "runtime_input": false,
+      "semantic_owner": "multicollateral_integration_validation",
+      "sha256": "af114d178d1d1564cba359e3ea61ea92f07a2a54dbe3e9c1409925ceff2cfad7"
     }
   ],
-  "entry_count": 8,
+  "entry_count": 19,
   "schema_version": 1
 }

@@ -6,6 +6,7 @@ from dataclasses import replace
 import json
 import math
 from pathlib import Path
+import subprocess
 
 import numpy as np
 import pandas as pd
@@ -19,7 +20,10 @@ from dai_sim.calibration.integrated_eth_validation import (
     INITIALISATION_COUNT,
     InputValidationResult,
     DynamicValidationResult,
+    VALIDATION_MANIFEST,
+    VALIDATION_SEMANTIC_OWNER,
     _dynamic_replication,
+    _manifest_payload,
     _normalised_initial_state,
     _overall_classification,
     _reference_rows,
@@ -375,3 +379,126 @@ def test_compact_evidence_is_complete_and_non_adopted() -> None:
     assert float(capacity.loc[
         capacity["metric"].eq("generic_audit_attempt_record_overcount"), "value"
     ].iloc[0]) == 0.0
+
+
+def test_manifest_rerun_preserves_other_semantic_owners(tmp_path: Path) -> None:
+    evidence_hashes_before = {
+        name: sha256_file(EVIDENCE_DIR / name) for name in COMPACT_FILENAMES
+    }
+    manifest = json.loads(VALIDATION_MANIFEST.read_text(encoding="utf-8"))
+    shared_entry_count = len(manifest["entries"])
+    foreign_path = "PROJECT_STATUS.md"
+    foreign_entry = {
+        "path": foreign_path,
+        "sha256": sha256_file(REPOSITORY_ROOT / foreign_path),
+        "bytes": (REPOSITORY_ROOT / foreign_path).stat().st_size,
+        "semantic_owner": "another_validation_owner",
+        "runtime_input": False,
+    }
+    manifest["entries"].append(foreign_entry)
+    manifest["entry_count"] = len(manifest["entries"])
+    temporary_manifest = tmp_path / "manifest.json"
+    temporary_manifest.write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+    merged = _manifest_payload(
+        EVIDENCE_DIR,
+        manifest_path=temporary_manifest,
+    )
+    temporary_manifest.write_text(
+        json.dumps(merged, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    rerun = _manifest_payload(
+        EVIDENCE_DIR,
+        manifest_path=temporary_manifest,
+    )
+
+    assert rerun == merged
+    assert foreign_entry in merged["entries"]
+    assert merged["entry_count"] == shared_entry_count + 1
+    assert len({entry["path"] for entry in merged["entries"]}) == len(
+        merged["entries"]
+    )
+    assert [
+        entry["path"] for entry in merged["entries"]
+    ] == sorted(entry["path"] for entry in merged["entries"])
+    assert sum(
+        entry["semantic_owner"] == VALIDATION_SEMANTIC_OWNER
+        for entry in merged["entries"]
+    ) == len(COMPACT_FILENAMES)
+    assert {
+        name: sha256_file(EVIDENCE_DIR / name) for name in COMPACT_FILENAMES
+    } == evidence_hashes_before
+
+
+def test_compact_validator_accepts_a_shared_manifest(tmp_path: Path) -> None:
+    manifest = json.loads(VALIDATION_MANIFEST.read_text(encoding="utf-8"))
+    shared_entry_count = len(manifest["entries"])
+    foreign_path = "PROJECT_STATUS.md"
+    manifest["entries"].append(
+        {
+            "path": foreign_path,
+            "sha256": sha256_file(REPOSITORY_ROOT / foreign_path),
+            "bytes": (REPOSITORY_ROOT / foreign_path).stat().st_size,
+            "semantic_owner": "another_validation_owner",
+            "runtime_input": False,
+        }
+    )
+    manifest["entry_count"] = len(manifest["entries"])
+    temporary_manifest = tmp_path / "manifest.json"
+    temporary_manifest.write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+    result = validate_compact_evidence(manifest_path=temporary_manifest)
+
+    assert result["manifest_entry_count"] == len(COMPACT_FILENAMES)
+    assert result["validation_manifest_total_entry_count"] == (
+        shared_entry_count + 1
+    )
+
+
+def test_multicollateral_compact_evidence_is_explicitly_trackable() -> None:
+    compact_names = (
+        "multicollateral_integration_specification.json",
+        "final_collateral_registry.csv",
+        "final_protocol_parameters.csv",
+        "final_portfolio_registry.csv",
+        "final_shock_registry.csv",
+        "multicollateral_initialisation_validation.csv",
+        "multicollateral_shared_capacity_validation.csv",
+        "multicollateral_dynamic_validation.csv",
+        "multicollateral_integration_decision.json",
+        "multicollateral_integration_reproducibility.json",
+        "multicollateral_integration_benchmark.json",
+    )
+    for name in compact_names:
+        path = f"data/provenance/validation/multicollateral_integration/{name}"
+        result = subprocess.run(
+            ["git", "check-ignore", "--no-index", "-q", path],
+            cwd=REPOSITORY_ROOT,
+            check=False,
+        )
+        assert result.returncode != 0, path
+
+    ignored_paths = (
+        (
+            "data/provenance/validation/multicollateral_integration/"
+            "replication_level_diagnostics.csv"
+        ),
+        (
+            "outputs/diagnostics/validation/multicollateral_integration/"
+            "replication_level_diagnostics.csv"
+        ),
+    )
+    for path in ignored_paths:
+        result = subprocess.run(
+            ["git", "check-ignore", "--no-index", "-q", path],
+            cwd=REPOSITORY_ROOT,
+            check=False,
+        )
+        assert result.returncode == 0, path

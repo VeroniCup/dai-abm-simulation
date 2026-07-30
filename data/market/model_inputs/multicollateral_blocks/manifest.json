@@ -1,0 +1,52 @@
+{
+  "artefact": "final_multicollateral_market_gas_pool",
+  "columns": [
+    "pool_row_id",
+    "source_pool_row_id",
+    "source_row",
+    "timestamp_utc",
+    "calibration_pool_label",
+    "regime_label",
+    "is_calibration",
+    "return_observation_valid",
+    "calibration_segment_id",
+    "eth_price_usd",
+    "wbtc_price_usd",
+    "usdc_price_usd",
+    "eth_log_return",
+    "wbtc_log_return",
+    "usdc_log_return",
+    "eth_24h_log_return",
+    "wbtc_24h_log_return",
+    "usdc_24h_log_return",
+    "median_effective_gas_price_gwei",
+    "p90_effective_gas_price_gwei",
+    "p99_effective_gas_price_gwei",
+    "target_normalised_block_utilisation"
+  ],
+  "excluded_intervals": {
+    "ftx": {
+      "end_exclusive_utc": "2022-11-21T00:00:00Z",
+      "start_utc": "2022-11-01T00:00:00Z"
+    },
+    "usdc_svb": {
+      "end_exclusive_utc": "2023-03-20T00:00:00Z",
+      "start_utc": "2023-03-06T00:00:00Z"
+    }
+  },
+  "output_path": "data/market/model_inputs/multicollateral_blocks/pool.csv",
+  "output_sha256": "e97570b94b2140f9a6dc6436b386ba0ea9e91d9de73b755cc38d8e971d91ed2e",
+  "rows": 26208,
+  "runtime_adopted": false,
+  "source_checksums": {
+    "data/market/model_inputs/environment_blocks/pool.csv": "b69276801bacf789f8ae91789983cc98a8a6d42d0a992940c0bcfa109ca25b7d",
+    "data/market/processed/dune_hourly_market_prices_processed.csv": "43f8a23aff2ec995a4e1ad5e8fc66f4b5223e8dcc9c8a36bd272d733ae1d4e25"
+  },
+  "tail_derivation": {
+    "computed_within_contiguous_segments": true,
+    "estimator": "nearest_rank",
+    "horizon_hours": 24,
+    "quantile": 0.01
+  },
+  "version": 1
+}

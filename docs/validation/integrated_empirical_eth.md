@@ -179,3 +179,18 @@ No parameter or confidence coefficient was estimated by this validation, no
 multi-collateral experiment ran, no final-validation observation was used,
 and no production profile or default was changed. The later constrained
 recovery matrix used this profile without modifying it.
+
+## Relation to the final multi-collateral profile
+
+The
+[final multi-collateral integration validation](multicollateral_integration.md)
+uses this profile's protected 500-vault, 2.5 million DAI population convention,
+its median system collateral-ratio target of 3.6089387701260205, Stage 1-only
+confidence, zero-delay oracle baseline and central system-wide capacity 26.
+It adds independently owned WBTC and explicitly counterfactual stable-proxy
+families without changing this ETH-only profile or its evidence.
+
+The new five-portfolio and seven-shock registries are future final-experiment
+inputs. They do not retrospectively alter this validation, and their ordinary
+dynamic results are integration diagnostics rather than a comparison with the
+ETH-only results reported here.

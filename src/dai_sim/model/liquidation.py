@@ -168,6 +168,124 @@ def keeper_will_liquidate(
     ) > 0
 
 
+def rank_liquidation_candidates(
+    vaults: list[Vault],
+    prices: float | dict[str, float] | None = None,
+    config: LiquidationConfig | None = None,
+    portfolio: CollateralPortfolioConfig | None = None,
+) -> pd.DataFrame:
+    """
+    Rank a mixed-collateral candidate set using one global ordering.
+
+    The deterministic order is:
+
+    1. expected keeper profit, descending;
+    2. debt at risk, descending;
+    3. vault identifier, ascending.
+
+    ``debt_at_risk`` is the candidate vault's full outstanding DAI debt. The
+    separate ``debt_subject_to_close_factor`` audit field records the amount
+    used to calculate expected profit under the applicable close factor.
+
+    Parameters
+    ----------
+    vaults:
+        Candidate vaults from every active collateral family. Vault identifiers
+        must be unique.
+    prices:
+        Optional collateral prices. When supplied, liquidation eligibility and
+        expected profit use :func:`expected_liquidation_profit`. When omitted,
+        the caller is asserting that the supplied vaults are already eligible
+        candidates, and profit is calculated directly from their debt and the
+        resolved liquidation parameters.
+    config:
+        Optional liquidation configuration. The legacy default configuration
+        is used when omitted.
+    portfolio:
+        Optional collateral configuration used to resolve collateral-specific
+        penalties and close factors.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Globally ordered, non-mutating candidate audit table.
+    """
+    resolved_config = config if config is not None else LiquidationConfig()
+    resolved_config.validate()
+
+    vault_ids = [vault.vault_id for vault in vaults]
+    if len(vault_ids) != len(set(vault_ids)):
+        raise ValueError(
+            "Candidate vault identifiers must be unique for deterministic ranking."
+        )
+
+    columns = [
+        "candidate_rank",
+        "vault_id",
+        "collateral_type",
+        "exact_ilk",
+        "debt_dai",
+        "debt_at_risk",
+        "debt_subject_to_close_factor",
+        "liquidation_penalty",
+        "max_close_factor",
+        "is_liquidatable",
+        "expected_profit",
+    ]
+    if not vaults:
+        return pd.DataFrame(columns=columns)
+
+    records: list[dict[str, object]] = []
+    for vault in vaults:
+        liquidation_penalty, max_close_factor = resolve_liquidation_parameters(
+            vault=vault,
+            config=resolved_config,
+            portfolio=portfolio,
+        )
+        debt_at_risk = vault.debt_dai
+        debt_subject_to_close_factor = debt_at_risk * max_close_factor
+
+        if prices is None:
+            is_liquidatable: object = pd.NA
+            expected_profit = (
+                debt_subject_to_close_factor * liquidation_penalty
+                - resolved_config.gas_cost
+                - debt_subject_to_close_factor * resolved_config.risk_cost_rate
+            )
+        else:
+            is_liquidatable = vault.is_liquidatable(prices)
+            expected_profit = expected_liquidation_profit(
+                vault=vault,
+                prices=prices,
+                config=resolved_config,
+                portfolio=portfolio,
+            )
+
+        records.append(
+            {
+                "vault_id": vault.vault_id,
+                "collateral_type": vault.collateral_type,
+                "exact_ilk": vault.exact_ilk,
+                "debt_dai": vault.debt_dai,
+                "debt_at_risk": debt_at_risk,
+                "debt_subject_to_close_factor": debt_subject_to_close_factor,
+                "liquidation_penalty": liquidation_penalty,
+                "max_close_factor": max_close_factor,
+                "is_liquidatable": is_liquidatable,
+                "expected_profit": expected_profit,
+            }
+        )
+
+    ranked = pd.DataFrame.from_records(records)
+    ranked = ranked.sort_values(
+        ["expected_profit", "debt_at_risk", "vault_id"],
+        ascending=[False, False, True],
+        kind="mergesort",
+    ).reset_index(drop=True)
+    ranked.insert(0, "candidate_rank", range(1, len(ranked) + 1))
+    return ranked.loc[:, columns]
+
+
 def execute_keeper_liquidation(
     vault: Vault,
     prices: float | dict[str, float],

@@ -16,7 +16,9 @@ It records:
 - items that can remain transparent limitations rather than becoming new mechanisms;
 - the final code, evidence, validation and dissertation freeze procedure.
 
-The file should be checked after every remaining pass and updated only when a stage has been committed and validated.
+The file should be checked after every remaining pass and updated when a stage
+has been completed and validated; its Git commit status is recorded
+separately.
 
 The project must not move directly from the completed unbounded-capacity ETH-recovery experiment to final multi-collateral simulations. Keeper execution must first be empirically constrained and then integrated into the principal empirical model.
 
@@ -30,12 +32,15 @@ Completed in the current end-stage pass:
 - integrated empirical ETH-only profile: completed and experiment-ready with caveats;
 - integrated input and dynamic distributional validation: completed.
 - constrained-liquidation recovery experiment: completed and operational;
-- qualitative comparison with the unbounded-capacity null: completed.
+- qualitative comparison with the unbounded-capacity null: completed;
+- final ETH/WBTC plus counterfactual-stable collateral set: frozen;
+- final protocol, five-portfolio and seven-shock registries: frozen; and
+- shared-capacity multi-collateral integration validation: completed with
+  caveats.
 
-Stages 1–3 are complete. The next stage is to freeze final multi-collateral
-empirical inputs and validate the shared-capacity multi-collateral integration
-contract; no final multi-collateral matrix should run before that contract is
-reviewed.
+Stages 1–5 are complete. The next stage is to pre-register and execute the
+hierarchical final multi-collateral experiments. No portfolio or shock has
+been selected from validation outcomes.
 
 ---
 
@@ -349,34 +354,38 @@ Required audit:
 
 A major new acquisition project is not required unless existing data are insufficient for even a sensitivity rationale.
 
-## 3.6 Stable collateral process — essential before final multi-collateral experiments
+## 3.6 Stable collateral process — frozen with a counterfactual boundary
 
-The project must freeze:
+The input freeze establishes:
 
-- exact stable proxy, likely USDC;
-- ordinary near-par noise;
-- controlled depeg magnitudes;
-- depeg persistence or recovery paths;
-- status of stable-backed portfolios as counterfactual;
-- final-validation boundary for March 2023 USDC/SVB.
+- a generic stable collateral proxy;
+- ordinary near-par variation from the local USDC series;
+- fixed 0.95 and 0.90 depeg floors;
+- 72-hour and 168-hour controlled smooth-recovery horizons;
+- explicit `counterfactual_stable_proxy` status for its vault and protocol
+  owners; and
+- exclusion of March 2023 USDC/SVB from construction.
 
-The March 2023 event must not determine the stable-depeg scenario if it remains final validation.
+The March 2023 event did not determine the stable-depeg scenarios and remains
+future final validation. There is still no direct stable-depeg confidence or
+DAI-demand coefficient.
 
-## 3.7 Empirical shock registry — essential
+## 3.7 Empirical and controlled shock registry — frozen
 
-The fixed \(2000\rightarrow1140\) ETH shock is suitable for a mechanism experiment but should not be the only final stress definition.
+The final result-blind registry contains:
 
-Required final shock families:
+- `eth_idiosyncratic_severe`;
+- `wbtc_idiosyncratic_severe`;
+- `joint_crypto_empirical_stress`;
+- `joint_crypto_high_correlation`;
+- `stable_depeg_moderate`;
+- `stable_depeg_severe`; and
+- `joint_crypto_stable_stress`.
 
-- isolated ETH shock;
-- isolated WBTC shock;
-- empirical joint crypto stress;
-- high-correlation crypto stress;
-- stablecoin depeg;
-- joint crypto and stable stress;
-- optional sequential shock.
-
-Severity levels should be fixed from empirical tail definitions or transparent counterfactual rules before final outcomes are inspected.
+Volatile severity uses nearest-rank q01 negative 24-hour returns or the
+pre-registered joint downside-and-gas score. Stable severity uses transparent
+fixed floors. The registry was frozen before any final outcome was inspected;
+no shock was ranked or selected.
 
 ## 3.8 Population size — essential validation
 
@@ -394,35 +403,37 @@ Candidate sizes:
 
 The legacy 100-vault model remains a benchmark, not the preferred final empirical scale.
 
-## 3.9 Collateral composition and protocol freeze — essential
+## 3.9 Collateral composition and protocol freeze — completed
 
-Before final multi-collateral execution, freeze:
+The final input registry fixes:
 
-- collateral types;
-- exact collateral-family mapping;
-- liquidation ratios;
-- liquidation penalties;
-- debt ceilings where used;
-- empirical ETH/WBTC debt shares;
-- counterfactual stable shares;
-- total initial debt;
-- total initial collateral value or exposure-normalisation rule.
+- the family order ETH, WBTC and counterfactual STABLE;
+- exact `ETH-A/B/C` and `WBTC-A/B/C` metadata;
+- exact-ilk and mechanically debt-weighted family liquidation ratios;
+- empirical ETH/WBTC debt shares of 0.8483941126796408 and
+  0.1516058873203592;
+- counterfactual stable debt coordinates of 0.25 and 0.50;
+- five portfolios with exactly 500 vaults and 2.5 million DAI; and
+- a common initial system collateral ratio of 3.6089387701260205.
 
-The historical ETH/WBTC share does not identify a stable-collateral share.
+Debt ceilings remain non-operational. `stable_supported` and `stable_heavy`
+remain counterfactual, and the historical ETH/WBTC ratio is preserved within
+their crypto shares.
 
-Stable-supported and stable-heavy portfolios must be labelled counterfactual unless additional evidence is introduced.
+## 3.10 Integrated distributional and out-of-sample validation — integration complete
 
-## 3.10 Integrated distributional and out-of-sample validation — essential
+The multi-collateral integration contract has passed 1,280 initialisations,
+160 ordinary 168-hour simulations and six shared-capacity smokes. It validates
+exact debt shares, common collateralisation, source isolation, numerical
+states, one global ranking, one system cap, backlog carry-forward and
+collateral-to-system reconciliation.
 
-The final empirical profile must complete:
+Population-scale validation, oracle-delay closure, quiet held-out validation,
+held-out crypto-stress validation and final USDC/SVB validation remain
+outstanding. No retuning may follow final validation.
 
-- distributional validation;
-- moment comparison;
-- quiet-period validation;
-- held-out crypto-stress validation;
-- final USDC/SVB validation.
-
-No retuning may follow final validation.
+The validation record is
+[`docs/validation/multicollateral_integration.md`](docs/validation/multicollateral_integration.md).
 
 ---
 
@@ -679,7 +690,7 @@ this completion gate and remains outstanding.
 
 ## Stage 3 — Constrained-liquidation recovery experiment
 
-**Status:** pending.
+**Status:** complete; `recovery_effect_capacity_dependent`.
 
 ### Research question
 
@@ -744,19 +755,27 @@ Require:
 - no scenario ranking;
 - clear comparison with the unbounded-capacity null result.
 
+All completion conditions passed in the pre-registered 24-cell,
+3,072-simulation matrix. Full-week recovery reduced liquidation debt and
+backlog under every capacity, with larger rescue effects under lower capacity;
+primary Stage 1 peg outcomes did not change. No capacity or confidence
+scenario was selected.
+
 ## Stage 4 — Freeze final multi-collateral empirical inputs
 
-**Status:** pending.
+**Status:** complete with counterfactual stable ownership.
 
-### Recommended collateral set
+### Final collateral set
 
-Prefer:
+Frozen:
 
 - ETH;
 - WBTC;
-- USDC or one generic stable proxy.
+- one generic counterfactual stable proxy, using ordinary USDC prices without
+  claiming an empirical stable-vault population.
 
-Do not add stETH unless complete market, vault and protocol evidence already exists and implementation cost is modest.
+The exact empirical ilks are `ETH-A/B/C` and `WBTC-A/B/C`. No additional
+collateral is admitted.
 
 ### Freeze
 
@@ -772,6 +791,14 @@ Do not add stETH unless complete market, vault and protocol evidence already exi
 - principal and adverse recovery paths;
 - vault-population scale.
 
+The registry fixes five portfolios: `eth_only`, `empirical_crypto`,
+`balanced_crypto`, `stable_supported` and `stable_heavy`. It fixes seven
+shocks: `eth_idiosyncratic_severe`, `wbtc_idiosyncratic_severe`,
+`joint_crypto_empirical_stress`, `joint_crypto_high_correlation`,
+`stable_depeg_moderate`, `stable_depeg_severe` and
+`joint_crypto_stable_stress`. Central scale is 500 vaults and 2.5 million DAI,
+with common system collateralisation 3.6089387701260205.
+
 ### Required labels
 
 - empirical;
@@ -779,11 +806,12 @@ Do not add stETH unless complete market, vault and protocol evidence already exi
 - counterfactual;
 - sensitivity.
 
-Do not call stable shares empirical without supporting debt-composition evidence.
+Stable shares are labelled counterfactual. No portfolio or shock was selected
+from model outcomes.
 
 ## Stage 5 — Multi-collateral integration validation
 
-**Status:** pending.
+**Status:** complete; `final_multicollateral_inputs_ready_with_caveats`.
 
 Verify:
 
@@ -806,10 +834,16 @@ Verify:
 
 Completion gate:
 
-- integration tests pass;
-- no silent per-collateral capacity duplication;
-- no double-counted debt;
-- no equivalent scenarios mislabelled as independent.
+- integration tests pass: yes;
+- no silent per-collateral capacity duplication: yes;
+- no double-counted debt: yes;
+- no equivalent scenarios mislabelled as independent: yes.
+
+All 1,280 initialisations and 160 ordinary dynamic replications passed. Under
+simultaneous demand, 108 unsafe ETH/WBTC/STABLE opportunities competed for one
+capacity of 26; the global ordering selected 9/9/8 and was invariant to input
+permutation. The stable family remains counterfactual, so the validation is
+ready with caveats rather than fully empirical.
 
 ## Stage 6 — Final multi-collateral experiments
 
@@ -821,15 +855,15 @@ Use a hierarchical design rather than one enormous full factorial.
 
 Portfolios:
 
-- ETH-only;
-- empirical ETH/WBTC;
-- balanced crypto;
-- stable-supported.
+- `eth_only`;
+- `empirical_crypto`;
+- `balanced_crypto`;
+- `stable_supported`.
 
 Shocks:
 
-- ETH-specific;
-- WBTC-specific.
+- `eth_idiosyncratic_severe`;
+- `wbtc_idiosyncratic_severe`.
 
 Core settings:
 
@@ -849,9 +883,8 @@ Portfolios:
 
 Shocks:
 
-- empirical joint crypto stress;
-- high-correlation stress;
-- systemic crypto stress.
+- `joint_crypto_empirical_stress`;
+- `joint_crypto_high_correlation`.
 
 Question:
 
@@ -861,15 +894,16 @@ Question:
 
 Portfolios:
 
-- crypto-only;
-- moderate stable-supported;
-- stable-heavy counterfactual.
+- `empirical_crypto`;
+- `stable_supported`;
+- `stable_heavy`.
 
 Shocks:
 
-- crypto stress;
-- stable depeg;
-- joint crypto and stable stress.
+- `joint_crypto_high_correlation`;
+- `stable_depeg_moderate`;
+- `stable_depeg_severe`;
+- `joint_crypto_stable_stress`.
 
 Question:
 
@@ -877,7 +911,7 @@ Question:
 
 ### Experiment D — Shared keeper capacity
 
-Selected simultaneous-shock cells crossed with:
+Pre-registered simultaneous-shock cells crossed with:
 
 - low capacity;
 - central capacity;
@@ -1145,12 +1179,13 @@ Do not:
 
 ## Multi-collateral inputs
 
-- [ ] Final collateral set
-- [ ] Final protocol parameter table
-- [ ] Portfolio composition registry
-- [ ] Stable collateral process
-- [ ] Empirical shock registry
-- [ ] Shared keeper allocation validation
+- [x] Final collateral set
+- [x] Final protocol parameter table
+- [x] Portfolio composition registry
+- [x] Stable collateral process, explicitly counterfactual
+- [x] Empirical and controlled shock registry
+- [x] Shared keeper allocation validation
+- [x] Multi-collateral integration validation
 
 ## Final experiments
 
@@ -1185,9 +1220,14 @@ Do not:
 
 The next authorised pass is:
 
-> **Freeze final multi-collateral empirical inputs and validate the
-> shared-capacity multi-collateral integration contract.**
+> **Pre-register and execute the final hierarchical multi-collateral
+> experiments: idiosyncratic diversification, stress correlation,
+> stable-collateral trade-off and shared keeper capacity.**
 
-The central integration treatment remains system-wide capacity 26 with
-`direct_cost_only`. Population, positive-hurdle and oracle-delay cases remain
-separate robustness dimensions.
+The final experiment registry must use the frozen five portfolios and seven
+shocks without result-based screening. The central treatment remains
+system-wide capacity 26 with `direct_cost_only`; 14 and 45 remain robustness
+points. Population, positive-hurdle and oracle-delay cases remain separate
+robustness dimensions. Final experiments, population robustness,
+oracle-delay robustness, held-out validation, USDC/SVB validation and final
+code freeze remain incomplete.
