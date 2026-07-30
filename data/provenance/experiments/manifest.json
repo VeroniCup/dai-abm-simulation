@@ -1,5 +1,5 @@
 {
-  "artefact_count": 4,
+  "artefact_count": 13,
   "artefacts": [
     {
       "classification": "scenario_defined_experimental_design",
@@ -28,8 +28,71 @@
       "runtime_adopted": false,
       "sha256": "d9f3de40aa1d9852c3fb1a51edc172ebf7eafc802a3b4547b003213dc7843adc",
       "size_bytes": 4761
+    },
+    {
+      "classification": "pre_registered_eth_recovery_experiment",
+      "path": "data/provenance/experiments/recovery/eth_recovery_benchmark.json",
+      "runtime_adopted": false,
+      "sha256": "0f7c8325d245744761bdff854124bd3392c166b1e0a5a7884079090f032da12e",
+      "size_bytes": 422
+    },
+    {
+      "classification": "pre_registered_eth_recovery_experiment",
+      "path": "data/provenance/experiments/recovery/eth_recovery_cell_summary.csv",
+      "runtime_adopted": false,
+      "sha256": "4957e93d0b0857aefdfd3bb33853874d9f2e4fd2c6a4e2c1f4bacd2b3afce43e",
+      "size_bytes": 109602
+    },
+    {
+      "classification": "pre_registered_eth_recovery_experiment",
+      "path": "data/provenance/experiments/recovery/eth_recovery_contrasts.csv",
+      "runtime_adopted": false,
+      "sha256": "7f38af47d134cc78365715602aa2755f6bd34b0109e810149213f6bd444d6cab",
+      "size_bytes": 180658
+    },
+    {
+      "classification": "pre_registered_eth_recovery_experiment",
+      "path": "data/provenance/experiments/recovery/eth_recovery_decision.json",
+      "runtime_adopted": false,
+      "sha256": "2124186a748617044664942d68d56b740df3b112d84b6889f44c78b80727b59f",
+      "size_bytes": 855
+    },
+    {
+      "classification": "pre_registered_eth_recovery_experiment",
+      "path": "data/provenance/experiments/recovery/eth_recovery_interactions.csv",
+      "runtime_adopted": false,
+      "sha256": "f0482c8ca8de3548120c5f13c7e3f8ffc92251871af026d1cc18c311c0d96378",
+      "size_bytes": 45212
+    },
+    {
+      "classification": "pre_registered_eth_recovery_experiment",
+      "path": "data/provenance/experiments/recovery/eth_recovery_paths.csv",
+      "runtime_adopted": false,
+      "sha256": "58abb8c91838000165a805614b6c9dd1d3d361ebf2db1d688b463394027eeb77",
+      "size_bytes": 601
+    },
+    {
+      "classification": "pre_registered_eth_recovery_experiment",
+      "path": "data/provenance/experiments/recovery/eth_recovery_registry.csv",
+      "runtime_adopted": false,
+      "sha256": "fa4eeab79333b257f4f9eaf79d6595725b09d1f8237599dad3fbb3d79a6f27d0",
+      "size_bytes": 5398
+    },
+    {
+      "classification": "pre_registered_eth_recovery_experiment",
+      "path": "data/provenance/experiments/recovery/eth_recovery_reproducibility.json",
+      "runtime_adopted": false,
+      "sha256": "ab9767c80c31cb664e29fb68440a388edc3c565f7be2a64fa69ec492147d56f8",
+      "size_bytes": 3888
+    },
+    {
+      "classification": "pre_registered_eth_recovery_experiment",
+      "path": "data/provenance/experiments/recovery/eth_recovery_specification.json",
+      "runtime_adopted": false,
+      "sha256": "f8a747e4e53cdebece4d2fe826836df5b6ee63dc81f561644386720239aa552b",
+      "size_bytes": 4633
     }
   ],
-  "purpose": "Content-addressed experimental-design evidence; no parameter estimate or selected scenario.",
+  "purpose": "Content-addressed experimental-design and ETH recovery evidence; no confidence scenario is selected or adopted.",
   "schema_version": 1
 }

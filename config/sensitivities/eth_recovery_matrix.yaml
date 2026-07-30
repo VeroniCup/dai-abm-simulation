@@ -1,0 +1,92 @@
+schema_version: 1
+experiment_id: eth_recovery_matrix_v1
+purpose: >-
+  Controlled ETH-only experiment measuring how post-shock collateral recovery
+  and the registered persistent-confidence scenarios affect peg recovery,
+  liquidation resolution and solvency.
+
+baseline:
+  profile: config/profiles/legacy.yaml
+  expected_sha256: 6de53071749fc504865ef760488003ab4733b58e8a6ce692144ca8e74ab9284a
+  vault_state: production_default
+  collateral_mode: ETH_only
+  initial_dai_price: 1.0
+
+shock:
+  source: frozen_eth_only_shock
+  pre_shock_price_usd: 2000.0
+  onset_hour: 48
+  trough_hour: 48
+  trough_price_usd: 1140.0
+  arithmetic_loss_fraction: -0.43
+  construction: instantaneous
+
+horizon:
+  step_hours: 1
+  pre_shock_hours: 48
+  post_shock_hours: 720
+  total_hours: 768
+
+recovery_paths:
+  - order: 1
+    identifier: persistent_trough
+    recovery_fraction: 0.0
+    recovery_duration_hours: 0
+  - order: 2
+    identifier: partial_week
+    recovery_fraction: 0.5
+    recovery_duration_hours: 168
+  - order: 3
+    identifier: full_week
+    recovery_fraction: 1.0
+    recovery_duration_hours: 168
+  - order: 4
+    identifier: rapid_full
+    recovery_fraction: 1.0
+    recovery_duration_hours: 48
+
+confidence:
+  registry: config/sensitivities/confidence_scenarios.yaml
+  expected_configuration_sha256: 86c33147f167d708e4a18191e50c39bec5056a680b13e682551317ba9b916e85
+  expected_registry_sha256: d455306fd7b7553f113099b6d51f962939d8b4793439a02c4638c646a63b25da
+  order:
+    - stage1_only
+    - confidence_resilient
+    - confidence_central
+    - confidence_fragile
+
+randomness:
+  registry_id: eth_recovery_matrix_v1
+  replications_per_cell: 128
+  residual_block_hours: 24
+  common_random_numbers: true
+  streams:
+    - vault_sampling
+    - market_innovations
+    - liquidation_randomness
+
+recovery_definition:
+  lower_bound: 0.995
+  upper_bound: 1.005
+  consecutive_hours: 24
+  restricted_mean_cap_hours: 720
+  probability_horizons_hours:
+    - 48
+    - 168
+    - 336
+    - 720
+
+primary_metrics:
+  - below_peg_burden
+  - restricted_mean_recovery_time
+  - recovery_probability_168h
+  - recovery_probability_720h
+  - maximum_unresolved_tab_dai
+  - cumulative_realised_bad_debt_dai
+
+output:
+  root: outputs/experiments/eth_recovery
+  compact_evidence: data/provenance/experiments/recovery
+  maximum_new_bytes: 524288000
+  minimum_free_bytes: 10737418240
+  runtime_adopted: false

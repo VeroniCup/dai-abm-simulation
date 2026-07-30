@@ -51,6 +51,17 @@ data/provenance/experiments/confidence/*
 !data/provenance/experiments/confidence/confidence_scenario_registry.csv
 !data/provenance/experiments/confidence/confidence_scenario_reproducibility.json
 !data/provenance/experiments/confidence/confidence_scenario_decision.json
+!data/provenance/experiments/recovery/
+data/provenance/experiments/recovery/*
+!data/provenance/experiments/recovery/eth_recovery_specification.json
+!data/provenance/experiments/recovery/eth_recovery_paths.csv
+!data/provenance/experiments/recovery/eth_recovery_registry.csv
+!data/provenance/experiments/recovery/eth_recovery_cell_summary.csv
+!data/provenance/experiments/recovery/eth_recovery_contrasts.csv
+!data/provenance/experiments/recovery/eth_recovery_interactions.csv
+!data/provenance/experiments/recovery/eth_recovery_decision.json
+!data/provenance/experiments/recovery/eth_recovery_reproducibility.json
+!data/provenance/experiments/recovery/eth_recovery_benchmark.json
 !data/provenance/calibration/
 data/provenance/calibration/*
 !data/provenance/calibration/manifest.json

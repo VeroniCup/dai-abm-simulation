@@ -296,6 +296,12 @@ Report:
 - peg-deviation autocorrelation; and
 - relation between DAI deviation, collateral returns, gas and liquidation activity.
 
+The controlled [ETH recovery matrix](../experiments/eth_recovery_matrix.md)
+implements the recovery-regime test with four pre-registered collateral paths,
+four transparent confidence cases, paired random streams and censored
+sustained-recovery estimands. Its result is conditional mechanism evidence,
+not a confidence calibration or historical event replay.
+
 ### 7.4 Liquidation and keeper behaviour
 
 Report:

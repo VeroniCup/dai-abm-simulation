@@ -1,0 +1,5 @@
+order,path_identifier,pre_shock_price_usd,trough_price_usd,recovery_fraction,recovery_duration_hours,terminal_price_usd,path_sha256
+1,persistent_trough,2000.0,1140.0,0.0,0,1140.0,fbe1e92c038a60f662e59178e77d7fcbfa0571a76d6c90494f7ec8b05f5239f5
+2,partial_week,2000.0,1140.0,0.5,168,1509.9668870541502,fa40d8e5c219b57e7ae9bf462118cdfabdab106f942161186a80bd52223950f0
+3,full_week,2000.0,1140.0,1.0,168,1999.9999999999998,f175c9111380499b2b7d71d32a4ac6f42cc3f8bc3d196c7fded95cb87a2c4d3b
+4,rapid_full,2000.0,1140.0,1.0,48,1999.9999999999998,ffff5b9a7636a1b38172f92de34f6cdf0d92b502bdce9dc57b284c98b85d52bc

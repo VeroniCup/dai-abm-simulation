@@ -191,10 +191,11 @@ byte-identical JSON and CSV artefacts.
 
 ## 11. Intended use and prohibited interpretation
 
-A separately authorised ETH-only recovery experiment may compare all four
-cases under common shocks and random numbers. The same registry may then be
-used as one robustness dimension in a separately authorised
-multi-collateral experiment.
+The separately authorised
+[ETH-only recovery matrix](eth_recovery_matrix.md) compares all four cases
+under the same four controlled recovery paths and paired common random
+numbers. The same registry may then be used as one robustness dimension in a
+separately authorised multi-collateral experiment.
 
 No scenario represents truth. The central case is only the componentwise
 midpoint of canonical coordinates; it is not an empirical mean, posterior

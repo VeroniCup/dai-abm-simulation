@@ -826,6 +826,7 @@ def simulate_candidate_invariant_liquidation_path(
     profile_path: Path = DEFAULT_TRANCHE_B_CONFIG_PATH,
     base_liquidation_config: LiquidationConfig | None = None,
     demand_template: LiquidationDemandProcess | None = None,
+    liquidation_seed: int | None = None,
 ) -> dict[str, np.ndarray]:
     """Run a calibration-only liquidation path under one capacity assumption.
 
@@ -851,11 +852,15 @@ def simulate_candidate_invariant_liquidation_path(
         ),
         max_liquidations_per_step=maximum_liquidations_per_step,
     )
-    seed = derive_seed(
-        registry_id=registry_id,
-        event_id=path.event.event_id,
-        replication=replication,
-        stream_name="liquidation_randomness",
+    seed = (
+        derive_seed(
+            registry_id=registry_id,
+            event_id=path.event.event_id,
+            replication=replication,
+            stream_name="liquidation_randomness",
+        )
+        if liquidation_seed is None
+        else int(liquidation_seed)
     )
     if demand_template is None:
         demand = LiquidationDemandProcess(
@@ -883,6 +888,9 @@ def simulate_candidate_invariant_liquidation_path(
         "liquidation_pressure": np.zeros(length, dtype="<f8"),
         "liquidation_gate_open": np.zeros(length, dtype="?"),
         "material_active_bad_debt": np.zeros(length, dtype="?"),
+        "realised_bad_debt_dai": np.zeros(length, dtype="<f8"),
+        "keeper_profit_dai": np.zeros(length, dtype="<f8"),
+        "capacity_rejected_opportunities": np.zeros(length, dtype="<i8"),
     }
     cleared_history: deque[float] = deque(maxlen=24)
     bad_debt_tolerance = material_bad_debt_tolerance(
@@ -910,7 +918,10 @@ def simulate_candidate_invariant_liquidation_path(
                 "n_attempted": 0,
                 "n_liquidated": 0,
                 "n_unprofitable": 0,
+                "n_capacity_limited": 0,
                 "debt_repaid": 0.0,
+                "bad_debt_realised": 0.0,
+                "keeper_profit": 0.0,
             }
         _, unresolved, active_bad_debt = _active_system(vaults, eth_price)
         cleared = float(summary["debt_repaid"])
@@ -936,6 +947,13 @@ def simulate_candidate_invariant_liquidation_path(
         arrays["liquidation_gate_open"][position] = pressure.gate_open
         arrays["material_active_bad_debt"][position] = material_active_bad_debt(
             active_bad_debt, tolerance=bad_debt_tolerance
+        )
+        arrays["realised_bad_debt_dai"][position] = float(
+            summary["bad_debt_realised"]
+        )
+        arrays["keeper_profit_dai"][position] = float(summary["keeper_profit"])
+        arrays["capacity_rejected_opportunities"][position] = int(
+            summary["n_capacity_limited"]
         )
     return arrays
 

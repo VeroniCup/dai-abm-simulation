@@ -36,3 +36,12 @@ directly from collateral labels.
 
 The current model does not include a direct stable-collateral depeg coefficient,
 endogenous governance response or order-book liquidity.
+
+## Opt-in persistent-confidence experiment
+
+The coefficient-normalised Stage 1 market response and persistent-confidence
+transition remain absent from production profiles. They are composed only by
+the [ETH-only recovery matrix](../experiments/eth_recovery_matrix.md), which
+uses the fixed scenario registry, full recovery gate and accepted 24-hour
+residual blocks. `stage1_only` remains the production and experimental
+reference. Experiment results do not select or adopt an active scenario.

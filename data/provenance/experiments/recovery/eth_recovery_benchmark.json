@@ -1,0 +1,15 @@
+{
+  "aborted_pre_result_attempts": 1,
+  "completed_simulations": 2048,
+  "failed_simulations": 0,
+  "free_disk_bytes": 240646459392,
+  "host_dependent": true,
+  "output_size_bytes": 55319872,
+  "peak_memory_bytes": null,
+  "resumed_simulations": 0,
+  "reused_simulations": 0,
+  "schema_version": 1,
+  "throughput_simulations_per_second": 36.44596880178137,
+  "wall_time_seconds": 56.192771583009744,
+  "worker_count": 4
+}

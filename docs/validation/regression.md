@@ -71,6 +71,16 @@ Equivalent scenario paths must be detected rather than interpreted as
 independent economic findings. Confidence, stable-depeg transmission and
 auction execution remain explicit modelling uncertainties.
 
+## ETH recovery experiment gate
+
+The opt-in ETH recovery matrix adds path, registry, common-random-number,
+sustained-recovery, censoring, paired-contrast, interaction, decision and
+evidence tests. Its execution must preserve the runtime-input checksums,
+confidence registry, Stage 1 and residual evidence, frozen smoke checks and
+Experiments 1–5 above. Generated checkpoints remain ignored; only compact
+content-addressed evidence is registered. Numerical failure above 1% in any
+cell invalidates interpretation.
+
 ## Current test gate
 
 The Stage 12 final review collected and passed `491` tests in both the working

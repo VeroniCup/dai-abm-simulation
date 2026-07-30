@@ -277,12 +277,28 @@ or structural model is selected, and production behaviour remains unchanged.
 
 The transparent
 [persistent-confidence scenario registry](docs/experiments/confidence_scenarios.md)
-is now pre-registered as the methodological continuation. It contains the
+is pre-registered as the methodological continuation. It contains the
 unchanged Stage 1-only default plus three explicitly activated quartile
 bundles reconstructed from the original coupled Stage 2 transform. The second
 canonical coordinate is relative recovery
 \(\rho_r=\alpha_r/\alpha_d\); consequently raw recovery is 0.25 for the
 central bundle and 0.1875 for both resilient and fragile bundles. No scenario
-is calibrated, ranked, selected or adopted by a runtime profile. Substantive
-recovery and multi-collateral experiments remain future, separately
-authorised work.
+is calibrated, ranked, selected or adopted by a runtime profile.
+
+The first separately authorised continuation is the
+[ETH-only peg-recovery matrix](docs/experiments/eth_recovery_matrix.md). It
+fixes the 2,000-to-1,140 severe shock, four smoothstep recovery paths, the four
+registered confidence cases, 128 paired replications per cell and censored
+24-hour sustained-recovery estimands. Detailed checkpoints remain ignored and
+compact decision evidence is registered under
+`data/provenance/experiments/recovery/`. This experiment does not reopen
+calibration or alter the Stage 1-only production default. Multi-collateral
+execution remains a separate future authorisation.
+
+The complete 2,048-run matrix is valid and classified as **no clear recovery
+path effect**. All registered ETH path contrasts are zero under the fixed
+ordinary-capacity baseline because virtually all vaults liquidate at the
+common trough and no unresolved tab or material bad debt remains for later
+collateral recovery to resolve. The fixed confidence bundles produce large
+peg-persistence differences, but no bundle is ranked, selected or adopted.
+H4a and H4b are not supported and no material H4c interaction is present.

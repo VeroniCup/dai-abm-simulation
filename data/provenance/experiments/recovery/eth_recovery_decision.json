@@ -1,0 +1,24 @@
+{
+  "H4a": "not_supported",
+  "H4a_supporting_scenarios": 0,
+  "H4b": "not_supported",
+  "H4b_expected_direction_scenarios": 0,
+  "H4c": "not_present",
+  "backlog_or_bad_debt_limited_recovery": false,
+  "confidence_scenario_ranked": false,
+  "confidence_scenario_selected": null,
+  "main_unresolved_mechanisms": "Separate gas, keeper-capacity and oracle-delay crosses remain outside this controlled experiment.",
+  "major_opposite_solvency_effect": false,
+  "next_authorised_boundary": {
+    "adverse_sensitivity": "persistent_trough",
+    "confidence_dimension": "all four fixed scenarios; no selected case",
+    "optional_robustness": [
+      "rapid_full",
+      "partial_week"
+    ],
+    "principal_multicollateral_path": "full_week"
+  },
+  "overall_classification": "no_clear_recovery_path_effect",
+  "runtime_adopted": false,
+  "schema_version": 1
+}

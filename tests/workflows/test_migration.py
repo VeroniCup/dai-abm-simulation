@@ -60,6 +60,7 @@ WORKFLOW_MAPPING = {
 
 EXPECTED_CATEGORIES = {
     "calibration",
+    "experiments",
     "gas",
     "inputs",
     "liquidations",
@@ -100,7 +101,7 @@ def test_only_real_populated_categories_exist() -> None:
         if path.is_dir() and path.name != "__pycache__"
     }
     assert categories == EXPECTED_CATEGORIES
-    assert not (workflow_root / "experiments").exists()
+    assert (workflow_root / "experiments/eth_recovery.py").is_file()
     for category in categories:
         assert any((workflow_root / category).rglob("*.py"))
 

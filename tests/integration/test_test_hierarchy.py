@@ -11,6 +11,7 @@ from tests.support import REPOSITORY_ROOT
 TESTS_ROOT = REPOSITORY_ROOT / "tests"
 APPROVED_CATEGORIES = {
     "calibration",
+    "experiments",
     "inputs",
     "integration",
     "model",
@@ -138,6 +139,7 @@ POST_RESTRUCTURING_FEATURE_MODULES = {
     "tests/model/test_confidence.py",
     "tests/model/test_market.py",
     "tests/workflows/test_confidence_calibration.py",
+    "tests/experiments/test_eth_recovery.py",
 }
 EXPECTED_FIXTURES = {
     "tests/fixtures/market/empirical_market.csv": (
@@ -191,7 +193,7 @@ def test_only_populated_semantic_categories_exist() -> None:
         and any(path.rglob("test_*.py"))
     }
     assert populated == APPROVED_CATEGORIES
-    assert not (TESTS_ROOT / "experiments").exists()
+    assert (TESTS_ROOT / "experiments/test_eth_recovery.py").is_file()
 
 
 def test_no_test_module_remains_at_suite_root() -> None:
@@ -202,7 +204,7 @@ def test_no_test_module_remains_at_suite_root() -> None:
 
 def test_no_placeholder_or_duplicate_test_module_exists() -> None:
     modules = sorted(TESTS_ROOT.rglob("test_*.py"))
-    assert len(modules) == 55
+    assert len(modules) == 56
     assert all(path.stat().st_size > 100 for path in modules)
     assert len({path.resolve() for path in modules}) == len(modules)
 
