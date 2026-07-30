@@ -60,8 +60,8 @@ WORKFLOW_MAPPING = {
 
 POST_RESTRUCTURING_WORKFLOWS = {
     "calibration/keeper_execution.py",
-    "experiments/constrained_eth_recovery.py",
-    "experiments/eth_recovery.py",
+    "experiments/mechanism/constrained_eth_recovery.py",
+    "experiments/mechanism/eth_recovery.py",
     "inputs/validate_integrated_eth.py",
     "inputs/validate_multicollateral.py",
     "market/process_historical_evidence.py",
@@ -116,7 +116,9 @@ def test_only_real_populated_categories_exist() -> None:
         if path.is_dir() and path.name != "__pycache__"
     }
     assert categories == EXPECTED_CATEGORIES
-    assert (workflow_root / "experiments/eth_recovery.py").is_file()
+    assert (
+        workflow_root / "experiments/mechanism/eth_recovery.py"
+    ).is_file()
     for category in categories:
         assert any((workflow_root / category).rglob("*.py"))
 
@@ -195,7 +197,10 @@ def test_workflows_are_not_installed_packages() -> None:
         "dai_sim.calibration",
         "dai_sim.common",
         "dai_sim.experiments",
+        "dai_sim.experiments.final",
+        "dai_sim.experiments.mechanism",
         "dai_sim.inputs",
         "dai_sim.model",
+        "dai_sim.validation",
     }
     assert not (ROOT / "workflows/__init__.py").exists()

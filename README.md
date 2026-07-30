@@ -14,13 +14,15 @@ MakerDAO and not financial advice.
 
 - [Repository guide](docs/overview/repository_guide.md)
 - [Architecture](docs/overview/architecture.md)
+- [Visual project structure](docs/overview/project_structure.md)
+- [Scientific package taxonomy](docs/overview/scientific_package_taxonomy.md)
 - [Model mechanics](docs/model/README.md)
 - [Empirical research design](empirical.md)
 - [Parameter methodology](parameters.md)
 - [Calibration documentation](docs/calibration/README.md)
 - [Experiment documentation](docs/experiments/README.md)
 - [Data acquisition and provenance](docs/data/acquisition.md)
-- [Validation and regression baselines](docs/validation/regression.md)
+- [Validation and regression baselines](docs/validation/README.md)
 - [Current project status](PROJECT_STATUS.md)
 
 The authoritative Python package is `src/dai_sim/`. User-facing profiles are
@@ -49,8 +51,8 @@ results, summary = run_all_scenarios()
 
 Established scenarios and experiment-specific functions are documented in
 [the experiment guide](docs/experiments/README.md). The repository does not
-currently provide an installed console command or a separate experiment
-workflow directory.
+currently provide an installed console command; registered recovery studies
+have semantic entry points under `workflows/experiments/mechanism/`.
 
 ## Profiles and empirical inputs
 

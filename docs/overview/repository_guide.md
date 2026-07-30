@@ -9,7 +9,10 @@ The authoritative paths are:
 | Economic model | `src/dai_sim/model/` |
 | Empirical input adapters | `src/dai_sim/inputs/` |
 | Calibration methods | `src/dai_sim/calibration/` |
-| Experiment scenarios and runners | `src/dai_sim/experiments/` |
+| Frozen-input and integration validation | `src/dai_sim/validation/` |
+| Mechanism experiments | `src/dai_sim/experiments/mechanism/` |
+| Final dissertation experiments | `src/dai_sim/experiments/final/` |
+| Protected established runners | `src/dai_sim/experiments/{runner,scenarios,summaries,plots}.py` |
 | Complete profiles | `config/profiles/` |
 | Sensitivity overrides | `config/sensitivities/` |
 | Domain data and provenance | `data/<domain>/` |
@@ -55,8 +58,11 @@ The semantic experiment functions are:
 - `run_peg_recovery_experiment`;
 - `run_multicollateral_experiment`.
 
-There is no separate experiment workflow command or experiment YAML
-configuration surface at this stage.
+Registered recovery studies have workflow entry points under
+`workflows/experiments/mechanism/`. The following pass must place the final
+hierarchical programme under `experiments/final/`, not beside calibration or
+validation. Established scenario runners remain Python-owned; there is no
+general experiment YAML configuration surface.
 
 ## Profiles
 

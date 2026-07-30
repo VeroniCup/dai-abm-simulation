@@ -273,11 +273,11 @@ The immutable specification SHA-256 is
 the experiment identity is
 `6cfbd19384fc95fe8b06de74704d0b2a76638722b100242e0bc87a9ee3e05acc`.
 The scientific owner is
-[`constrained_eth_recovery.py`](../../src/dai_sim/experiments/constrained_eth_recovery.py),
+[`constrained_eth_recovery.py`](../../src/dai_sim/experiments/mechanism/constrained_eth_recovery.py),
 the configuration is
 [`constrained_eth_recovery.yaml`](../../config/sensitivities/constrained_eth_recovery.yaml),
 and the workflow is
-[`workflows/experiments/constrained_eth_recovery.py`](../../workflows/experiments/constrained_eth_recovery.py).
+[`workflows/experiments/mechanism/constrained_eth_recovery.py`](../../workflows/experiments/mechanism/constrained_eth_recovery.py).
 
 The compact evidence is content-addressed under
 `data/provenance/experiments/constrained_recovery/`. Detailed atomic

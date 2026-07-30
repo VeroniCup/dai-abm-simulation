@@ -13,7 +13,7 @@ import pandas as pd
 import pytest
 
 from dai_sim.calibration.event_simulation import load_stage1_owners
-from dai_sim.calibration.integrated_eth_validation import (
+from dai_sim.validation.integrated_eth import (
     COMPACT_FILENAMES,
     DYNAMIC_REPLICATION_COUNT,
     EVIDENCE_DIR,

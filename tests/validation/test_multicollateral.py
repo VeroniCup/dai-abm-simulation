@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from dai_sim.calibration import multicollateral_validation as validation
+from dai_sim.validation import multicollateral as validation
 from dai_sim.inputs.multicollateral import (
     FAMILY_ORDER,
     PORTFOLIO_ORDER,

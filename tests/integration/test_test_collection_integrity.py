@@ -220,7 +220,7 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
         "tests/calibration/test_tracked_calibration_evidence.py": 10,
         "tests/calibration/test_confidence_evidence.py": 10,
         "tests/calibration/test_confidence_infrastructure_evidence.py": 11,
-        "tests/calibration/test_confidence_scenarios.py": 37,
+        "tests/inputs/test_confidence_scenario_resolution.py": 28,
         "tests/calibration/test_event_simulation.py": 6,
         "tests/calibration/test_keeper_execution.py": 13,
         "tests/calibration/test_partial_identification.py": 24,
@@ -233,9 +233,10 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
         "tests/model/test_liquidation_ranking.py": 6,
         "tests/model/test_market.py": 7,
         "tests/workflows/test_confidence_calibration.py": 40,
-        "tests/experiments/test_eth_recovery.py": 36,
-        "tests/experiments/test_constrained_eth_recovery.py": 41,
-        "tests/integration/test_integrated_empirical_eth.py": 20,
-        "tests/integration/test_multicollateral_integration.py": 40,
+        "tests/experiments/mechanism/test_eth_recovery.py": 36,
+        "tests/experiments/mechanism/test_constrained_eth_recovery.py": 41,
+        "tests/validation/test_confidence_scenarios.py": 9,
+        "tests/validation/test_integrated_eth.py": 20,
+        "tests/validation/test_multicollateral.py": 40,
     }
     assert len(nodeids) == 420 + len(additions)

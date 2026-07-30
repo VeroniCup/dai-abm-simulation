@@ -1,1 +1,1 @@
-"""Scenario definitions, experiment runners, summaries and plots."""
+"""Mechanism studies, final experiments and protected legacy runners."""

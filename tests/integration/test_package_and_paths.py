@@ -170,6 +170,9 @@ def test_pyproject_metadata_and_discovery_are_bounded() -> None:
         "dai_sim.calibration",
         "dai_sim.common",
         "dai_sim.experiments",
+        "dai_sim.experiments.final",
+        "dai_sim.experiments.mechanism",
         "dai_sim.inputs",
         "dai_sim.model",
+        "dai_sim.validation",
     ]

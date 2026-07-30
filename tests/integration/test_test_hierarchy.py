@@ -15,6 +15,7 @@ APPROVED_CATEGORIES = {
     "inputs",
     "integration",
     "model",
+    "validation",
     "workflows",
 }
 EXPECTED_MAPPING = {
@@ -128,7 +129,8 @@ CLEAN_CLONE_CORRECTION_MODULES = {
 POST_RESTRUCTURING_FEATURE_MODULES = {
     "tests/calibration/test_confidence_evidence.py",
     "tests/calibration/test_confidence_infrastructure_evidence.py",
-    "tests/calibration/test_confidence_scenarios.py",
+    "tests/inputs/test_confidence_scenario_resolution.py",
+    "tests/validation/test_confidence_scenarios.py",
     "tests/calibration/test_event_simulation.py",
     "tests/calibration/test_keeper_execution.py",
     "tests/calibration/test_partial_identification.py",
@@ -141,10 +143,10 @@ POST_RESTRUCTURING_FEATURE_MODULES = {
     "tests/model/test_liquidation_ranking.py",
     "tests/model/test_market.py",
     "tests/workflows/test_confidence_calibration.py",
-    "tests/experiments/test_eth_recovery.py",
-    "tests/experiments/test_constrained_eth_recovery.py",
-    "tests/integration/test_integrated_empirical_eth.py",
-    "tests/integration/test_multicollateral_integration.py",
+    "tests/experiments/mechanism/test_eth_recovery.py",
+    "tests/experiments/mechanism/test_constrained_eth_recovery.py",
+    "tests/validation/test_integrated_eth.py",
+    "tests/validation/test_multicollateral.py",
     "tests/inputs/test_multicollateral.py",
 }
 EXPECTED_FIXTURES = {
@@ -199,7 +201,7 @@ def test_only_populated_semantic_categories_exist() -> None:
         and any(path.rglob("test_*.py"))
     }
     assert populated == APPROVED_CATEGORIES
-    assert (TESTS_ROOT / "experiments/test_eth_recovery.py").is_file()
+    assert (TESTS_ROOT / "experiments/mechanism/test_eth_recovery.py").is_file()
 
 
 def test_no_test_module_remains_at_suite_root() -> None:
@@ -210,7 +212,7 @@ def test_no_test_module_remains_at_suite_root() -> None:
 
 def test_no_placeholder_or_duplicate_test_module_exists() -> None:
     modules = sorted(TESTS_ROOT.rglob("test_*.py"))
-    assert len(modules) == 62
+    assert len(modules) == 63
     assert all(path.stat().st_size > 100 for path in modules)
     assert len({path.resolve() for path in modules}) == len(modules)
 

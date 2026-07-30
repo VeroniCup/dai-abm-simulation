@@ -39,7 +39,7 @@ from dai_sim.calibration.event_simulation import (
     simulate_candidate_invariant_liquidation_path,
 )
 from dai_sim.calibration.market import sample_residual_blocks
-from dai_sim.experiments.confidence_scenarios import (
+from dai_sim.inputs.confidence_scenarios import (
     EXPECTED_SCENARIO_ORDER,
     load_confidence_scenario_registry,
     resolve_confidence_scenario,

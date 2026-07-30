@@ -2,6 +2,12 @@
 
 Active calibration guidance is organised by evidence and decision:
 
+`src/dai_sim/calibration/` owns estimation, identification and adoption
+decisions. Frozen-profile and cross-layer validation belongs to
+`src/dai_sim/validation/`; two path-hashed historical validator
+implementations remain under `calibration/` as documented exceptions rather
+than calibration activities.
+
 - [Parameter sources](parameter_sources.md) — acquisition classes and the
   complete parameter inventory.
 - [Parameter estimation](parameter_estimation.md) — reproducible estimators

@@ -14,7 +14,7 @@ _WORKFLOW_BOOTSTRAP = next(
 )
 runpy.run_path(str(_WORKFLOW_BOOTSTRAP))["bootstrap_runtime"](__file__)
 
-from dai_sim.experiments.eth_recovery import (
+from dai_sim.experiments.mechanism.eth_recovery import (
     build_cell_registry,
     build_eth_path,
     experiment_identity,

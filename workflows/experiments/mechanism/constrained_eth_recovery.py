@@ -14,7 +14,7 @@ _WORKFLOW_BOOTSTRAP = next(
 )
 runpy.run_path(str(_WORKFLOW_BOOTSTRAP))["bootstrap_runtime"](__file__)
 
-from dai_sim.experiments.constrained_eth_recovery import (
+from dai_sim.experiments.mechanism.constrained_eth_recovery import (
     audit_checkpoints,
     build_cell_registry,
     build_evidence_payloads,
@@ -89,7 +89,7 @@ def main() -> int:
             "cells": [cell.identifier for cell in cells],
         }
     elif operation == "build-seeds":
-        from dai_sim.experiments.constrained_eth_recovery import (
+        from dai_sim.experiments.mechanism.constrained_eth_recovery import (
             seed_record,
             seed_registry_checksum,
         )

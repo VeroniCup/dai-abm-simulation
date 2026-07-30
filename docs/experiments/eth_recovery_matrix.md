@@ -224,9 +224,9 @@ this experiment's conditional unbounded-capacity null.
 The YAML owner is
 [`eth_recovery_matrix.yaml`](../../config/sensitivities/eth_recovery_matrix.yaml),
 the implementation is
-[`eth_recovery.py`](../../src/dai_sim/experiments/eth_recovery.py), and the
+[`eth_recovery.py`](../../src/dai_sim/experiments/mechanism/eth_recovery.py), and the
 workflow is
-[`workflows/experiments/eth_recovery.py`](../../workflows/experiments/eth_recovery.py).
+[`workflows/experiments/mechanism/eth_recovery.py`](../../workflows/experiments/mechanism/eth_recovery.py).
 The scientific identity hashes the code owners, baseline, shock, paths,
 confidence registry, seed registry, matrix, estimands, contrasts and decision
 rules while excluding results, output paths, host metadata and rankings.

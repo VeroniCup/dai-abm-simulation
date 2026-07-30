@@ -33,17 +33,17 @@ from dai_sim.calibration.event_simulation import (
     SPARSE_SCALING_EVIDENCE,
     load_stage1_owners,
 )
-from dai_sim.calibration.integrated_eth_validation import (
+from dai_sim.validation.integrated_eth import (
     EXPECTED_STAGE1_RESIDUAL_BLOCK_SHA256,
     EXPECTED_STAGE1_RESIDUAL_SEQUENCE_SHA256,
     _normalised_initial_state,
 )
 from dai_sim.calibration.market import sample_residual_blocks
-from dai_sim.experiments.confidence_scenarios import (
+from dai_sim.inputs.confidence_scenarios import (
     EXPECTED_SCENARIO_ORDER,
     load_confidence_scenario_registry,
 )
-from dai_sim.experiments.eth_recovery import (
+from dai_sim.experiments.mechanism.eth_recovery import (
     EXPECTED_CONFIDENCE_CONFIG_SHA256,
     EXPECTED_CONFIDENCE_REGISTRY_SHA256,
     RecoveryDesign,

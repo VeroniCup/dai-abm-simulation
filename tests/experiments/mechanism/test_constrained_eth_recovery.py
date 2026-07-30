@@ -15,8 +15,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from dai_sim.experiments.confidence_scenarios import EXPECTED_SCENARIO_ORDER
-from dai_sim.experiments.constrained_eth_recovery import (
+from dai_sim.inputs.confidence_scenarios import EXPECTED_SCENARIO_ORDER
+from dai_sim.experiments.mechanism.constrained_eth_recovery import (
     CAPACITY_ORDER,
     CAPACITY_VALUES,
     EXPECTED_PATH_CHECKSUMS,
@@ -45,7 +45,10 @@ from dai_sim.experiments.constrained_eth_recovery import (
     seed_registry_checksum,
     specification_payload,
 )
-from dai_sim.experiments.eth_recovery import _recovery_metrics, path_checksum
+from dai_sim.experiments.mechanism.eth_recovery import (
+    _recovery_metrics,
+    path_checksum,
+)
 from dai_sim.inputs.integrated_profile import (
     TOTAL_DEBT_DAI,
     VAULT_COUNT,
@@ -360,7 +363,7 @@ def _contrast_frame() -> tuple[pd.DataFrame, pd.DataFrame]:
                         )
     frame = pd.DataFrame(rows)
     # The implementation supports every registered summary metric.
-    from dai_sim.experiments.constrained_eth_recovery import SUMMARY_METRICS
+    from dai_sim.experiments.mechanism.constrained_eth_recovery import SUMMARY_METRICS
 
     for metric in SUMMARY_METRICS:
         if metric not in frame:
@@ -542,7 +545,7 @@ def test_reconstruct_evidence_cli_uses_keyword_only_boundary(
     monkeypatch, capsys, tmp_path
 ) -> None:
     workflow = importlib.import_module(
-        "workflows.experiments.constrained_eth_recovery"
+        "workflows.experiments.mechanism.constrained_eth_recovery"
     )
     calls: list[tuple[object, dict[str, object]]] = []
     design = type("Design", (), {"evidence_dir": tmp_path})()
@@ -580,14 +583,14 @@ def test_reconstruct_evidence_cli_uses_keyword_only_boundary(
 
 def test_reconstruct_evidence_cli_rejects_invalid_operation() -> None:
     workflow = importlib.import_module(
-        "workflows.experiments.constrained_eth_recovery"
+        "workflows.experiments.mechanism.constrained_eth_recovery"
     )
     with pytest.raises(SystemExit):
         workflow.build_parser().parse_args(["not-an-operation"])
 
 
 def test_authoritative_evidence_builder_remains_keyword_only() -> None:
-    from dai_sim.experiments.constrained_eth_recovery import write_evidence
+    from dai_sim.experiments.mechanism.constrained_eth_recovery import write_evidence
 
     signature = inspect.signature(write_evidence)
     assert all(

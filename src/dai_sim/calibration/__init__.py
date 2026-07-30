@@ -1,1 +1,1 @@
-"""Statistical calibration and parameter-validation components."""
+"""Parameter estimation, identification and adoption components."""

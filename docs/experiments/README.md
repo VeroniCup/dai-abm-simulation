@@ -1,7 +1,11 @@
 # Experiments
 
-The established experiments are implemented in
-[`src/dai_sim/experiments/`](../../src/dai_sim/experiments/):
+Experiments are separated by scientific role. Established historical runners
+remain in [`src/dai_sim/experiments/`](../../src/dai_sim/experiments/);
+controlled pre-final studies live in
+[`experiments/mechanism/`](../../src/dai_sim/experiments/mechanism/), and
+[`experiments/final/`](../../src/dai_sim/experiments/final/) is the sole
+destination for the unimplemented final dissertation programme.
 
 - [Baseline gas and panic scenarios](baseline.md)
 - [Oracle delay](oracle_delay.md)
@@ -22,7 +26,8 @@ The established experiments are implemented in
 - [Peg recovery](peg_recovery.md)
 - [Multi-collateral portfolios and shocks](multi_collateral.md)
 
-The established multi-collateral runner above is a legacy stylised experiment
+The established multi-collateral runner above is a protected historical
+stylised experiment
 and remains operational for regression compatibility. Its five historical
 portfolio names and five historical shock names are not the newly frozen
 final design. The final, still unexecuted design has five portfolios and seven
@@ -30,9 +35,10 @@ shocks registered by the
 [multi-collateral integration validation](../validation/multicollateral_integration.md).
 No final portfolio or shock has been ranked or selected.
 
-Established scenario definitions are Python configuration factories in
+Established scenario definitions are protected Python configuration factories in
 `scenarios.py`, with execution functions in `runner.py`. The new opt-in ETH
 recovery matrix has a dedicated versioned YAML design and resumable workflow;
-it does not change those established runners. All experiments use explicit
+it does not change those established runners. Its source and workflow are under
+`experiments/mechanism/`. All experiments use explicit
 seeds, and the first five experiments retain frozen substantive regression
 checksums.

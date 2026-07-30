@@ -143,7 +143,10 @@ def test_distribution_contains_only_canonical_packages() -> None:
         "dai_sim.calibration",
         "dai_sim.common",
         "dai_sim.experiments",
+        "dai_sim.experiments.final",
+        "dai_sim.experiments.mechanism",
         "dai_sim.inputs",
         "dai_sim.model",
+        "dai_sim.validation",
     }
     assert not list((ROOT / "src").glob("*.py"))

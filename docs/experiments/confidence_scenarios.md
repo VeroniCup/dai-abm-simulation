@@ -134,8 +134,12 @@ factorial treatments and are not production alternatives.
 
 The sole tracked configuration owner is
 [`confidence_scenarios.yaml`](../../config/sensitivities/confidence_scenarios.yaml).
-Typed loading, exact Decimal derivation, validation and metadata are owned by
-[`confidence_scenarios.py`](../../src/dai_sim/experiments/confidence_scenarios.py).
+Typed registry resolution is owned by
+[`inputs/confidence_scenarios.py`](../../src/dai_sim/inputs/confidence_scenarios.py);
+mechanism checks and deterministic evidence validation are owned by
+[`validation/confidence_scenarios.py`](../../src/dai_sim/validation/confidence_scenarios.py).
+The former experiment-module path remains only as a protected import surface
+for the registered integrated-ETH source identity.
 
 Experiment configuration accepts one `confidence_scenario` identifier:
 

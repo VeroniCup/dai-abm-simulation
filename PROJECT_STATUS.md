@@ -94,6 +94,22 @@ resolutions across four spawned workers completed deterministically. No
 experiment result, compact-evidence checksum, checkpoint, profile, seed,
 parameter or production default changed, and no substantive simulation ran.
 
+The pre-final
+[project-structure visualisation](docs/overview/project_structure.md) and
+[architecture audit](docs/overview/project_structure_audit.md) are complete.
+The follow-up
+[scientific package taxonomy](docs/overview/scientific_package_taxonomy.md)
+separates calibration, validation, scenario resolution, controlled mechanism
+experiments and the reserved final programme. The two ETH recovery studies,
+their workflows and tests now sit under `experiments/mechanism/`; confidence
+scenario responsibilities are split between `inputs/` and `validation/`; and
+`experiments/final/` is the one destination for the next implementation pass.
+Path-hashed validator implementations remain documented historical
+exceptions. The exact classification is
+`scientific_package_taxonomy_ready_with_protected_exceptions`. No provenance,
+runtime input, profile, registry, parameter, scientific identity, output or
+production default changed.
+
 Detailed current guidance:
 
 - [Empirical framework](empirical.md)

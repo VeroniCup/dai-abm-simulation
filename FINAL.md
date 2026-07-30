@@ -36,7 +36,10 @@ Completed in the current end-stage pass:
 - final ETH/WBTC plus counterfactual-stable collateral set: frozen;
 - final protocol, five-portfolio and seven-shock registries: frozen; and
 - shared-capacity multi-collateral integration validation: completed with
-  caveats.
+  caveats; and
+- project-structure visualisation, architecture audit and scientific package
+  taxonomy: completed as
+  `scientific_package_taxonomy_ready_with_protected_exceptions`.
 
 Stages 1–5 are complete. The next stage is to pre-register and execute the
 hierarchical final multi-collateral experiments. No portfolio or shock has
@@ -1186,6 +1189,18 @@ Do not:
 - [x] Empirical and controlled shock registry
 - [x] Shared keeper allocation validation
 - [x] Multi-collateral integration validation
+
+## Pre-final maintenance
+
+- [x] Project-structure visualisation and architecture audit
+  - calibration, validation, input resolution and experiments are explicitly
+    separated;
+  - the ETH recovery studies are registered mechanism experiments;
+  - `experiments/final/` is the sole destination for the next programme;
+  - path-hashed validator implementations remain protected exceptions;
+  - no duplicate active ownership was found;
+  - no ignored diagnostic was removed; and
+  - all scientific evidence remained unchanged.
 
 ## Final experiments
 

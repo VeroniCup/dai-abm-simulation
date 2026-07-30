@@ -33,6 +33,7 @@ AUTHORITATIVE_MODULES = (
     "dai_sim.inputs.vaults",
     "dai_sim.inputs.liquidations",
     "dai_sim.inputs.protocol",
+    "dai_sim.inputs.confidence_scenarios",
     "dai_sim.calibration.data_loading",
     "dai_sim.calibration.statistics",
     "dai_sim.calibration.market",
@@ -42,10 +43,16 @@ AUTHORITATIVE_MODULES = (
     "dai_sim.calibration.protocol",
     "dai_sim.calibration.adoption",
     "dai_sim.calibration.validation",
+    "dai_sim.validation.confidence_scenarios",
+    "dai_sim.validation.integrated_eth",
+    "dai_sim.validation.multicollateral",
     "dai_sim.experiments.scenarios",
     "dai_sim.experiments.runner",
     "dai_sim.experiments.summaries",
     "dai_sim.experiments.plots",
+    "dai_sim.experiments.mechanism.eth_recovery",
+    "dai_sim.experiments.mechanism.constrained_eth_recovery",
+    "dai_sim.experiments.final",
 )
 
 

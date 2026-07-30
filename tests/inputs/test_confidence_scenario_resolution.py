@@ -1,41 +1,30 @@
-"""Transparent, scenario-defined persistent-confidence registry tests."""
+"""Typed confidence-scenario registry and resolution tests."""
 
 from __future__ import annotations
 
 import ast
 from decimal import Decimal
 from hashlib import sha256
-import json
 from pathlib import Path
 
 import pytest
 import yaml
 
-from dai_sim.experiments.confidence_scenarios import (
+from dai_sim.inputs.confidence_scenarios import (
     DEFAULT_REGISTRY_PATH,
     EXPECTED_SCENARIO_ORDER,
-    PROFILE_BEHAVIOUR_CHECKSUMS,
     SOURCE_DOMAIN_PATH,
     SOURCE_DOMAIN_SHA256,
     TRANSFORM_OWNER_PATH,
-    controlled_mechanism_smoke,
-    evidence_payloads,
     load_confidence_scenario_registry,
     registry_csv_bytes,
     resolve_confidence_scenario,
     resolve_experiment_confidence,
-    validate_confidence_scenario_evidence,
     validate_source_domain,
-    write_confidence_scenario_evidence,
-)
-from dai_sim.inputs.environment import (
-    configuration_behaviour_sha256,
-    load_configuration_profile,
 )
 
 
 ROOT = Path(__file__).resolve().parents[2]
-PROFILE_DIR = ROOT / "config/profiles"
 EXPECTED_ACTIVE = {
     "confidence_resilient": {
         "canonical": ("0.25", "0.75", "0.75", "0.25"),
@@ -288,7 +277,7 @@ def test_factorial_structural_variant_is_unavailable(tmp_path: Path) -> None:
 def test_registry_has_no_dependency_on_search_or_factorial_modules() -> None:
     tree = ast.parse(
         (
-            ROOT / "src/dai_sim/experiments/confidence_scenarios.py"
+            ROOT / "src/dai_sim/inputs/confidence_scenarios.py"
         ).read_text(encoding="utf-8")
     )
     imported = set()
@@ -318,95 +307,6 @@ def test_registry_csv_is_deterministic_and_content_addressed() -> None:
     assert sha256(first).hexdigest() == registry.registry_sha256
     assert first.count(b"\n") == 5
 
-
-def test_mechanism_smoke_is_deterministic_bounded_and_non_substantive() -> None:
-    first = controlled_mechanism_smoke()
-    second = controlled_mechanism_smoke()
-    assert first == second
-    assert first["default_equals_explicit_stage1_only"]
-    assert first["substantive_experiment"] is False
-    assert first["runtime_adopted"] is False
-    for result in first["scenario_results"].values():
-        assert all(0.0 <= value <= 1.0 for value in result["confidence_path"])
-
-
-def test_mechanism_smoke_has_required_deterioration_recovery_and_panic_ordering() -> None:
-    smoke = controlled_mechanism_smoke()
-    results = smoke["scenario_results"]
-    assert (
-        results["confidence_resilient"]["confidence_path"][0]
-        > results["confidence_central"]["confidence_path"][0]
-        > results["confidence_fragile"]["confidence_path"][0]
-    )
-    assert (
-        results["confidence_central"]["common_start_one_step_recovery"]
-        > results["confidence_resilient"]["common_start_one_step_recovery"]
-        == results["confidence_fragile"]["common_start_one_step_recovery"]
-    )
-    panic = smoke["panic_magnitude_at_common_state"]
-    assert (
-        panic["confidence_fragile"]
-        > panic["confidence_central"]
-        > panic["confidence_resilient"]
-    )
-    assert results["stage1_only"]["confidence_path"] == [1.0] * 30
-    assert results["stage1_only"]["panic_component_path"] == [0.0] * 30
-
-
-def test_evidence_payloads_are_deterministic_and_preserve_scientific_boundaries() -> None:
-    first = evidence_payloads()
-    second = evidence_payloads()
-    assert first == second
-    specification = json.loads(first["confidence_scenario_specification.json"])
-    reproducibility = json.loads(
-        first["confidence_scenario_reproducibility.json"]
-    )
-    decision = json.loads(first["confidence_scenario_decision.json"])
-    assert specification["no_model_selection"]
-    assert specification["final_validation_used"] is False
-    assert "central > resilient = fragile" in (
-        specification["raw_recovery_adjustment_ordering"]
-    )
-    assert reproducibility["sobol_candidate_used"] is False
-    assert reproducibility["factorial_cell_used"] is False
-    assert reproducibility["objective_value_used"] is False
-    assert decision["scenario_ranked"] is False
-    assert decision["scenario_selected"] is None
-
-
-def test_evidence_writes_and_validates_twice_byte_identically(tmp_path: Path) -> None:
-    first_dir = tmp_path / "first"
-    second_dir = tmp_path / "second"
-    first_manifest = tmp_path / "first_manifest.json"
-    second_manifest = tmp_path / "second_manifest.json"
-    first = write_confidence_scenario_evidence(
-        evidence_dir=first_dir,
-        manifest_path=first_manifest,
-    )
-    second = write_confidence_scenario_evidence(
-        evidence_dir=second_dir,
-        manifest_path=second_manifest,
-    )
-    assert first == second
-    assert first_manifest.read_bytes() == second_manifest.read_bytes()
-    for name in first:
-        assert (first_dir / name).read_bytes() == (second_dir / name).read_bytes()
-    report = validate_confidence_scenario_evidence(
-        evidence_dir=first_dir,
-        manifest_path=first_manifest,
-    )
-    assert report["scenario_count"] == 4
-    assert report["manifest_entry_count"] == 4
-
-
-@pytest.mark.parametrize("profile", ("legacy", "empirical", "empirical_stress"))
-def test_existing_profile_behaviour_remains_frozen(profile: str) -> None:
-    bundle = load_configuration_profile(PROFILE_DIR / f"{profile}.yaml")
-    assert configuration_behaviour_sha256(bundle) == PROFILE_BEHAVIOUR_CHECKSUMS[
-        profile
-    ]
-
-
 def test_configuration_owner_and_registry_checksum_are_stable() -> None:
     registry = load_confidence_scenario_registry()
     assert registry.configuration_path == DEFAULT_REGISTRY_PATH.resolve()
@@ -414,35 +314,3 @@ def test_configuration_owner_and_registry_checksum_are_stable() -> None:
         DEFAULT_REGISTRY_PATH.read_bytes()
     ).hexdigest()
     assert registry.source_domain_sha256 == SOURCE_DOMAIN_SHA256
-
-
-def test_scenario_documentation_records_coupling_and_prohibited_interpretation() -> None:
-    text = (
-        ROOT / "docs/experiments/confidence_scenarios.md"
-    ).read_text(encoding="utf-8")
-    required = (
-        r"\rho_r=u_r",
-        r"\alpha_r=\alpha_d\rho_r",
-        "central therefore recovers faster",
-        "No scenario represents truth",
-        "not an empirical mean",
-        "`confidence_central` is not an implicit default",
-    )
-    assert all(fragment in text for fragment in required)
-    assert "resilient has the greatest raw recovery" not in text.lower()
-    assert "calibrated central estimate" not in text.lower()
-
-
-def test_active_guides_link_the_scenario_registry() -> None:
-    paths = (
-        "docs/experiments/README.md",
-        "docs/experiments/confidence.md",
-        "docs/calibration/README.md",
-        "docs/calibration/confidence_and_behaviour.md",
-        "docs/calibration/confidence_structural_factorial.md",
-        "docs/overview/architecture.md",
-        "PROJECT_STATUS.md",
-    )
-    for relative in paths:
-        text = (ROOT / relative).read_text(encoding="utf-8")
-        assert "confidence_scenarios" in text

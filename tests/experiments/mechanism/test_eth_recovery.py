@@ -11,8 +11,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from dai_sim.experiments.confidence_scenarios import EXPECTED_SCENARIO_ORDER
-from dai_sim.experiments.eth_recovery import (
+from dai_sim.inputs.confidence_scenarios import EXPECTED_SCENARIO_ORDER
+from dai_sim.experiments.mechanism.eth_recovery import (
     CONFIDENCE_CONTRASTS,
     PATH_ORDER,
     PRIMARY_METRICS,
@@ -415,7 +415,7 @@ def test_configuration_contains_no_forbidden_cross_or_fifth_treatment() -> None:
 
 def test_production_default_remains_stage1_only() -> None:
     confidence_registry = (
-        Path(__file__).resolve().parents[2]
+        Path(__file__).resolve().parents[3]
         / "config/sensitivities/confidence_scenarios.yaml"
     )
     payload = confidence_registry.read_text(encoding="utf-8")
@@ -425,8 +425,8 @@ def test_production_default_remains_stage1_only() -> None:
 
 def test_workflow_exposes_only_registered_recovery_operations() -> None:
     workflow = (
-        Path(__file__).resolve().parents[2]
-        / "workflows/experiments/eth_recovery.py"
+        Path(__file__).resolve().parents[3]
+        / "workflows/experiments/mechanism/eth_recovery.py"
     ).read_text(encoding="utf-8")
     for operation in (
         "validate-inputs",
@@ -448,8 +448,8 @@ def test_reconstruction_preserves_existing_measured_benchmark(
     tmp_path: Path,
 ) -> None:
     workflow_path = (
-        Path(__file__).resolve().parents[2]
-        / "workflows/experiments/eth_recovery.py"
+        Path(__file__).resolve().parents[3]
+        / "workflows/experiments/mechanism/eth_recovery.py"
     )
     resolve = runpy.run_path(str(workflow_path))["_resolve_benchmark"]
     evidence_dir = tmp_path / "evidence"

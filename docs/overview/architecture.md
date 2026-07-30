@@ -3,37 +3,65 @@
 ## Purpose
 
 The repository implements an interpretable agent-based model of DAI stability
-under collateral-price stress. It separates economic mechanics, empirical
-inputs, calibration, experiment orchestration and reproducibility records.
-The model is intentionally narrower than the full Maker protocol.
+under collateral-price stress. Economic mechanics, empirical inputs,
+calibration, validation and experiments are separate scientific layers. The
+model remains intentionally narrower than the full Maker protocol.
 
 ## Authoritative package
 
-The installable Python package is `src/dai_sim/`:
+The installable package is `src/dai_sim/`:
 
 | Package | Responsibility |
 | --- | --- |
 | `model/` | Vault, collateral, price, liquidation, confidence, DAI-market and simulation mechanics |
-| `inputs/` | Configuration and empirical runtime-input adapters |
-| `calibration/` | Statistical estimation, reviews and adoption decisions |
-| `experiments/` | Scenario definitions, runners, summaries and plots |
+| `inputs/` | Typed configuration, registry resolution and empirical runtime adapters |
+| `calibration/` | Statistical estimation, identification, uncertainty and adoption decisions |
+| `validation/` | Frozen-input, profile, accounting and cross-layer contract checks |
+| `experiments/mechanism/` | Controlled pre-final causal studies |
+| `experiments/final/` | Reserved final hierarchical dissertation programme |
+| `experiments/` root modules | Protected established scenario runners, summaries and plots |
 | `common/` | Shared repository-path infrastructure |
 
-Compatibility modules remain temporarily under flat `src/` paths. They
-forward to `dai_sim` and are not authoritative implementations.
+The temporary flat compatibility modules were removed during repository
+restructuring. `src/dai_sim/` is the only packaged source namespace.
 
-The main dependency direction is:
-
-```text
-experiments
-    -> inputs
-    -> model
-calibration
-    -> processed data and provenance
-    -> candidate parameters
+```mermaid
+flowchart LR
+    A["Empirical evidence"] --> B["Calibration"]
+    B --> C["Typed inputs"]
+    C --> D["Model"]
+    D --> E["Validation"]
+    E --> F["Mechanism experiments"]
+    F --> G["Final experiments"]
+    B --> H["Calibration provenance"]
+    E --> I["Validation provenance"]
+    F --> J["Experiment provenance"]
+    G --> J
 ```
 
-Economic model modules do not depend on acquisition workflows.
+The model does not depend on acquisition workflows. Validation does not feed
+outcome-selected values back into calibration.
+
+## Protected scientific paths
+
+The integrated ETH and multi-collateral validation implementations remain at
+`dai_sim.calibration.integrated_eth_validation` and
+`dai_sim.calibration.multicollateral_validation`. Their current scientific
+identity functions hash the historical relative source and workflow paths.
+The semantic `dai_sim.validation` modules delegate to those implementations
+without duplicating logic.
+
+Confidence scenario values remain owned solely by
+`config/sensitivities/confidence_scenarios.yaml`. Typed loading and activation
+are owned by `dai_sim.inputs.confidence_scenarios`; mechanism/evidence checks
+are owned by `dai_sim.validation.confidence_scenarios`. The old experiment
+module is retained only as an identity-protecting import surface.
+
+The registered ETH recovery and constrained ETH recovery studies are
+mechanism experiments under `dai_sim.experiments.mechanism`. The root
+`runner`, `scenarios`, `summaries` and `plots` modules remain protected
+interfaces for established Experiments 1–6. They are not the destination for
+the final experiment programme.
 
 ## Empirical domains
 
@@ -45,83 +73,50 @@ workflows/<domain>/
 sql/<domain>/{templates,generated}/
 ```
 
-The domains are `market`, `gas`, `vaults`, `liquidations` and `protocol`.
-Aligned market–gas environment blocks are market-owned because their row
-identity is defined by the joint sampling block. Liquidation transaction gas
-is liquidation-owned because the observation unit is a liquidation
-transaction.
+The domains are `market`, `gas`, `vaults`, `liquidations` and
+`protocol`. Aligned market–gas environment blocks are market-owned because
+their row identity is defined jointly. Liquidation transaction gas is
+liquidation-owned because the observation unit is a liquidation transaction.
 
 ## Configuration
 
-Complete user-facing profiles are:
+Complete profiles live in `config/profiles/`. Partial treatment and scenario
+registries live in `config/sensitivities/`; fixed protocol mappings live in
+`config/protocol/`.
 
-- `config/profiles/legacy.yaml`;
-- `config/profiles/empirical.yaml`;
-- `config/profiles/empirical_stress.yaml`; and
-- `config/profiles/empirical_integrated_eth.yaml`, an additive, opt-in
-  integration-validation profile which is never selected implicitly; and
-- `config/profiles/empirical_integrated_multicollateral.yaml`, an additive,
-  experiment-ready but non-runtime-adopted profile for the frozen final
-  multi-collateral inputs.
-
-Partial overrides live under `config/sensitivities/`. The explicit dormant
-persistent-confidence scenario registry also lives there; it is an
-experiment-design owner and is not merged into a complete profile by default.
-Its activation and provenance contract is documented in
-[`confidence_scenarios.md`](../experiments/confidence_scenarios.md). Protocol
-mappings and fixed protocol settings live under `config/protocol/`.
-Established experiments remain defined in Python rather than in separate
-experiment configuration files.
-
-Compact integration-validation evidence is owned by
-`data/provenance/validation/`; detailed validation runs remain ignored under
-`outputs/diagnostics/validation/`.
-
-The final multi-collateral configuration is split by semantic owner:
-`config/protocol/final_collateral_registry.yaml` owns collateral and exact-ilk
-parameters, while `config/sensitivities/final_portfolio_registry.yaml` and
-`final_shock_registry.yaml` own the five treatment portfolios and seven
-result-blind shocks. The stable family remains an explicitly counterfactual
-proxy. These registries do not replace or rename the established stylised
+The final multi-collateral configuration has three value owners:
+`final_collateral_registry.yaml` owns collateral and exact-ilk values,
+`final_portfolio_registry.yaml` owns five portfolios, and
+`final_shock_registry.yaml` owns seven result-blind shocks. The stable family
+is explicitly counterfactual. None replaces the established stylised
 multi-collateral experiment.
-
-Semantic profile loaders validate the original immutable profile path through
-each configuration layer. They do not materialise shared
-`.base_for_validation.yaml` files. This keeps serial and concurrent worker
-initialisation semantically identical and prevents one worker from deleting a
-profile resource still needed by another. Resolved provenance paths remain
-repository-relative.
 
 ## Workflows and SQL
 
-Acquisition, processing, reconstruction, model-input construction,
-calibration and validation entry points live under `workflows/`. Historical
-diagnostic and repair tools are bounded under
-`workflows/maintenance/archive/`.
+Acquisition, processing, reconstruction, input construction and calibration
+entry points live under semantic workflow directories. Input-validation CLIs
+remain under `workflows/inputs/`; the integrated and multi-collateral
+workflow bytes are registered scientific-identity inputs. Registered recovery
+CLIs live under `workflows/experiments/mechanism/`. A final workflow
+directory will be added only with real final experiment code.
 
-Experiment evidence workflows are operational interfaces around immutable
-scientific owners. Repairing a workflow invocation does not re-identify a
-completed experiment; registered treatment, metric, seed and evidence owners
-remain frozen.
-
-Hand-maintained SQL lives in `sql/<domain>/templates/`. Executed historical or
-deterministically generated SQL lives in `sql/<domain>/generated/`, with
-historical instances under `generated/history/` where appropriate.
+Hand-maintained SQL lives in `sql/<domain>/templates/`. Executed historical
+or deterministic generated SQL lives in `sql/<domain>/generated/`.
 
 ## Behavioural compatibility
 
 The legacy ETH-only path remains the default. Multi-collateral inputs are
-normalised into collateral-specific price mappings and long-format
-collateral-level outputs, while established system-level result columns remain
-available. The final opt-in multi-collateral contract uses one global keeper
-ranking and one shared capacity across all collateral pools; it is documented
-in the
-[integration validation](../validation/multicollateral_integration.md).
+normalised to collateral-specific price mappings and long-format attribution,
+while established system outputs remain compatible. The final opt-in
+multi-collateral contract uses one globally ranked keeper capacity across all
+collateral pools.
 
 ## Further reading
 
-- [Model mechanics](../model/README.md)
+- [Visual project structure](project_structure.md)
+- [Scientific package taxonomy](scientific_package_taxonomy.md)
+- [Package audit](project_structure_audit.md)
 - [Repository guide](repository_guide.md)
-- [Data acquisition](../data/acquisition.md)
+- [Model mechanics](../model/README.md)
 - [Regression validation](../validation/regression.md)
 - [Restructuring specification](../repository_restructuring_specification.md)
