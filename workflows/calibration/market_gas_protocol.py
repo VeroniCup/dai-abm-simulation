@@ -61,6 +61,10 @@ from dai_sim.calibration.partial_identification import (
     DEFAULT_ROOT as DEFAULT_PARTIAL_IDENTIFICATION_ROOT,
     run_partial_identification_review,
 )
+from dai_sim.calibration.structural_incompatibility import (
+    DEFAULT_ROOT as DEFAULT_STRUCTURAL_DIAGNOSIS_ROOT,
+    run_structural_review,
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -84,6 +88,7 @@ def build_parser() -> argparse.ArgumentParser:
             "recovery-redesign",
             "objective-identification",
             "partial-identification",
+            "structural-diagnosis",
         ),
         default="phase2a",
     )
@@ -268,6 +273,33 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_PARTIAL_IDENTIFICATION_ROOT,
         help="Ignored root for resumable partial-identification checkpoints.",
     )
+    parser.add_argument(
+        "--structural-action",
+        choices=(
+            "validate-inputs",
+            "decompose-baseline",
+            "audit-boundaries",
+            "build-registry",
+            "validate-sources",
+            "run-panel",
+            "resume-panel",
+            "summarise",
+            "classify",
+            "reconstruct-evidence",
+            "validate",
+        ),
+        default="validate",
+        help=(
+            "Objective-blind one-factor structural diagnosis; never ranks, "
+            "optimises, selects or adopts a parameter or structural model."
+        ),
+    )
+    parser.add_argument(
+        "--structural-root",
+        type=Path,
+        default=DEFAULT_STRUCTURAL_DIAGNOSIS_ROOT,
+        help="Ignored root for atomic structural-diagnosis checkpoints.",
+    )
     return parser
 
 
@@ -275,6 +307,18 @@ def main() -> int:
     """Execute once and print only compact provenance, never input rows."""
     parser = build_parser()
     args = parser.parse_args()
+    if args.operation == "structural-diagnosis":
+        workers = args.workers or 4
+        if workers < 1 or workers > 6:
+            parser.error("--workers must be between 1 and 6")
+        result = run_structural_review(
+            action=args.structural_action,
+            root=args.structural_root.resolve(),
+            evidence_dir=args.evidence_dir.resolve(),
+            workers=workers,
+        )
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return 0
     if args.operation == "partial-identification":
         workers = args.workers or 4
         if workers < 1 or workers > 6:

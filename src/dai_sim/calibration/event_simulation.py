@@ -48,7 +48,11 @@ from dai_sim.model.confidence import (
     RecoveryGateInputs,
     update_persistent_confidence,
 )
-from dai_sim.model.liquidation import liquidate_vaults, summarise_liquidations
+from dai_sim.model.liquidation import (
+    LiquidationConfig,
+    liquidate_vaults,
+    summarise_liquidations,
+)
 from dai_sim.model.market import coefficient_normalised_market_response
 from dai_sim.model.simulation import SimulationConfig
 from dai_sim.model.vault import Vault
@@ -809,6 +813,131 @@ def _active_system(vaults: Sequence[Vault], eth_price: float) -> tuple[int, floa
     unresolved = float(sum(vault.debt_dai for vault in liquidatable))
     bad_debt = float(sum(vault.bad_debt(eth_price) for vault in active))
     return len(liquidatable), unresolved, bad_debt
+
+
+def simulate_candidate_invariant_liquidation_path(
+    *,
+    state: ConditionalInitialState,
+    path: ConditionalEventPath,
+    replication: int,
+    registry_id: str,
+    config: ConditionalEventSimulationConfig,
+    maximum_liquidations_per_step: int | None,
+    profile_path: Path = DEFAULT_TRANCHE_B_CONFIG_PATH,
+    base_liquidation_config: LiquidationConfig | None = None,
+    demand_template: LiquidationDemandProcess | None = None,
+) -> dict[str, np.ndarray]:
+    """Run a calibration-only liquidation path under one capacity assumption.
+
+    The adapter exposes the candidate-invariant liquidation calculation already
+    owned by the conditional-event experiment.  It changes no liquidation
+    equation and is deliberately limited to the dormant diagnostic harness.
+    """
+    config.validate()
+    if maximum_liquidations_per_step is not None and (
+        maximum_liquidations_per_step <= 0
+    ):
+        raise ValueError("The diagnostic liquidation capacity must be positive.")
+    bundle = (
+        None
+        if base_liquidation_config is not None
+        else load_tranche_b_configuration(profile_path)
+    )
+    liquidation_config = replace(
+        (
+            base_liquidation_config
+            if base_liquidation_config is not None
+            else bundle.base_bundle.liquidation_config
+        ),
+        max_liquidations_per_step=maximum_liquidations_per_step,
+    )
+    seed = derive_seed(
+        registry_id=registry_id,
+        event_id=path.event.event_id,
+        replication=replication,
+        stream_name="liquidation_randomness",
+    )
+    if demand_template is None:
+        demand = LiquidationDemandProcess(
+            _liquidation_demand_config(profile_path, seed=seed)
+        )
+    else:
+        demand = object.__new__(LiquidationDemandProcess)
+        demand.config = replace(demand_template.config, seed=seed)
+        demand.rng = np.random.default_rng(seed)
+        demand.pool = demand_template.pool
+        demand.positive_counts = demand_template.positive_counts
+        demand.statistics = demand_template.statistics
+        demand.hurdle_probability = demand_template.hurdle_probability
+    vaults = state.to_vaults()
+    length = len(path.timestamps)
+    arrays: dict[str, np.ndarray] = {
+        "liquidatable_before": np.zeros(length, dtype="<i8"),
+        "liquidation_attempts": np.zeros(length, dtype="<i8"),
+        "successful_liquidations": np.zeros(length, dtype="<i8"),
+        "failed_liquidation_attempts": np.zeros(length, dtype="<i8"),
+        "cleared_tab_dai": np.zeros(length, dtype="<f8"),
+        "unresolved_tab_dai": np.zeros(length, dtype="<f8"),
+        "active_bad_debt_dai": np.zeros(length, dtype="<f8"),
+        "trailing_cleared_tab_dai": np.zeros(length, dtype="<f8"),
+        "liquidation_pressure": np.zeros(length, dtype="<f8"),
+        "liquidation_gate_open": np.zeros(length, dtype="?"),
+        "material_active_bad_debt": np.zeros(length, dtype="?"),
+    }
+    cleared_history: deque[float] = deque(maxlen=24)
+    bad_debt_tolerance = material_bad_debt_tolerance(
+        state.total_debt_dai, config
+    )
+    for position, eth_price in enumerate(path.observed_eth_prices):
+        liquidatable, _, _ = _active_system(vaults, eth_price)
+        arrays["liquidatable_before"][position] = liquidatable
+        decision = demand.sample_step(
+            step=position,
+            liquidatable_inventory=liquidatable,
+            keeper_capacity=maximum_liquidations_per_step,
+        )
+        if liquidatable:
+            liquidation_frame = liquidate_vaults(
+                vaults,
+                eth_price,
+                liquidation_config,
+                bounded_demand=decision.bounded_demand,
+                attempt_budget=decision.attempt_budget,
+            )
+            summary = summarise_liquidations(liquidation_frame)
+        else:
+            summary = {
+                "n_attempted": 0,
+                "n_liquidated": 0,
+                "n_unprofitable": 0,
+                "debt_repaid": 0.0,
+            }
+        _, unresolved, active_bad_debt = _active_system(vaults, eth_price)
+        cleared = float(summary["debt_repaid"])
+        cleared_history.append(cleared)
+        pressure = liquidation_pressure_state(
+            unresolved_tab_dai=unresolved,
+            hourly_cleared_tab_dai=cleared,
+            cleared_history=tuple(cleared_history),
+            tolerance=config.liquidation_pressure_tolerance,
+        )
+        arrays["liquidation_attempts"][position] = int(summary["n_attempted"])
+        arrays["successful_liquidations"][position] = int(summary["n_liquidated"])
+        arrays["failed_liquidation_attempts"][position] = int(
+            summary["n_unprofitable"]
+        )
+        arrays["cleared_tab_dai"][position] = cleared
+        arrays["unresolved_tab_dai"][position] = unresolved
+        arrays["active_bad_debt_dai"][position] = active_bad_debt
+        arrays["trailing_cleared_tab_dai"][
+            position
+        ] = pressure.trailing_cleared_tab_dai
+        arrays["liquidation_pressure"][position] = pressure.pressure
+        arrays["liquidation_gate_open"][position] = pressure.gate_open
+        arrays["material_active_bad_debt"][position] = material_active_bad_debt(
+            active_bad_debt, tolerance=bad_debt_tolerance
+        )
+    return arrays
 
 
 def _event_metrics(

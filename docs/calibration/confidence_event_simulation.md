@@ -220,3 +220,8 @@ The same validated mechanism and cache now support the
 [partial-identification pass](confidence_partial_identification.md) over all
 74 calibration events. Cache reuse changes neither event mechanics nor the
 production boundary.
+
+The [structural incompatibility
+diagnosis](confidence_structural_incompatibility.md) now uses this same dormant
+experiment through calibration-only, one-factor adapters. Production callers
+and the primary event specification remain unchanged.

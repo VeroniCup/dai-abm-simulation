@@ -236,3 +236,8 @@ specification, constraints, candidate classifications, set summary,
 representatives, reproducibility and benchmark evidence are registered under
 `data/provenance/calibration/confidence/`. The candidate-invariant cache is
 reused in place and must not be duplicated.
+
+The subsequent [structural incompatibility
+diagnosis](confidence_structural_incompatibility.md) preserves this empty-set
+result and uses it only to decompose directional failures. It does not revise
+the support bands, rank the rejected vectors or create a new admissible set.

@@ -241,3 +241,8 @@ The subsequent [partial-identification design](confidence_partial_identification
 uses the verified analytic hierarchical MCSE to construct fixed 90 per cent
 Monte Carlo intervals. It neither weakens the precision gate nor rehabilitates
 the failed point objective.
+
+Its preserved objective-blind ladder is also the paired baseline for the
+[structural incompatibility
+diagnosis](confidence_structural_incompatibility.md); no baseline candidate is
+rerun merely to reconstruct a comparison.

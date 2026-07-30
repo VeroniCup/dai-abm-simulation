@@ -121,6 +121,15 @@ data/provenance/calibration/confidence/*
 !data/provenance/calibration/confidence/partial_identification_representatives.json
 !data/provenance/calibration/confidence/partial_identification_reproducibility.json
 !data/provenance/calibration/confidence/partial_identification_benchmark.json
+!data/provenance/calibration/confidence/structural_incompatibility_specification.json
+!data/provenance/calibration/confidence/structural_baseline_mismatch.csv
+!data/provenance/calibration/confidence/structural_parameter_boundary_trends.csv
+!data/provenance/calibration/confidence/structural_variant_registry.json
+!data/provenance/calibration/confidence/structural_variant_results.csv
+!data/provenance/calibration/confidence/structural_family_summary.json
+!data/provenance/calibration/confidence/structural_incompatibility_decision.json
+!data/provenance/calibration/confidence/structural_incompatibility_reproducibility.json
+!data/provenance/calibration/confidence/structural_incompatibility_benchmark.json
 
 # Domain-owned provenance. Detailed operational records stay ignored; selected
 # durable entry points remain tracked.

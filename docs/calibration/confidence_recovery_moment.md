@@ -161,3 +161,8 @@ simplified objective therefore does not authorise a new search.
 The [partial-identification pass](confidence_partial_identification.md)
 retains the existing 792-hour completion convention as a broad compatibility
 constraint. Censoring is diagnostic and no new recovery moment is introduced.
+
+The [structural incompatibility
+diagnosis](confidence_structural_incompatibility.md) subsequently holds that
+constraint and its 90% Monte Carlo rule fixed while testing experiment
+assumptions one family at a time.

@@ -203,3 +203,7 @@ Persistent confidence remains dormant. Runtime profiles, sensitivities,
 experiments, model inputs, vault mechanics, liquidation mechanics and price
 processes are unchanged. Registry B, Powell optimisation, final validation and
 the USDC/SVB event remain outside this pass.
+
+The later [structural incompatibility
+diagnosis](confidence_structural_incompatibility.md) retains this
+non-operationality decision and applies no scalar Stage 2 objective.

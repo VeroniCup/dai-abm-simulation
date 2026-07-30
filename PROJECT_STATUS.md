@@ -247,3 +247,19 @@ arises from the five empirical compatibility constraints, with 203 candidates
 also failing the numerical-bound gate. No representative vector exists. The
 next authorised boundary is a review of structural assumptions or empirical
 support-band design, not point fitting, ranking or runtime adoption.
+
+That review is implemented as the
+[persistent-confidence structural incompatibility
+diagnosis](docs/calibration/confidence_structural_incompatibility.md). It
+decomposes the five fixed compatibility failures and runs an objective-blind
+16-candidate panel of one-factor vault-state, capacity, residual, stress and
+recovery-gate interventions using paired registry-A streams. Historical hourly
+gas is recorded as unavailable for the pre-June-2021 event hours rather than
+invented. The pass neither changes the empirical bands or parameter domain nor
+selects a candidate, structural model or runtime configuration. The completed
+diagnosis is **multiple structural families contribute**: the lower-SCR vault
+state, zero-residual mechanism diagnostic and removal of the unresolved-backlog
+gate each partially explain downside and recovery mismatches, but no variant
+resolves a constraint. The next boundary is pre-registration of a small
+objective-blind factorial structural experiment, not another behavioural
+parameter search.

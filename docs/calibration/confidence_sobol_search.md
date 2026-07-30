@@ -178,3 +178,7 @@ The fixed 256-vector design is reused unchanged as an objective-blind domain
 for [partial identification](confidence_partial_identification.md). Historical
 objective values and ranks do not enter admissibility or representative
 selection, and the original search is not resumed.
+
+The later [structural incompatibility
+diagnosis](confidence_structural_incompatibility.md) uses only the registered
+objective-blind candidate panel and never revives the Sobol ranking.

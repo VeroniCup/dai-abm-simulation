@@ -888,3 +888,8 @@ The separately pre-registered
 treats those summaries as compatibility constraints over the unchanged Sobol
 domain. Retained vectors and objective-blind representatives support
 robustness analysis only; they are not estimates.
+
+The subsequent [structural incompatibility
+diagnosis](confidence_structural_incompatibility.md) treats vault state,
+capacity, residuals, stress construction and recovery gates as objective-blind
+diagnostic interventions. No intervention is a revised behavioural model.

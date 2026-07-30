@@ -746,3 +746,7 @@ A separately pre-registered
 [grid-based partial-identification analysis](confidence_partial_identification.md)
 uses the five summaries as compatibility constraints rather than objective
 terms. It calculates no weighted discrepancy and ranks no candidate.
+
+The following [structural incompatibility
+diagnosis](confidence_structural_incompatibility.md) decomposes the empty
+compatibility set without changing moments, scales, bands or parameter bounds.

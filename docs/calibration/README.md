@@ -47,6 +47,9 @@ Active calibration guidance is organised by evidence and decision:
   — fixed-grid empirical compatibility bands, inner and outer admissibility,
   and objective-blind representatives for robustness analysis. Retained
   vectors are not estimates and no persistent-confidence value is adopted.
+- [Persistent-confidence structural incompatibility](confidence_structural_incompatibility.md)
+  — baseline mismatch directions and a fixed, one-factor, paired structural
+  panel. Diagnostic interventions are not ranked, selected or runtime adopted.
 - [Representative vaults](vaults.md)
 - [Liquidations](liquidations.md)
 - [Protocol parameters](protocol.md)
