@@ -1,0 +1,64 @@
+{
+  "domain": "validation",
+  "duplicate_paths": 0,
+  "entries": [
+    {
+      "bytes": 6598,
+      "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_specification.json",
+      "runtime_input": false,
+      "semantic_owner": "integrated_empirical_eth_validation",
+      "sha256": "82b39324f9c15883d8e40e25a14cf43153adb5fad03352ce169a93e9aecf6ca3"
+    },
+    {
+      "bytes": 4806,
+      "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_profile.json",
+      "runtime_input": false,
+      "semantic_owner": "integrated_empirical_eth_validation",
+      "sha256": "411da8a21b0c669eb962979a2e015b93f399b58ba279d7f799d270420ce5f80b"
+    },
+    {
+      "bytes": 5134,
+      "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_input_validation.csv",
+      "runtime_input": false,
+      "semantic_owner": "integrated_empirical_eth_validation",
+      "sha256": "4498ef09c05037787933d4d34309bdb59a2ab2d113620e8fd2106bf1b499f458"
+    },
+    {
+      "bytes": 4565,
+      "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_dynamic_summary.csv",
+      "runtime_input": false,
+      "semantic_owner": "integrated_empirical_eth_validation",
+      "sha256": "8b345fc48c661af4aceff7b5e17582c23625ca12239a5e7b4013e3536adfd68b"
+    },
+    {
+      "bytes": 677,
+      "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_capacity_summary.csv",
+      "runtime_input": false,
+      "semantic_owner": "integrated_empirical_eth_validation",
+      "sha256": "e7246572fa85f53a9ce895f5b66aaddfdfef534ca0125b009175a413913f5885"
+    },
+    {
+      "bytes": 1548,
+      "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_decision.json",
+      "runtime_input": false,
+      "semantic_owner": "integrated_empirical_eth_validation",
+      "sha256": "0c9b2ab578725d959a946b737f614ff79bb253f824fd18fad372ff0f18c5e195"
+    },
+    {
+      "bytes": 1610,
+      "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_reproducibility.json",
+      "runtime_input": false,
+      "semantic_owner": "integrated_empirical_eth_validation",
+      "sha256": "726c9d4fc0360269a1d133ab83b5b22f86ea8cc264044293abe273b72144070f"
+    },
+    {
+      "bytes": 452,
+      "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_benchmark.json",
+      "runtime_input": false,
+      "semantic_owner": "integrated_empirical_eth_validation",
+      "sha256": "1b70d8658cd128479300dda6b24f7dce0df4eb572d204df8c4d8df45f78946d7"
+    }
+  ],
+  "entry_count": 8,
+  "schema_version": 1
+}

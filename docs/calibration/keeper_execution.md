@@ -199,10 +199,11 @@ Important limitations are:
 
 ## Next experimental boundary
 
-This study does not run an integrated simulation. A separately authorised
-next step may construct one ETH-only empirical profile with 500 vaults,
-empirical market, gas and liquidation-arrival inputs, the shared central
-capacity, one registered hurdle profile, and the accepted Stage 1
-response/confidence settings. That experiment must preserve the present
-candidate-only provenance and must not reinterpret the count as
-collateral-specific capacity.
+The separately authorised
+[integrated ETH-only validation](../validation/integrated_empirical_eth.md)
+has now assembled 500 empirical vaults, empirical market, gas and
+liquidation-arrival inputs, shared central capacity 26,
+`direct_cost_only`, and the accepted Stage 1 response/confidence settings.
+It is experiment-ready with caveats and remains opt-in. The validation
+preserves this study's candidate-only provenance and continues to describe
+the capacity as system-wide rather than collateral-specific.

@@ -57,7 +57,9 @@ Complete user-facing profiles are:
 
 - `config/profiles/legacy.yaml`;
 - `config/profiles/empirical.yaml`;
-- `config/profiles/empirical_stress.yaml`.
+- `config/profiles/empirical_stress.yaml`; and
+- `config/profiles/empirical_integrated_eth.yaml`, an additive, opt-in
+  integration-validation profile which is never selected implicitly.
 
 Partial overrides live under `config/sensitivities/`. The explicit dormant
 persistent-confidence scenario registry also lives there; it is an
@@ -67,6 +69,10 @@ Its activation and provenance contract is documented in
 mappings and fixed protocol settings live under `config/protocol/`.
 Established experiments remain defined in Python rather than in separate
 experiment configuration files.
+
+Compact integration-validation evidence is owned by
+`data/provenance/validation/`; detailed validation runs remain ignored under
+`outputs/diagnostics/validation/`.
 
 ## Workflows and SQL
 

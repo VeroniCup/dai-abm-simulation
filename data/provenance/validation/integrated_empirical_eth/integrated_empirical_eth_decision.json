@@ -1,0 +1,32 @@
+{
+  "authorised_next_boundary": "constrained_liquidation_recovery_experiment",
+  "capacity_validation": {
+    "capacity": 26,
+    "controlled_smoke_passed": true,
+    "duplicated_per_collateral": false,
+    "maximum_attempts": 26,
+    "shared_semantics": "system_wide_shared_capacity"
+  },
+  "component_inside_shares": {
+    "liquidation_arrival": 0.8571428571428571,
+    "market_gas": 1.0,
+    "vault": 1.0
+  },
+  "input_classification": "integrated_empirical_eth_inputs_valid_with_caveats",
+  "no_parameter_tuning": true,
+  "no_production_adoption": true,
+  "oracle_status": "transparent_baseline_not_calibrated",
+  "output_classification": "integrated_outputs_partially_compatible",
+  "overall_classification": "integrated_empirical_eth_profile_ready_with_caveats",
+  "principal_caveats": [
+    "Dynamic liquidation and DAI outputs are reduced-form and only partly comparable with historical observations.",
+    "The oracle uses a transparent zero-delay baseline that has not been empirically calibrated.",
+    "The shared capacity is partially identified and is not a physical keeper-network maximum.",
+    "Population robustness at 250 and 1,000 vaults remains outstanding.",
+    "The bounded-demand audit regression excludes unselected opportunities from attempted counts; the authoritative attempt budget and capacity diagnostics now agree."
+  ],
+  "profile_identifier": "empirical_integrated_eth",
+  "profile_identity": "ab68c32a145262bcef07716469d92be09e3d96506383ad16a07d0ba1bad2b34d",
+  "runtime_adopted": false,
+  "schema_version": 1
+}

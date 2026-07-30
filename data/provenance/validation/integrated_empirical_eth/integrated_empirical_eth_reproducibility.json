@@ -1,0 +1,27 @@
+{
+  "completed_dynamic_replications": 128,
+  "completed_initialisations": 512,
+  "deterministic_reconstruction": true,
+  "final_validation_data_used": false,
+  "input_checksums": {
+    "keeper_configuration": "e1d590508bb3e95ec6bdc2a30c41580fe211831a673dd447e793a0053a7fa848",
+    "keeper_gas": "37a5f49f4cc273b9d0d9526609be7f14b91b78939acf26e4dce00b66443e1594",
+    "keeper_registry": "58c5754ed95dead1ad283a7961fb0588496804a94f58ddb0e196a57601ee1e1b",
+    "liquidation_arrival": "cc29435bb0434237aba438ee98bded77f086704c7400bb5016e2b58703258c8a",
+    "liquidation_sequence_sensitivity": "9fdd5f3b5fb97e2dd41d0201bad34909ad05e423ad6b52f65219f49f02a1c7ed",
+    "market_gas": "b69276801bacf789f8ae91789983cc98a8a6d42d0a992940c0bcfa109ca25b7d",
+    "stage1_residual_blocks": "6f55b51acfc1da23836b3d847153bd4f68e4a38fc33fd967e9d3b795737bf28c",
+    "stage1_residual_sequence": "3fa2319cee9e1749405c0dc477e0f11ef9c31dd83c371b619bd33eda23c37c30",
+    "vault_initialisation": "5230a30aa2c2aebe69ef859ccdcbb785eb44f20a691b431f2fd01b0d16558892"
+  },
+  "multi_collateral_execution": false,
+  "parameter_calibration_run": false,
+  "preregistration_identity": "85f466ab297094fe4385546cf7c27d3e9f76d8bfdd64e4282c603e844faa1bd7",
+  "profile_identity": "ab68c32a145262bcef07716469d92be09e3d96506383ad16a07d0ba1bad2b34d",
+  "recovery_matrix_run": false,
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "scientific_code_identity": "f88cdf57e23bca4e56bb768fc0bb6767978d0649419f4d16fbfa964701aa2f4e",
+  "seed_registry_checksum": "2d077d4ce51fdbb6243bc2dde2d46aaeb998f7efb325a3f7b504fdd2ff5eb38d",
+  "usdc_svb_used": false
+}

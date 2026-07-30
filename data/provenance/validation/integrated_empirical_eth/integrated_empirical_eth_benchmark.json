@@ -1,0 +1,16 @@
+{
+  "free_storage_bytes": 239150694400,
+  "host_dependent": true,
+  "ignored_output_size_bytes": 290412,
+  "initialisation_count": 512,
+  "memory_bytes": null,
+  "minimum_free_storage_bytes": 10737418240,
+  "output_cap_bytes": 314572800,
+  "platform": "Darwin",
+  "schema_version": 1,
+  "simulation_count": 128,
+  "simulation_hours": 720,
+  "simulations_per_second": 1.0223386247687902,
+  "wall_time_seconds": 125.20313416598947,
+  "worker_count": 1
+}

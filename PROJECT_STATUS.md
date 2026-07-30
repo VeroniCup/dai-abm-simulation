@@ -42,7 +42,21 @@ is complete. The shared hourly capacity and the current proportional
 profit-hurdle interface are both partially identified; the pre-registered
 mixed-versus-dominant composition comparison is underpowered and therefore
 unresolved. A candidate-only registry and typed opt-in resolver exist, but no
-runtime profile imports them and no established experiment has changed.
+ordinary runtime profile imports them and no established experiment has
+changed. The dedicated integrated validation profile resolves them only when
+selected explicitly.
+
+The additive
+[integrated empirical ETH-only profile](docs/validation/integrated_empirical_eth.md)
+is also complete. Its 512 input initialisations and 128 independent
+720-hour dynamic replications passed all ownership, numerical, accounting and
+shared-capacity gates. The result is
+`integrated_empirical_eth_profile_ready_with_caveats`: all vault and
+market–gas moments passed, while the liquidation-arrival maximum-support
+statistic and limited like-for-like output references remain explicit
+caveats. The profile uses system-wide capacity 26, `direct_cost_only`,
+Stage 1-only confidence and a transparent zero-delay oracle baseline. It is
+experiment-ready but not runtime adopted.
 
 Detailed current guidance:
 
@@ -106,12 +120,12 @@ review reproduced all of them without changing executable behaviour.
 
 ## Next research work
 
-The next authorised experimental boundary after the keeper study is a
-separate integrated ETH-only empirical profile: 500 vaults, empirical market,
-gas and liquidation arrivals, the system-wide central capacity, an explicitly
-registered hurdle profile, and the accepted Stage 1 response/confidence
-settings. It has not been run. The keeper candidates remain review evidence,
-not adopted defaults.
+The next authorised experimental boundary is the separately pre-registered
+constrained-liquidation recovery experiment using the validated integrated
+ETH-only profile. Population-scale robustness, oracle-delay calibration,
+multi-collateral execution and final validation remain outstanding. Keeper
+candidates and the integrated profile remain opt-in evidence rather than
+adopted defaults.
 
 The behavioural-confidence calibration planning pass has resolved four core
 specification choices in the [confidence and behavioural calibration

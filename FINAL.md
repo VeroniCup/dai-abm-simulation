@@ -27,10 +27,12 @@ Completed in the current end-stage pass:
 - keeper capacity frontier: completed with a partially identified shared range;
 - keeper profit-hurdle decision: completed at the successful-execution evidence level;
 - keeper scenario registry: completed as candidate-only, opt-in evidence.
+- integrated empirical ETH-only profile: completed and experiment-ready with caveats;
+- integrated input and dynamic distributional validation: completed.
 
-Stage 1 is complete. The next stage is the integrated empirical ETH-only
-profile; it must be validated before constrained recovery or any
-multi-collateral matrix is run.
+Stages 1 and 2 are complete. The next stage is the separately pre-registered
+constrained-liquidation recovery experiment; no multi-collateral matrix should
+run before that bounded comparison is reviewed.
 
 ---
 
@@ -286,23 +288,22 @@ Do not confuse this with:
 - gas cost;
 - liquidation penalty.
 
-## 3.3 Integrated empirical ETH-only profile — essential
+## 3.3 Integrated empirical ETH-only profile — completed
 
-Empirical layers currently exist separately.
+The additive `empirical_integrated_eth` profile now combines 500
+empirical-joint ETH vaults normalised to 2.5 million DAI, empirical market and
+gas blocks, empirical hourly liquidation arrivals, system-wide capacity 26,
+`direct_cost_only`, full-close liquidation, the accepted Stage 1 response and
+residual blocks, Stage 1-only confidence, and a transparent zero-delay oracle
+baseline.
 
-The final central profile still needs to combine:
-
-- empirical joint vault population;
-- empirical market and gas blocks;
-- empirical liquidation arrivals;
-- empirically constrained keeper capacity;
-- final keeper-hurdle treatment;
-- full-close liquidation;
-- Stage 1 DAI response;
-- accepted residual blocks;
-- Stage 1-only confidence default.
-
-This integrated profile is the bridge between parameter work and final policy experiments.
+The result-blind validation used 512 input initialisations and 128 independent
+720-hour dynamic replications. All numerical and accounting gates passed. The
+classification is `integrated_empirical_eth_profile_ready_with_caveats`
+because one finite-sample arrival maximum statistic and several reduced-form
+dynamic comparisons lack like-for-like historical references. The profile is
+experiment-ready but `runtime_adopted: false`. See
+[`docs/validation/integrated_empirical_eth.md`](docs/validation/integrated_empirical_eth.md).
 
 ## 3.4 Recovery under constrained execution — essential
 
@@ -593,7 +594,7 @@ opportunities rather than DAI debt or collateral value.
 
 ## Stage 2 — Integrated empirical ETH-only profile
 
-**Status:** next.
+**Status:** completed; experiment-ready with caveats and not runtime adopted.
 
 This is an ETH-only integration validation harness, not an ETH recalibration
 of the system-wide keeper capacity. No constrained-recovery or
@@ -650,6 +651,14 @@ Require:
 - deterministic seed ownership;
 - distributional validation evidence;
 - no final-validation data.
+
+All completion-gate conditions are satisfied. The 512 input initialisations
+retain the empirical joint vault distribution, market–gas alignment and
+hourly arrival owner without fallback. All 128 dynamic replications are
+numerically valid, selected attempts never exceed the single system-wide cap
+of 26, and the controlled smoke carries rejected backlog forward. The
+transparent oracle remains uncalibrated. Population robustness is not part of
+this completion gate and remains outstanding.
 
 ## Stage 3 — Constrained-liquidation recovery experiment
 
@@ -1099,14 +1108,14 @@ Do not:
 
 ## Immediate
 
-- [ ] Keeper capacity frontier
-- [ ] Keeper profit-hurdle decision
-- [ ] Keeper scenario registry
+- [x] Keeper capacity frontier
+- [x] Keeper profit-hurdle decision
+- [x] Keeper scenario registry
 
 ## Empirical integration
 
-- [ ] Integrated empirical ETH-only profile
-- [ ] Distributional validation
+- [x] Integrated empirical ETH-only profile
+- [x] Distributional validation
 - [ ] Population-scale validation
 - [ ] Oracle-delay status freeze
 
@@ -1157,6 +1166,8 @@ Do not:
 
 The next authorised pass is:
 
-> **Keeper execution calibration: estimate evidence-constrained shared capacity bounds, resolve the keeper profit-hurdle status, and register low, central and high keeper execution profiles without changing production defaults or running final experiments.**
+> **Pre-register and run the bounded constrained-liquidation recovery experiment using the validated `empirical_integrated_eth` profile, without tuning the profile, changing production defaults, using final-validation data or running a multi-collateral matrix.**
 
-The pass should not execute the constrained-recovery or multi-collateral matrices. It should end with a committed, validated keeper execution registry that can be consumed by the integrated empirical profile.
+The central integration treatment remains system-wide capacity 26 with
+`direct_cost_only`. Population, positive-hurdle and oracle-delay cases remain
+separate robustness dimensions.

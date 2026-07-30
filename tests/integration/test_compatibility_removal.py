@@ -129,6 +129,7 @@ def test_removed_configuration_aliases_are_absent() -> None:
     assert not (ROOT / "config/empirical").exists()
     assert {path.name for path in (ROOT / "config/profiles").glob("*.yaml")} == {
         "empirical.yaml",
+        "empirical_integrated_eth.yaml",
         "empirical_stress.yaml",
         "legacy.yaml",
     }

@@ -431,14 +431,18 @@ def liquidate_vaults(
                     "remaining_collateral_amount": vault.collateral_amount,
                 }
 
-            elif row["expected_profit"] <= 0:
+            elif demand_selected_vault_ids is not None:
+                # Demand-selected rows outside the ranked attempt budget are
+                # capacity-limited even when their ex-post profit is negative.
+                # They were not sent to execute_keeper_liquidation and must
+                # not consume the authoritative attempt budget.
                 record = {
                     "vault_id": vault.vault_id,
                     "collateral_type": vault.collateral_type,
-                    "attempted": True,
+                    "attempted": False,
                     "liquidated": False,
                     "fully_liquidated": False,
-                    "reason": "unprofitable",
+                    "reason": "capacity_limited",
                     "expected_profit": row["expected_profit"],
                     "realised_keeper_profit": 0.0,
                     "bad_debt": vault.bad_debt(prices),
@@ -449,14 +453,14 @@ def liquidate_vaults(
                     "remaining_collateral_amount": vault.collateral_amount,
                 }
 
-            elif demand_selected_vault_ids is not None:
+            elif row["expected_profit"] <= 0:
                 record = {
                     "vault_id": vault.vault_id,
                     "collateral_type": vault.collateral_type,
-                    "attempted": False,
+                    "attempted": True,
                     "liquidated": False,
                     "fully_liquidated": False,
-                    "reason": "capacity_limited",
+                    "reason": "unprofitable",
                     "expected_profit": row["expected_profit"],
                     "realised_keeper_profit": 0.0,
                     "bad_debt": vault.bad_debt(prices),

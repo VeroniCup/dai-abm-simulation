@@ -176,6 +176,19 @@ data/provenance/calibration/confidence/*
 !data/provenance/calibration/confidence/structural_factorial_precision_decision.json
 !data/provenance/calibration/confidence/structural_factorial_precision_reproducibility.json
 !data/provenance/calibration/confidence/structural_factorial_precision_benchmark.json
+!data/provenance/validation/
+data/provenance/validation/*
+!data/provenance/validation/manifest.json
+!data/provenance/validation/integrated_empirical_eth/
+data/provenance/validation/integrated_empirical_eth/*
+!data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_specification.json
+!data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_profile.json
+!data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_input_validation.csv
+!data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_dynamic_summary.csv
+!data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_capacity_summary.csv
+!data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_decision.json
+!data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_reproducibility.json
+!data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_benchmark.json
 
 # Domain-owned provenance. Detailed operational records stay ignored; selected
 # durable entry points remain tracked.

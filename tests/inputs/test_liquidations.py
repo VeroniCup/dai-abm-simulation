@@ -246,6 +246,19 @@ def test_unprofitable_selected_opportunities_remain_unprofitable() -> None:
     assert set(result["reason"]) == {"unprofitable"}
 
 
+def test_bounded_demand_does_not_count_unselected_unprofitable_rows_as_attempts() -> None:
+    result = liquidate_vaults(
+        vaults=_vaults(3, debt=500.0),
+        prices=1000.0,
+        config=LiquidationConfig(gas_cost=10_000.0),
+        bounded_demand=3,
+        attempt_budget=1,
+    )
+    assert int(result["attempted"].sum()) == 1
+    assert int((result["reason"] == "unprofitable").sum()) == 1
+    assert int((result["reason"] == "capacity_limited").sum()) == 2
+
+
 def test_empirical_full_close_factor_closes_selected_profitable_vault() -> None:
     vaults = _vaults(1)
     result = liquidate_vaults(

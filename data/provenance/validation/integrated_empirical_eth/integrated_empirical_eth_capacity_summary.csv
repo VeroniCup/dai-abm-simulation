@@ -1,0 +1,13 @@
+metric,value,unit
+demand_hours,815,replication-hours
+share_all_hours_with_positive_demand,0.00884331597222,fraction
+binding_hours,3,replication-hours
+share_demand_hours_binding,0.00368098159509,fraction
+mean_capacity_utilisation_on_demand_hours,0.107833883908,fraction_of_26
+p90_replication_capacity_utilisation,0.196923076923,fraction_of_26
+maximum_capacity_utilisation,1,fraction_of_26
+mean_capacity_rejected_opportunities,0.0001953125,opportunities_per_hour
+maximum_capacity_rejected_opportunities,16,opportunities_per_hour
+maximum_hourly_attempts,26,opportunities_per_hour
+generic_audit_attempt_record_overcount,0,non-executed audit records
+controlled_smoke_pass,1,boolean

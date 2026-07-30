@@ -23,10 +23,10 @@ from tests.support import REPOSITORY_ROOT
 
 
 EXPECTED_CASE_DIGEST = (
-    "6e0ede732d7f2895999c539f69365888bf196021259fa578390ee1c138afddf9"
+    "4dcc15b1151405679d4f8e2c7db2d548c4052b9815347b626c6cf8aa6cc2e25b"
 )
 EXPECTED_DECORATOR_DIGEST = (
-    "dcb42096ef2c6384b876a3b5408a44733b0bd477beb72d2f2406c1229bc5a300"
+    "6c6e0e67dc3cf4dbd66ad72253d56c7b75e76fba3d01528f0ad8da107dd3fac9"
 )
 EXPECTED_MONKEYPATCH_DIGEST = (
     "19d7b650cf2fe8cff524a23ed9b19bb3401dc272d3bd584b12871ee7e5942d32"
@@ -40,7 +40,7 @@ EXPECTED_CASE_COUNTS = {
     "tests/inputs/test_configuration.py": 11,
     "tests/inputs/test_configuration_profiles.py": 16,
     "tests/inputs/test_environment.py": 17,
-    "tests/inputs/test_liquidations.py": 17,
+    "tests/inputs/test_liquidations.py": 18,
     "tests/inputs/test_model_input_paths.py": 6,
     "tests/inputs/test_vaults.py": 19,
     "tests/integration/test_documentation_hierarchy.py": 7,
@@ -149,9 +149,9 @@ def _json_digest(value: object) -> str:
     return sha256(serialised.encode("utf-8")).hexdigest()
 
 
-def test_all_419_retained_pre_migration_logical_cases_are_preserved() -> None:
+def test_all_420_retained_pre_migration_logical_cases_are_preserved() -> None:
     baseline = _baseline_nodeids(_collect_nodeids())
-    assert len(baseline) == 419
+    assert len(baseline) == 420
     assert len(set(baseline)) == len(baseline)
     assert _digest_lines(baseline) == EXPECTED_CASE_DIGEST
 
@@ -165,7 +165,7 @@ def test_pre_migration_case_counts_are_preserved_by_module() -> None:
 
 def test_parametrisation_and_marker_decorators_are_preserved() -> None:
     records = _decorator_records()
-    assert len(records) == 404
+    assert len(records) == 405
     assert _json_digest(records) == EXPECTED_DECORATOR_DIGEST
 
 
@@ -232,5 +232,6 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
         "tests/model/test_market.py": 7,
         "tests/workflows/test_confidence_calibration.py": 40,
         "tests/experiments/test_eth_recovery.py": 36,
+        "tests/integration/test_integrated_empirical_eth.py": 17,
     }
-    assert len(nodeids) == 419 + len(additions)
+    assert len(nodeids) == 420 + len(additions)

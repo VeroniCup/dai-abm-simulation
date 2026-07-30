@@ -37,6 +37,39 @@ DURABLE_PROVENANCE = (
     "data/provenance/index.json",
     "data/provenance/calibration/manifest.json",
     "data/provenance/experiments/manifest.json",
+    "data/provenance/validation/manifest.json",
+    (
+        "data/provenance/validation/integrated_empirical_eth/"
+        "integrated_empirical_eth_specification.json"
+    ),
+    (
+        "data/provenance/validation/integrated_empirical_eth/"
+        "integrated_empirical_eth_profile.json"
+    ),
+    (
+        "data/provenance/validation/integrated_empirical_eth/"
+        "integrated_empirical_eth_input_validation.csv"
+    ),
+    (
+        "data/provenance/validation/integrated_empirical_eth/"
+        "integrated_empirical_eth_dynamic_summary.csv"
+    ),
+    (
+        "data/provenance/validation/integrated_empirical_eth/"
+        "integrated_empirical_eth_capacity_summary.csv"
+    ),
+    (
+        "data/provenance/validation/integrated_empirical_eth/"
+        "integrated_empirical_eth_decision.json"
+    ),
+    (
+        "data/provenance/validation/integrated_empirical_eth/"
+        "integrated_empirical_eth_reproducibility.json"
+    ),
+    (
+        "data/provenance/validation/integrated_empirical_eth/"
+        "integrated_empirical_eth_benchmark.json"
+    ),
     (
         "data/provenance/experiments/confidence/"
         "confidence_scenario_specification.json"
@@ -81,6 +114,7 @@ def test_root_provenance_contains_only_cross_domain_entry_points() -> None:
     assert entries == {
         "calibration",
         "experiments",
+        "validation",
         "data_manifest.csv",
         "index.json",
     }

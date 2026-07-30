@@ -1,0 +1,168 @@
+{
+  "acceptance_rules": {
+    "capacity_may_not_exceed": 26,
+    "mandatory_moments_operational": true,
+    "minimum_inside_share_by_component": 0.9,
+    "numerical_and_accounting_failures_allowed": 0,
+    "protected_checksums_match": true,
+    "silent_fallback_allowed": false
+  },
+  "classifications": {
+    "input": [
+      "integrated_empirical_eth_inputs_valid",
+      "integrated_empirical_eth_inputs_valid_with_caveats",
+      "integrated_empirical_eth_inputs_blocked",
+      "integrated_empirical_eth_inputs_invalid"
+    ],
+    "output": [
+      "integrated_outputs_broadly_compatible",
+      "integrated_outputs_partially_compatible",
+      "integrated_outputs_not_compatible",
+      "integrated_output_validation_not_operational"
+    ],
+    "overall": [
+      "integrated_empirical_eth_profile_ready",
+      "integrated_empirical_eth_profile_ready_with_caveats",
+      "integrated_empirical_eth_profile_blocked",
+      "integrated_empirical_eth_profile_invalid"
+    ]
+  },
+  "confidence_setting": "stage1_only",
+  "final_validation_exclusions": {
+    "final_validation_observations_used": 0,
+    "usdc_svb_march_2023": true,
+    "usdc_svb_observations_used": 0,
+    "withheld_november_2022": true
+  },
+  "future_recovery_results_excluded": true,
+  "input_checksums": {
+    "keeper_configuration": "e1d590508bb3e95ec6bdc2a30c41580fe211831a673dd447e793a0053a7fa848",
+    "keeper_gas": "37a5f49f4cc273b9d0d9526609be7f14b91b78939acf26e4dce00b66443e1594",
+    "keeper_registry": "58c5754ed95dead1ad283a7961fb0588496804a94f58ddb0e196a57601ee1e1b",
+    "liquidation_arrival": "cc29435bb0434237aba438ee98bded77f086704c7400bb5016e2b58703258c8a",
+    "liquidation_sequence_sensitivity": "9fdd5f3b5fb97e2dd41d0201bad34909ad05e423ad6b52f65219f49f02a1c7ed",
+    "market_gas": "b69276801bacf789f8ae91789983cc98a8a6d42d0a992940c0bcfa109ca25b7d",
+    "stage1_residual_blocks": "6f55b51acfc1da23836b3d847153bd4f68e4a38fc33fd967e9d3b795737bf28c",
+    "stage1_residual_sequence": "3fa2319cee9e1749405c0dc477e0f11ef9c31dd83c371b619bd33eda23c37c30",
+    "vault_initialisation": "5230a30aa2c2aebe69ef859ccdcbb785eb44f20a691b431f2fd01b0d16558892"
+  },
+  "keeper_hurdle_profile": "direct_cost_only",
+  "oracle_delay_steps": 0,
+  "oracle_status": "transparent_baseline_not_calibrated",
+  "owner_paths": {
+    "confidence_registry": "config/sensitivities/confidence_scenarios.yaml",
+    "keeper_configuration": "config/sensitivities/keeper_execution.yaml",
+    "keeper_evidence_registry": "data/provenance/calibration/keeper/keeper_execution_registry.csv",
+    "keeper_gas": "data/liquidations/model_inputs/keeper_gas/pool.csv",
+    "liquidation_arrival": "data/liquidations/model_inputs/arrival/hourly_pool.csv",
+    "liquidation_sequence_sensitivity": "data/liquidations/model_inputs/arrival/sequence_pool.csv",
+    "market_gas": "data/market/model_inputs/environment_blocks/pool.csv",
+    "profile": "config/profiles/empirical_integrated_eth.yaml",
+    "vault_initialisation": "data/vaults/model_inputs/initialisation/pool.csv"
+  },
+  "parameter_tuning": false,
+  "persistent_confidence_enabled": false,
+  "preregistration_identity": "85f466ab297094fe4385546cf7c27d3e9f76d8bfdd64e4282c603e844faa1bd7",
+  "profile_classification_excluded": true,
+  "profile_identifier": "empirical_integrated_eth",
+  "profile_identity": "ab68c32a145262bcef07716469d92be09e3d96506383ad16a07d0ba1bad2b34d",
+  "purpose": "integrated empirical ETH-only distributional validation",
+  "registered_input_metrics": {
+    "liquidation_arrival": [
+      "zero_arrival_share",
+      "positive_arrival_mean",
+      "positive_arrival_median",
+      "positive_arrival_p75",
+      "positive_arrival_p90",
+      "positive_arrival_p95",
+      "maximum_support"
+    ],
+    "market_gas": [
+      "eth_return_p10",
+      "eth_return_median",
+      "eth_return_p90",
+      "eth_return_volatility",
+      "eth_absolute_return_p95",
+      "median_gas_median",
+      "median_gas_p90",
+      "p90_gas_p90",
+      "p99_gas_p95",
+      "return_gas_rank_correlation"
+    ],
+    "vault": [
+      "debt_mean",
+      "debt_median",
+      "debt_p10",
+      "debt_p25",
+      "debt_p75",
+      "debt_p90",
+      "collateral_ratio_mean",
+      "collateral_ratio_median",
+      "collateral_ratio_p10",
+      "collateral_ratio_p25",
+      "collateral_ratio_p75",
+      "collateral_ratio_p90",
+      "debt_collateral_ratio_rank_correlation",
+      "total_debt",
+      "initial_liquidatable_share"
+    ]
+  },
+  "result_fields_excluded": true,
+  "risk_cost_rate": 0.0,
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "scientific_code_identity": "f88cdf57e23bca4e56bb768fc0bb6767978d0649419f4d16fbfa964701aa2f4e",
+  "seed_registry": {
+    "calibration_registry_b_reused": false,
+    "derivation": "sha256(namespace|replication|stream) first 64 bits modulo 2^32",
+    "dynamic_replication_count": 128,
+    "eth_recovery_seeds_reused": false,
+    "final_validation_seeds_reused": false,
+    "initialisation_count": 512,
+    "reference_registry_id": "integrated-empirical-eth-reference-v1",
+    "registry_id": "integrated-empirical-eth-validation-v1",
+    "schema_version": 1,
+    "streams": [
+      "vault_sampling",
+      "market_gas_blocks",
+      "keeper_gas_units",
+      "liquidation_arrivals",
+      "stage1_residual_blocks",
+      "controlled_smoke_vaults",
+      "controlled_smoke_arrivals"
+    ]
+  },
+  "seed_registry_checksum": "2d077d4ce51fdbb6243bc2dde2d46aaeb998f7efb325a3f7b504fdd2ff5eb38d",
+  "shared_keeper_capacity": 26,
+  "shared_keeper_profile": "shared_keeper_capacity_central",
+  "shared_keeper_semantics": "system_wide_shared_capacity",
+  "shared_keeper_unit": "protocol-level liquidation opportunities per one-hour simulation step",
+  "stage1": {
+    "above_peg_response_rounded": 0.105131,
+    "below_peg_response_rounded": 0.199381,
+    "residual_block_hours": 24,
+    "residual_block_sha256": "6f55b51acfc1da23836b3d847153bd4f68e4a38fc33fd967e9d3b795737bf28c",
+    "residual_sequence_sha256": "3fa2319cee9e1749405c0dc477e0f11ef9c31dd83c371b619bd33eda23c37c30"
+  },
+  "total_debt_dai": 2500000.0,
+  "validation_components": {
+    "A": "configuration_and_integration_audit",
+    "B": {
+      "independent_initialisations": 512,
+      "name": "monte_carlo_input_distribution_validation",
+      "vaults_per_initialisation": 500
+    },
+    "C": {
+      "hours": 720,
+      "name": "dynamic_integrated_validation",
+      "replications": 128
+    },
+    "controlled_binding_smoke": {
+      "confidence_comparison": false,
+      "fixed_residual_path": "zero",
+      "hours": 240,
+      "recovery_comparison": false
+    }
+  },
+  "vault_count": 500
+}
