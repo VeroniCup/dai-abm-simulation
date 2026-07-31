@@ -15,6 +15,11 @@ the earlier unbounded-capacity recovery experiment could not exercise:
 The experiment is complete and is classified
 `recovery_effect_capacity_dependent`.
 
+The H5a–H5d labels retained below are this completed study's historical
+mechanism labels. They pre-date the final four-hypothesis dissertation
+framework. They are not a fifth dissertation hypothesis and must not be
+treated as additional hypotheses.
+
 ## 2. Relation to the earlier null
 
 The committed unbounded experiment used 100 legacy vaults, fixed gas and
@@ -102,8 +107,9 @@ The four fixed scenarios are ordered:
 3. `confidence_central`;
 4. `confidence_fragile`.
 
-`stage1_only` owns the primary H5a–H5c conclusions. The active scenarios are
-transparent robustness assumptions used for H5d and mechanism sensitivity.
+`stage1_only` owns the primary historical mechanism H5a–H5c conclusions. The
+active scenarios are transparent robustness assumptions used for the
+historical mechanism H5d label and mechanism sensitivity.
 They are neither ranked nor fitted.
 
 ## 9. Matrix, replications and common random numbers
@@ -236,10 +242,14 @@ ranking or empirical fit.
 
 ## 19. Pre-registered decisions
 
-- H5a, recovery rescues unresolved positions: **supported**.
-- H5b, recovery improves primary peg outcomes: **not supported**.
-- H5c, the recovery effect depends on capacity: **present**.
-- H5d, solvency–peg decoupling under persistent confidence:
+- Historical mechanism H5a, recovery rescues unresolved positions:
+  **supported**.
+- Historical mechanism H5b, recovery improves primary peg outcomes:
+  **not supported**.
+- Historical mechanism H5c, the recovery effect depends on capacity:
+  **present**.
+- Historical mechanism H5d, solvency–peg decoupling under persistent
+  confidence:
   **present**.
 - Capacity mechanism: **`higher_capacity_reduces_backlog`**.
 - Overall: **`recovery_effect_capacity_dependent`**.

@@ -1,7 +1,7 @@
 # Project structure
 
-This is the implemented repository map immediately before final
-multi-collateral experiment development. It distinguishes scientific roles,
+This is the implemented repository map after completion of the first final
+multi-collateral experiment. It distinguishes scientific roles,
 authoritative inputs and generated outputs.
 
 ## 1. Scientific architecture
@@ -14,7 +14,7 @@ flowchart TD
     D["Simulation model<br/>economic mechanisms"]
     E["Validation<br/>frozen inputs and contracts"]
     F["Mechanism experiments<br/>controlled pre-final studies"]
-    G["Final experiments<br/>reserved destination"]
+    G["Final experiments<br/>Experiment A complete"]
     H["Compact provenance"]
     I["Generated figures, tables and diagnostics"]
 
@@ -29,8 +29,8 @@ flowchart TD
 Calibration may conclude that a parameter is unidentified; it does not need to
 produce a point estimate. Validation checks frozen compositions and
 cross-layer behaviour without estimating values. Mechanism experiments test
-controlled causal effects. The final package is reserved for the principal
-hierarchical dissertation programme.
+controlled causal effects. The final package owns the principal hierarchical
+dissertation programme; Experiment A is complete and Experiment B is next.
 
 ## 2. Actual repository tree
 
@@ -57,7 +57,7 @@ dai-abm-simulation/
 │   ├── validation/                  frozen-input and contract validation
 │   ├── experiments/
 │   │   ├── mechanism/               ETH recovery studies
-│   │   ├── final/                   reserved final programme
+│   │   ├── final/                   final programme and Experiment A
 │   │   └── {runner,scenarios,summaries,plots}.py [protected established]
 │   └── common/                      shared repository infrastructure
 ├── workflows/
@@ -65,10 +65,11 @@ dai-abm-simulation/
 │   ├── calibration/
 │   ├── inputs/                      input-validation entry points
 │   ├── experiments/mechanism/
+│   ├── experiments/final/
 │   └── maintenance/
 ├── tests/
 │   ├── {model,inputs,calibration,validation}/
-│   ├── experiments/mechanism/
+│   ├── experiments/{mechanism,final}/
 │   ├── workflows/
 │   └── integration/
 ├── docs/
@@ -78,8 +79,7 @@ dai-abm-simulation/
 └── outputs/{experiments,diagnostics,figures,tables}/
 ```
 
-Optional empty directories are not created for visual symmetry. The one
-intentional empty scientific boundary is `src/dai_sim/experiments/final/`.
+Optional empty directories are not created for visual symmetry.
 
 ## 3. Scientific workflow
 
@@ -91,16 +91,17 @@ flowchart LR
     D["Mechanism recovery studies<br/>complete"]
     E["Multi-collateral input validation<br/>complete"]
     T["Scientific package taxonomy<br/>complete with protected exceptions"]
-    F["Final experiments<br/>pending"]
+    F["Experiment A<br/>complete"]
+    B2["Experiment B<br/>next"]
     G["Held-out validation<br/>pending"]
     H["Code freeze<br/>pending"]
 
-    A --> B --> C --> D --> E --> T --> F --> G --> H
+    A --> B --> C --> D --> E --> T --> F --> B2 --> G --> H
 ```
 
-This maintenance pass changes no registry, treatment, metric, simulation
-result or runtime default. Its purpose is to give the next pass one
-unambiguous final-experiment destination.
+The final programme retains separate registered, operational and generated
+evidence boundaries. Experiment A changes no production default; its next
+unambiguous boundary is Experiment B under the frozen master programme.
 
 ## 4. Ownership map
 
@@ -120,7 +121,7 @@ unambiguous final-experiment destination.
 | Sustained recovery metrics | `dai_sim.experiments.mechanism.eth_recovery._recovery_metrics` | Constrained study imports the same owner |
 | Integrated ETH validation API | `dai_sim.validation.integrated_eth` | Protected implementation remains under calibration |
 | Multi-collateral validation API | `dai_sim.validation.multicollateral` | Protected implementation remains under calibration |
-| Final experiment code | `dai_sim.experiments.final` | No implementation yet |
+| Final experiment code | `dai_sim.experiments.final` | Master programme and completed Experiment A |
 | Evidence manifests | `data/provenance/{calibration,validation,experiments}/manifest.json` | Cross-class provenance index |
 
 Values, typed resolution, economic application and scientific validation are

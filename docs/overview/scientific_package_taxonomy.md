@@ -11,8 +11,8 @@ The active boundaries are now explicit:
 - `validation/` checks frozen inputs, profiles and cross-layer contracts;
 - `inputs/` resolves registered values into typed runtime objects;
 - `experiments/mechanism/` contains controlled pre-final causal studies; and
-- `experiments/final/` is the sole destination for the unimplemented
-  dissertation experiment programme.
+- `experiments/final/` owns the pre-registered dissertation experiment
+  programme and completed Experiment A.
 
 Two registered validators and one historical confidence-scenario import
 surface remain at older paths because path strings and source bytes participate
@@ -45,8 +45,9 @@ evidence.
 
 A final experiment directly answers the principal multi-collateral research
 questions. Idiosyncratic diversification, stress correlation, the stable
-collateral trade-off and shared keeper-capacity crowding will enter only
-`dai_sim.experiments.final`.
+collateral trade-off and shared keeper-capacity crowding are owned only by
+`dai_sim.experiments.final`; the first is complete and the others remain
+unexecuted.
 
 ### Scenario or input resolution
 
@@ -70,7 +71,9 @@ src/dai_sim/
 │   │   ├── eth_recovery.py
 │   │   └── constrained_eth_recovery.py
 │   ├── final/
-│   │   └── __init__.py            reserved implementation boundary
+│   │   ├── __init__.py            package boundary
+│   │   ├── programme.py           frozen master programme
+│   │   └── idiosyncratic_diversification.py
 │   ├── confidence_scenarios.py    [protected historical import surface]
 │   ├── runner.py                  [protected established experiments]
 │   ├── scenarios.py               [protected established scenarios]
@@ -90,9 +93,12 @@ tests/
 ├── inputs/
 │   └── test_confidence_scenario_resolution.py
 ├── experiments/
-│   └── mechanism/
-│       ├── test_eth_recovery.py
-│       └── test_constrained_eth_recovery.py
+│   ├── mechanism/
+│   │   ├── test_eth_recovery.py
+│   │   └── test_constrained_eth_recovery.py
+│   └── final/
+│       ├── test_programme.py
+│       └── test_idiosyncratic_diversification.py
 ├── model/
 ├── workflows/
 └── integration/
@@ -100,16 +106,16 @@ tests/
 workflows/
 ├── calibration/
 ├── experiments/
-│   └── mechanism/
-│       ├── eth_recovery.py
-│       └── constrained_eth_recovery.py
+│   ├── mechanism/
+│   │   ├── eth_recovery.py
+│   │   └── constrained_eth_recovery.py
+│   └── final/
+│       └── idiosyncratic_diversification.py
 ├── inputs/                         protected input-validation entry points
 └── maintenance/
 ```
 
-No empty test or workflow directory was added merely for symmetry. The source
-`experiments/final/` boundary is intentionally present before final
-implementation.
+No empty test or workflow directory was added merely for symmetry.
 
 ## Current-to-target migration
 
@@ -138,7 +144,8 @@ implementation.
 | `experiments/mechanism/__init__.py` | Package import only | Package boundary | None | Added |
 | `experiments/mechanism/eth_recovery.py` | Consumes calibration event paths, input scenarios and model confidence/market mechanics; workflow and tests call it | `mechanism_experiment` | Owns the 16-cell matrix, CRN seeds, recovery outcomes, contrasts and registered evidence; identity remains `bcae5ed6…` | Moved |
 | `experiments/mechanism/constrained_eth_recovery.py` | Consumes the integrated profile, keeper inputs, scenario resolver and ETH recovery metric; workflow and tests call it | `mechanism_experiment` | Owns the 24-cell matrix, hypotheses, paired evidence and identity `17ace2eb…` | Moved |
-| `experiments/final/__init__.py` | No caller yet | Final implementation boundary | No experiment exists | Added; deliberately empty of business logic |
+| `experiments/final/programme.py` | Final workflow, tests and Experiment A | `final_programme` | Owns the four-RQ/four-hypothesis master programme and its identity | Implemented |
+| `experiments/final/idiosyncratic_diversification.py` | Final workflow and tests | `final_experiment` | Owns Experiment A design, checkpoints, aggregation, decisions and compact evidence | Implemented |
 | `experiments/runner.py` | Calls model, scenarios and summaries; public API and established docs call it | `historical_protected_exception` / mechanism runner | Runs established Experiments 1–6; frozen Experiments 1–5 depend on it | Retained |
 | `experiments/scenarios.py` | Imported by the established runner and registered structural evidence | `scenario_input` / `historical_protected_exception` | Historical scenario factories; a registry records this path | Retained |
 | `experiments/summaries.py` | Imported by the established runner | `shared_metric` / reporting | Established summary schema and recovery reporting | Retained |
@@ -155,8 +162,11 @@ final hierarchical programme.
 | --- | --- | --- | --- |
 | `workflows/experiments/mechanism/eth_recovery.py` | `workflow_only` | Dispatches registered recovery operations; owns no scientific equation | Moved |
 | `workflows/experiments/mechanism/constrained_eth_recovery.py` | `workflow_only` | Dispatches the constrained study and evidence reconstruction | Moved |
+| `workflows/experiments/final/idiosyncratic_diversification.py` | `workflow_only` | Dispatches final pre-registration, Experiment A checkpoints and compact evidence | Implemented |
 | `tests/experiments/mechanism/test_eth_recovery.py` | `test_only` | Protects design, CRN, outcomes, metrics, evidence and workflow interface | Moved |
 | `tests/experiments/mechanism/test_constrained_eth_recovery.py` | `test_only` | Protects cells, capacity treatments, hypotheses, evidence and workflow interface | Moved |
+| `tests/experiments/final/test_programme.py` | `test_only` | Protects master programme scope, identities and execution boundaries | Implemented |
+| `tests/experiments/final/test_idiosyncratic_diversification.py` | `test_only` | Protects Experiment A design, simulation, evidence and decisions | Implemented |
 
 ### Experiment documentation
 
@@ -275,5 +285,5 @@ flowchart LR
 ```
 
 Validation may call the model and typed inputs, but it does not feed a
-validation outcome back into parameter estimation. Final experiments are not
-implemented in this pass.
+validation outcome back into parameter estimation. Experiment A is complete;
+Experiments B–E remain unexecuted.

@@ -5,7 +5,8 @@ remain in [`src/dai_sim/experiments/`](../../src/dai_sim/experiments/);
 controlled pre-final studies live in
 [`experiments/mechanism/`](../../src/dai_sim/experiments/mechanism/), and
 [`experiments/final/`](../../src/dai_sim/experiments/final/) is the sole
-destination for the unimplemented final dissertation programme.
+destination for the pre-registered
+[final dissertation programme](final/README.md).
 
 - [Baseline gas and panic scenarios](baseline.md)
 - [Oracle delay](oracle_delay.md)
@@ -25,15 +26,25 @@ destination for the unimplemented final dissertation programme.
   initialisation with scientific evidence held immutable.
 - [Peg recovery](peg_recovery.md)
 - [Multi-collateral portfolios and shocks](multi_collateral.md)
+- [Final dissertation experiment programme](final/README.md) — the
+  authoritative four research questions and four hypotheses, together with
+  the registered Experiment A–E and H4-synthesis boundaries.
+- [Experiment A — idiosyncratic diversification](final/idiosyncratic_diversification.md)
+  — the completed eight-cell, 1,024-simulation isolated-shock experiment.
 
 The established multi-collateral runner above is a protected historical
 stylised experiment
 and remains operational for regression compatibility. Its five historical
 portfolio names and five historical shock names are not the newly frozen
-final design. The final, still unexecuted design has five portfolios and seven
-shocks registered by the
+final design. The final design has five portfolios and seven shocks registered by the
 [multi-collateral integration validation](../validation/multicollateral_integration.md).
-No final portfolio or shock has been ranked or selected.
+No final portfolio or shock has been ranked or selected. Its core programme
+contains 43 cells and 5,504 planned simulations. Experiment A is complete and
+supports idiosyncratic diversification, with solvency improvements but
+unchanged peg outcomes. Experiment B is the next authorised pass but remains
+unexecuted; Experiments C–D are `preregistered_not_executed`; Experiment E is
+`preregistered_blocked_pending_oracle_delay_freeze`; and the result-independent
+H4 evidence synthesis is `pending_evidence_synthesis`.
 
 Established scenario definitions are protected Python configuration factories in
 `scenarios.py`, with execution functions in `runner.py`. The new opt-in ETH

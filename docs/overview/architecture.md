@@ -18,7 +18,7 @@ The installable package is `src/dai_sim/`:
 | `calibration/` | Statistical estimation, identification, uncertainty and adoption decisions |
 | `validation/` | Frozen-input, profile, accounting and cross-layer contract checks |
 | `experiments/mechanism/` | Controlled pre-final causal studies |
-| `experiments/final/` | Reserved final hierarchical dissertation programme |
+| `experiments/final/` | Pre-registered final programme and completed Experiment A |
 | `experiments/` root modules | Protected established scenario runners, summaries and plots |
 | `common/` | Shared repository-path infrastructure |
 
@@ -97,8 +97,9 @@ Acquisition, processing, reconstruction, input construction and calibration
 entry points live under semantic workflow directories. Input-validation CLIs
 remain under `workflows/inputs/`; the integrated and multi-collateral
 workflow bytes are registered scientific-identity inputs. Registered recovery
-CLIs live under `workflows/experiments/mechanism/`. A final workflow
-directory will be added only with real final experiment code.
+CLIs live under `workflows/experiments/mechanism/`. The final programme
+workflow under `workflows/experiments/final/` owns pre-registration,
+checkpoint operation and evidence reconstruction for Experiment A.
 
 Hand-maintained SQL lives in `sql/<domain>/templates/`. Executed historical
 or deterministic generated SQL lives in `sql/<domain>/generated/`.

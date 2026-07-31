@@ -1,0 +1,44 @@
+{
+  "checkpoint_audit": {
+    "duplicate_checkpoints": 0,
+    "expected_checkpoints": 128,
+    "experiment_identity": "a9d7c3fa5dc5da9bcf61314a57501ea5a8be506e305eee6f45afaae3131600bb",
+    "missing_checkpoints": 0,
+    "observed_checkpoints": 128,
+    "orphan_checkpoints": 0,
+    "passed": true,
+    "valid_checkpoints": 128
+  },
+  "crn_audit": {
+    "nested_family_draws": true,
+    "paired_stream_failures": 0,
+    "replication_count": 128
+  },
+  "detailed_output_path": "outputs/experiments/final/idiosyncratic_diversification/a9d7c3fa5dc5da9bcf61314a57501ea5a8be506e305eee6f45afaae3131600bb",
+  "detailed_output_size_bytes": 5690327,
+  "experiment_identity": "a9d7c3fa5dc5da9bcf61314a57501ea5a8be506e305eee6f45afaae3131600bb",
+  "experiments_b_to_e_executed": false,
+  "final_validation_data_used": false,
+  "other_final_output_directories": [],
+  "post_execution_maintenance": {
+    "aggregation_changed": false,
+    "classification": "evidence_serialization_infrastructure",
+    "decision_rules_changed": false,
+    "maintenance_parent": "0fabe5192b7942969fd01b602fc1031b6dcf8f62",
+    "normalisation_owner": "dai_sim.common.serialization",
+    "registered_identity_preserved": true,
+    "simulation_calculations_changed": false
+  },
+  "post_execution_operational_code_identity": "7cce1942e79f29aa584c1720cceaedcff003666d29dfd63d2deec299634dba0b",
+  "programme_identity": "084dd8495ec29717a94cc2d6d5427a78f377d82989abf2d119547fb1db376260",
+  "result_checksums": {
+    "cell_rows_csv": "1ed0cfa835b0c229a291c4c8076637c4000c73312488206eb39b4868b78a3030",
+    "collateral_rows_csv": "8eba1beb7aff62f012379ad9bb965240adfd4526096f27286205a3ea02ecf1f4"
+  },
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "scientific_code_identity": "759748068fec4d45c257a649189b37234d7dd6d23e7ccf4273067bd4c2d1c00a",
+  "seed_registry_sha256": "51fe62b5a27ab5901ed299e50b6bcbcb2ef5490b53226ae6513438f4d526a247",
+  "simulation_count": 1024,
+  "usdc_svb_used": false
+}

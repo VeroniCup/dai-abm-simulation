@@ -62,6 +62,7 @@ POST_RESTRUCTURING_WORKFLOWS = {
     "calibration/keeper_execution.py",
     "experiments/mechanism/constrained_eth_recovery.py",
     "experiments/mechanism/eth_recovery.py",
+    "experiments/final/idiosyncratic_diversification.py",
     "inputs/validate_integrated_eth.py",
     "inputs/validate_multicollateral.py",
     "market/process_historical_evidence.py",

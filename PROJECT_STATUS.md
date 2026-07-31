@@ -85,6 +85,19 @@ classification is `final_multicollateral_inputs_ready_with_caveats`.
 The profile is experiment-ready, opt-in and not runtime adopted. No portfolio
 or shock was ranked or selected.
 
+The first final-programme study,
+[Experiment A — idiosyncratic diversification](docs/experiments/final/idiosyncratic_diversification.md),
+is complete from its original 128 authoritative checkpoints and 1,024
+simulations; no replication was rerun during evidence reconstruction. A
+post-execution NumPy JSON scalar correction is classified
+`evidence_serialization_infrastructure` and changed neither the scientific
+calculations nor the registered decisions. A1 is `supported`, A2 is
+`exposure_gradient_consistent`, A3 is `shock_localisation_valid`, and the
+overall result is `H3_idiosyncratic_diversification_supported`. Solvency
+improves for the qualifying diversified portfolios while the registered peg
+outcomes remain unchanged. No portfolio, shock or runtime configuration was
+ranked, selected or adopted.
+
 The separate
 [experiment-infrastructure maintenance](docs/validation/experiment_infrastructure_maintenance.md)
 is complete. The convenience reconstruction CLI now respects the keyword-only
@@ -171,9 +184,10 @@ review reproduced all of them without changing executable behaviour.
 
 ## Next research work
 
-The next scientific boundary is to pre-register and execute the final
-hierarchical multi-collateral experiments: idiosyncratic diversification,
-stress correlation, stable-collateral trade-off and shared keeper capacity.
+The next authorised scientific boundary is Experiment B, correlated stress.
+It will test whether the isolated-shock diversification evidence from
+Experiment A survives increasing cross-asset dependence. Experiments B–E have
+not been executed.
 Population-scale robustness, oracle-delay closure and held-out final
 validation, including USDC/SVB, remain outstanding. The five portfolios and
 seven shocks are frozen inputs, not result-based selections. Keeper candidates

@@ -21,19 +21,31 @@ A suitable description of the project is:
 
 ---
 
-## 2. Core research question
+## 2. Dissertation research questions
 
-The principal research question should be:
+The dissertation uses exactly four research questions.
 
-> **How do collateral composition, cross-asset dependence and liquidation frictions jointly affect DAI solvency and peg resilience under market stress?**
+### RQ1
 
-This question can be divided into five testable sub-questions.
+> **How do collateral-price shocks propagate through vault collateralisation,
+> liquidation eligibility, keeper execution and DAI price adjustment in the
+> ETH-only core model?**
 
-1. Does multi-collateralisation reduce system-wide bad debt relative to an ETH-only system?
-2. Does the diversification benefit weaken when ETH and BTC become more highly correlated during market stress?
-3. Does stable collateral reduce crypto-market liquidation risk while introducing stablecoin-depeg contagion risk?
-4. Do collateral-specific liquidation parameters improve resilience relative to uniform parameters?
-5. Does shared keeper capacity create competition between collateral types during simultaneous liquidations?
+### RQ2
+
+> **How do gas costs, keeper participation, liquidation capacity and oracle
+> delay affect liquidation completion, bad debt and DAI peg recovery?**
+
+### RQ3
+
+> **Which collateral-recovery and behavioural assumptions materially affect
+> the speed and reliability of peg restoration after stress?**
+
+### RQ4
+
+> **Under what collateral compositions and shock structures does
+> multi-collateral DAI become more resilient than an ETH-only system, and when
+> does diversification instead transmit or concentrate risk?**
 
 ---
 
@@ -663,43 +675,33 @@ This is necessary because raw losses mechanically increase with collateral expos
 
 ---
 
-## 12. Hypotheses
+## 12. Dissertation hypotheses
 
-### H1: Idiosyncratic diversification
+The dissertation has exactly four hypotheses. Labels used by earlier
+mechanism studies are historical study labels and do not extend this list.
 
-\[
-\text{Multi-collateralisation reduces system loss under collateral-specific shocks.}
-\]
+### H1: Liquidation frictions
 
-### H2: Stress correlation
+> **Stronger liquidation frictions are expected to increase unresolved debt,
+> bad debt and the magnitude or duration of negative peg deviations.**
 
-\[
-\text{The diversification benefit falls as stress-period ETH–BTC dependence rises.}
-\]
+### H2: Oracle delay
 
-### H3: Stable-collateral trade-off
+> **Oracle delay is expected to widen the mismatch between market conditions
+> and protocol action, especially after rapid collateral-price shocks.**
 
-\[
-\text{Stable collateral reduces crypto-driven liquidation risk but introduces depeg-contagion risk.}
-\]
+### H3: Diversification and contagion
 
-### H4: Risk-sensitive liquidation design
+> **Multi-collateral diversification is expected to reduce system losses under
+> isolated collateral-specific shocks, but its benefits should diminish under
+> correlated stress and may reverse when a collateral intended to provide
+> stability experiences its own depeg or liquidity impairment.**
 
-\[
-\text{Collateral-specific liquidation parameters reduce bad debt relative to uniform parameters.}
-\]
+### H4: Recovery and behavioural stabilisation
 
-### H5: Shared keeper capacity
-
-\[
-\text{Shared keeper capacity amplifies losses when several collateral types become unsafe simultaneously.}
-\]
-
-### H6: Ordinary versus tail resilience
-
-\[
-\text{The portfolio that minimises average volatility need not minimise crisis bad debt or peg-recovery time.}
-\]
+> **Recovery is expected to depend jointly on collateral-price rebound,
+> liquidation resolution and behavioural stabilisation, with unresolved
+> backlog limiting the effect of otherwise favourable recovery conditions.**
 
 ---
 

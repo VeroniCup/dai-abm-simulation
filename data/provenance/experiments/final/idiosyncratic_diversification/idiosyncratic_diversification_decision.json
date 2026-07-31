@@ -1,0 +1,168 @@
+{
+  "A1": "supported",
+  "A1_detail": {
+    "balanced_crypto": {
+      "beneficial_interval_count": 2,
+      "beneficial_rule_satisfied": true,
+      "no_clear_bad_debt_adverse_effect": true
+    },
+    "empirical_crypto": {
+      "beneficial_interval_count": 0,
+      "beneficial_rule_satisfied": false,
+      "no_clear_bad_debt_adverse_effect": true
+    },
+    "stable_supported": {
+      "beneficial_interval_count": 2,
+      "beneficial_rule_satisfied": true,
+      "no_clear_bad_debt_adverse_effect": true
+    }
+  },
+  "A2": "exposure_gradient_consistent",
+  "A2_detail": {
+    "eth_only_direct_wbtc_loss_zero": true,
+    "exposure_normalised_metrics_retained": [
+      "exposure_normalised_liquidated_debt",
+      "exposure_normalised_backlog",
+      "exposure_normalised_bad_debt"
+    ],
+    "raw_gradient_consistent_metric_count": 2,
+    "raw_gradient_informative_metric_count": 2,
+    "raw_metric_diagnostics": {
+      "backlog_area": {
+        "informative_nonconstant": true,
+        "nondecreasing_with_exposure": true,
+        "range": 23718.553542553156
+      },
+      "liquidated_debt": {
+        "informative_nonconstant": true,
+        "nondecreasing_with_exposure": true,
+        "range": 13728.170914885179
+      },
+      "realised_bad_debt": {
+        "informative_nonconstant": false,
+        "nondecreasing_with_exposure": false,
+        "range": 0.0
+      }
+    },
+    "raw_metrics_checked": [
+      "liquidated_debt",
+      "backlog_area",
+      "realised_bad_debt"
+    ],
+    "stable_supported_comparisons": {
+      "balanced_crypto": {
+        "exposure_normalised_mean_differences": {
+          "exposure_normalised_backlog": 0.0023850171106806276,
+          "exposure_normalised_bad_debt": 0.0,
+          "exposure_normalised_liquidated_debt": -0.002926242148296107
+        },
+        "system_mean_differences": {
+          "backlog_area_share": -0.01061148093026319,
+          "liquidated_debt_share": -0.004653126160242585,
+          "realised_bad_debt_share": 0.0
+        }
+      },
+      "empirical_crypto": {
+        "exposure_normalised_mean_differences": {
+          "exposure_normalised_backlog": -0.006432001925548325,
+          "exposure_normalised_bad_debt": 0.0,
+          "exposure_normalised_liquidated_debt": -0.014812841213249885
+        },
+        "system_mean_differences": {
+          "backlog_area_share": -0.02153101670874725,
+          "liquidated_debt_share": -0.015037918030765603,
+          "realised_bad_debt_share": -6.139598888115037e-23
+        }
+      }
+    },
+    "system_metrics_retained": [
+      "realised_bad_debt_share",
+      "backlog_area_share",
+      "liquidated_debt_share"
+    ],
+    "wbtc_exposure_order": [
+      "eth_only",
+      "stable_supported",
+      "empirical_crypto",
+      "balanced_crypto"
+    ]
+  },
+  "A3": "shock_localisation_valid",
+  "experiment_identity": "a9d7c3fa5dc5da9bcf61314a57501ea5a8be506e305eee6f45afaae3131600bb",
+  "experiment_valid": true,
+  "main_limitations": [
+    "STABLE is a counterfactual stable proxy, not empirical Maker USDC vaults.",
+    "Oracle delay is a transparent zero-delay baseline pending a separate freeze.",
+    "Idiosyncratic evidence does not establish correlated-stress resilience.",
+    "The canonical close-factor-one liquidation owner can record terminal debt as keeper-repaid, making realised bad debt structurally zero; no post-result correction or retuning was applied."
+  ],
+  "maximum_cell_failure_share": 0.0,
+  "next_authorised_pass": "B_correlated_stress",
+  "overall_h3_classification": "H3_idiosyncratic_diversification_supported",
+  "peg_solvency_detail": {
+    "common_improvement_portfolios": [],
+    "peg_adverse_portfolios": [],
+    "peg_beneficial_portfolios": [],
+    "portfolio_results": {
+      "balanced_crypto": {
+        "adverse_metric_count": 0,
+        "beneficial_metric_count": 0,
+        "majority_adverse": false,
+        "majority_beneficial": false,
+        "metric_results": {
+          "below_peg_burden": "unchanged",
+          "mean_absolute_peg_deviation": "unchanged",
+          "minimum_dai_price": "unchanged",
+          "recovery_probability_720h": "unchanged",
+          "restricted_mean_recovery_time": "unchanged"
+        }
+      },
+      "empirical_crypto": {
+        "adverse_metric_count": 0,
+        "beneficial_metric_count": 0,
+        "majority_adverse": false,
+        "majority_beneficial": false,
+        "metric_results": {
+          "below_peg_burden": "unchanged",
+          "mean_absolute_peg_deviation": "unchanged",
+          "minimum_dai_price": "unchanged",
+          "recovery_probability_720h": "unchanged",
+          "restricted_mean_recovery_time": "unchanged"
+        }
+      },
+      "stable_supported": {
+        "adverse_metric_count": 0,
+        "beneficial_metric_count": 0,
+        "majority_adverse": false,
+        "majority_beneficial": false,
+        "metric_results": {
+          "below_peg_burden": "unchanged",
+          "mean_absolute_peg_deviation": "unchanged",
+          "minimum_dai_price": "unchanged",
+          "recovery_probability_720h": "unchanged",
+          "restricted_mean_recovery_time": "unchanged"
+        }
+      }
+    },
+    "solvency_beneficial_portfolios": [
+      "balanced_crypto",
+      "stable_supported"
+    ]
+  },
+  "peg_solvency_relationship": "solvency_improves_peg_unchanged",
+  "portfolio_ranked": false,
+  "portfolio_selected": null,
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "shock_ranked": false,
+  "shock_selected": null,
+  "validity_audit": {
+    "accounting_failure_count": 0,
+    "crn_valid": true,
+    "nested_family_draws_valid": true,
+    "numerical_failure_count": 0,
+    "portfolio_state_reused_across_shocks": true,
+    "price_isolation_failure_count": 0,
+    "price_path_order_invariant": true
+  }
+}

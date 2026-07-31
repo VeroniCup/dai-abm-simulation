@@ -1,0 +1,273 @@
+schema_version: 1
+programme_identifier: final_dissertation_experiment_programme
+runtime_adopted: false
+
+parent:
+  commit: 0fabe5192b7942969fd01b602fc1031b6dcf8f62
+  subject: Clarify scientific package taxonomy
+  package_taxonomy:
+    path: docs/overview/scientific_package_taxonomy.md
+    sha256: b9e30d4ca97c4c1ab382dcdb2b2fdc980c277ebcef0f54ba20d1933db119af22
+    snapshot_semantics: parent_commit_blob
+
+package_boundary: src/dai_sim/experiments/final/
+
+research_questions:
+  RQ1:
+    text: >-
+      How do collateral-price shocks propagate through vault collateralisation,
+      liquidation eligibility, keeper execution and DAI price adjustment in the
+      ETH-only core model?
+  RQ2:
+    text: >-
+      How do gas costs, keeper participation, liquidation capacity and oracle
+      delay affect liquidation completion, bad debt and DAI peg recovery?
+  RQ3:
+    text: >-
+      Which collateral-recovery and behavioural assumptions materially affect
+      the speed and reliability of peg restoration after stress?
+  RQ4:
+    text: >-
+      Under what collateral compositions and shock structures does
+      multi-collateral DAI become more resilient than an ETH-only system, and
+      when does diversification instead transmit or concentrate risk?
+
+hypotheses:
+  H1:
+    title: Liquidation frictions
+    statement: >-
+      Stronger liquidation frictions are expected to increase unresolved debt,
+      bad debt and the magnitude or duration of negative peg deviations.
+  H2:
+    title: Oracle delay
+    statement: >-
+      Oracle delay is expected to widen the mismatch between market conditions
+      and protocol action, especially after rapid collateral-price shocks.
+  H3:
+    title: Diversification and contagion
+    statement: >-
+      Multi-collateral diversification is expected to reduce system losses
+      under isolated collateral-specific shocks, but its benefits should
+      diminish under correlated stress and may reverse when a collateral
+      intended to provide stability experiences its own depeg or liquidity
+      impairment.
+  H4:
+    title: Recovery and behavioural stabilisation
+    statement: >-
+      Recovery is expected to depend jointly on collateral-price rebound,
+      liquidation resolution and behavioural stabilisation, with unresolved
+      backlog limiting the effect of otherwise favourable recovery conditions.
+
+frozen_inputs:
+  integrated_profile:
+    identifier: empirical_integrated_multicollateral
+    path: config/profiles/empirical_integrated_multicollateral.yaml
+    sha256: a2da654cdc9fc053c50f13aacb18e63ce7854bf47d6ad1519352467f6c7986fc
+    identity: d0241808701d0472532c1f7c502ab6637afd60a50082b94bed9ff66f7ec2d53e
+    identity_source_path: data/provenance/validation/multicollateral_integration/multicollateral_integration_reproducibility.json
+    identity_source_sha256: e57258a9bc81f8d602a6bd7a9dbc306695a8c7bdbace84d5ba26b6b821c361f6
+  collateral_registry:
+    path: config/protocol/final_collateral_registry.yaml
+    sha256: 75268fed6b3db5a80a822a80b8629291491cd73ce62b4c3e6cf3975060b4eb6d
+  portfolio_registry:
+    path: config/sensitivities/final_portfolio_registry.yaml
+    sha256: 76aa03afa352d86be76fbc7e0153981589f50798c52aed7dfad897061b7960b1
+  shock_registry:
+    path: config/sensitivities/final_shock_registry.yaml
+    sha256: a98df90e3e743fc22d9f92c38d53cf46a893928d3fe48eda9e609a20aa108581
+  keeper_registry:
+    path: config/sensitivities/keeper_execution.yaml
+    sha256: e1d590508bb3e95ec6bdc2a30c41580fe211831a673dd447e793a0053a7fa848
+    evidence_path: data/provenance/calibration/keeper/keeper_execution_registry.csv
+    evidence_sha256: 58c5754ed95dead1ad283a7961fb0588496804a94f58ddb0e196a57601ee1e1b
+  confidence_registry:
+    path: config/sensitivities/confidence_scenarios.yaml
+    sha256: 86c33147f167d708e4a18191e50c39bec5056a680b13e682551317ba9b916e85
+    identity: d455306fd7b7553f113099b6d51f962939d8b4793439a02c4638c646a63b25da
+  stage1:
+    evidence_path: data/provenance/calibration/confidence/stage1_market_estimates.json
+    evidence_sha256: d86625e268c7e8b8abcb6d37e48f87c3c01578c8a3c09024a57da93978614547
+    below_peg_response: "0.199381"
+    above_peg_response: "0.105131"
+  residuals:
+    evidence_path: data/provenance/calibration/confidence/stage1_residual_summary.json
+    evidence_sha256: 98299918d452695b96f639aaae4c2344c189a3351bd55f1d86a2441d5bcded0e
+    sequence_sha256: 3fa2319cee9e1749405c0dc477e0f11ef9c31dd83c371b619bd33eda23c37c30
+    block_sha256: 6f55b51acfc1da23836b3d847153bd4f68e4a38fc33fd967e9d3b795737bf28c
+
+common_treatment:
+  profile_identifier: empirical_integrated_multicollateral
+  total_vaults: 500
+  total_debt_dai: "2500000"
+  target_system_collateral_ratio: "3.6089387701260205"
+  keeper:
+    capacity_profile_identifier: shared_keeper_capacity_central
+    maximum_liquidations_per_step: 26
+    hurdle_profile_identifier: direct_cost_only
+    risk_cost_rate: "0"
+    semantics: system_wide_shared_capacity
+  confidence_scenario_identifier: stage1_only
+  oracle:
+    treatment_identifier: transparent_zero_delay_baseline
+    delay_steps: 0
+    status: transparent_uncalibrated_baseline
+  recovery_path_identifier: full_week
+
+experiment_order:
+  - A_idiosyncratic_diversification
+  - B_correlated_stress
+  - C_stable_collateral_tradeoff
+  - D_shared_keeper_capacity
+  - E_oracle_delay
+
+experiments:
+  A_idiosyncratic_diversification:
+    order: 1
+    primary_research_question: RQ4
+    research_questions:
+      - RQ4
+    primary_hypothesis: H3
+    hypotheses:
+      - H3
+    portfolios:
+      - eth_only
+      - empirical_crypto
+      - balanced_crypto
+      - stable_supported
+    shocks:
+      - eth_idiosyncratic_severe
+      - wbtc_idiosyncratic_severe
+    cell_order: shock_then_portfolio
+    replication_count: 128
+    execution_status: authorised_current_pass
+    dependency_status: frozen_inputs_ready
+    final_validation_data_used: false
+
+  B_correlated_stress:
+    order: 2
+    primary_research_question: RQ4
+    research_questions:
+      - RQ4
+    primary_hypothesis: H3
+    hypotheses:
+      - H3
+    portfolios:
+      - eth_only
+      - empirical_crypto
+      - balanced_crypto
+      - stable_supported
+    shocks:
+      - joint_crypto_empirical_stress
+      - joint_crypto_high_correlation
+    cell_order: shock_then_portfolio
+    replication_count: 128
+    execution_status: preregistered_not_executed
+    dependency_status: frozen_inputs_ready
+    final_validation_data_used: false
+
+  C_stable_collateral_tradeoff:
+    order: 3
+    primary_research_question: RQ4
+    research_questions:
+      - RQ4
+    primary_hypothesis: H3
+    hypotheses:
+      - H3
+    portfolios:
+      - empirical_crypto
+      - stable_supported
+      - stable_heavy
+    shocks:
+      - joint_crypto_high_correlation
+      - stable_depeg_moderate
+      - stable_depeg_severe
+      - joint_crypto_stable_stress
+    cell_order: shock_then_portfolio
+    replication_count: 128
+    execution_status: preregistered_not_executed
+    dependency_status: frozen_inputs_ready
+    final_validation_data_used: false
+
+  D_shared_keeper_capacity:
+    order: 4
+    primary_research_question: RQ2
+    research_questions:
+      - RQ2
+      - RQ4
+    primary_hypothesis: H1
+    hypotheses:
+      - H1
+      - H3
+    anchors:
+      - portfolio: empirical_crypto
+        shock: joint_crypto_high_correlation
+      - portfolio: stable_supported
+        shock: joint_crypto_stable_stress
+      - portfolio: stable_heavy
+        shock: joint_crypto_stable_stress
+    capacity_treatments:
+      - identifier: shared_keeper_capacity_low
+        maximum_liquidations_per_step: 14
+      - identifier: shared_keeper_capacity_central
+        maximum_liquidations_per_step: 26
+      - identifier: shared_keeper_capacity_high
+        maximum_liquidations_per_step: 45
+    cell_order: anchor_then_capacity
+    replication_count: 128
+    execution_status: preregistered_not_executed
+    dependency_status: frozen_inputs_ready
+    final_validation_data_used: false
+
+  E_oracle_delay:
+    order: 5
+    primary_research_question: RQ2
+    research_questions:
+      - RQ2
+    primary_hypothesis: H2
+    hypotheses:
+      - H2
+    anchors:
+      - portfolio: empirical_crypto
+        shock: joint_crypto_high_correlation
+      - portfolio: stable_supported
+        shock: joint_crypto_stable_stress
+    oracle_treatments:
+      - identifier: oracle_delay_low
+      - identifier: oracle_delay_central
+      - identifier: oracle_delay_high
+    cell_order: anchor_then_oracle_treatment
+    replication_count: 128
+    execution_status: preregistered_blocked_pending_oracle_delay_freeze
+    dependency_status: oracle_delay_freeze_required
+    final_validation_data_used: false
+
+h4_synthesis:
+  identifier: H4_recovery_and_behaviour_synthesis
+  order: 6
+  research_questions:
+    - RQ3
+  hypotheses:
+    - H4
+  execution_status: pending_evidence_synthesis
+  unrestricted_core_simulation_matrix: false
+  evidence_sources:
+    - unbounded_eth_recovery
+    - constrained_eth_recovery
+    - confidence_scenario_validation
+    - recovery_gate_evidence
+    - backlog_evidence
+    - relevant_final_programme_results
+
+programme_totals:
+  planned_core_cells: 43
+  planned_core_simulations: 5504
+  authorised_current_pass_simulations: 1024
+
+final_validation_boundary:
+  final_validation_data_used: false
+  excluded_intervals:
+    - ftx
+    - usdc_svb
+  outcome_based_portfolio_selection: false
+  outcome_based_shock_selection: false
+  retuning_permitted: false

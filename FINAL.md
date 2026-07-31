@@ -39,11 +39,19 @@ Completed in the current end-stage pass:
   caveats; and
 - project-structure visualisation, architecture audit and scientific package
   taxonomy: completed as
-  `scientific_package_taxonomy_ready_with_protected_exceptions`.
+  `scientific_package_taxonomy_ready_with_protected_exceptions`; and
+- final four-RQ/four-hypothesis experiment programme pre-registration:
+  completed under programme identity
+  `084dd8495ec29717a94cc2d6d5427a78f377d82989abf2d119547fb1db376260`,
+  with 43 core cells and 5,504 planned simulations; and
+- final Experiment A, idiosyncratic diversification: completed from 128
+  authoritative checkpoints and 1,024 simulations under experiment identity
+  `a9d7c3fa5dc5da9bcf61314a57501ea5a8be506e305eee6f45afaae3131600bb`,
+  without selecting a portfolio or shock.
 
-Stages 1–5 are complete. The next stage is to pre-register and execute the
-hierarchical final multi-collateral experiments. No portfolio or shock has
-been selected from validation outcomes.
+Stages 1–5 and final Experiment A are complete. Experiment B, correlated
+stress, is the next authorised pass and remains unexecuted. No portfolio or
+shock has been selected from validation or experiment outcomes.
 
 ---
 
@@ -850,7 +858,8 @@ ready with caveats rather than fully empirical.
 
 ## Stage 6 — Final multi-collateral experiments
 
-**Status:** pending.
+**Status:** in progress. Experiment A is complete; Experiment B is the next
+authorised pass; Experiments B–E remain unexecuted.
 
 Use a hierarchical design rather than one enormous full factorial.
 
@@ -877,6 +886,24 @@ Core settings:
 Question:
 
 - does unaffected collateral reduce system losses?
+
+Result:
+
+- 128 original authoritative checkpoints and 1,024 simulations completed;
+- no simulation was rerun during evidence reconstruction;
+- A1 is `supported`;
+- A2 is `exposure_gradient_consistent`;
+- A3 is `shock_localisation_valid`;
+- the overall classification is
+  `H3_idiosyncratic_diversification_supported`; and
+- the solvency–peg relationship is
+  `solvency_improves_peg_unchanged`.
+
+The post-execution NumPy JSON scalar repair is classified
+`evidence_serialization_infrastructure`. It changed only evidence
+serialisation, not scientific calculation, aggregation or decision logic.
+No portfolio, shock or runtime configuration was ranked, selected or adopted.
+See the [Experiment A report](docs/experiments/final/idiosyncratic_diversification.md).
 
 ### Experiment B — Stress correlation
 
@@ -1204,10 +1231,11 @@ Do not:
 
 ## Final experiments
 
-- [ ] Idiosyncratic diversification
+- [x] Idiosyncratic diversification
 - [ ] Stress correlation
 - [ ] Stable-collateral trade-off
 - [ ] Shared keeper capacity
+- [ ] H4 evidence synthesis
 - [ ] Selected robustness layer
 
 ## Validation
@@ -1235,14 +1263,14 @@ Do not:
 
 The next authorised pass is:
 
-> **Pre-register and execute the final hierarchical multi-collateral
-> experiments: idiosyncratic diversification, stress correlation,
-> stable-collateral trade-off and shared keeper capacity.**
+> **Execute Experiment B: correlated stress using the frozen master
+> programme.**
 
 The final experiment registry must use the frozen five portfolios and seven
 shocks without result-based screening. The central treatment remains
 system-wide capacity 26 with `direct_cost_only`; 14 and 45 remain robustness
-points. Population, positive-hurdle and oracle-delay cases remain separate
-robustness dimensions. Final experiments, population robustness,
+points. Experiment A is complete; Experiments B–E have not been executed.
+Population, positive-hurdle and oracle-delay cases remain separate
+robustness dimensions. The remaining final experiments, population robustness,
 oracle-delay robustness, held-out validation, USDC/SVB validation and final
 code freeze remain incomplete.

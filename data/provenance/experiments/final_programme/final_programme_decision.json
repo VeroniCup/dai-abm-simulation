@@ -1,0 +1,15 @@
+{
+  "experiment_a_authorised": true,
+  "experiment_e_status": "blocked_pending_result_blind_oracle_delay_freeze",
+  "experiments_b_to_d_frozen_unexecuted": true,
+  "final_validation_data_used": false,
+  "h4_synthesis_status": "pending_evidence_synthesis",
+  "model_selection_performed": false,
+  "portfolio_selection_performed": false,
+  "programme_identifier": "final_dissertation_experiment_programme",
+  "programme_identity": "084dd8495ec29717a94cc2d6d5427a78f377d82989abf2d119547fb1db376260",
+  "programme_preregistered": true,
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "shock_selection_performed": false
+}

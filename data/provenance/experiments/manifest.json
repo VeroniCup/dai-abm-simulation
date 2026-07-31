@@ -1,5 +1,5 @@
 {
-  "artefact_count": 23,
+  "artefact_count": 35,
   "artefacts": [
     {
       "classification": "scenario_defined_experimental_design",
@@ -98,6 +98,90 @@
       "runtime_adopted": false,
       "sha256": "7c8ef81f874a41451b111087d4890c04ae5cd525e0d9d236c31cfd4c2ac72c06",
       "size_bytes": 30170
+    },
+    {
+      "classification": "pre_registered_final_idiosyncratic_diversification_experiment",
+      "path": "data/provenance/experiments/final/idiosyncratic_diversification/idiosyncratic_diversification_benchmark.json",
+      "runtime_adopted": false,
+      "sha256": "27820f78457d641e847efcee028377394dacf695ed6bb1597f0647b4a1679faa",
+      "size_bytes": 1037
+    },
+    {
+      "classification": "pre_registered_final_idiosyncratic_diversification_experiment",
+      "path": "data/provenance/experiments/final/idiosyncratic_diversification/idiosyncratic_diversification_cell_summary.csv",
+      "runtime_adopted": false,
+      "sha256": "db7de25363c4d93b7b5876f0fcfd36d8f87c9ee61505d78db967c9bfc9539350",
+      "size_bytes": 35652
+    },
+    {
+      "classification": "pre_registered_final_idiosyncratic_diversification_experiment",
+      "path": "data/provenance/experiments/final/idiosyncratic_diversification/idiosyncratic_diversification_collateral_summary.csv",
+      "runtime_adopted": false,
+      "sha256": "e45144f1d580cef241dd8a261b71bef4e53fb4b3914a1ad1c46c5da30631aea8",
+      "size_bytes": 73056
+    },
+    {
+      "classification": "pre_registered_final_idiosyncratic_diversification_experiment",
+      "path": "data/provenance/experiments/final/idiosyncratic_diversification/idiosyncratic_diversification_contrasts.csv",
+      "runtime_adopted": false,
+      "sha256": "26a048115e555f0c846858eeac019197356ac5e36d20667f187edd6046cb845b",
+      "size_bytes": 21858
+    },
+    {
+      "classification": "pre_registered_final_idiosyncratic_diversification_experiment",
+      "path": "data/provenance/experiments/final/idiosyncratic_diversification/idiosyncratic_diversification_decision.json",
+      "runtime_adopted": false,
+      "sha256": "cf720d855adc62c5270042f9d2cb85338ef14d7d80a2aa8cb70f7d0dc7b9f614",
+      "size_bytes": 5763
+    },
+    {
+      "classification": "pre_registered_final_idiosyncratic_diversification_experiment",
+      "path": "data/provenance/experiments/final/idiosyncratic_diversification/idiosyncratic_diversification_registry.csv",
+      "runtime_adopted": false,
+      "sha256": "59eb120b572a09c8cd863f180f735b227d21cbe0b5664c4d94a696ed51ad6840",
+      "size_bytes": 1596
+    },
+    {
+      "classification": "pre_registered_final_idiosyncratic_diversification_experiment",
+      "path": "data/provenance/experiments/final/idiosyncratic_diversification/idiosyncratic_diversification_reproducibility.json",
+      "runtime_adopted": false,
+      "sha256": "d04a955c843b831ae95e9b4a9326b1cb65211041a12121b3e74b98922f562fe7",
+      "size_bytes": 1958
+    },
+    {
+      "classification": "pre_registered_final_idiosyncratic_diversification_experiment",
+      "path": "data/provenance/experiments/final/idiosyncratic_diversification/idiosyncratic_diversification_specification.json",
+      "runtime_adopted": false,
+      "sha256": "e6da0af839c53ddffb6eeaea596174d26499afeb55ca0d1910be49c679cd740d",
+      "size_bytes": 82029
+    },
+    {
+      "classification": "pre_registered_final_dissertation_experiment_programme",
+      "path": "data/provenance/experiments/final_programme/final_programme_decision.json",
+      "runtime_adopted": false,
+      "sha256": "96938611e4ca5fbe169fdcd4c1c9e2b49482a10851edba1a3f319c34d0cfa1c6",
+      "size_bytes": 622
+    },
+    {
+      "classification": "pre_registered_final_dissertation_experiment_programme",
+      "path": "data/provenance/experiments/final_programme/final_programme_registry.csv",
+      "runtime_adopted": false,
+      "sha256": "29f122447af3b157ac5aaffa1fd797021195558ac373e6fffd9d5c6365d65fe4",
+      "size_bytes": 14481
+    },
+    {
+      "classification": "pre_registered_final_dissertation_experiment_programme",
+      "path": "data/provenance/experiments/final_programme/final_programme_reproducibility.json",
+      "runtime_adopted": false,
+      "sha256": "f2044e38a55cdd59e6e010d80c9360492d4d343e589311d64422154e0516dc34",
+      "size_bytes": 4987
+    },
+    {
+      "classification": "pre_registered_final_dissertation_experiment_programme",
+      "path": "data/provenance/experiments/final_programme/final_programme_specification.json",
+      "runtime_adopted": false,
+      "sha256": "a16302160fc1124d0e61a9157bb596cf80b376d0a07dfd9800c985fb87f84419",
+      "size_bytes": 54337
     },
     {
       "classification": "pre_registered_eth_recovery_experiment",

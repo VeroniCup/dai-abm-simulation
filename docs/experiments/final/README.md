@@ -1,0 +1,106 @@
+# Final dissertation experiment programme
+
+## Purpose and boundary
+
+This directory owns the pre-registered final dissertation experiment
+programme. It is separate from the protected historical runners and the
+completed ETH-only mechanism studies. The programme contains 43 core cells
+and 5,504 planned simulations, each with 128 replications.
+[Experiment A](idiosyncratic_diversification.md) is complete from its original
+128 authoritative checkpoints and 1,024 simulations. Experiment B is the next
+authorised pass but is not yet executed. Experiments B–E remain unexecuted.
+
+The H4 evidence synthesis is a reporting programme rather than another core
+simulation matrix. It remains pending and contributes no additional cell or
+simulation to the totals above.
+
+## Dissertation research questions
+
+### RQ1
+
+> How do collateral-price shocks propagate through vault collateralisation,
+> liquidation eligibility, keeper execution and DAI price adjustment in the
+> ETH-only core model?
+
+### RQ2
+
+> How do gas costs, keeper participation, liquidation capacity and oracle
+> delay affect liquidation completion, bad debt and DAI peg recovery?
+
+### RQ3
+
+> Which collateral-recovery and behavioural assumptions materially affect the
+> speed and reliability of peg restoration after stress?
+
+### RQ4
+
+> Under what collateral compositions and shock structures does
+> multi-collateral DAI become more resilient than an ETH-only system, and when
+> does diversification instead transmit or concentrate risk?
+
+## Dissertation hypotheses
+
+### H1 — Liquidation frictions
+
+> Stronger liquidation frictions are expected to increase unresolved debt,
+> bad debt and the magnitude or duration of negative peg deviations.
+
+### H2 — Oracle delay
+
+> Oracle delay is expected to widen the mismatch between market conditions
+> and protocol action, especially after rapid collateral-price shocks.
+
+### H3 — Diversification and contagion
+
+> Multi-collateral diversification is expected to reduce system losses under
+> isolated collateral-specific shocks, but its benefits should diminish under
+> correlated stress and may reverse when a collateral intended to provide
+> stability experiences its own depeg or liquidity impairment.
+
+### H4 — Recovery and behavioural stabilisation
+
+> Recovery is expected to depend jointly on collateral-price rebound,
+> liquidation resolution and behavioural stabilisation, with unresolved
+> backlog limiting the effect of otherwise favourable recovery conditions.
+
+These are the only four dissertation hypotheses. Historical labels such as
+H4a–H4c and H5a–H5d belong to the completed mechanism studies that originally
+defined them; they are not additional dissertation hypotheses.
+
+## Registered programme
+
+| Programme component | Core cells | Replications | Planned simulations | Status | Principal role |
+| --- | ---: | ---: | ---: | --- | --- |
+| Experiment A — idiosyncratic diversification | 8 | 128 | 1,024 | `completed` | RQ4 and H3 under isolated collateral-specific shocks |
+| Experiment B — correlated stress | 8 | 128 | 1,024 | `authorised_next_not_executed` | RQ4 and H3 as cross-asset dependence rises |
+| Experiment C — stable-collateral trade-off | 12 | 128 | 1,536 | `preregistered_not_executed` | RQ4 and H3 under stable-proxy depeg and joint stress |
+| Experiment D — shared keeper capacity | 9 | 128 | 1,152 | `preregistered_not_executed` | RQ2 and H1, with cross-collateral implications for RQ4 |
+| Experiment E — oracle delay | 6 | 128 | 768 | `preregistered_blocked_pending_oracle_delay_freeze` | RQ2 and H2 |
+| H4 evidence synthesis | 0 | — | 0 | `pending_evidence_synthesis` | RQ3 and H4, using pre-registered evidence rather than a new core matrix |
+| **Total** | **43** |  | **5,504** |  |  |
+
+Experiment E has no numerical oracle-delay treatments yet. Its blocked status
+must remain until those values are frozen through a result-independent
+specification. No placeholder values may be inferred from earlier studies.
+
+Experiment A reports A1 `supported`, A2
+`exposure_gradient_consistent`, A3 `shock_localisation_valid` and overall
+`H3_idiosyncratic_diversification_supported`. Its solvency–peg relationship
+is `solvency_improves_peg_unchanged`. The compact evidence was reconstructed
+from the original checkpoints without rerunning a simulation. A
+post-execution NumPy-to-JSON repair, classified
+`evidence_serialization_infrastructure`, changed only the serialisation
+boundary and did not change any scientific calculation or decision.
+
+## Sequencing and no-retuning rule
+
+The programme is hierarchical. Completion of Experiment A records Experiment
+B as the next authorised pass; it does not authorise Experiments C–E, the H4
+synthesis, robustness layers or held-out validation. Each later component
+must retain its registered design and receive its own execution authorisation.
+
+Model mechanisms, parameters, empirical input pools, portfolio definitions,
+shock definitions, keeper settings, confidence scenarios and oracle-delay
+values must not be retuned in response to final-programme results. Held-out
+validation is evaluative only. A miss, null result or unfavourable contrast
+must be reported rather than repaired by changing the frozen design.

@@ -8,6 +8,11 @@ resolution and behavioural stabilisation. It is the first substantive use of
 the transparent persistent-confidence scenarios after closure of their
 calibration programme. The scenarios remain assumptions, not estimates.
 
+The H4a–H4c labels retained below are this completed study's historical
+mechanism labels. They pre-date the final four-hypothesis dissertation
+framework and must not be read as additional hypotheses or as subdivisions of
+the dissertation's H4.
+
 ## 2. Production baseline and fixed boundaries
 
 The controlled experiment uses the established ETH-only `legacy` profile. It
@@ -138,12 +143,15 @@ scenario” contrast is used.
 
 ## 10. Pre-registered interpretation
 
-H4a requires `full_week` to reduce both below-peg burden and restricted
+Historical mechanism label H4a requires `full_week` to reduce both below-peg
+burden and restricted
 recovery time relative to `persistent_trough`, with expected-direction paired
 intervals excluding zero in at least three of four confidence scenarios and
-no clear opposite result. H4b asks whether `rapid_full` improves either
+no clear opposite result. Historical mechanism label H4b asks whether
+`rapid_full` improves either
 primary peg measure over `full_week` in at least three scenarios without a
-clear opposite effect. H4c is present when at least one registered interaction
+clear opposite effect. Historical mechanism label H4c is present when at least
+one registered interaction
 interval excludes zero for burden, restricted recovery time or 720-hour
 recovery probability.
 
@@ -169,7 +177,8 @@ runtime configuration.
 
 All 2,048 runs completed with no numerical failure. The fixed experiment is
 classified as **`no_clear_recovery_path_effect`**: H4a and H4b are not
-supported and H4c is not present. Within every confidence scenario, all five
+supported and H4c is not present. These are historical mechanism labels, not
+the dissertation hypothesis verdict. Within every confidence scenario, all five
 path contrasts are exactly zero for the primary outcomes. Under the ordinary
 unbounded-capacity baseline, 99.625 vaults are liquidatable and successfully
 liquidated on average at the common shock; mean debt repayment is
