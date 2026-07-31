@@ -1,0 +1,6 @@
+{
+  "classification": "quiet_validation_not_separately_registered",
+  "reason": "No distinct result-blind quiet window was registered; November 2022 is counted once.",
+  "schema_version": 1,
+  "simulation_count": 0
+}

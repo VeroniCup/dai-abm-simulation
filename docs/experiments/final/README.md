@@ -24,6 +24,13 @@ registered reporting programme rather than another core simulation matrix. It
 contributes no additional cell or simulation to the totals above and records
 `H4_recovery_conditionally_supported`.
 
+The [selected robustness layer](selected_robustness.md) is complete from 56
+cells and 3,584 simulations. All four inherited contrast families are
+`robust`, giving `core_conclusions_robust`, without selecting a population,
+market-block length or keeper hurdle. The separate
+[final held-out validation](../../validation/final_validation.md) is complete
+as `final_validation_mixed`; it is evaluative and triggered no retuning.
+
 ## Dissertation research questions
 
 ### RQ1
@@ -143,10 +150,11 @@ sensitivities: none is ranked, selected or runtime adopted.
 
 The programme is hierarchical. Completion of Experiment E closed the five-
 experiment core programme, and the registered H4 recovery and behavioural-
-stabilisation synthesis now completes RQ3 evidence integration. The next stage
-is the pre-registered robustness and final-validation sequence without
-retuning. Each later component must retain its registered design and receive
-its own execution authorisation.
+stabilisation synthesis completes RQ3 evidence integration. The selected
+robustness and final-validation sequence is also complete without retuning.
+The next stage is construction of the final dissertation tables, figures,
+result registry and validation summary, followed by the final repository and
+code freeze.
 
 Model mechanisms, parameters, empirical input pools, portfolio definitions,
 shock definitions, keeper settings, confidence scenarios and oracle-delay

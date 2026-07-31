@@ -184,6 +184,31 @@ unchanged peg outcomes. No simulation or checkpoint was used, no confidence
 scenario was ranked or selected, no held-out or USDC/SVB evidence entered,
 and production remains Stage 1-only.
 
+The pre-registered
+[selected robustness layer](docs/experiments/final/selected_robustness.md) is
+complete under robustness identity
+`59474cbc9e37d7df5d49fb5b9a0abbf4670ce300799f82ccb0ec21ed8a3aebbf`.
+Its 56 cells and 64 paired replications per cell produced 3,584 valid
+simulations. R-A, R-B, R-C and R-D are each `robust`; all six non-baseline
+settings retained the inherited conclusion and no clear two-metric reversal
+occurred. The overall classification is `core_conclusions_robust`. Population,
+market-block, positive-hurdle and metric-only recovery sensitivities qualify
+generalisability without selecting or adopting a treatment.
+
+The frozen-model
+[final held-out validation](docs/validation/final_validation.md) is complete
+under freeze identity
+`1bc40998534dd3842a229c701743494147d24832d956622411afba7863d3c295` and
+validation identity
+`a5e281a810892454539f0528c30536696d01c664bbd6cceda17584b88d5f3ed2`.
+No distinct quiet window was separately registered, so November 2022 is
+counted once as the generalisation/FTX holdout. Its 128 simulations are
+`ftx_validation_directionally_consistent`. The final 256-simulation USDC/SVB
+stage passed its zero-STABLE negative control but is
+`usdc_svb_stable_channel_underactive`. The technically valid overall result
+is `final_validation_mixed`. The no-retuning record confirms zero model,
+parameter, scenario, metric-rule or production-adoption changes.
+
 The separate
 [experiment-infrastructure maintenance](docs/validation/experiment_infrastructure_maintenance.md)
 is complete. The convenience reconstruction CLI now respects the keyword-only
@@ -270,15 +295,16 @@ review reproduced all of them without changing executable behaviour.
 
 ## Next research work
 
-Experiments A–E, the result-independent oracle-delay freeze and the registered
-H4 synthesis are complete. The five-experiment core programme plus RQ3/H4
-evidence integration is complete. The next scientific stage is the
-pre-registered robustness layer and final validation sequence without
-retuning the frozen model.
+Experiments A–E, the result-independent oracle-delay freeze, the registered H4
+synthesis, selected robustness and final held-out validation are complete.
+The five-experiment core programme plus RQ3/H4 evidence integration is
+complete. The next stage is to produce the final dissertation tables, figures,
+result registry and validation summary, then perform the final repository and
+code freeze.
 The stable-impairment component of H3 is complete with partial support, while
 Experiment D provides mixed secondary shared-capacity transmission evidence.
 Population-scale robustness and held-out final validation, including
-USDC/SVB, remain outstanding. The five portfolios and
+USDC/SVB, are now complete. The five portfolios and
 seven shocks are frozen inputs, not result-based selections. Keeper candidates
 and both integrated profiles remain opt-in evidence rather than adopted
 defaults.

@@ -1,0 +1,21 @@
+{
+  "calibration_runs": 0,
+  "checkpoint_audit": {
+    "checkpoint_bytes": 15487097,
+    "complete": true,
+    "duplicate_count": 0,
+    "missing_count": 0,
+    "orphan_count": 0,
+    "orphan_paths": [],
+    "valid_count": 64
+  },
+  "held_out_exclusions_enforced": true,
+  "parameter_changes": 0,
+  "registry_sha256": "7e1d10acfa45d7495d12abaa51b5acb3fa28004fda8254373d6a9e78deeb9951",
+  "robustness_identity": "59474cbc9e37d7df5d49fb5b9a0abbf4670ce300799f82ccb0ec21ed8a3aebbf",
+  "runtime_adopted": false,
+  "scenario_changes": 0,
+  "schema_version": 1,
+  "scientific_source_identity": "62315e2a86dc9af77e12fa4759dc557f0991e3071b7a370a5e1fd8f208379c3d",
+  "seed_registry_sha256": "e4b2e2c66be11e850e40bb306b2bc17961efb168997762c97b9863e2df653c95"
+}

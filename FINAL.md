@@ -71,13 +71,22 @@ Completed in the current end-stage pass:
 - H4 recovery and behavioural-stabilisation synthesis: completed without a
   simulation under synthesis identity
   `06f56e77ad56416483b2c010f0e63375b664baeff1830ec6306e37858c5920cb`
-  as `H4_recovery_conditionally_supported`.
+  as `H4_recovery_conditionally_supported`; and
+- selected robustness: completed from 56 cells and 3,584 simulations under
+  robustness identity
+  `59474cbc9e37d7df5d49fb5b9a0abbf4670ce300799f82ccb0ec21ed8a3aebbf`
+  as `core_conclusions_robust`; and
+- final held-out validation: completed under freeze identity
+  `1bc40998534dd3842a229c701743494147d24832d956622411afba7863d3c295`
+  and validation identity
+  `a5e281a810892454539f0528c30536696d01c664bbd6cceda17584b88d5f3ed2`
+  as `final_validation_mixed`, with an explicit no-retuning declaration.
 
 Stages 1–5, final Experiments A–E and the result-independent oracle-delay
-freeze are complete. The five-experiment core final programme and the H4/RQ3
-evidence integration are complete. No portfolio, shock, capacity, oracle
-delay or confidence scenario has been selected from validation or experiment
-outcomes.
+freeze are complete. The five-experiment core final programme, H4/RQ3 evidence
+integration, selected robustness and frozen-model validation are complete. No
+portfolio, shock, capacity, keeper hurdle, market block, oracle delay or
+confidence scenario has been selected from validation or experiment outcomes.
 
 ---
 
@@ -441,7 +450,7 @@ pre-registered joint downside-and-gas score. Stable severity uses transparent
 fixed floors. The registry was frozen before any final outcome was inspected;
 no shock was ranked or selected.
 
-## 3.8 Population size — essential validation
+## 3.8 Population size — robustness complete
 
 Final empirical experiments should preferably use:
 
@@ -455,7 +464,12 @@ Candidate sizes:
 - 500;
 - 1,000.
 
-The legacy 100-vault model remains a benchmark, not the preferred final empirical scale.
+The selected robustness layer evaluated all three coordinates while holding
+total debt, portfolio shares and initial system collateralisation fixed.
+All four registered contrast families retained their inherited conclusions at
+250 and 1,000 vaults as well as the 500-vault baseline. The legacy 100-vault
+model remains a benchmark, not the preferred final empirical scale. No
+population was selected from the robustness result.
 
 ## 3.9 Collateral composition and protocol freeze — completed
 
@@ -474,7 +488,7 @@ Debt ceilings remain non-operational. `stable_supported` and `stable_heavy`
 remain counterfactual, and the historical ETH/WBTC ratio is preserved within
 their crypto shares.
 
-## 3.10 Integrated distributional and out-of-sample validation — integration complete
+## 3.10 Integrated distributional and out-of-sample validation — complete
 
 The multi-collateral integration contract has passed 1,280 initialisations,
 160 ordinary 168-hour simulations and six shared-capacity smokes. It validates
@@ -482,13 +496,18 @@ exact debt shares, common collateralisation, source isolation, numerical
 states, one global ranking, one system cap, backlog carry-forward and
 collateral-to-system reconciliation.
 
-Population-scale validation, quiet held-out validation, held-out crypto-stress
-validation and final USDC/SVB validation remain outstanding. The oracle-delay
-freeze and Experiment E are complete. No retuning may follow final
-validation.
+Population-scale robustness and final held-out validation are complete. No
+distinct quiet window was separately registered. November 2022 is therefore
+counted once as the generalisation/FTX holdout and is
+`ftx_validation_directionally_consistent`; March 2023 USDC/SVB is
+`usdc_svb_stable_channel_underactive`. The overall technically valid result is
+`final_validation_mixed`. The no-retuning declaration confirms no scientific
+or production change followed validation.
 
 The validation record is
-[`docs/validation/multicollateral_integration.md`](docs/validation/multicollateral_integration.md).
+[`docs/validation/multicollateral_integration.md`](docs/validation/multicollateral_integration.md),
+with the held-out result in
+[`docs/validation/final_validation.md`](docs/validation/final_validation.md).
 
 ---
 
@@ -1090,81 +1109,63 @@ Stage 1-only. See the
 
 ### Robustness layer
 
-Apply only to selected core contrasts:
+**Status:** complete.
 
-- four confidence scenarios;
-- persistent trough versus full-week recovery;
-- market block lengths;
-- population sizes;
-- oracle delays;
-- empirical portfolio-share interval endpoints;
-- keeper-hurdle range.
+The result-blind selected layer used four inherited contrasts, seven
+one-at-a-time settings and 64 paired replications per cell: 56 cells and 3,584
+simulations. Capacity, oracle delay, confidence, recovery paths, portfolio
+composition and shock structures were already covered by the completed
+programme and were not repeated. The new coordinates were 250/500/1,000
+vaults, 72/168/336-hour market blocks and direct/lower-positive/upper-positive
+keeper hurdles. Recovery was recalculated from the same DAI paths at 12, 24
+and 48 consecutive hours.
 
-Do not choose robustness cells after inspecting favourable results.
+R-A, R-B, R-C and R-D are each `robust`: every family reconstructed its
+baseline, retained the inherited conclusion in six of six non-baseline
+settings and had zero clear two-metric reversals. The overall classification
+is `core_conclusions_robust` under identity
+`59474cbc9e37d7df5d49fb5b9a0abbf4670ce300799f82ccb0ec21ed8a3aebbf`.
+No robustness coordinate was selected or adopted.
 
 ## Stage 7 — Final validation
 
-**Status:** pending.
+**Status:** complete as `final_validation_mixed`.
 
 ### Stage 7A — Quiet held-out validation
 
-Assess:
-
-- false-positive stress;
-- peg distribution;
-- liquidation frequency;
-- backlog;
-- baseline recovery;
-- numerical stability.
-
-Do not retune.
+No distinct result-blind quiet window was separately registered. The stage is
+closed as `quiet_validation_not_separately_registered` with zero simulations;
+no dates were invented.
 
 ### Stage 7B — Held-out crypto stress validation
 
-Assess:
-
-- direction of liquidation intensity;
-- gas and keeper stress;
-- collateral contribution;
-- peg pressure;
-- backlog and bad debt.
-
-Do not claim exact historical replay where initial vault states are standardised.
+The canonical November 2022 generalisation/FTX window is counted once. Its
+128 simulations are `ftx_validation_directionally_consistent`: historical
+crypto stress activates unsafe inventory, liquidations and backlog in the
+expected direction. Standardised vault states, omitted owner intervention and
+abstract auction microstructure preclude an exact historical replay claim.
 
 ### Stage 7C — Final USDC/SVB validation
 
-Run once after all specifications are frozen.
-
-Assess:
-
-- stable collateral depeg transmission;
-- stable-backed liquidation;
-- cross-collateral effects;
-- DAI peg direction and approximate magnitude;
-- model limitations.
-
-After this run:
-
-- no parameter changes;
-- no scenario changes;
-- no mechanism additions;
-- no result-based retuning.
+The final stage ran 128 negative-control and 128 stable-supported simulations.
+The zero-STABLE negative control passed, but stable-attributed liquidation and
+backlog did not activate despite 625,000 DAI mean stable exposure. The result
+is `usdc_svb_stable_channel_underactive`, reflecting high standardised initial
+collateralisation and the absent non-vault stablecoin route. The unfavourable
+finding is retained. The no-retuning declaration records zero parameter,
+scenario, mechanism, metric-rule and production changes.
 
 ## Stage 8 — Robustness, dissertation outputs and code freeze
 
-**Status:** pending.
+**Status:** robustness and validation evidence complete; dissertation outputs
+and code freeze remain pending.
 
 ### Required robustness
 
-- population size;
-- block length;
-- capacity bounds;
-- keeper-hurdle bounds;
-- confidence scenarios;
-- oracle delay;
-- recovery definition;
-- portfolio shares;
-- selected shock severities.
+Complete. The selected layer adds population, market-block, keeper-hurdle and
+metric-only recovery-definition sensitivities. The completed core and
+mechanism studies retain ownership of capacity, confidence, oracle delay,
+portfolio and shock robustness.
 
 ### Final artefacts
 
@@ -1334,7 +1335,7 @@ Do not:
 
 - [x] Integrated empirical ETH-only profile
 - [x] Distributional validation
-- [ ] Population-scale validation
+- [x] Population-scale robustness
 - [x] Oracle-delay status freeze
 
 ## Recovery
@@ -1374,25 +1375,25 @@ Do not:
 - [x] Shared keeper capacity
 - [x] Oracle delay
 - [x] H4 evidence synthesis and RQ3 integration
-- [ ] Selected robustness layer
+- [x] Selected robustness layer
 
 ## Validation
 
-- [ ] Quiet held-out validation
-- [ ] Held-out crypto stress validation
-- [ ] Final USDC/SVB validation
-- [ ] No-retuning confirmation
+- [x] Quiet stage resolved as `quiet_validation_not_separately_registered`
+- [x] Held-out crypto stress validation
+- [x] Final USDC/SVB validation
+- [x] No-retuning confirmation
 
 ## Freeze
 
-- [ ] Final robustness
-- [ ] Final evidence reconstruction
+- [x] Final robustness
+- [x] Final validation evidence reconstruction
 - [ ] Final figures and tables
 - [ ] `MAIN.md` updated
-- [ ] `FINAL.md` updated
-- [ ] `PROJECT_STATUS.md` closed
+- [x] `FINAL.md` updated
+- [x] `PROJECT_STATUS.md` updated for the completed evaluative stage
 - [ ] README and comments refreshed
-- [ ] Full suite and clean repository audit
+- [x] Full suite and clean repository audit for the evaluative stage
 - [ ] Model development stopped
 
 ---
@@ -1401,12 +1402,12 @@ Do not:
 
 The next scientific stage is:
 
-> **Begin the pre-registered robustness layer and final validation sequence
-> without retuning the frozen model.**
+> **Produce final dissertation tables, figures, result registry and validation
+> summary, then perform the final repository and code freeze.**
 
 The final experiment registry continues to use the frozen five portfolios and
 seven shocks without result-based screening. Experiments A–E are complete.
-The H4 synthesis is complete, no confidence scenario has been selected and
-production remains Stage 1-only. Population, positive-hurdle and oracle-delay
-cases remain separate robustness dimensions. Population robustness, held-out
-validation, USDC/SVB validation and final code freeze remain incomplete.
+The H4 synthesis, selected robustness and frozen-model validation are
+complete. No confidence scenario or sensitivity coordinate has been selected,
+production remains Stage 1-only and the no-retuning declaration is in force.
+Final dissertation outputs and the final code freeze remain incomplete.

@@ -1,0 +1,76 @@
+schema_version: 1
+registry_id: registered_selected_robustness
+scientific_status: evaluative_robustness_not_calibration
+runtime_adopted: false
+parent_commit: 26280a950286e4b0b88ca931a1ad1f24406f984b
+master_programme_identity: 084dd8495ec29717a94cc2d6d5427a78f377d82989abf2d119547fb1db376260
+protected_experiment_identities:
+  A: a9d7c3fa5dc5da9bcf61314a57501ea5a8be506e305eee6f45afaae3131600bb
+  B: e02c035162f8178c96d2cae71d0a581ce813ab33526854bd5810e8e2810ead83
+  C: cb6d00877c54011cc49714bdfe23fad83140fef001568ea9b43d355811c9129b
+  D: b324c31be7ef6dd7f61e504709b2086b0e88ce181c177f25dcaad182095c17e3
+  E: 67ec5a1e03492608c7f847861f7dbd506d2a526dbf4107298241b26c855eb0f8
+h4_synthesis_identity: 06f56e77ad56416483b2c010f0e63375b664baeff1830ec6306e37858c5920cb
+oracle_delay_registry_identity: 2e562ef2618e472ce3b0551addf2596ddbe137910fa6d2ad5884ae71c674e46d
+replications: 64
+fixed_system:
+  total_debt_dai: 2500000
+  target_system_collateral_ratio: 3.6089387701260205
+  capacity: 26
+  confidence: stage1_only
+  oracle_delay_hours: 0
+  dai_residual_block_hours: 24
+population_coordinates: [250, 500, 1000]
+market_block_coordinates_hours: [72, 168, 336]
+keeper_hurdles:
+  direct_cost_only:
+    risk_cost_rate: 0.0
+    unit: fraction_of_debt_repaid
+  keeper_hurdle_low:
+    risk_cost_rate: 0.105100900480
+    unit: fraction_of_debt_repaid
+  keeper_hurdle_high:
+    risk_cost_rate: 0.124431757397
+    unit: fraction_of_debt_repaid
+recovery_definition:
+  band: [0.995, 1.005]
+  primary_consecutive_hours: 24
+  sensitivity_consecutive_hours: [12, 24, 48]
+settings:
+  - {id: baseline, population: 500, market_block_hours: 168, hurdle: direct_cost_only}
+  - {id: population_250, population: 250, market_block_hours: 168, hurdle: direct_cost_only}
+  - {id: population_1000, population: 1000, market_block_hours: 168, hurdle: direct_cost_only}
+  - {id: market_block_72, population: 500, market_block_hours: 72, hurdle: direct_cost_only}
+  - {id: market_block_336, population: 500, market_block_hours: 336, hurdle: direct_cost_only}
+  - {id: keeper_hurdle_low, population: 500, market_block_hours: 168, hurdle: keeper_hurdle_low}
+  - {id: keeper_hurdle_high, population: 500, market_block_hours: 168, hurdle: keeper_hurdle_high}
+contrast_families:
+  - id: R-A
+    shock: eth_idiosyncratic_severe
+    reference_portfolio: eth_only
+    treatment_portfolio: stable_supported
+    inherited_conclusion: H3_idiosyncratic_diversification_supported
+  - id: R-B
+    shock: joint_crypto_high_correlation
+    reference_portfolio: eth_only
+    treatment_portfolio: stable_supported
+    inherited_conclusion: diversification_advantage_weakens_but_does_not_reverse
+  - id: R-C
+    shock: joint_crypto_stable_stress
+    reference_portfolio: empirical_crypto
+    treatment_portfolio: stable_supported
+    inherited_conclusion: stable_support_buffers_joint_crypto_stress
+  - id: R-D
+    shock: stable_depeg_severe
+    reference_portfolio: stable_supported
+    treatment_portfolio: stable_heavy
+    inherited_conclusion: depeg_exposure_gradient_inconsistent
+primary_metrics:
+  common: [backlog_area_share, liquidated_debt_share, maximum_unresolved_tab_share]
+  R-D: [stable_attributed_liquidated_debt_share, stable_exposure_normalised_liquidated_debt]
+held_out_exclusions:
+  - {id: november_2022_generalisation_ftx_holdout, start: '2022-11-01T00:00:00Z', end_exclusive: '2022-11-21T00:00:00Z'}
+  - {id: usdc_svb, start: '2023-03-06T00:00:00Z', end_exclusive: '2023-03-20T00:00:00Z'}
+forbidden_dimensions: [capacity, oracle_delay, confidence_scenario, recovery_path, portfolio_endpoints, shock_definitions]
+no_full_factorial: true
+no_retuning: true

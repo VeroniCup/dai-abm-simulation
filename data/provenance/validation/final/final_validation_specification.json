@@ -1,0 +1,31 @@
+{
+  "exact_historical_replay_claim": false,
+  "execution_order": [
+    "quiet",
+    "ftx",
+    "usdc_svb"
+  ],
+  "freeze_identity": "1bc40998534dd3842a229c701743494147d24832d956622411afba7863d3c295",
+  "ftx": {
+    "hours": 480,
+    "portfolio": "empirical_crypto",
+    "replications": 128
+  },
+  "no_retuning": true,
+  "november_2022_counted_once": true,
+  "observed_dai_role": "comparison_target_only",
+  "quiet_status": "quiet_validation_not_separately_registered",
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "scientific_status": "frozen_model_held_out_validation",
+  "synthetic_shock_overlay": false,
+  "usdc_svb": {
+    "hours": 336,
+    "portfolios": [
+      "empirical_crypto",
+      "stable_supported"
+    ],
+    "replications_per_portfolio": 128
+  },
+  "validation_identity": "a5e281a810892454539f0528c30536696d01c664bbd6cceda17584b88d5f3ed2"
+}

@@ -1,0 +1,40 @@
+{
+  "contrast_families": {
+    "R-A": {
+      "baseline_direction_reconstructed": true,
+      "classification": "robust",
+      "clear_reversal_settings": 0,
+      "retained_nonbaseline_settings": 6
+    },
+    "R-B": {
+      "baseline_direction_reconstructed": true,
+      "classification": "robust",
+      "clear_reversal_settings": 0,
+      "retained_nonbaseline_settings": 6
+    },
+    "R-C": {
+      "baseline_direction_reconstructed": true,
+      "classification": "robust",
+      "clear_reversal_settings": 0,
+      "retained_nonbaseline_settings": 6
+    },
+    "R-D": {
+      "baseline_direction_reconstructed": true,
+      "classification": "robust",
+      "clear_reversal_settings": 0,
+      "retained_nonbaseline_settings": 6
+    }
+  },
+  "overall_classification": "core_conclusions_robust",
+  "parameter_selection": false,
+  "prior_experiment_decisions_changed": false,
+  "robustness_identity": "59474cbc9e37d7df5d49fb5b9a0abbf4670ce300799f82ccb0ec21ed8a3aebbf",
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "validity": {
+    "accounting_failures": 0,
+    "held_out_leakage": 0,
+    "numerical_failures": 0,
+    "passed": true
+  }
+}

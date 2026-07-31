@@ -1,0 +1,85 @@
+{
+  "comparison_metrics": {
+    "observed": [
+      "eth_minimum_hourly_log_return",
+      "wbtc_minimum_hourly_log_return",
+      "stablecoin_minimum_price",
+      "dai_minimum_price",
+      "dai_mean_absolute_deviation",
+      "dai_below_peg_burden",
+      "gas_median_gwei",
+      "gas_p95_gwei",
+      "observed_recovery_duration"
+    ],
+    "simulated": [
+      "unsafe_vault_share",
+      "eligible_liquidation_tab",
+      "completed_liquidations",
+      "liquidated_debt_share",
+      "backlog_area_share",
+      "maximum_unresolved_tab_share",
+      "terminal_unresolved_tab_share",
+      "terminal_active_bad_debt_share",
+      "realised_bad_debt_share",
+      "mean_capacity_utilisation",
+      "capacity_rejected_opportunity_count",
+      "minimum_dai_price",
+      "mean_absolute_peg_deviation",
+      "below_peg_burden",
+      "restricted_mean_recovery_time",
+      "recovery_probability"
+    ]
+  },
+  "confidence_default": "stage1_only",
+  "decision_hierarchy": [
+    "final_validation_supportive_with_limitations",
+    "final_validation_mixed",
+    "final_validation_not_supportive",
+    "final_validation_not_fully_operational",
+    "final_validation_invalid"
+  ],
+  "freeze_identity": "1bc40998534dd3842a229c701743494147d24832d956622411afba7863d3c295",
+  "h4_synthesis_identity": "06f56e77ad56416483b2c010f0e63375b664baeff1830ec6306e37858c5920cb",
+  "historical_source_sha256": "86ed2ac5a5d364cc57e8b41e137ef369a0fce7a393d386b4b38fc1ebd1be0545",
+  "keeper_registry_sha256": "58c5754ed95dead1ad283a7961fb0588496804a94f58ddb0e196a57601ee1e1b",
+  "master_programme_identity": "084dd8495ec29717a94cc2d6d5427a78f377d82989abf2d119547fb1db376260",
+  "no_retuning_declaration": "Validation findings are evaluative. Unfavourable results are retained as limitations and do not trigger model retuning.",
+  "oracle_delay_registry_identity": "2e562ef2618e472ce3b0551addf2596ddbe137910fa6d2ad5884ae71c674e46d",
+  "parent_commit": "26280a950286e4b0b88ca931a1ad1f24406f984b",
+  "portfolio_choices": {
+    "ftx": [
+      "empirical_crypto"
+    ],
+    "usdc_svb": [
+      "empirical_crypto",
+      "stable_supported"
+    ]
+  },
+  "protected_experiment_identities": {
+    "A": "a9d7c3fa5dc5da9bcf61314a57501ea5a8be506e305eee6f45afaae3131600bb",
+    "B": "e02c035162f8178c96d2cae71d0a581ce813ab33526854bd5810e8e2810ead83",
+    "C": "cb6d00877c54011cc49714bdfe23fad83140fef001568ea9b43d355811c9129b",
+    "D": "b324c31be7ef6dd7f61e504709b2086b0e88ce181c177f25dcaad182095c17e3",
+    "E": "67ec5a1e03492608c7f847861f7dbd506d2a526dbf4107298241b26c855eb0f8"
+  },
+  "residual_block_sha256": "6f55b51acfc1da23836b3d847153bd4f68e4a38fc33fd967e9d3b795737bf28c",
+  "residual_sequence_sha256": "3fa2319cee9e1749405c0dc477e0f11ef9c31dd83c371b619bd33eda23c37c30",
+  "result_fields_excluded": true,
+  "robustness_classification": "core_conclusions_robust",
+  "robustness_decision_sha256": "0e8c3a3b50383ab133c72bae888106d6adf15908eb927b8ed5dde376764da36b",
+  "robustness_identity": "59474cbc9e37d7df5d49fb5b9a0abbf4670ce300799f82ccb0ec21ed8a3aebbf",
+  "robustness_registry_sha256": "7e1d10acfa45d7495d12abaa51b5acb3fa28004fda8254373d6a9e78deeb9951",
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "scientific_source_identity": "991d182036bab98d0efa0c70ae2b8f070fb60b467d3075173df551ef3c1d899c",
+  "scientific_status": "frozen_model_held_out_validation",
+  "simulation_counts": {
+    "ftx": 128,
+    "quiet": 0,
+    "total": 384,
+    "usdc_svb": 256
+  },
+  "stage1_coefficients_sha256": "d86625e268c7e8b8abcb6d37e48f87c3c01578c8a3c09024a57da93978614547",
+  "validation_registry_sha256": "dd52c77a3c03345fe9b3eb7b0cebd9bff7b35513b6970f5db1bc64162006e9ad",
+  "window_inventory_sha256": "8d11f57eeaf58846a4a26c308dbd921ace82ca837af7a0af87cc686a4195074b"
+}

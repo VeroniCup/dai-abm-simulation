@@ -26,6 +26,7 @@ dai-sim/
 
 # Generated outputs: ordinary runs, figures, diagnostics and reporting tables.
 outputs/experiments/**
+outputs/validation/**
 outputs/figures/**
 outputs/diagnostics/**
 outputs/tables/**
@@ -140,6 +141,16 @@ data/provenance/experiments/final/recovery_behaviour_synthesis/*
 !data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_claim_crosswalk.csv
 !data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_decision.json
 !data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_reproducibility.json
+!data/provenance/experiments/final/selected_robustness/
+data/provenance/experiments/final/selected_robustness/*
+!data/provenance/experiments/final/selected_robustness/selected_robustness_specification.json
+!data/provenance/experiments/final/selected_robustness/selected_robustness_registry.csv
+!data/provenance/experiments/final/selected_robustness/selected_robustness_cell_summary.csv
+!data/provenance/experiments/final/selected_robustness/selected_robustness_contrast_summary.csv
+!data/provenance/experiments/final/selected_robustness/selected_robustness_recovery_definition_sensitivity.csv
+!data/provenance/experiments/final/selected_robustness/selected_robustness_decision.json
+!data/provenance/experiments/final/selected_robustness/selected_robustness_reproducibility.json
+!data/provenance/experiments/final/selected_robustness/selected_robustness_benchmark.json
 !data/provenance/calibration/
 data/provenance/calibration/*
 !data/provenance/calibration/manifest.json
@@ -288,6 +299,19 @@ data/provenance/validation/multicollateral_integration/*
 !data/provenance/validation/multicollateral_integration/multicollateral_integration_decision.json
 !data/provenance/validation/multicollateral_integration/multicollateral_integration_reproducibility.json
 !data/provenance/validation/multicollateral_integration/multicollateral_integration_benchmark.json
+!data/provenance/validation/final/
+data/provenance/validation/final/*
+!data/provenance/validation/final/final_validation_specification.json
+!data/provenance/validation/final/final_validation_window_inventory.csv
+!data/provenance/validation/final/final_validation_freeze.json
+!data/provenance/validation/final/final_validation_quiet_summary.json
+!data/provenance/validation/final/final_validation_ftx_summary.json
+!data/provenance/validation/final/final_validation_usdc_svb_summary.json
+!data/provenance/validation/final/final_validation_metric_comparison.csv
+!data/provenance/validation/final/final_validation_decision.json
+!data/provenance/validation/final/no_retuning_decision.json
+!data/provenance/validation/final/final_validation_reproducibility.json
+!data/provenance/validation/final/final_validation_benchmark.json
 
 # Domain-owned provenance. Detailed operational records stay ignored; selected
 # durable entry points remain tracked.

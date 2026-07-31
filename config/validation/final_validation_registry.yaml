@@ -1,0 +1,47 @@
+schema_version: 1
+registry_id: frozen_model_held_out_validation
+scientific_status: evaluative_validation_not_calibration
+runtime_adopted: false
+parent_commit: 26280a950286e4b0b88ca931a1ad1f24406f984b
+execution_order: [quiet, november_2022_generalisation_ftx_holdout, usdc_svb]
+windows:
+  quiet:
+    status: quiet_validation_not_separately_registered
+    execute: false
+    reason: November 2022 was historically labelled quiet/generalisation and FTX; it is one holdout, not two observations.
+  november_2022_generalisation_ftx_holdout:
+    start: '2022-11-01T00:00:00Z'
+    end_exclusive: '2022-11-21T00:00:00Z'
+    roles: [generalisation, ftx_crypto_stress]
+    portfolio: empirical_crypto
+    replications: 128
+  usdc_svb:
+    start: '2023-03-06T00:00:00Z'
+    end_exclusive: '2023-03-20T00:00:00Z'
+    roles: [stablecoin_event, cross_collateral_validation]
+    portfolios: [empirical_crypto, stable_supported]
+    replications_per_portfolio: 128
+historical_source:
+  path: data/market/processed/combined/hourly_market_gas_panel.csv
+  sha256: 86ed2ac5a5d364cc57e8b41e137ef369a0fce7a393d386b4b38fc1ebd1be0545
+  coverage_start: '2021-06-01T00:00:00Z'
+  coverage_end_exclusive: '2024-07-01T00:00:00Z'
+simulation:
+  population: 500
+  total_debt_dai: 2500000
+  target_system_collateral_ratio: 3.6089387701260205
+  capacity: 26
+  keeper_hurdle: direct_cost_only
+  risk_cost_rate: 0.0
+  confidence: stage1_only
+  oracle_delay_hours: 0
+  synthetic_shock_overlay: false
+  observed_dai_role: comparison_target_only
+  stable_validation_price_owner: observed_usdc
+metrics:
+  observed: [eth_minimum_hourly_log_return, wbtc_minimum_hourly_log_return, stablecoin_minimum_price, dai_minimum_price, dai_mean_absolute_deviation, dai_below_peg_burden, gas_median_gwei, gas_p95_gwei, observed_recovery_duration]
+  simulated: [unsafe_vault_share, eligible_liquidation_tab, completed_liquidations, liquidated_debt_share, backlog_area_share, maximum_unresolved_tab_share, terminal_unresolved_tab_share, terminal_active_bad_debt_share, realised_bad_debt_share, mean_capacity_utilisation, capacity_rejected_opportunity_count, minimum_dai_price, mean_absolute_peg_deviation, below_peg_burden, restricted_mean_recovery_time, recovery_probability]
+comparison_statuses: [directionally_consistent, magnitude_broadly_compatible, overstated, understated, structurally_unavailable, not_comparable]
+no_retuning_declaration: Validation findings are evaluative. Unfavourable results are retained as limitations and do not trigger model retuning.
+workflow_operations: [inventory, freeze, quiet, ftx, usdc-svb, reconstruct, all]
+forbidden_operations: [calibrate, update_parameters, add_scenario, retune]

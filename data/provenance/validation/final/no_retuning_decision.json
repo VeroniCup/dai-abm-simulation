@@ -1,0 +1,18 @@
+{
+  "declaration": "Validation findings are evaluative. Unfavourable results are retained as limitations and do not trigger model retuning.",
+  "metric_rule_changes": 0,
+  "model_changes_after_validation": 0,
+  "parameter_changes": 0,
+  "production_adoption_changes": 0,
+  "robustness_identity": "59474cbc9e37d7df5d49fb5b9a0abbf4670ce300799f82ccb0ec21ed8a3aebbf",
+  "scenario_changes": 0,
+  "schema_version": 1,
+  "scientific_freeze_identity": "1bc40998534dd3842a229c701743494147d24832d956622411afba7863d3c295",
+  "source_and_config_hashes": {
+    "historical_source_sha256": "86ed2ac5a5d364cc57e8b41e137ef369a0fce7a393d386b4b38fc1ebd1be0545",
+    "robustness_registry_sha256": "7e1d10acfa45d7495d12abaa51b5acb3fa28004fda8254373d6a9e78deeb9951",
+    "scientific_source_identity": "991d182036bab98d0efa0c70ae2b8f070fb60b467d3075173df551ef3c1d899c",
+    "validation_registry_sha256": "dd52c77a3c03345fe9b3eb7b0cebd9bff7b35513b6970f5db1bc64162006e9ad"
+  },
+  "validation_identity": "a5e281a810892454539f0528c30536696d01c664bbd6cceda17584b88d5f3ed2"
+}

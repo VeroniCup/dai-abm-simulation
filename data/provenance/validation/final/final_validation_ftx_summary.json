@@ -1,0 +1,233 @@
+{
+  "classification": "ftx_validation_directionally_consistent",
+  "negative_control_passed": true,
+  "observed": {
+    "dai_below_peg_burden": 0.09101883333333838,
+    "dai_mean_absolute_deviation": 0.0013677192708333604,
+    "dai_minimum_price": 0.9962311666666668,
+    "end_exclusive_utc": "2022-11-21T00:00:00Z",
+    "eth_minimum_hourly_log_return": -0.0776665260793247,
+    "eth_wbtc_hourly_return_correlation": 0.926387467918771,
+    "eth_window_log_return": -0.31425616990322985,
+    "gas_median_gwei": 14.975496492608873,
+    "gas_p95_gwei": 41.337336732322534,
+    "hours": 480,
+    "observed_inside_band_share": 0.9604166666666667,
+    "observed_recovery_duration": 280,
+    "stablecoin_minimum_price": 0.997037416666667,
+    "start_utc": "2022-11-01T00:00:00Z",
+    "wbtc_minimum_hourly_log_return": -0.0501573208596966,
+    "wbtc_window_log_return": -0.23494830953976115
+  },
+  "replay_limitations": [
+    "standardised vault states",
+    "STABLE family excluded",
+    "owner intervention omitted",
+    "auction microstructure abstracted"
+  ],
+  "schema_version": 1,
+  "simulated": {
+    "empirical_crypto": {
+      "backlog_area_share": {
+        "count": 128,
+        "maximum": 1.4965167479735153,
+        "mean": 0.20987013003088895,
+        "median": 0.0973503173036134,
+        "minimum": 0.0,
+        "p05": 0.0010609453546700166,
+        "p25": 0.03380931386969549,
+        "p75": 0.2771670264633179,
+        "p95": 0.8140761445893967,
+        "standard_error": 0.023844323226865728
+      },
+      "below_peg_burden": {
+        "count": 128,
+        "maximum": 0.31130904800670767,
+        "mean": 0.169529781664708,
+        "median": 0.16210772941470009,
+        "minimum": 0.08738428756381922,
+        "p05": 0.11119110235558066,
+        "p25": 0.14174457510325117,
+        "p75": 0.18856378479074226,
+        "p95": 0.25652456092902537,
+        "standard_error": 0.003697635444301309
+      },
+      "capacity_rejected_opportunity_count": {
+        "count": 128,
+        "maximum": 1.0,
+        "mean": 0.0078125,
+        "median": 0.0,
+        "minimum": 0.0,
+        "p05": 0.0,
+        "p25": 0.0,
+        "p75": 0.0,
+        "p95": 0.0,
+        "standard_error": 0.0078125
+      },
+      "completed_liquidations": {
+        "count": 128,
+        "maximum": 70.0,
+        "mean": 24.3359375,
+        "median": 22.0,
+        "minimum": 0.0,
+        "p05": 3.0,
+        "p25": 14.5,
+        "p75": 33.25,
+        "p95": 53.29999999999998,
+        "standard_error": 1.3172966038402008
+      },
+      "eligible_liquidation_tab": {
+        "count": 128,
+        "maximum": 1051480.5736067626,
+        "mean": 278183.21263308096,
+        "median": 224831.9435209822,
+        "minimum": 0.0,
+        "p05": 2977.5360478125367,
+        "p25": 62263.995399087216,
+        "p75": 415585.240973028,
+        "p95": 770966.5388053242,
+        "standard_error": 22728.656123540273
+      },
+      "liquidated_debt_share": {
+        "count": 128,
+        "maximum": 0.41741229200470636,
+        "mean": 0.08526766911294487,
+        "median": 0.051378908136280974,
+        "minimum": 0.0,
+        "p05": 0.000751982605388433,
+        "p25": 0.012320085925068192,
+        "p75": 0.13294176859128115,
+        "p95": 0.28125058018178184,
+        "standard_error": 0.008125680124684977
+      },
+      "maximum_unresolved_tab_share": {
+        "count": 128,
+        "maximum": 0.39976722773551965,
+        "mean": 0.06462398962073097,
+        "median": 0.026239182473430434,
+        "minimum": 0.0,
+        "p05": 0.0005608642446126919,
+        "p25": 0.008586863619801422,
+        "p75": 0.10021778261326958,
+        "p95": 0.24623268334115572,
+        "standard_error": 0.007265569299457348
+      },
+      "mean_absolute_peg_deviation": {
+        "count": 128,
+        "maximum": 0.0008830534727098741,
+        "mean": 0.0006004607511611978,
+        "median": 0.0005913521815443148,
+        "minimum": 0.0003884679717347082,
+        "p05": 0.0004638508027032204,
+        "p25": 0.0005313425066421954,
+        "p75": 0.000654740409460597,
+        "p95": 0.0007776021454130686,
+        "standard_error": 8.582743996101516e-06
+      },
+      "mean_capacity_utilisation": {
+        "count": 128,
+        "maximum": 0.01746794871794872,
+        "mean": 0.002536558493589744,
+        "median": 0.0021233974358974357,
+        "minimum": 0.0,
+        "p05": 0.0002684294871794872,
+        "p25": 0.001282051282051282,
+        "p75": 0.003205128205128205,
+        "p95": 0.005420673076923076,
+        "standard_error": 0.00018621859470650156
+      },
+      "minimum_dai_price": {
+        "count": 128,
+        "maximum": 0.998470562148491,
+        "mean": 0.9963992274315208,
+        "median": 0.996549510271239,
+        "minimum": 0.9941259928965708,
+        "p05": 0.9942235698336068,
+        "p25": 0.9958216255858624,
+        "p75": 0.9971686914174243,
+        "p95": 0.9978155968930491,
+        "standard_error": 8.912962120569991e-05
+      },
+      "realised_bad_debt_share": {
+        "count": 128,
+        "maximum": 4.133645125520872e-21,
+        "mean": 3.2294102543131814e-23,
+        "median": 0.0,
+        "minimum": 0.0,
+        "p05": 0.0,
+        "p25": 0.0,
+        "p75": 0.0,
+        "p95": 0.0,
+        "standard_error": 3.22941025431318e-23
+      },
+      "recovery_probability": {
+        "count": 128,
+        "maximum": 1.0,
+        "mean": 1.0,
+        "median": 1.0,
+        "minimum": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "standard_error": 0.0
+      },
+      "restricted_mean_recovery_time": {
+        "count": 128,
+        "maximum": 469.0,
+        "mean": 25.078125,
+        "median": 0.0,
+        "minimum": 0.0,
+        "p05": 0.0,
+        "p25": 0.0,
+        "p75": 0.0,
+        "p95": 263.59999999999997,
+        "standard_error": 7.6439644872640615
+      },
+      "terminal_active_bad_debt_share": {
+        "count": 128,
+        "maximum": 0.0,
+        "mean": 0.0,
+        "median": 0.0,
+        "minimum": 0.0,
+        "p05": 0.0,
+        "p25": 0.0,
+        "p75": 0.0,
+        "p95": 0.0,
+        "standard_error": 0.0
+      },
+      "terminal_unresolved_tab_share": {
+        "count": 128,
+        "maximum": 0.052009574348980396,
+        "mean": 0.0009029199398525047,
+        "median": 0.0,
+        "minimum": 0.0,
+        "p05": 0.0,
+        "p25": 0.0,
+        "p75": 1.1464340233461764e-05,
+        "p95": 0.002670403731434863,
+        "standard_error": 0.0004822722671807505
+      },
+      "unsafe_vault_share": {
+        "count": 128,
+        "maximum": 0.078,
+        "mean": 0.030031250000000002,
+        "median": 0.028,
+        "minimum": 0.0,
+        "p05": 0.008700000000000001,
+        "p25": 0.018,
+        "p75": 0.0385,
+        "p95": 0.06,
+        "standard_error": 0.0013947638962489412
+      }
+    }
+  },
+  "simulation_count": 128,
+  "stage": "ftx",
+  "technical_validity": {
+    "accounting_failures": 0,
+    "numerical_failures": 0,
+    "passed": true
+  },
+  "validation_identity": "a5e281a810892454539f0528c30536696d01c664bbd6cceda17584b88d5f3ed2"
+}

@@ -42,6 +42,9 @@ destination for the pre-registered
 - [H4 recovery and behavioural-stabilisation synthesis](final/recovery_behaviour_synthesis.md)
   — the completed registered evidence integration for RQ3, with no new
   simulation or behavioural-scenario selection.
+- [Selected robustness layer](final/selected_robustness.md) — the completed
+  56-cell one-at-a-time population, market-block and keeper-hurdle assessment,
+  with recovery duration recalculated as a metric-only sensitivity.
 
 Generated detailed experiment outputs use the semantic namespaces
 `outputs/experiments/mechanism/` for controlled mechanism studies and
@@ -66,8 +69,10 @@ result-independent oracle-delay freeze resolves Experiment E to transparent
 zero-, one- and two-step sensitivities. Experiment E is complete with
 `H2_oracle_delay_partially_supported`, no selected delay and no runtime
 adoption; see the [final report](final/oracle_delay.md). The H4 synthesis is
-complete as `H4_recovery_conditionally_supported`; robustness and held-out
-validation remain pending.
+complete as `H4_recovery_conditionally_supported`; the selected robustness
+layer is `core_conclusions_robust` and final held-out validation is
+`final_validation_mixed`. No result changed the frozen model or selected a
+runtime treatment.
 
 Established scenario definitions are protected Python configuration factories in
 `scenarios.py`, with execution functions in `runner.py`. The new opt-in ETH

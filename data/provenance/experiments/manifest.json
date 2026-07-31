@@ -1,5 +1,5 @@
 {
-  "artefact_count": 73,
+  "artefact_count": 81,
   "artefacts": [
     {
       "classification": "scenario_defined_experimental_design",
@@ -308,6 +308,62 @@
       "runtime_adopted": false,
       "sha256": "2e79aaeed1271725a7107faa36af03399c5560313d5bfd6960b9992882970001",
       "size_bytes": 3157
+    },
+    {
+      "classification": "registered_selected_robustness",
+      "path": "data/provenance/experiments/final/selected_robustness/selected_robustness_benchmark.json",
+      "runtime_adopted": false,
+      "sha256": "d5a9d4ea059b32aaf2aa3afe0ebdf4ac6ee23a52be4198e5449a144b16b4ba66",
+      "size_bytes": 577
+    },
+    {
+      "classification": "registered_selected_robustness",
+      "path": "data/provenance/experiments/final/selected_robustness/selected_robustness_cell_summary.csv",
+      "runtime_adopted": false,
+      "sha256": "a5298eb7f491a0ced61715a80031e1173bc805b9899afbd923761b1df0ffa08c",
+      "size_bytes": 94395
+    },
+    {
+      "classification": "registered_selected_robustness",
+      "path": "data/provenance/experiments/final/selected_robustness/selected_robustness_contrast_summary.csv",
+      "runtime_adopted": false,
+      "sha256": "56700f347a7db5d14fd55700e259b6d3c9431f6bba2c8f81f0ea6d3e8df31365",
+      "size_bytes": 22370
+    },
+    {
+      "classification": "registered_selected_robustness",
+      "path": "data/provenance/experiments/final/selected_robustness/selected_robustness_decision.json",
+      "runtime_adopted": false,
+      "sha256": "0e8c3a3b50383ab133c72bae888106d6adf15908eb927b8ed5dde376764da36b",
+      "size_bytes": 1152
+    },
+    {
+      "classification": "registered_selected_robustness",
+      "path": "data/provenance/experiments/final/selected_robustness/selected_robustness_recovery_definition_sensitivity.csv",
+      "runtime_adopted": false,
+      "sha256": "b30a2190c00c0804abb456199bd3e1926e26bcff3d1019e7f7907f5e2555ea9c",
+      "size_bytes": 66323
+    },
+    {
+      "classification": "registered_selected_robustness",
+      "path": "data/provenance/experiments/final/selected_robustness/selected_robustness_registry.csv",
+      "runtime_adopted": false,
+      "sha256": "1a7a61cb1a57574e74c3f366dd189c30812a8b35c36a67a80d4f50baebcb373c",
+      "size_bytes": 11608
+    },
+    {
+      "classification": "registered_selected_robustness",
+      "path": "data/provenance/experiments/final/selected_robustness/selected_robustness_reproducibility.json",
+      "runtime_adopted": false,
+      "sha256": "454926b16bce218f7a5d00547bc896efbc9f72cdff38a50d75cb8aba65a063de",
+      "size_bytes": 750
+    },
+    {
+      "classification": "registered_selected_robustness",
+      "path": "data/provenance/experiments/final/selected_robustness/selected_robustness_specification.json",
+      "runtime_adopted": false,
+      "sha256": "c472655a466e8ea0ae4c9025347749873a319afd65d6793fb1943c698fe26292",
+      "size_bytes": 2044
     },
     {
       "classification": "pre_registered_final_shared_keeper_capacity_experiment",

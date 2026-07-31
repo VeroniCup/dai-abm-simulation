@@ -57,9 +57,11 @@ POST_RESTRUCTURING_WORKFLOWS = {
     "experiments/final/shared_keeper_capacity.py",
     "experiments/final/oracle_delay.py",
     "experiments/final/recovery_behaviour_synthesis.py",
+    "experiments/final/selected_robustness.py",
     "inputs/validate_integrated_eth.py",
     "inputs/validate_multicollateral.py",
     "market/process_historical_evidence.py",
+    "validation/final_validation.py",
 }
 
 EXPECTED_CATEGORIES = {
@@ -71,6 +73,7 @@ EXPECTED_CATEGORIES = {
     "maintenance",
     "market",
     "protocol",
+    "validation",
     "vaults",
 }
 

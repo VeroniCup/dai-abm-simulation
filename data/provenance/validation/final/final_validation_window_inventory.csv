@@ -1,0 +1,4 @@
+identifier,start_utc,end_exclusive_utc,event_label,intended_role,source_path,source_sha256,excluded_from_calibration,previously_used_in_calibration,held_out,complete_required_data,overlap,decision
+quiet,,,quiet/generalisation,quiet false-positive diagnostic,,,,,,False,not_applicable,quiet_validation_not_separately_registered
+november_2022_generalisation_ftx_holdout,2022-11-01T00:00:00Z,2022-11-21T00:00:00Z,November 2022 FTX,one held-out sample with generalisation and crypto-stress diagnostics,data/market/processed/combined/hourly_market_gas_panel.csv,86ed2ac5a5d364cc57e8b41e137ef369a0fce7a393d386b4b38fc1ebd1be0545,True,False,True,True,none,execute_once_not_double_counted
+usdc_svb,2023-03-06T00:00:00Z,2023-03-20T00:00:00Z,USDC/SVB,held-out stablecoin and cross-collateral validation,data/market/processed/combined/hourly_market_gas_panel.csv,86ed2ac5a5d364cc57e8b41e137ef369a0fce7a393d386b4b38fc1ebd1be0545,True,False,True,True,none,execute_last

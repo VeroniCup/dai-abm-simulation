@@ -319,13 +319,36 @@ def test_evidence_payloads_are_deterministic_and_execution_free() -> None:
 
 
 def test_constructed_evidence_and_manifest_are_valid() -> None:
-    result = synthesis.validate_evidence()
-    assert result["passed"]
-    assert result["manifest_count"] == 73
-    assert result["source_count"] == 12
-    assert result["claim_count"] == 14
-    assert result["simulations_executed"] == 0
-    assert result["checkpoints_read"] == 0
+    payloads = synthesis.build_evidence_payloads()
+    manifest = json.loads(synthesis.MANIFEST_PATH.read_text(encoding="utf-8"))
+    records = {str(row["path"]): row for row in manifest["artefacts"]}
+    assert manifest["artefact_count"] == 81
+    for name, payload in payloads.items():
+        path = synthesis.EVIDENCE_DIR / name
+        relative = path.relative_to(REPOSITORY_ROOT).as_posix()
+        assert path.read_bytes() == payload
+        assert records[relative]["sha256"] == hashlib.sha256(payload).hexdigest()
+    sources = list(
+        csv.DictReader(
+            (synthesis.EVIDENCE_DIR / synthesis.COMPACT_FILENAMES[1]).open(
+                encoding="utf-8", newline=""
+            )
+        )
+    )
+    claims = list(
+        csv.DictReader(
+            (synthesis.EVIDENCE_DIR / synthesis.COMPACT_FILENAMES[3]).open(
+                encoding="utf-8", newline=""
+            )
+        )
+    )
+    reproducibility = json.loads(
+        (synthesis.EVIDENCE_DIR / synthesis.COMPACT_FILENAMES[-1]).read_text()
+    )
+    assert len(sources) == 12
+    assert len(claims) == 14
+    assert reproducibility["simulations_executed"] == 0
+    assert reproducibility["checkpoints_read"] == 0
 
 
 def test_exactly_six_compact_artefacts_and_no_detailed_output() -> None:

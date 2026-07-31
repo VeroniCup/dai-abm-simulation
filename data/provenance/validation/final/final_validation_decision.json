@@ -1,0 +1,15 @@
+{
+  "exact_historical_replay_claim": false,
+  "freeze_identity": "1bc40998534dd3842a229c701743494147d24832d956622411afba7863d3c295",
+  "ftx_classification": "ftx_validation_directionally_consistent",
+  "model_changed": false,
+  "overall_classification": "final_validation_mixed",
+  "parameters_changed": false,
+  "quiet_classification": "quiet_validation_not_separately_registered",
+  "runtime_adopted": false,
+  "scenarios_changed": false,
+  "schema_version": 1,
+  "technical_validity": true,
+  "usdc_svb_classification": "usdc_svb_stable_channel_underactive",
+  "validation_identity": "a5e281a810892454539f0528c30536696d01c664bbd6cceda17584b88d5f3ed2"
+}

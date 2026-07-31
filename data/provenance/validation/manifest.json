@@ -3,6 +3,83 @@
   "duplicate_paths": 0,
   "entries": [
     {
+      "bytes": 1034,
+      "path": "data/provenance/validation/final/final_validation_benchmark.json",
+      "runtime_input": false,
+      "semantic_owner": "frozen_model_held_out_validation",
+      "sha256": "0feae3ef0e4c0fee2d3216dbbbee9a853c9db8b376d5145c69d3a04ab7c10549"
+    },
+    {
+      "bytes": 656,
+      "path": "data/provenance/validation/final/final_validation_decision.json",
+      "runtime_input": false,
+      "semantic_owner": "frozen_model_held_out_validation",
+      "sha256": "b04821e1d37b45e0f2f02b65904ef9bf1a1ece7ee82315deefc0fc03b1f17282"
+    },
+    {
+      "bytes": 3741,
+      "path": "data/provenance/validation/final/final_validation_freeze.json",
+      "runtime_input": false,
+      "semantic_owner": "frozen_model_held_out_validation",
+      "sha256": "487517684dac071d31e82f4ec166d2fef5118aae8611f9a81905eb2ea9a409ca"
+    },
+    {
+      "bytes": 7065,
+      "path": "data/provenance/validation/final/final_validation_ftx_summary.json",
+      "runtime_input": false,
+      "semantic_owner": "frozen_model_held_out_validation",
+      "sha256": "dd3e378eaea87694318fcd68dfbfafb07469e9cf2b72373022700d71bea5381c"
+    },
+    {
+      "bytes": 4468,
+      "path": "data/provenance/validation/final/final_validation_metric_comparison.csv",
+      "runtime_input": false,
+      "semantic_owner": "frozen_model_held_out_validation",
+      "sha256": "fbc3281db595b31860991a40174fbc55702cb30e0486a83707ddd8206f4dbffd"
+    },
+    {
+      "bytes": 217,
+      "path": "data/provenance/validation/final/final_validation_quiet_summary.json",
+      "runtime_input": false,
+      "semantic_owner": "frozen_model_held_out_validation",
+      "sha256": "319abf02b997b679b0c03a99b01b2bb9b06d5019e4e0b358e762bf2be5aba8c9"
+    },
+    {
+      "bytes": 789,
+      "path": "data/provenance/validation/final/final_validation_reproducibility.json",
+      "runtime_input": false,
+      "semantic_owner": "frozen_model_held_out_validation",
+      "sha256": "921b963b44c8bb03e82d322c0d818089bb78f01be8fe7c3c25b02e40243a9958"
+    },
+    {
+      "bytes": 864,
+      "path": "data/provenance/validation/final/final_validation_specification.json",
+      "runtime_input": false,
+      "semantic_owner": "frozen_model_held_out_validation",
+      "sha256": "ce87eb25585fbcd7e852ff63efaf48f0424e097c392f85704be2a71afede3f30"
+    },
+    {
+      "bytes": 12715,
+      "path": "data/provenance/validation/final/final_validation_usdc_svb_summary.json",
+      "runtime_input": false,
+      "semantic_owner": "frozen_model_held_out_validation",
+      "sha256": "da7e46fe0c185cce0a4d418bb46dd4fc63e1f063382cf7aeda598749d392526e"
+    },
+    {
+      "bytes": 955,
+      "path": "data/provenance/validation/final/final_validation_window_inventory.csv",
+      "runtime_input": false,
+      "semantic_owner": "frozen_model_held_out_validation",
+      "sha256": "0f2be35f566684ec74d3b7fef762349bd82c4c7778310eb7c2380d18ed813471"
+    },
+    {
+      "bytes": 1048,
+      "path": "data/provenance/validation/final/no_retuning_decision.json",
+      "runtime_input": false,
+      "semantic_owner": "frozen_model_held_out_validation",
+      "sha256": "df9c44a85e29546632e3907f27d4e841cebdbde0c95ea32a2ac90fe3d6d1a9b5"
+    },
+    {
       "bytes": 452,
       "path": "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_benchmark.json",
       "runtime_input": false,
@@ -136,6 +213,6 @@
       "sha256": "af114d178d1d1564cba359e3ea61ea92f07a2a54dbe3e9c1409925ceff2cfad7"
     }
   ],
-  "entry_count": 19,
+  "entry_count": 30,
   "schema_version": 1
 }

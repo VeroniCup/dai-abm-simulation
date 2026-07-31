@@ -1,0 +1,16 @@
+{
+  "calibration_runs": 0,
+  "checkpoint_count": 64,
+  "completed_simulations": 3584,
+  "execution_command": "PYTHONPATH=src python workflows/experiments/final/selected_robustness.py run --workers 8",
+  "full_wall_time_seconds": 2120.504146916999,
+  "held_out_validation_runs": 0,
+  "measurement_timestamp_utc": "2026-07-31T19:06:36.655435+00:00",
+  "network_calls": 0,
+  "output_size_bytes": 15487097,
+  "prior_experiment_reruns": 0,
+  "schema_version": 1,
+  "smoke_wall_time_seconds": 106.128,
+  "throughput_simulations_per_second": 1.6901641080074177,
+  "worker_count": 8
+}

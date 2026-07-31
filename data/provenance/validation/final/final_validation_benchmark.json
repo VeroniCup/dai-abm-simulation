@@ -1,0 +1,25 @@
+{
+  "calibration_runs": 0,
+  "completed_simulations": 384,
+  "evidence_only_resume_reused_replications": 128,
+  "execution_commands": [
+    "PYTHONPATH=src python workflows/validation/final_validation.py ftx --workers 8",
+    "PYTHONPATH=src python workflows/validation/final_validation.py usdc-svb --workers 8"
+  ],
+  "ftx_simulations": 128,
+  "ftx_wall_time_seconds": 46.79383608299395,
+  "measurement_timestamp_utc": "2026-07-31T19:22:28.430494+00:00",
+  "model_changes": 0,
+  "network_calls": 0,
+  "parameter_changes": 0,
+  "post_execution_aggregation_failures": 1,
+  "quiet_simulations": 0,
+  "scenario_changes": 0,
+  "schema_version": 1,
+  "substantive_retries": 0,
+  "usdc_svb_checkpoint_write_span_seconds": 51.15390181541443,
+  "usdc_svb_simulations": 256,
+  "usdc_svb_timing_note": "Substantive orchestration wall time reconstructed from the uninterrupted execution call because the post-execution evidence aggregator failed before returning run_stage timing.",
+  "usdc_svb_wall_time_seconds": 72.108,
+  "worker_count": 8
+}

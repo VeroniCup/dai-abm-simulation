@@ -20,6 +20,9 @@ semantic validation modules delegate without redefining behaviour.
 - [Final multi-collateral integration](multicollateral_integration.md) —
   frozen five-portfolio and seven-shock inputs, counterfactual stable-proxy
   boundary, and validation of one globally ranked shared keeper capacity.
+- [Final held-out validation](final_validation.md) — the frozen-model November
+  2022 FTX/generalisation and March 2023 USDC/SVB evaluation, classified
+  `final_validation_mixed` with an explicit no-retuning declaration.
 - [Confidence scenarios](../experiments/confidence_scenarios.md) — joint typed
   input-resolution and scenario-validation contract.
 

@@ -1,0 +1,63 @@
+{
+  "h4_synthesis_identity": "06f56e77ad56416483b2c010f0e63375b664baeff1830ec6306e37858c5920cb",
+  "market_blocks": {
+    "aligned_eth_wbtc": true,
+    "coordinates_hours": [
+      72,
+      168,
+      336
+    ],
+    "dai_residual_block_hours": 24,
+    "ftx_excluded": true
+  },
+  "master_programme_identity": "084dd8495ec29717a94cc2d6d5427a78f377d82989abf2d119547fb1db376260",
+  "matrix": {
+    "cells": 56,
+    "contrast_families": 4,
+    "full_factorial": false,
+    "replications": 64,
+    "settings": 7,
+    "simulations": 3584,
+    "treatment_cells": 2
+  },
+  "no_retuning": true,
+  "oracle_delay_registry_identity": "2e562ef2618e472ce3b0551addf2596ddbe137910fa6d2ad5884ae71c674e46d",
+  "parent_commit": "26280a950286e4b0b88ca931a1ad1f24406f984b",
+  "population": {
+    "coordinates": [
+      250,
+      500,
+      1000
+    ],
+    "nested_family_draws": true,
+    "target_system_collateral_ratio": 3.6089387701260205,
+    "total_debt_dai": 2500000.0
+  },
+  "protected_experiment_identities": {
+    "A": "a9d7c3fa5dc5da9bcf61314a57501ea5a8be506e305eee6f45afaae3131600bb",
+    "B": "e02c035162f8178c96d2cae71d0a581ce813ab33526854bd5810e8e2810ead83",
+    "C": "cb6d00877c54011cc49714bdfe23fad83140fef001568ea9b43d355811c9129b",
+    "D": "b324c31be7ef6dd7f61e504709b2086b0e88ce181c177f25dcaad182095c17e3",
+    "E": "67ec5a1e03492608c7f847861f7dbd506d2a526dbf4107298241b26c855eb0f8"
+  },
+  "recovery_definition": {
+    "band": [
+      0.995,
+      1.005
+    ],
+    "consecutive_hours": [
+      12,
+      24,
+      48
+    ],
+    "metric_only": true,
+    "primary_hours": 24
+  },
+  "registry_path": "config/sensitivities/final_robustness_registry.yaml",
+  "registry_sha256": "7e1d10acfa45d7495d12abaa51b5acb3fa28004fda8254373d6a9e78deeb9951",
+  "robustness_identity": "59474cbc9e37d7df5d49fb5b9a0abbf4670ce300799f82ccb0ec21ed8a3aebbf",
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "scientific_source_identity": "62315e2a86dc9af77e12fa4759dc557f0991e3071b7a370a5e1fd8f208379c3d",
+  "scientific_status": "registered_selected_robustness"
+}
