@@ -1,0 +1,19 @@
+finding_order,component,source_identifier,tier,registered_finding,evidence_direction,quantitative_context,limitation
+1,S1_recovery_channel,unbounded_eth_recovery,1,no_clear_recovery_path_effect,conditional_null,Immediate full-close execution resolves nearly all unsafe positions before rebound.,No unresolved inventory remains to rescue.
+2,S1_recovery_channel,constrained_eth_recovery,1,H5a supported,supports_channel,Full-week recovery avoids liquidation debt at all three capacities.,Controlled ETH-only setting.
+3,S2_execution_conditioning,constrained_eth_recovery,1,H5c present; higher_capacity_reduces_backlog,supports_interaction,Avoided debt and rescue counts are largest at capacity 14; backlog falls as capacity rises.,Capacity values are partially identified.
+4,S2_execution_conditioning,experiment_d,1,H1_no_clear_shared_capacity_effect,limits_generalisability,Final multi-collateral capacity transmission is mixed or non-binding.,"Different populations, shocks and treatment question."
+5,S3_behavioural_stabilisation,confidence_partial_identification,1,zero admissible vectors,not_identified,All 256 bounded candidates are rejected.,Finite candidate grid.
+6,S3_behavioural_stabilisation,confidence_structural_factorial,1,factorial_interactions_reveal_tradeoffs,not_identified,No structural-factorial cell is admissible.,"Mechanism diagnosis, not parameter estimation."
+7,S3_behavioural_stabilisation,confidence_scenarios,1,transparent scenario assumptions,scenario_boundary,Four fixed scenarios; no ranking or selection.,Active values are not estimates.
+8,S3_behavioural_stabilisation,unbounded_eth_recovery,2,confidence controls registered peg recovery,scenario_dependent,Active confidence assumptions alter the DAI recovery path.,Cannot establish which scenario is empirically correct.
+9,S3_behavioural_stabilisation,constrained_eth_recovery,2,H5b not supported; scenario contrasts differ,scenario_dependent,Resilient recovery contrasts are negative while central and fragile primary contrasts are zero.,"Scenario-conditional, not a ranking."
+10,S4_backlog_gate,constrained_eth_recovery,1,H5a and H5c supported,supports_mechanism_condition,Unresolved positions create a recovery window and recovery reduces backlog.,No clean isolated backlog-to-peg contrast.
+11,S4_backlog_gate,stage1_dai_mechanism,1,operational recovery gate,supports_mechanism_condition,"Behavioural recovery is gated by unresolved tab, active bad debt and price stability.",Gate coefficient is not fitted.
+12,S4_backlog_gate,experiment_e,1,E2 partially supported,timing_context,Delay changes recognition and interim backlog while peg outcomes remain unchanged.,Capacity never binds; bad debt is degenerate.
+13,S5_solvency_peg_decoupling,constrained_eth_recovery,1,H5a supported; H5b not supported; H5d present,supports_decoupling,Recovery improves solvency without changing Stage 1 primary peg outcomes.,Persistent-confidence results remain scenario-defined.
+14,S5_solvency_peg_decoupling,experiment_a,1,solvency_improves_peg_unchanged,supports_decoupling,Diversification improves solvency with unchanged peg outcomes.,Not a recovery-path experiment.
+15,S5_solvency_peg_decoupling,experiment_b,1,solvency_deteriorates_peg_unchanged,supports_decoupling,Bundled correlated stress worsens solvency with unchanged peg outcomes.,Not a pure correlation contrast.
+16,S5_solvency_peg_decoupling,experiment_c,1,solvency_improves_peg_unchanged,supports_decoupling,Stable collateral improves solvency with unchanged peg outcomes.,Stable proxy is counterfactual.
+17,S5_solvency_peg_decoupling,experiment_d,1,neither_materially_changes,neutral_context,Capacity treatment does not materially alter either outcome overall.,Several anchors do not bind.
+18,S5_solvency_peg_decoupling,experiment_e,1,solvency_deteriorates_peg_unchanged,supports_decoupling,Oracle delay changes timing and solvency diagnostics with unchanged peg outcomes.,Transparent delay sensitivity.

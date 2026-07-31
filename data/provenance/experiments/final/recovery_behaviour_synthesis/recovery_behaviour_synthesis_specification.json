@@ -1,0 +1,105 @@
+{
+  "claim_schema": [
+    "claim_order",
+    "claim_identifier",
+    "claim_text",
+    "supporting_source_ids",
+    "limiting_source_ids",
+    "source_decision_labels",
+    "source_design_differences",
+    "evidence_direction",
+    "evidential_status",
+    "dissertation_safe_wording",
+    "prohibited_overstatement"
+  ],
+  "component_rules": {
+    "S1_recovery_channel": [
+      "conditionally_operational",
+      "generally_operational",
+      "not_operational",
+      "inconsistent",
+      "invalid"
+    ],
+    "S2_execution_conditioning": [
+      "supported",
+      "partially_supported",
+      "not_supported"
+    ],
+    "S2_generalisability_qualifier": [
+      "general",
+      "context_specific"
+    ],
+    "S3_behavioural_stabilisation": [
+      "scenario_dependent_not_identified",
+      "robustly_supported",
+      "not_operational",
+      "empirically_identified"
+    ],
+    "S4_backlog_gate": [
+      "mechanism_condition_supported",
+      "peg_gate_effect_supported",
+      "mechanism_present_peg_effect_unresolved",
+      "not_operational"
+    ],
+    "S5_solvency_peg_decoupling": [
+      "strongly_supported",
+      "supported",
+      "mixed",
+      "not_supported"
+    ]
+  },
+  "components": [
+    "S1_recovery_channel",
+    "S2_execution_conditioning",
+    "S3_behavioural_stabilisation",
+    "S4_backlog_gate",
+    "S5_solvency_peg_decoupling"
+  ],
+  "evidence_hierarchy": [
+    "Tier 1 registered decisions",
+    "Tier 2 registered compact summaries",
+    "Tier 3 tracked reports"
+  ],
+  "excluded_evidence": [
+    "ignored checkpoints",
+    "untracked notes",
+    "held-out validation",
+    "USDC/SVB validation",
+    "external sources"
+  ],
+  "final_validation_excluded": true,
+  "historical_labels": {
+    "H5a_to_H5d": "internal constrained-recovery component labels, not dissertation hypotheses"
+  },
+  "hypothesis": "H4",
+  "no_pooling_rule": {
+    "meta_analysis": false,
+    "method": "registered decision triangulation and mechanism compatibility",
+    "simulation_count_weighting": false,
+    "statistical_pooling": false
+  },
+  "overall_hierarchy": [
+    "H4_joint_recovery_supported",
+    "H4_recovery_conditionally_supported",
+    "H4_solvency_recovery_without_peg_recovery",
+    "H4_behavioural_recovery_unresolved",
+    "H4_no_clear_recovery_evidence",
+    "H4_recovery_synthesis_invalid"
+  ],
+  "programme_identity": "084dd8495ec29717a94cc2d6d5427a78f377d82989abf2d119547fb1db376260",
+  "purpose": "Registered evidence synthesis for RQ3 and H4; no new experiment.",
+  "research_question": "RQ3",
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "scientific_status": "registered_evidence_synthesis",
+  "source_inclusion_rules": {
+    "checksum_match_required": true,
+    "compact_summaries_quantify_decisions_only": true,
+    "registered_decisions_are_primary": true,
+    "reports_cannot_override_decisions": true,
+    "tracked_at_parent_commit": true
+  },
+  "source_registry_sha256": "825640e51bbda151b73b2ec2ee43a07fe4bd08fd9b50337c49831f6045d5d98a",
+  "synthesis_identity": "06f56e77ad56416483b2c010f0e63375b664baeff1830ec6306e37858c5920cb",
+  "synthesis_parent_commit": "e688a0cf5b2f90c244a08dc58afda040ba476808"
+}

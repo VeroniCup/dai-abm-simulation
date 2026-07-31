@@ -1,5 +1,5 @@
 {
-  "artefact_count": 67,
+  "artefact_count": 73,
   "artefacts": [
     {
       "classification": "scenario_defined_experimental_design",
@@ -266,6 +266,48 @@
       "runtime_adopted": false,
       "sha256": "acce1aafeabcc8ccfd63b4ca353e9839c1cc11373043432a47c31389eb8f0537",
       "size_bytes": 13624
+    },
+    {
+      "classification": "registered_h4_recovery_behaviour_evidence_synthesis",
+      "path": "data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_claim_crosswalk.csv",
+      "runtime_adopted": false,
+      "sha256": "84dde99575fd99931d36bddf6f8bd30e97e685adbf83c3ac9ef877fafacb5cb8",
+      "size_bytes": 5249
+    },
+    {
+      "classification": "registered_h4_recovery_behaviour_evidence_synthesis",
+      "path": "data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_decision.json",
+      "runtime_adopted": false,
+      "sha256": "9e913eea00aa0b59a7f2d08785aaadf64e251dfe67f6710df2a2cc37cd4b545d",
+      "size_bytes": 1787
+    },
+    {
+      "classification": "registered_h4_recovery_behaviour_evidence_synthesis",
+      "path": "data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_evidence_matrix.csv",
+      "runtime_adopted": false,
+      "sha256": "1968710a2f394c9d3652cabe86be40bff52c9cce092c28233d128ab2a6e7a87b",
+      "size_bytes": 3935
+    },
+    {
+      "classification": "registered_h4_recovery_behaviour_evidence_synthesis",
+      "path": "data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_reproducibility.json",
+      "runtime_adopted": false,
+      "sha256": "e3fd4e3d02ea5ac99e30eb2be0e15272d6a395709754a9eb0608876caef449a6",
+      "size_bytes": 3580
+    },
+    {
+      "classification": "registered_h4_recovery_behaviour_evidence_synthesis",
+      "path": "data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_sources.csv",
+      "runtime_adopted": false,
+      "sha256": "825640e51bbda151b73b2ec2ee43a07fe4bd08fd9b50337c49831f6045d5d98a",
+      "size_bytes": 9524
+    },
+    {
+      "classification": "registered_h4_recovery_behaviour_evidence_synthesis",
+      "path": "data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_specification.json",
+      "runtime_adopted": false,
+      "sha256": "2e79aaeed1271725a7107faa36af03399c5560313d5bfd6960b9992882970001",
+      "size_bytes": 3157
     },
     {
       "classification": "pre_registered_final_shared_keeper_capacity_experiment",

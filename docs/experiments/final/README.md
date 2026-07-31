@@ -19,9 +19,10 @@ existing Experiment E treatment identifiers externally as zero, one and two
 hourly steps. [Experiment E](oracle_delay.md) is complete without selecting or
 runtime-adopting a delay.
 
-The H4 evidence synthesis is a reporting programme rather than another core
-simulation matrix. It remains pending and contributes no additional cell or
-simulation to the totals above.
+The [H4 evidence synthesis](recovery_behaviour_synthesis.md) is complete as a
+registered reporting programme rather than another core simulation matrix. It
+contributes no additional cell or simulation to the totals above and records
+`H4_recovery_conditionally_supported`.
 
 ## Dissertation research questions
 
@@ -85,7 +86,7 @@ defined them; they are not additional dissertation hypotheses.
 | Experiment C — stable-collateral trade-off | 12 | 128 | 1,536 | `completed` | RQ4 and H3 under stable-proxy depeg and joint stress |
 | Experiment D — shared keeper capacity | 9 | 128 | 1,152 | `completed` | RQ2 and H1, with cross-collateral implications for RQ4 |
 | Experiment E — oracle delay | 6 | 128 | 768 | `completed` | RQ2 and H2 |
-| H4 evidence synthesis | 0 | — | 0 | `pending_evidence_synthesis` | RQ3 and H4, using pre-registered evidence rather than a new core matrix |
+| H4 evidence synthesis | 0 | — | 0 | `completed` | RQ3 and H4, using registered evidence rather than a new core matrix |
 | **Total** | **43** |  | **5,504** |  |  |
 
 The frozen master registry still carries the original unresolved treatment
@@ -140,11 +141,12 @@ sensitivities: none is ranked, selected or runtime adopted.
 
 ## Sequencing and no-retuning rule
 
-The programme is hierarchical. Completion of Experiment E closes the five-
-experiment core programme and authorises the next pre-registered stage: H4
-recovery and behavioural-stabilisation evidence synthesis. Robustness layers
-and held-out validation remain separately gated. Each later component must
-retain its registered design and receive its own execution authorisation.
+The programme is hierarchical. Completion of Experiment E closed the five-
+experiment core programme, and the registered H4 recovery and behavioural-
+stabilisation synthesis now completes RQ3 evidence integration. The next stage
+is the pre-registered robustness and final-validation sequence without
+retuning. Each later component must retain its registered design and receive
+its own execution authorisation.
 
 Model mechanisms, parameters, empirical input pools, portfolio definitions,
 shock definitions, keeper settings, confidence scenarios and oracle-delay

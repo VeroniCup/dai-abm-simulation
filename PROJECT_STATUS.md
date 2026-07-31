@@ -170,6 +170,20 @@ under close-factor-one accounting. No delay was selected, no held-out or
 USDC/SVB data were used, and the production zero-delay default remains
 unchanged. Experiments A–D remain byte-identical.
 
+The registered
+[H4 recovery and behavioural-stabilisation evidence synthesis](docs/experiments/final/recovery_behaviour_synthesis.md)
+is complete under synthesis identity
+`06f56e77ad56416483b2c010f0e63375b664baeff1830ec6306e37858c5920cb`.
+Its decisions are S1 `conditionally_operational`, S2 `supported` with the
+`context_specific` qualifier, S3 `scenario_dependent_not_identified`, S4
+`mechanism_present_peg_effect_unresolved` and S5 `strongly_supported`, giving
+`H4_recovery_conditionally_supported`. Collateral rebound can rescue vaults
+only while positions remain unresolved; execution conditions alter that
+window; and registered solvency or timing changes repeatedly coexist with
+unchanged peg outcomes. No simulation or checkpoint was used, no confidence
+scenario was ranked or selected, no held-out or USDC/SVB evidence entered,
+and production remains Stage 1-only.
+
 The separate
 [experiment-infrastructure maintenance](docs/validation/experiment_infrastructure_maintenance.md)
 is complete. The convenience reconstruction CLI now respects the keyword-only
@@ -256,10 +270,11 @@ review reproduced all of them without changing executable behaviour.
 
 ## Next research work
 
-Experiments A–E and the result-independent oracle-delay freeze are complete.
-The five-experiment core final programme is complete. The next scientific
-stage is the pre-registered H4 recovery and behavioural-stabilisation evidence
-synthesis.
+Experiments A–E, the result-independent oracle-delay freeze and the registered
+H4 synthesis are complete. The five-experiment core programme plus RQ3/H4
+evidence integration is complete. The next scientific stage is the
+pre-registered robustness layer and final validation sequence without
+retuning the frozen model.
 The stable-impairment component of H3 is complete with partial support, while
 Experiment D provides mixed secondary shared-capacity transmission evidence.
 Population-scale robustness and held-out final validation, including

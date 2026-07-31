@@ -67,12 +67,17 @@ Completed in the current end-stage pass:
 - final Experiment E, oracle delay: completed from 128 authoritative
   checkpoints and 768 simulations under experiment identity
   `67ec5a1e03492608c7f847861f7dbd506d2a526dbf4107298241b26c855eb0f8`,
-  without selecting or runtime-adopting a delay.
+  without selecting or runtime-adopting a delay; and
+- H4 recovery and behavioural-stabilisation synthesis: completed without a
+  simulation under synthesis identity
+  `06f56e77ad56416483b2c010f0e63375b664baeff1830ec6306e37858c5920cb`
+  as `H4_recovery_conditionally_supported`.
 
 Stages 1–5, final Experiments A–E and the result-independent oracle-delay
-freeze are complete. The five-experiment core final programme is complete. No
-portfolio, shock, capacity or oracle delay has been selected from validation
-or experiment outcomes.
+freeze are complete. The five-experiment core final programme and the H4/RQ3
+evidence integration are complete. No portfolio, shock, capacity, oracle
+delay or confidence scenario has been selected from validation or experiment
+outcomes.
 
 ---
 
@@ -897,8 +902,9 @@ ready with caveats rather than fully empirical.
 
 ## Stage 6 — Final multi-collateral experiments
 
-**Status:** core programme complete. Experiments A–E and the result-independent
-oracle-delay freeze are complete; H4 evidence synthesis remains pending.
+**Status:** core programme and H4 synthesis complete. Experiments A–E, the
+result-independent oracle-delay freeze and registered RQ3 evidence integration
+are complete.
 
 Use a hierarchical design rather than one enormous full factorial.
 
@@ -1053,6 +1059,34 @@ capacity was ranked, selected or runtime adopted. The transmission result is
 conditional on the frozen expected-profit, debt-at-risk and vault-ID ranking.
 See the
 [Experiment D report](docs/experiments/final/shared_keeper_capacity.md).
+
+### H4 recovery and behavioural-stabilisation synthesis
+
+Completed as `registered_evidence_synthesis` with no simulation or checkpoint
+read. The content-addressed synthesis identity is
+`06f56e77ad56416483b2c010f0e63375b664baeff1830ec6306e37858c5920cb`.
+
+Registered decisions:
+
+- S1 recovery channel: `conditionally_operational`;
+- S2 execution conditioning: `supported`;
+- S2 generalisability: `context_specific`;
+- S3 behavioural stabilisation: `scenario_dependent_not_identified`;
+- S4 backlog gate: `mechanism_present_peg_effect_unresolved`;
+- S5 solvency–peg decoupling: `strongly_supported`; and
+- overall H4: `H4_recovery_conditionally_supported`.
+
+RQ3 answer: collateral recovery can rescue unresolved vaults and reduce
+backlog, but the channel disappears after liquidation closure. Execution
+capacity changes the rescue window. Behavioural assumptions can alter peg
+recovery under transparent scenarios, but are not empirically identified.
+Across the Stage 1-only final programme, solvency and liquidation-timing
+changes generally remain distinct from sustained DAI peg recovery.
+
+No confidence scenario was ranked or selected, historical decisions remained
+unchanged, and no held-out or USDC/SVB evidence was used. Production remains
+Stage 1-only. See the
+[registered synthesis report](docs/experiments/final/recovery_behaviour_synthesis.md).
 
 ### Robustness layer
 
@@ -1336,9 +1370,10 @@ Do not:
 
 - [x] Idiosyncratic diversification
 - [x] Stress correlation
-- [ ] Stable-collateral trade-off
-- [ ] Shared keeper capacity
-- [ ] H4 evidence synthesis
+- [x] Stable-collateral trade-off
+- [x] Shared keeper capacity
+- [x] Oracle delay
+- [x] H4 evidence synthesis and RQ3 integration
 - [ ] Selected robustness layer
 
 ## Validation
@@ -1366,12 +1401,12 @@ Do not:
 
 The next scientific stage is:
 
-> **Complete the pre-registered H4 recovery and behavioural-stabilisation
-> evidence synthesis.**
+> **Begin the pre-registered robustness layer and final validation sequence
+> without retuning the frozen model.**
 
 The final experiment registry continues to use the frozen five portfolios and
 seven shocks without result-based screening. Experiments A–E are complete.
-Population, positive-hurdle and oracle-delay cases remain separate
-robustness dimensions. The remaining final experiments, population robustness,
-held-out validation, USDC/SVB validation and final code freeze remain
-incomplete.
+The H4 synthesis is complete, no confidence scenario has been selected and
+production remains Stage 1-only. Population, positive-hurdle and oracle-delay
+cases remain separate robustness dimensions. Population robustness, held-out
+validation, USDC/SVB validation and final code freeze remain incomplete.

@@ -132,6 +132,14 @@ data/provenance/experiments/final/oracle_delay/*
 !data/provenance/experiments/final/oracle_delay/oracle_delay_decision.json
 !data/provenance/experiments/final/oracle_delay/oracle_delay_reproducibility.json
 !data/provenance/experiments/final/oracle_delay/oracle_delay_benchmark.json
+!data/provenance/experiments/final/recovery_behaviour_synthesis/
+data/provenance/experiments/final/recovery_behaviour_synthesis/*
+!data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_specification.json
+!data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_sources.csv
+!data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_evidence_matrix.csv
+!data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_claim_crosswalk.csv
+!data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_decision.json
+!data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_reproducibility.json
 !data/provenance/calibration/
 data/provenance/calibration/*
 !data/provenance/calibration/manifest.json

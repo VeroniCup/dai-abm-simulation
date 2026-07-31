@@ -39,6 +39,9 @@ destination for the pre-registered
   experiment.
 - [Experiment D — shared keeper capacity](final/shared_keeper_capacity.md)
   — the completed nine-cell, 1,152-simulation global-capacity experiment.
+- [H4 recovery and behavioural-stabilisation synthesis](final/recovery_behaviour_synthesis.md)
+  — the completed registered evidence integration for RQ3, with no new
+  simulation or behavioural-scenario selection.
 
 Generated detailed experiment outputs use the semantic namespaces
 `outputs/experiments/mechanism/` for controlled mechanism studies and
@@ -62,8 +65,9 @@ peg outcomes, yielding `H1_no_clear_shared_capacity_effect`. The
 result-independent oracle-delay freeze resolves Experiment E to transparent
 zero-, one- and two-step sensitivities. Experiment E is complete with
 `H2_oracle_delay_partially_supported`, no selected delay and no runtime
-adoption; see the [final report](final/oracle_delay.md). The H4 evidence
-synthesis remains `pending_evidence_synthesis`.
+adoption; see the [final report](final/oracle_delay.md). The H4 synthesis is
+complete as `H4_recovery_conditionally_supported`; robustness and held-out
+validation remain pending.
 
 Established scenario definitions are protected Python configuration factories in
 `scenarios.py`, with execution functions in `runner.py`. The new opt-in ETH

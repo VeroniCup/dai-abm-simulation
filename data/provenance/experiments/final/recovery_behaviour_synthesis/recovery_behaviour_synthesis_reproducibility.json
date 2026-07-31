@@ -1,0 +1,53 @@
+{
+  "calibration_runs": 0,
+  "checkpoints_read": 0,
+  "claim_count": 14,
+  "deterministic_reconstruction": true,
+  "held_out_observations": 0,
+  "historical_evidence_rewritten": false,
+  "network_calls": 0,
+  "programme_identity": "084dd8495ec29717a94cc2d6d5427a78f377d82989abf2d119547fb1db376260",
+  "result_checksums": {
+    "recovery_behaviour_synthesis_claim_crosswalk.csv": "84dde99575fd99931d36bddf6f8bd30e97e685adbf83c3ac9ef877fafacb5cb8",
+    "recovery_behaviour_synthesis_decision.json": "9e913eea00aa0b59a7f2d08785aaadf64e251dfe67f6710df2a2cc37cd4b545d",
+    "recovery_behaviour_synthesis_evidence_matrix.csv": "1968710a2f394c9d3652cabe86be40bff52c9cce092c28233d128ab2a6e7a87b",
+    "recovery_behaviour_synthesis_sources.csv": "825640e51bbda151b73b2ec2ee43a07fe4bd08fd9b50337c49831f6045d5d98a",
+    "recovery_behaviour_synthesis_specification.json": "2e79aaeed1271725a7107faa36af03399c5560313d5bfd6960b9992882970001"
+  },
+  "runtime_adopted": false,
+  "runtime_changes": 0,
+  "scenario_rankings": 0,
+  "schema_version": 1,
+  "simulations_executed": 0,
+  "source_count": 12,
+  "source_decision_checksums": {
+    "confidence_partial_identification": "a42ae42f3cb55ac215e3d76d373d8be1c4f45656f32669d69a5e98bfa075e7ae",
+    "confidence_scenarios": "b66124cffea3177f5343a91e3529afde29bdf143e189ec358ddf8c5ee198aa4d",
+    "confidence_structural_factorial": "f9ac6758dcff3597f2541c3ac68f28cb23fe66c1072b025fabf41b141443f8b9",
+    "constrained_eth_recovery": "b366f83fe8d217555aa7f56c8f924ad69d55e15be6f0b0a9713be364121103f6",
+    "experiment_a": "cf720d855adc62c5270042f9d2cb85338ef14d7d80a2aa8cb70f7d0dc7b9f614",
+    "experiment_b": "dc669354d036060ce9477fdca4a863877af3a88ead73a9130d804c1a66b3add6",
+    "experiment_c": "9aa54888c6592859944f7ed5fa3e3b99fecaf29bfcf5518b566d8cdb24489cef",
+    "experiment_d": "ca6927dfadb88d22c4e7d8e5cdede644b3486ccddf53c1f4a6b690e179ba51f2",
+    "experiment_e": "a9745d751f77b07ec3d44eb1c54449ca6a15f71340ab23af9b9e1ac750b62776",
+    "final_programme": "96938611e4ca5fbe169fdcd4c1c9e2b49482a10851edba1a3f319c34d0cfa1c6",
+    "stage1_dai_mechanism": "d86625e268c7e8b8abcb6d37e48f87c3c01578c8a3c09024a57da93978614547",
+    "unbounded_eth_recovery": "2124186a748617044664942d68d56b740df3b112d84b6889f44c78b80727b59f"
+  },
+  "source_identities": {
+    "confidence_partial_identification": "39d01a3dfa07053dbe31c8189d88ab5f5fdfaa8003d3ddb28606179fd8413e6d",
+    "confidence_scenarios": "d455306fd7b7553f113099b6d51f962939d8b4793439a02c4638c646a63b25da",
+    "confidence_structural_factorial": "4558b97de3c092b8cec70b9117407333527f517559b7126fa0428c5e9059ad00",
+    "constrained_eth_recovery": "6cfbd19384fc95fe8b06de74704d0b2a76638722b100242e0bc87a9ee3e05acc",
+    "experiment_a": "a9d7c3fa5dc5da9bcf61314a57501ea5a8be506e305eee6f45afaae3131600bb",
+    "experiment_b": "e02c035162f8178c96d2cae71d0a581ce813ab33526854bd5810e8e2810ead83",
+    "experiment_c": "cb6d00877c54011cc49714bdfe23fad83140fef001568ea9b43d355811c9129b",
+    "experiment_d": "b324c31be7ef6dd7f61e504709b2086b0e88ce181c177f25dcaad182095c17e3",
+    "experiment_e": "67ec5a1e03492608c7f847861f7dbd506d2a526dbf4107298241b26c855eb0f8",
+    "final_programme": "084dd8495ec29717a94cc2d6d5427a78f377d82989abf2d119547fb1db376260",
+    "stage1_dai_mechanism": "stage1-market-and-recovery-gate",
+    "unbounded_eth_recovery": "68afcef1166bb6b13813d0e481ce7bddff7605c0ac7326bf8b9d1400eacff20b"
+  },
+  "source_registry_sha256": "825640e51bbda151b73b2ec2ee43a07fe4bd08fd9b50337c49831f6045d5d98a",
+  "synthesis_identity": "06f56e77ad56416483b2c010f0e63375b664baeff1830ec6306e37858c5920cb"
+}

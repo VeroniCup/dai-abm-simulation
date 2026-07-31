@@ -1,0 +1,28 @@
+{
+  "S1_recovery_channel": "conditionally_operational",
+  "S2_execution_conditioning": "supported",
+  "S2_generalisability_qualifier": "context_specific",
+  "S3_behavioural_stabilisation": "scenario_dependent_not_identified",
+  "S4_backlog_gate": "mechanism_present_peg_effect_unresolved",
+  "S5_solvency_peg_decoupling": "strongly_supported",
+  "checkpoints_read": 0,
+  "confidence_scenario_ranked": false,
+  "confidence_scenario_selected": null,
+  "held_out_observations": 0,
+  "next_stage": "pre_registered_robustness_and_final_validation_without_retuning",
+  "overall_h4_classification": "H4_recovery_conditionally_supported",
+  "principal_limitations": [
+    "The synthesis organises known registered findings and creates no new cross-experiment causal contrast.",
+    "Source populations, shocks, seeds and confidence activation differ and are not statistically pooled.",
+    "Persistent-confidence parameters are not empirically identified.",
+    "The causal backlog-to-peg gate effect is not cleanly isolated.",
+    "Bad-debt evidence is limited by close-factor-one accounting."
+  ],
+  "rq3_answer": "Collateral recovery can rescue unresolved vaults and reduce backlog, but the channel disappears after liquidation closure. Execution capacity changes the rescue window. Behavioural assumptions can alter peg recovery under transparent scenarios, but are not empirically identified. Across the Stage 1-only final programme, solvency and liquidation-timing changes generally remain distinct from sustained DAI peg recovery.",
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "scientific_status": "registered_evidence_synthesis",
+  "simulations_executed": 0,
+  "synthesis_identity": "06f56e77ad56416483b2c010f0e63375b664baeff1830ec6306e37858c5920cb",
+  "usdc_svb_used": false
+}

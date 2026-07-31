@@ -240,6 +240,7 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
         "tests/experiments/final/test_shared_keeper_capacity.py": 59,
         "tests/experiments/final/test_final_oracle_delay.py": 38,
         "tests/experiments/final/test_programme.py": 9,
+        "tests/experiments/final/test_recovery_behaviour_synthesis.py": 40,
         "tests/validation/test_confidence_scenarios.py": 9,
         "tests/validation/test_integrated_eth.py": 20,
         "tests/validation/test_multicollateral.py": 40,
