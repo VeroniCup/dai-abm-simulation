@@ -1,5 +1,5 @@
 {
-  "artefact_count": 51,
+  "artefact_count": 59,
   "artefacts": [
     {
       "classification": "scenario_defined_experimental_design",
@@ -210,6 +210,62 @@
       "runtime_adopted": false,
       "sha256": "e6da0af839c53ddffb6eeaea596174d26499afeb55ca0d1910be49c679cd740d",
       "size_bytes": 82029
+    },
+    {
+      "classification": "pre_registered_final_shared_keeper_capacity_experiment",
+      "path": "data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_benchmark.json",
+      "runtime_adopted": false,
+      "sha256": "45c52037436bc1b7995ca8bd77e59ec18d131cc753ac7a7aef3dda4b9d80a0bd",
+      "size_bytes": 1152
+    },
+    {
+      "classification": "pre_registered_final_shared_keeper_capacity_experiment",
+      "path": "data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_cell_summary.csv",
+      "runtime_adopted": false,
+      "sha256": "c5db3bbfc059ff4c32bdaaa1196e55fb7492a23c749167893f122133b1831f0f",
+      "size_bytes": 76087
+    },
+    {
+      "classification": "pre_registered_final_shared_keeper_capacity_experiment",
+      "path": "data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_collateral_summary.csv",
+      "runtime_adopted": false,
+      "sha256": "d49e936549cce21a6f1b032da7a0a0f6c9565b0c214e708dacfc83f130a2578d",
+      "size_bytes": 167336
+    },
+    {
+      "classification": "pre_registered_final_shared_keeper_capacity_experiment",
+      "path": "data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_contrasts.csv",
+      "runtime_adopted": false,
+      "sha256": "f6ea581d214d19f6982d57e3cd547904163781d2d28a1fa57ebed5c0879aec72",
+      "size_bytes": 242657
+    },
+    {
+      "classification": "pre_registered_final_shared_keeper_capacity_experiment",
+      "path": "data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_decision.json",
+      "runtime_adopted": false,
+      "sha256": "ca6927dfadb88d22c4e7d8e5cdede644b3486ccddf53c1f4a6b690e179ba51f2",
+      "size_bytes": 11997
+    },
+    {
+      "classification": "pre_registered_final_shared_keeper_capacity_experiment",
+      "path": "data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_registry.csv",
+      "runtime_adopted": false,
+      "sha256": "f8642ce774ea83c11e1cbe7a6d8d7c47a566d8dbd26f3bc8809863e44cdd2295",
+      "size_bytes": 2991
+    },
+    {
+      "classification": "pre_registered_final_shared_keeper_capacity_experiment",
+      "path": "data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_reproducibility.json",
+      "runtime_adopted": false,
+      "sha256": "a62b7e301f1a91859835de3d4679a2a3eec5bb78d0eaee02c1a43fccfa130ecc",
+      "size_bytes": 4887
+    },
+    {
+      "classification": "pre_registered_final_shared_keeper_capacity_experiment",
+      "path": "data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_specification.json",
+      "runtime_adopted": false,
+      "sha256": "10d7bd2062d6d52b03941c90558dded45954fb8ffbf1a501dc0dd05e4f2b28e0",
+      "size_bytes": 14901
     },
     {
       "classification": "pre_registered_final_stable_collateral_tradeoff_experiment",

@@ -237,6 +237,7 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
         "tests/experiments/final/test_correlated_stress.py": 65,
         "tests/experiments/final/test_idiosyncratic_diversification.py": 39,
         "tests/experiments/final/test_stable_collateral_tradeoff.py": 63,
+        "tests/experiments/final/test_shared_keeper_capacity.py": 59,
         "tests/experiments/final/test_programme.py": 9,
         "tests/validation/test_confidence_scenarios.py": 9,
         "tests/validation/test_integrated_eth.py": 20,

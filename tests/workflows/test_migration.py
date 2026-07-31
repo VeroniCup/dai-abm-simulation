@@ -65,6 +65,7 @@ POST_RESTRUCTURING_WORKFLOWS = {
     "experiments/final/correlated_stress.py",
     "experiments/final/idiosyncratic_diversification.py",
     "experiments/final/stable_collateral_tradeoff.py",
+    "experiments/final/shared_keeper_capacity.py",
     "inputs/validate_integrated_eth.py",
     "inputs/validate_multicollateral.py",
     "market/process_historical_evidence.py",

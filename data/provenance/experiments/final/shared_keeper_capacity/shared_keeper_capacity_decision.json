@@ -1,0 +1,348 @@
+{
+  "D1": {
+    "classification": "not_supported"
+  },
+  "D2": {
+    "anchors": {
+      "empirical_crypto__joint_crypto_high_correlation": {
+        "clear_backlog_families": [
+          "ETH"
+        ],
+        "clear_total_rejection_increase": true,
+        "displaced_families": [
+          "ETH",
+          "WBTC"
+        ],
+        "full_rule": true,
+        "pairwise_attribution": "not_identifiable",
+        "partial_rule": true,
+        "rejecting_families": [
+          "ETH",
+          "WBTC"
+        ]
+      },
+      "stable_heavy__joint_crypto_stable_stress": {
+        "clear_backlog_families": [],
+        "clear_total_rejection_increase": false,
+        "displaced_families": [],
+        "full_rule": false,
+        "pairwise_attribution": "not_identifiable",
+        "partial_rule": false,
+        "rejecting_families": []
+      },
+      "stable_supported__joint_crypto_stable_stress": {
+        "clear_backlog_families": [],
+        "clear_total_rejection_increase": false,
+        "displaced_families": [
+          "ETH"
+        ],
+        "full_rule": false,
+        "pairwise_attribution": "not_identifiable",
+        "partial_rule": true,
+        "rejecting_families": [
+          "ETH"
+        ]
+      }
+    },
+    "classification": "shared_capacity_transmission_mixed"
+  },
+  "D3": {
+    "anchors": {
+      "empirical_crypto__joint_crypto_high_correlation": {
+        "clear_adverse_count": 0,
+        "clear_worsening_at_low_capacity_count": 0,
+        "metrics": {
+          "below_peg_burden": {
+            "ci95_lower": 0.0,
+            "ci95_upper": 0.0,
+            "mean_relief": 0.0,
+            "operationality": "operational"
+          },
+          "mean_absolute_peg_deviation": {
+            "ci95_lower": 0.0,
+            "ci95_upper": 0.0,
+            "mean_relief": 0.0,
+            "operationality": "operational"
+          },
+          "minimum_dai_price": {
+            "ci95_lower": 0.0,
+            "ci95_upper": 0.0,
+            "mean_relief": 0.0,
+            "operationality": "operational"
+          },
+          "recovery_probability_720h": {
+            "ci95_lower": 0.0,
+            "ci95_upper": 0.0,
+            "mean_relief": 0.0,
+            "operationality": "degenerate"
+          },
+          "restricted_mean_recovery_time": {
+            "ci95_lower": 0.0,
+            "ci95_upper": 0.0,
+            "mean_relief": 0.0,
+            "operationality": "operational"
+          }
+        },
+        "operational_count": 4,
+        "peg_friction_rule": false
+      },
+      "stable_heavy__joint_crypto_stable_stress": {
+        "clear_adverse_count": 0,
+        "clear_worsening_at_low_capacity_count": 0,
+        "metrics": {
+          "below_peg_burden": {
+            "ci95_lower": 0.0,
+            "ci95_upper": 0.0,
+            "mean_relief": 0.0,
+            "operationality": "operational"
+          },
+          "mean_absolute_peg_deviation": {
+            "ci95_lower": 0.0,
+            "ci95_upper": 0.0,
+            "mean_relief": 0.0,
+            "operationality": "operational"
+          },
+          "minimum_dai_price": {
+            "ci95_lower": 0.0,
+            "ci95_upper": 0.0,
+            "mean_relief": 0.0,
+            "operationality": "operational"
+          },
+          "recovery_probability_720h": {
+            "ci95_lower": 0.0,
+            "ci95_upper": 0.0,
+            "mean_relief": 0.0,
+            "operationality": "degenerate"
+          },
+          "restricted_mean_recovery_time": {
+            "ci95_lower": 0.0,
+            "ci95_upper": 0.0,
+            "mean_relief": 0.0,
+            "operationality": "operational"
+          }
+        },
+        "operational_count": 4,
+        "peg_friction_rule": false
+      },
+      "stable_supported__joint_crypto_stable_stress": {
+        "clear_adverse_count": 0,
+        "clear_worsening_at_low_capacity_count": 0,
+        "metrics": {
+          "below_peg_burden": {
+            "ci95_lower": 0.0,
+            "ci95_upper": 0.0,
+            "mean_relief": 0.0,
+            "operationality": "operational"
+          },
+          "mean_absolute_peg_deviation": {
+            "ci95_lower": 0.0,
+            "ci95_upper": 0.0,
+            "mean_relief": 0.0,
+            "operationality": "operational"
+          },
+          "minimum_dai_price": {
+            "ci95_lower": 0.0,
+            "ci95_upper": 0.0,
+            "mean_relief": 0.0,
+            "operationality": "operational"
+          },
+          "recovery_probability_720h": {
+            "ci95_lower": 0.0,
+            "ci95_upper": 0.0,
+            "mean_relief": 0.0,
+            "operationality": "degenerate"
+          },
+          "restricted_mean_recovery_time": {
+            "ci95_lower": 0.0,
+            "ci95_upper": 0.0,
+            "mean_relief": 0.0,
+            "operationality": "operational"
+          }
+        },
+        "operational_count": 4,
+        "peg_friction_rule": false
+      }
+    },
+    "classification": "peg_unchanged"
+  },
+  "anchor_relief_statuses": {
+    "empirical_crypto__joint_crypto_high_correlation": {
+      "adverse_primary_count": 0,
+      "capacity_rejections_nonincreasing": true,
+      "classification": "capacity_relief_partial",
+      "clear_primary_count": 1,
+      "monotonic_or_threshold_count": 1,
+      "operational_primary_count": 4,
+      "primary_metrics": {
+        "backlog_area_share": {
+          "ci95_lower": 4.646400744309667e-06,
+          "ci95_upper": 0.0009944950027549262,
+          "low_to_high_mean_relief": 0.000499570701749618,
+          "monotonicity": "threshold_relief",
+          "operationality": "operational"
+        },
+        "liquidation_completion_ratio": {
+          "ci95_lower": -5.072010910286185e-05,
+          "ci95_upper": 0.0002572850928075681,
+          "low_to_high_mean_relief": 0.00010328249185235314,
+          "monotonicity": "no_capacity_effect",
+          "operationality": "operational"
+        },
+        "maximum_unresolved_tab_share": {
+          "ci95_lower": -4.733265010366923e-07,
+          "ci95_upper": 2.3654498854477533e-06,
+          "low_to_high_mean_relief": 9.460616922055305e-07,
+          "monotonicity": "no_capacity_effect",
+          "operationality": "operational"
+        },
+        "terminal_unresolved_tab_share": {
+          "ci95_lower": 0.0,
+          "ci95_upper": 0.0,
+          "low_to_high_mean_relief": 0.0,
+          "monotonicity": "no_capacity_effect",
+          "operationality": "operational"
+        }
+      }
+    },
+    "stable_heavy__joint_crypto_stable_stress": {
+      "adverse_primary_count": 0,
+      "capacity_rejections_nonincreasing": true,
+      "classification": "capacity_relief_not_supported",
+      "clear_primary_count": 0,
+      "monotonic_or_threshold_count": 0,
+      "operational_primary_count": 4,
+      "primary_metrics": {
+        "backlog_area_share": {
+          "ci95_lower": 0.0,
+          "ci95_upper": 0.0,
+          "low_to_high_mean_relief": 0.0,
+          "monotonicity": "no_capacity_effect",
+          "operationality": "operational"
+        },
+        "liquidation_completion_ratio": {
+          "ci95_lower": 0.0,
+          "ci95_upper": 0.0,
+          "low_to_high_mean_relief": 0.0,
+          "monotonicity": "no_capacity_effect",
+          "operationality": "operational"
+        },
+        "maximum_unresolved_tab_share": {
+          "ci95_lower": 0.0,
+          "ci95_upper": 0.0,
+          "low_to_high_mean_relief": 0.0,
+          "monotonicity": "no_capacity_effect",
+          "operationality": "operational"
+        },
+        "terminal_unresolved_tab_share": {
+          "ci95_lower": 0.0,
+          "ci95_upper": 0.0,
+          "low_to_high_mean_relief": 0.0,
+          "monotonicity": "no_capacity_effect",
+          "operationality": "operational"
+        }
+      }
+    },
+    "stable_supported__joint_crypto_stable_stress": {
+      "adverse_primary_count": 0,
+      "capacity_rejections_nonincreasing": true,
+      "classification": "capacity_relief_not_supported",
+      "clear_primary_count": 0,
+      "monotonic_or_threshold_count": 0,
+      "operational_primary_count": 4,
+      "primary_metrics": {
+        "backlog_area_share": {
+          "ci95_lower": -2.1531671781179446e-05,
+          "ci95_upper": 7.68550897345314e-05,
+          "low_to_high_mean_relief": 2.7661708976675983e-05,
+          "monotonicity": "no_capacity_effect",
+          "operationality": "operational"
+        },
+        "liquidation_completion_ratio": {
+          "ci95_lower": 0.0,
+          "ci95_upper": 0.0,
+          "low_to_high_mean_relief": 0.0,
+          "monotonicity": "no_capacity_effect",
+          "operationality": "operational"
+        },
+        "maximum_unresolved_tab_share": {
+          "ci95_lower": 0.0,
+          "ci95_upper": 0.0,
+          "low_to_high_mean_relief": 0.0,
+          "monotonicity": "no_capacity_effect",
+          "operationality": "operational"
+        },
+        "terminal_unresolved_tab_share": {
+          "ci95_lower": 0.0,
+          "ci95_upper": 0.0,
+          "low_to_high_mean_relief": 0.0,
+          "monotonicity": "no_capacity_effect",
+          "operationality": "operational"
+        }
+      }
+    }
+  },
+  "bad_debt_evaluation_boundary": {
+    "interpretation": "H1 bad-debt component excluded where degenerate under the retained close-factor-one accounting boundary.",
+    "positive_realised_bad_debt": "degenerate",
+    "realised_bad_debt_share": "degenerate",
+    "terminal_active_bad_debt_share": "degenerate"
+  },
+  "capacity_selected": false,
+  "cross_anchor_sensitivity": {
+    "backlog_area_share": "crypto_anchor_more_sensitive",
+    "liquidation_completion_ratio": "crypto_anchor_more_sensitive",
+    "maximum_unresolved_tab_share": "crypto_anchor_more_sensitive",
+    "overall": "metric_specific",
+    "terminal_unresolved_tab_share": "similar_sensitivity"
+  },
+  "experiment_e_executed": false,
+  "experiment_id": "D_shared_keeper_capacity",
+  "experiment_identity": "b324c31be7ef6dd7f61e504709b2086b0e88ce181c177f25dcaad182095c17e3",
+  "metric_operationality": {
+    "all_hour_binding_share": "operational",
+    "backlog_area_share": "operational",
+    "below_peg_burden": "operational",
+    "capacity_binding_hours": "operational",
+    "capacity_rejected_opportunity_count": "operational",
+    "capacity_rejection_share": "operational",
+    "debt_weighted_liquidated_vault_share": "operational",
+    "hours_with_positive_unresolved_backlog": "operational",
+    "liquidated_debt_share": "operational",
+    "liquidation_completion_ratio": "operational",
+    "maximum_capacity_utilisation": "operational",
+    "maximum_unresolved_tab_share": "operational",
+    "mean_absolute_peg_deviation": "operational",
+    "mean_capacity_utilisation": "operational",
+    "mean_positive_demand_utilisation": "operational",
+    "minimum_dai_price": "operational",
+    "positive_demand_binding_share": "operational",
+    "positive_realised_bad_debt": "degenerate",
+    "realised_bad_debt_share": "degenerate",
+    "recovery_probability_720h": "degenerate",
+    "restricted_mean_recovery_time": "operational",
+    "successful_closure_count": "operational",
+    "terminal_active_bad_debt_share": "degenerate",
+    "terminal_unresolved_tab_share": "operational",
+    "unused_capacity_positive_demand_hours": "operational"
+  },
+  "next_authorised_stage": "result_blind_oracle_delay_freeze_before_experiment_e",
+  "overall_h1_classification": "H1_no_clear_shared_capacity_effect",
+  "peg_solvency_relationship": "neither_materially_changes",
+  "preferred_capacity": null,
+  "programme_identity": "084dd8495ec29717a94cc2d6d5427a78f377d82989abf2d119547fb1db376260",
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "validity_audit": {
+    "accounting_failure_count": 0,
+    "capacity_failure_count": 0,
+    "capacity_selected": false,
+    "checkpoint_complete": true,
+    "collateral_rows": 3456,
+    "held_out_data_used": false,
+    "numerical_failure_count": 0,
+    "passed": true,
+    "path_failure_count": 0,
+    "system_rows": 1152,
+    "usdc_svb_used": false
+  }
+}

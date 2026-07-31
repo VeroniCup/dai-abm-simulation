@@ -55,11 +55,16 @@ Completed in the current end-stage pass:
 - final Experiment C, stable-collateral trade-off: completed from 128
   authoritative checkpoints and 1,536 simulations under experiment identity
   `cb6d00877c54011cc49714bdfe23fad83140fef001568ea9b43d355811c9129b`,
-  without selecting a portfolio or shock.
+  without selecting a portfolio or shock; and
+- final Experiment D, shared keeper capacity: completed from 128 authoritative
+  checkpoints and 1,152 simulations under experiment identity
+  `b324c31be7ef6dd7f61e504709b2086b0e88ce181c177f25dcaad182095c17e3`,
+  without selecting a capacity.
 
-Stages 1–5 and final Experiments A–C are complete. Experiment D, shared
-keeper capacity, is the next authorised pass and remains unexecuted. No
-portfolio or shock has been selected from validation or experiment outcomes.
+Stages 1–5 and final Experiments A–D are complete. Experiment E remains
+unexecuted and blocked pending a result-independent oracle-delay freeze. No
+portfolio, shock or capacity has been selected from validation or experiment
+outcomes.
 
 ---
 
@@ -866,8 +871,8 @@ ready with caveats rather than fully empirical.
 
 ## Stage 6 — Final multi-collateral experiments
 
-**Status:** in progress. Experiments A–C are complete; Experiment D is the
-next authorised pass; Experiments D–E remain unexecuted.
+**Status:** in progress. Experiments A–D are complete; Experiment E remains
+unexecuted and blocked pending the result-independent oracle-delay freeze.
 
 Use a hierarchical design rather than one enormous full factorial.
 
@@ -989,15 +994,39 @@ or selected. Experiments A and B remain unchanged. See the
 
 ### Experiment D — Shared keeper capacity
 
-Pre-registered simultaneous-shock cells crossed with:
+Completed simultaneous-shock cells crossed with:
 
-- low capacity;
-- central capacity;
-- high capacity.
+- low capacity: 14;
+- central capacity: 26;
+- high capacity: 45.
 
 Question:
 
 - does shared keeper capacity transmit stress across collateral pools?
+
+Result:
+
+- 128 authoritative checkpoints and 1,152 simulations completed;
+- the empirical-crypto anchor has `capacity_relief_partial`;
+- stable supported and stable heavy have
+  `capacity_relief_not_supported`;
+- D1 is `not_supported`;
+- D2 is `shared_capacity_transmission_mixed`;
+- D3 is `peg_unchanged`;
+- the overall classification is
+  `H1_no_clear_shared_capacity_effect`; and
+- the peg–solvency relationship is
+  `neither_materially_changes`.
+
+The empirical-crypto low-capacity treatment produces a small threshold
+backlog-area effect and clear rejection increase, but the other primary
+completion metrics and all registered peg outcomes are unchanged. Realised
+bad-debt metrics remain degenerate under close-factor-one accounting. The
+capacity coordinates remain partially identified sensitivity values; no
+capacity was ranked, selected or runtime adopted. The transmission result is
+conditional on the frozen expected-profit, debt-at-risk and vault-ID ranking.
+See the
+[Experiment D report](docs/experiments/final/shared_keeper_capacity.md).
 
 ### Robustness layer
 
@@ -1311,15 +1340,13 @@ Do not:
 
 The next authorised pass is:
 
-> **Execute Experiment D: shared keeper capacity using the frozen master
-> programme.**
+> **Complete the result-blind oracle-delay freeze required before Experiment
+> E.**
 
-The final experiment registry must use the frozen five portfolios and seven
-shocks without result-based screening. The central treatment remains
-system-wide capacity 26 with `direct_cost_only`; 14 and 45 are the registered
-Experiment D treatments. Experiments A–C are complete; Experiments D–E have
-not been executed, and Experiment E remains blocked pending the oracle-delay
-freeze.
+The final experiment registry continues to use the frozen five portfolios and
+seven shocks without result-based screening. Experiments A–D are complete.
+Experiment E has not been executed and remains blocked pending the
+oracle-delay freeze.
 Population, positive-hurdle and oracle-delay cases remain separate
 robustness dimensions. The remaining final experiments, population robustness,
 oracle-delay robustness, held-out validation, USDC/SVB validation and final

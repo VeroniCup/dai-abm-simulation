@@ -1,0 +1,417 @@
+{
+  "anchors": [
+    {
+      "portfolio": "empirical_crypto",
+      "shock": "joint_crypto_high_correlation"
+    },
+    {
+      "portfolio": "stable_supported",
+      "shock": "joint_crypto_stable_stress"
+    },
+    {
+      "portfolio": "stable_heavy",
+      "shock": "joint_crypto_stable_stress"
+    }
+  ],
+  "bad_debt_metrics": [
+    "realised_bad_debt_share",
+    "positive_realised_bad_debt",
+    "terminal_active_bad_debt_share"
+  ],
+  "capacities": [
+    {
+      "identification": "partial",
+      "profile": "shared_keeper_capacity_low",
+      "units": "liquidation_opportunities_per_hour",
+      "value": 14
+    },
+    {
+      "identification": "partial",
+      "profile": "shared_keeper_capacity_central",
+      "units": "liquidation_opportunities_per_hour",
+      "value": 26
+    },
+    {
+      "identification": "partial",
+      "profile": "shared_keeper_capacity_high",
+      "units": "liquidation_opportunities_per_hour",
+      "value": 45
+    }
+  ],
+  "capacity_selection_permitted": false,
+  "cell_order": [
+    "joint_crypto_high_correlation__empirical_crypto__shared_keeper_capacity_low",
+    "joint_crypto_high_correlation__empirical_crypto__shared_keeper_capacity_central",
+    "joint_crypto_high_correlation__empirical_crypto__shared_keeper_capacity_high",
+    "joint_crypto_stable_stress__stable_supported__shared_keeper_capacity_low",
+    "joint_crypto_stable_stress__stable_supported__shared_keeper_capacity_central",
+    "joint_crypto_stable_stress__stable_supported__shared_keeper_capacity_high",
+    "joint_crypto_stable_stress__stable_heavy__shared_keeper_capacity_low",
+    "joint_crypto_stable_stress__stable_heavy__shared_keeper_capacity_central",
+    "joint_crypto_stable_stress__stable_heavy__shared_keeper_capacity_high"
+  ],
+  "cells": [
+    {
+      "capacity": 14,
+      "capacity_profile": "shared_keeper_capacity_low",
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_high_correlation__empirical_crypto__shared_keeper_capacity_low",
+      "master_row_checksum": "d96ecba966fc94b8bb2584a63af3c7ba95f654629f5c6c2af703a36c2b0bb870",
+      "oracle_delay": 0,
+      "order": 1,
+      "portfolio": "empirical_crypto",
+      "replication_count": 128,
+      "shock": "joint_crypto_high_correlation"
+    },
+    {
+      "capacity": 26,
+      "capacity_profile": "shared_keeper_capacity_central",
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_high_correlation__empirical_crypto__shared_keeper_capacity_central",
+      "master_row_checksum": "764da77417a403dab31c2389e0648440d3d805e2ee08023fde2a162934087734",
+      "oracle_delay": 0,
+      "order": 2,
+      "portfolio": "empirical_crypto",
+      "replication_count": 128,
+      "shock": "joint_crypto_high_correlation"
+    },
+    {
+      "capacity": 45,
+      "capacity_profile": "shared_keeper_capacity_high",
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_high_correlation__empirical_crypto__shared_keeper_capacity_high",
+      "master_row_checksum": "b1ba98d03359d1adce0187211462ae6caaf29c9667c9f1ca6bf6c15d2e191c0f",
+      "oracle_delay": 0,
+      "order": 3,
+      "portfolio": "empirical_crypto",
+      "replication_count": 128,
+      "shock": "joint_crypto_high_correlation"
+    },
+    {
+      "capacity": 14,
+      "capacity_profile": "shared_keeper_capacity_low",
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_stable_stress__stable_supported__shared_keeper_capacity_low",
+      "master_row_checksum": "cfbeeb8252b5ea953f3808d2db52a7ea2f0b995971c72b872d5c69f7cfba2602",
+      "oracle_delay": 0,
+      "order": 4,
+      "portfolio": "stable_supported",
+      "replication_count": 128,
+      "shock": "joint_crypto_stable_stress"
+    },
+    {
+      "capacity": 26,
+      "capacity_profile": "shared_keeper_capacity_central",
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_stable_stress__stable_supported__shared_keeper_capacity_central",
+      "master_row_checksum": "daf856fcd2180197a22a31b406a893390084316612092ae0606debfcb4e010c7",
+      "oracle_delay": 0,
+      "order": 5,
+      "portfolio": "stable_supported",
+      "replication_count": 128,
+      "shock": "joint_crypto_stable_stress"
+    },
+    {
+      "capacity": 45,
+      "capacity_profile": "shared_keeper_capacity_high",
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_stable_stress__stable_supported__shared_keeper_capacity_high",
+      "master_row_checksum": "e7ab6e7e6ca7be2c3467d4764d797be209ffd531c2256a13a11aeb2f906fc2c9",
+      "oracle_delay": 0,
+      "order": 6,
+      "portfolio": "stable_supported",
+      "replication_count": 128,
+      "shock": "joint_crypto_stable_stress"
+    },
+    {
+      "capacity": 14,
+      "capacity_profile": "shared_keeper_capacity_low",
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_stable_stress__stable_heavy__shared_keeper_capacity_low",
+      "master_row_checksum": "cea91dab3be14741ba3dfb2f273a81fb916a9a3a7076d4521b613bbb161bf2e5",
+      "oracle_delay": 0,
+      "order": 7,
+      "portfolio": "stable_heavy",
+      "replication_count": 128,
+      "shock": "joint_crypto_stable_stress"
+    },
+    {
+      "capacity": 26,
+      "capacity_profile": "shared_keeper_capacity_central",
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_stable_stress__stable_heavy__shared_keeper_capacity_central",
+      "master_row_checksum": "9d409ee598738144ebab8465709d5bae3b427f272fbef841d7d4a4d8cec86bbd",
+      "oracle_delay": 0,
+      "order": 8,
+      "portfolio": "stable_heavy",
+      "replication_count": 128,
+      "shock": "joint_crypto_stable_stress"
+    },
+    {
+      "capacity": 45,
+      "capacity_profile": "shared_keeper_capacity_high",
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_stable_stress__stable_heavy__shared_keeper_capacity_high",
+      "master_row_checksum": "e1fa955384d99d03c001157864810efece3b09113c37d29834bce6cd0bfa76a2",
+      "oracle_delay": 0,
+      "order": 9,
+      "portfolio": "stable_heavy",
+      "replication_count": 128,
+      "shock": "joint_crypto_stable_stress"
+    }
+  ],
+  "collateral_metrics": [
+    "initial_debt_exposure",
+    "eligible_liquidation_tab",
+    "candidate_count",
+    "profitability_filtered_count",
+    "selected_count",
+    "rejected_count",
+    "successful_closure_count",
+    "liquidated_debt",
+    "terminal_unresolved_tab",
+    "backlog_area",
+    "maximum_backlog",
+    "terminal_active_bad_debt",
+    "realised_bad_debt",
+    "keeper_profit_proxy",
+    "share_system_capacity_consumed",
+    "share_system_rejections",
+    "contribution_to_system_backlog",
+    "exposure_normalised_backlog",
+    "exposure_normalised_unresolved_tab",
+    "displaced_candidates",
+    "cross_family_displacement_hours"
+  ],
+  "common_settings": {
+    "confidence": "stage1_only",
+    "hurdle": "direct_cost_only",
+    "max_close_factor": 1.0,
+    "oracle_delay": 0,
+    "risk_cost_rate": 0.0
+  },
+  "decision_rules": {
+    "D1": [
+      "supported",
+      "partially_supported",
+      "not_supported",
+      "not_operational",
+      "invalid"
+    ],
+    "D2": [
+      "shared_capacity_transmission_present",
+      "shared_capacity_transmission_mixed",
+      "shared_capacity_transmission_not_present",
+      "shared_capacity_not_binding",
+      "shared_capacity_transmission_invalid"
+    ],
+    "D3": [
+      "peg_friction_effect_present",
+      "peg_friction_effect_partial",
+      "peg_unchanged",
+      "peg_response_mixed",
+      "peg_not_operational",
+      "peg_response_invalid"
+    ],
+    "anchor_relief": {
+      "adverse_primary_metrics_permitted": 0,
+      "rejections_must_not_increase_with_capacity": true,
+      "required_clear_primary_metrics": 2,
+      "required_monotonic_or_threshold_metrics": 2
+    },
+    "monotonicity": {
+      "capacity_effect_adverse": "The low-to-high interval is clearly adverse.",
+      "invalid": "A registered validity gate fails.",
+      "monotonic_relief": "Both adjacent relief estimates are non-negative, the low-to-high interval excludes zero beneficially, and neither adjacent interval is clearly adverse.",
+      "no_capacity_effect": "The low-to-high interval includes zero without a systematic adjacent pattern.",
+      "non_monotonic_relief": "Low-to-high relief is beneficial but one adjacent interval is clearly adverse.",
+      "not_operational": "The metric is unavailable or degenerate.",
+      "threshold_relief": "Low-to-high relief is clear, one adjacent interval crosses zero, and neither adjacent interval is clearly adverse."
+    },
+    "overall_h1": [
+      "H1_shared_capacity_supported",
+      "H1_shared_capacity_partially_supported",
+      "H1_shared_capacity_backlog_effect_only",
+      "H1_no_clear_shared_capacity_effect",
+      "H1_shared_capacity_not_operational",
+      "H1_shared_capacity_experiment_invalid"
+    ],
+    "peg_solvency": [
+      "solvency_and_peg_improve_with_capacity",
+      "solvency_improves_peg_unchanged",
+      "peg_improves_solvency_unchanged",
+      "solvency_and_peg_diverge",
+      "neither_materially_changes",
+      "relationship_mixed",
+      "relationship_invalid"
+    ]
+  },
+  "direction_normalised_relief": true,
+  "experiment_d_parent_commit": "df498045a9e331d7570fef9a4fcc1e783c9f2fee",
+  "experiment_e_executed": false,
+  "experiment_id": "D_shared_keeper_capacity",
+  "experiment_identity": "b324c31be7ef6dd7f61e504709b2086b0e88ce181c177f25dcaad182095c17e3",
+  "family_order": [
+    "ETH",
+    "WBTC",
+    "STABLE"
+  ],
+  "final_validation_data_used": false,
+  "held_out_data_used": false,
+  "horizon": {
+    "post_shock_hours": 720,
+    "pre_shock_hours": 48,
+    "recovery_band": [
+      0.995,
+      1.005
+    ],
+    "recovery_window_hours": 24,
+    "rmst_cap_hours": 720,
+    "total_hours": 768
+  },
+  "hypotheses": [
+    "H1",
+    "H3"
+  ],
+  "materiality_thresholds": {
+    "accounting_tolerance_dai": 1e-05,
+    "backlog_share_scale": 4e-07,
+    "capacity_coordinate_scale": 0.022222222222222223,
+    "contrast_interval_confidence": 0.95,
+    "failure_share_invalid": 0.01,
+    "numerical_tolerance": 1e-10,
+    "positive_demand_hour_scale": 0.001388888888888889
+  },
+  "metric_directions": {
+    "all_hour_binding_share": 1,
+    "backlog_area_share": 1,
+    "below_peg_burden": 1,
+    "capacity_binding_hours": 1,
+    "capacity_rejected_opportunity_count": 1,
+    "capacity_rejection_share": 1,
+    "debt_weighted_liquidated_vault_share": -1,
+    "hours_with_positive_unresolved_backlog": 1,
+    "liquidated_debt_share": -1,
+    "liquidation_completion_ratio": -1,
+    "maximum_capacity_utilisation": 1,
+    "maximum_unresolved_tab_share": 1,
+    "mean_absolute_peg_deviation": 1,
+    "mean_capacity_utilisation": 1,
+    "mean_positive_demand_utilisation": 1,
+    "minimum_dai_price": -1,
+    "positive_demand_binding_share": 1,
+    "positive_realised_bad_debt": 1,
+    "realised_bad_debt_share": 1,
+    "recovery_probability_720h": -1,
+    "restricted_mean_recovery_time": 1,
+    "successful_closure_count": -1,
+    "terminal_active_bad_debt_share": 1,
+    "terminal_unresolved_tab_share": 1,
+    "unused_capacity_positive_demand_hours": 1
+  },
+  "operationality_classes": [
+    "operational",
+    "degenerate",
+    "not_operational",
+    "invalid"
+  ],
+  "peg_metrics": [
+    "below_peg_burden",
+    "mean_absolute_peg_deviation",
+    "minimum_dai_price",
+    "restricted_mean_recovery_time",
+    "recovery_probability_720h"
+  ],
+  "primary_completion_metrics": [
+    "backlog_area_share",
+    "maximum_unresolved_tab_share",
+    "terminal_unresolved_tab_share",
+    "liquidation_completion_ratio"
+  ],
+  "primary_role": "RQ2_H1",
+  "profile": {
+    "identifier": "empirical_integrated_multicollateral",
+    "identity": "d0241808701d0472532c1f7c502ab6637afd60a50082b94bed9ff66f7ec2d53e",
+    "runtime_adopted": false,
+    "sha256": "a2da654cdc9fc053c50f13aacb18e63ce7854bf47d6ad1519352467f6c7986fc",
+    "target_system_collateral_ratio": 3.6089387701260205,
+    "total_debt_dai": 2500000.0,
+    "vault_count": 500
+  },
+  "programme_identity": "084dd8495ec29717a94cc2d6d5427a78f377d82989abf2d119547fb1db376260",
+  "queue_owner": {
+    "collateral_quotas": false,
+    "dynamic_queue_note": "post-binding queue differences are treatment-mediated state outcomes; capacity-neutral inputs and ranking are paired",
+    "pairwise_displacement_identifiable": false,
+    "random_tie_breaking": false,
+    "ranking": [
+      "expected_profit_desc",
+      "debt_at_risk_desc",
+      "vault_id_asc"
+    ],
+    "scope": "one_global_system_queue"
+  },
+  "raw_contrasts": [
+    "capacity_14_minus_26",
+    "capacity_26_minus_45",
+    "capacity_14_minus_45"
+  ],
+  "registry_checksums": {
+    "collateral": "75268fed6b3db5a80a822a80b8629291491cd73ce62b4c3e6cf3975060b4eb6d",
+    "confidence": "d455306fd7b7553f113099b6d51f962939d8b4793439a02c4638c646a63b25da",
+    "keeper": "58c5754ed95dead1ad283a7961fb0588496804a94f58ddb0e196a57601ee1e1b",
+    "portfolio": "76aa03afa352d86be76fbc7e0153981589f50798c52aed7dfad897061b7960b1",
+    "shock": "a98df90e3e743fc22d9f92c38d53cf46a893928d3fe48eda9e609a20aa108581"
+  },
+  "replications": 128,
+  "research_questions": [
+    "RQ2",
+    "RQ4"
+  ],
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "scientific_code_identity": "6620759e268b79dbe71cf0e0a4a2848b6f6ac50272c9338276b3ea08300afae1",
+  "secondary_execution_metrics": [
+    "capacity_rejected_opportunity_count",
+    "capacity_rejection_share",
+    "successful_closure_count",
+    "liquidated_debt_share",
+    "debt_weighted_liquidated_vault_share",
+    "hours_with_positive_unresolved_backlog",
+    "capacity_binding_hours",
+    "mean_capacity_utilisation",
+    "maximum_capacity_utilisation",
+    "mean_positive_demand_utilisation",
+    "positive_demand_binding_share",
+    "all_hour_binding_share",
+    "unused_capacity_positive_demand_hours"
+  ],
+  "secondary_role": "RQ4_H3",
+  "seed_namespace": "final-shared-keeper-capacity-v1",
+  "seed_registry_sha256": "74a6a4b46237bf1b1eecbda0aefef4e4dab6e72da508823dc18e190ce7d169ce",
+  "seed_streams": [
+    "initialisation_key",
+    "market_gas_blocks",
+    "keeper_gas_units",
+    "liquidation_arrivals",
+    "stage1_residual_blocks"
+  ],
+  "simulation_core_identity": "7c1fd91903663779bb30c5b98448b1eac9ab2d426e17e9f6f47fb5db30a5dba4",
+  "stage1_owners": {
+    "above_peg_response": 0.105131,
+    "below_peg_response": 0.199381,
+    "residual_block_sha256": "6f55b51acfc1da23836b3d847153bd4f68e4a38fc33fd967e9d3b795737bf28c",
+    "residual_sequence_sha256": "3fa2319cee9e1749405c0dc477e0f11ef9c31dd83c371b619bd33eda23c37c30"
+  },
+  "substantive_simulations": 1152,
+  "usdc_svb_used": false
+}

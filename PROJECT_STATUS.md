@@ -128,6 +128,22 @@ depeg paths are scenario-defined, and no USDC/SVB or held-out evidence was
 used. Experiments A and B remain unchanged and no runtime default was
 adopted.
 
+The fourth final-programme study,
+[Experiment D — shared keeper capacity](docs/experiments/final/shared_keeper_capacity.md),
+is complete from 128 authoritative checkpoints and 1,152 simulations under
+experiment identity
+`b324c31be7ef6dd7f61e504709b2086b0e88ce181c177f25dcaad182095c17e3`.
+D1 is `not_supported`, D2 is `shared_capacity_transmission_mixed`, D3 is
+`peg_unchanged`, and the overall result is
+`H1_no_clear_shared_capacity_effect`. The empirical-crypto anchor has a
+small threshold backlog-area effect; the stable-supported effect is
+uncertain, and stable-heavy capacity does not bind. The registered
+peg–solvency relationship is `neither_materially_changes`. Realised bad-debt
+metrics remain degenerate under close-factor-one accounting. Capacities 14,
+26 and 45 remain partially identified sensitivity coordinates: no capacity
+was ranked, selected or runtime adopted. Experiments A–C remain unchanged,
+and Experiment E did not run.
+
 The separate
 [experiment-infrastructure maintenance](docs/validation/experiment_infrastructure_maintenance.md)
 is complete. The convenience reconstruction CLI now respects the keyword-only
@@ -214,11 +230,11 @@ review reproduced all of them without changing executable behaviour.
 
 ## Next research work
 
-The next authorised scientific boundary is Experiment D, shared keeper
-capacity. Experiments A–C are complete; Experiments D–E remain unexecuted,
-and Experiment E remains blocked pending a result-independent oracle-delay
-freeze. The stable-impairment component of H3 is complete with partial
-support.
+Experiments A–D are complete. The next authorised scientific boundary is the
+result-independent oracle-delay freeze required before Experiment E.
+Experiment E remains unexecuted and blocked; H4 synthesis remains pending.
+The stable-impairment component of H3 is complete with partial support, while
+Experiment D provides mixed secondary shared-capacity transmission evidence.
 Population-scale robustness, oracle-delay closure and held-out final
 validation, including USDC/SVB, remain outstanding. The five portfolios and
 seven shocks are frozen inputs, not result-based selections. Keeper candidates

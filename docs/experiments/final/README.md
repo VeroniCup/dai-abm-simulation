@@ -11,8 +11,10 @@ and 5,504 planned simulations, each with 128 replications.
 [Experiment B](correlated_stress.md) is also complete from 128 authoritative
 checkpoints and 1,024 simulations.
 [Experiment C](stable_collateral_tradeoff.md) is complete from 128
-authoritative checkpoints and 1,536 simulations. Experiment D is the next
-authorised pass; Experiments D–E remain unexecuted.
+authoritative checkpoints and 1,536 simulations.
+[Experiment D](shared_keeper_capacity.md) is complete from 128 authoritative
+checkpoints and 1,152 simulations. Experiment E remains unexecuted and
+blocked pending the result-independent oracle-delay freeze.
 
 The H4 evidence synthesis is a reporting programme rather than another core
 simulation matrix. It remains pending and contributes no additional cell or
@@ -78,7 +80,7 @@ defined them; they are not additional dissertation hypotheses.
 | Experiment A — idiosyncratic diversification | 8 | 128 | 1,024 | `completed` | RQ4 and H3 under isolated collateral-specific shocks |
 | Experiment B — correlated stress | 8 | 128 | 1,024 | `completed` | RQ4 and H3 across the two registered joint-stress bundles |
 | Experiment C — stable-collateral trade-off | 12 | 128 | 1,536 | `completed` | RQ4 and H3 under stable-proxy depeg and joint stress |
-| Experiment D — shared keeper capacity | 9 | 128 | 1,152 | `preregistered_not_executed` | RQ2 and H1, with cross-collateral implications for RQ4 |
+| Experiment D — shared keeper capacity | 9 | 128 | 1,152 | `completed` | RQ2 and H1, with cross-collateral implications for RQ4 |
 | Experiment E — oracle delay | 6 | 128 | 768 | `preregistered_blocked_pending_oracle_delay_freeze` | RQ2 and H2 |
 | H4 evidence synthesis | 0 | — | 0 | `pending_evidence_synthesis` | RQ3 and H4, using pre-registered evidence rather than a new core matrix |
 | **Total** | **43** |  | **5,504** |  |  |
@@ -114,12 +116,22 @@ The stable family and its depeg paths remain counterfactual, and USDC/SVB was
 not used. The registered peg–solvency relationship is
 `solvency_improves_peg_unchanged`.
 
+Experiment D reports D1 `not_supported`, D2
+`shared_capacity_transmission_mixed`, D3 `peg_unchanged` and overall
+`H1_no_clear_shared_capacity_effect`. Only the empirical-crypto anchor shows
+a clear, small threshold backlog-area effect; the stable-supported effect is
+uncertain and the stable-heavy treatments do not bind. The registered
+peg–solvency relationship is `neither_materially_changes`. Capacities 14, 26
+and 45 remain partially identified sensitivity coordinates: none is ranked,
+selected or runtime adopted.
+
 ## Sequencing and no-retuning rule
 
-The programme is hierarchical. Completion of Experiment C records Experiment
-D as the next authorised pass; it does not authorise Experiment E, the H4
-synthesis, robustness layers or held-out validation. Each later component
-must retain its registered design and receive its own execution authorisation.
+The programme is hierarchical. Completion of Experiment D does not authorise
+Experiment E, the H4 synthesis, robustness layers or held-out validation.
+The next boundary is the result-independent oracle-delay freeze required
+before Experiment E. Each later component must retain its registered design
+and receive its own execution authorisation.
 
 Model mechanisms, parameters, empirical input pools, portfolio definitions,
 shock definitions, keeper settings, confidence scenarios and oracle-delay

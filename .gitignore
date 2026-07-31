@@ -112,6 +112,16 @@ data/provenance/experiments/final/stable_collateral_tradeoff/*
 !data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_decision.json
 !data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_reproducibility.json
 !data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_benchmark.json
+!data/provenance/experiments/final/shared_keeper_capacity/
+data/provenance/experiments/final/shared_keeper_capacity/*
+!data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_specification.json
+!data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_registry.csv
+!data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_cell_summary.csv
+!data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_collateral_summary.csv
+!data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_contrasts.csv
+!data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_decision.json
+!data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_reproducibility.json
+!data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_benchmark.json
 !data/provenance/calibration/
 data/provenance/calibration/*
 !data/provenance/calibration/manifest.json

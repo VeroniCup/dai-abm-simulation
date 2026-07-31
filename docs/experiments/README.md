@@ -37,6 +37,8 @@ destination for the pre-registered
 - [Experiment C — stable-collateral trade-off](final/stable_collateral_tradeoff.md)
   — the completed twelve-cell, 1,536-simulation counterfactual stable-proxy
   experiment.
+- [Experiment D — shared keeper capacity](final/shared_keeper_capacity.md)
+  — the completed nine-cell, 1,152-simulation global-capacity experiment.
 
 Generated detailed experiment outputs use the semantic namespaces
 `outputs/experiments/mechanism/` for controlled mechanism studies and
@@ -49,13 +51,14 @@ and remains operational for regression compatibility. Its five historical
 portfolio names and five historical shock names are not the newly frozen
 final design. The final design has five portfolios and seven shocks registered by the
 [multi-collateral integration validation](../validation/multicollateral_integration.md).
-No final portfolio or shock has been ranked or selected. Its core programme
-contains 43 cells and 5,504 planned simulations. Experiments A–C are
-complete. Experiment A supports idiosyncratic diversification; Experiment B
-finds that the benefit weakens across the registered stress bundles without
-reversing, while Experiment C finds supported crypto buffering but no
-registered stable-depeg severity or exposure gradient. Experiment D is the
-next authorised pass and is `preregistered_not_executed`; Experiment E is
+No final portfolio, shock or capacity has been ranked or selected. Its core
+programme contains 43 cells and 5,504 planned simulations. Experiments A–D
+are complete. Experiment A supports idiosyncratic diversification; Experiment
+B finds that the benefit weakens across the registered stress bundles without
+reversing; Experiment C finds supported crypto buffering but no registered
+stable-depeg severity or exposure gradient; and Experiment D finds one small
+threshold backlog effect, mixed shared-capacity transmission and unchanged
+peg outcomes, yielding `H1_no_clear_shared_capacity_effect`. Experiment E is
 `preregistered_blocked_pending_oracle_delay_freeze`; and the result-independent
 H4 evidence synthesis is `pending_evidence_synthesis`.
 
