@@ -1,0 +1,433 @@
+{
+  "cell_order": [
+    "joint_crypto_high_correlation__empirical_crypto",
+    "joint_crypto_high_correlation__stable_supported",
+    "joint_crypto_high_correlation__stable_heavy",
+    "stable_depeg_moderate__empirical_crypto",
+    "stable_depeg_moderate__stable_supported",
+    "stable_depeg_moderate__stable_heavy",
+    "stable_depeg_severe__empirical_crypto",
+    "stable_depeg_severe__stable_supported",
+    "stable_depeg_severe__stable_heavy",
+    "joint_crypto_stable_stress__empirical_crypto",
+    "joint_crypto_stable_stress__stable_supported",
+    "joint_crypto_stable_stress__stable_heavy"
+  ],
+  "cells": [
+    {
+      "capacity": 26,
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_high_correlation__empirical_crypto",
+      "master_row_checksum": "bf183001addb9989f0a3796f4fa8f131f783ef609c0c78591d9f24ede66f2937",
+      "oracle_delay": 0,
+      "order": 1,
+      "portfolio": "empirical_crypto",
+      "replication_count": 128,
+      "shock": "joint_crypto_high_correlation"
+    },
+    {
+      "capacity": 26,
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_high_correlation__stable_supported",
+      "master_row_checksum": "bc8f45be78952c945db30625b33932156d529110697559b3c7610d5b55feec54",
+      "oracle_delay": 0,
+      "order": 2,
+      "portfolio": "stable_supported",
+      "replication_count": 128,
+      "shock": "joint_crypto_high_correlation"
+    },
+    {
+      "capacity": 26,
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_high_correlation__stable_heavy",
+      "master_row_checksum": "b802087753fead6f0109a4564b4354a68a153eec39ee6cb411f3e8df9343533a",
+      "oracle_delay": 0,
+      "order": 3,
+      "portfolio": "stable_heavy",
+      "replication_count": 128,
+      "shock": "joint_crypto_high_correlation"
+    },
+    {
+      "capacity": 26,
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "stable_depeg_moderate__empirical_crypto",
+      "master_row_checksum": "83442939bae279b996ba2e34b2116bb380e0a1853cc0a70c397ff39bfe2ee8e2",
+      "oracle_delay": 0,
+      "order": 4,
+      "portfolio": "empirical_crypto",
+      "replication_count": 128,
+      "shock": "stable_depeg_moderate"
+    },
+    {
+      "capacity": 26,
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "stable_depeg_moderate__stable_supported",
+      "master_row_checksum": "f2264540eb106b230057d6bcac8ae7611718564e7e3672460380425b28eb04b5",
+      "oracle_delay": 0,
+      "order": 5,
+      "portfolio": "stable_supported",
+      "replication_count": 128,
+      "shock": "stable_depeg_moderate"
+    },
+    {
+      "capacity": 26,
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "stable_depeg_moderate__stable_heavy",
+      "master_row_checksum": "4b18a718c467eb31c6a07a401acc7ded211dea6b27e77fe66364a2744d5620db",
+      "oracle_delay": 0,
+      "order": 6,
+      "portfolio": "stable_heavy",
+      "replication_count": 128,
+      "shock": "stable_depeg_moderate"
+    },
+    {
+      "capacity": 26,
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "stable_depeg_severe__empirical_crypto",
+      "master_row_checksum": "9cdc18c53940850ee3a8b8cd0a76756a2e43887552a7ef16133d3ce4649b19bd",
+      "oracle_delay": 0,
+      "order": 7,
+      "portfolio": "empirical_crypto",
+      "replication_count": 128,
+      "shock": "stable_depeg_severe"
+    },
+    {
+      "capacity": 26,
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "stable_depeg_severe__stable_supported",
+      "master_row_checksum": "1de2dd15f69265cb05a8ae0253ed149c3396d515212549458753c6fd6b0848db",
+      "oracle_delay": 0,
+      "order": 8,
+      "portfolio": "stable_supported",
+      "replication_count": 128,
+      "shock": "stable_depeg_severe"
+    },
+    {
+      "capacity": 26,
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "stable_depeg_severe__stable_heavy",
+      "master_row_checksum": "5a8c95986e14d40c90ff84b0f9540dfcc958119157f57f55d0e3c73a04fb12a5",
+      "oracle_delay": 0,
+      "order": 9,
+      "portfolio": "stable_heavy",
+      "replication_count": 128,
+      "shock": "stable_depeg_severe"
+    },
+    {
+      "capacity": 26,
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_stable_stress__empirical_crypto",
+      "master_row_checksum": "1bdd0c4fb989afc5229552143bd0cd9e59c62e315d552295b2b47373d411263c",
+      "oracle_delay": 0,
+      "order": 10,
+      "portfolio": "empirical_crypto",
+      "replication_count": 128,
+      "shock": "joint_crypto_stable_stress"
+    },
+    {
+      "capacity": 26,
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_stable_stress__stable_supported",
+      "master_row_checksum": "ed393f6672beaf42a8d6a25a294d0104abfe6a15229df1c980decf40f2516b47",
+      "oracle_delay": 0,
+      "order": 11,
+      "portfolio": "stable_supported",
+      "replication_count": 128,
+      "shock": "joint_crypto_stable_stress"
+    },
+    {
+      "capacity": 26,
+      "confidence": "stage1_only",
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_stable_stress__stable_heavy",
+      "master_row_checksum": "445d24581b655a83cce1ba9e76aa0c3233476fc39b061644a389e052de4d1700",
+      "oracle_delay": 0,
+      "order": 12,
+      "portfolio": "stable_heavy",
+      "replication_count": 128,
+      "shock": "joint_crypto_stable_stress"
+    }
+  ],
+  "collateral_metrics": [
+    "initial_debt_exposure",
+    "unsafe_vault_count",
+    "liquidation_arrivals",
+    "selected_attempts",
+    "capacity_rejections",
+    "successful_closures",
+    "liquidated_debt",
+    "backlog_area",
+    "active_bad_debt",
+    "realised_bad_debt",
+    "keeper_profit_proxy",
+    "exposure_normalised_liquidated_debt",
+    "exposure_normalised_backlog",
+    "exposure_normalised_bad_debt",
+    "contribution_to_system_backlog",
+    "contribution_to_system_bad_debt",
+    "displaced_candidates",
+    "simultaneous_unsafe_hours",
+    "maximum_backlog",
+    "stable_minimum_price",
+    "stable_hours_below_0_99",
+    "stable_hours_below_0_95",
+    "stable_hours_below_0_90"
+  ],
+  "common_settings": {
+    "capacity": 26,
+    "confidence": "stage1_only",
+    "hurdle": "direct_cost_only",
+    "oracle_delay": 0,
+    "risk_cost_rate": 0.0
+  },
+  "components": [
+    "C1",
+    "C2",
+    "C3"
+  ],
+  "contrast_types": [
+    "raw_portfolio_contrast",
+    "direction_normalised_advantage",
+    "crypto_protection",
+    "depeg_cost",
+    "severity_increment",
+    "exposure_gradient",
+    "joint_stress_advantage",
+    "tradeoff_erosion",
+    "stable_to_crypto_contagion",
+    "reversal_flag"
+  ],
+  "decision_rules": {
+    "C1": {
+      "invalid": "A registered validity gate fails.",
+      "not_operational": "Fewer than two primary metrics are operational.",
+      "not_supported": "Neither portfolio satisfies the rule.",
+      "partially_supported": "Exactly one portfolio satisfies the rule.",
+      "supported": "Both stable portfolios have at least two operational advantages with 95% intervals above zero and no adverse operational bad-debt effect."
+    },
+    "C2": {
+      "depeg_exposure_gradient_consistent": "Negative controls pass; severity worsens at least one stable-sensitive metric for both portfolios; severe heavy exposure worsens at least two metrics.",
+      "depeg_exposure_gradient_inconsistent": "Registered directions are clearly and unexplainedly opposite.",
+      "depeg_exposure_gradient_not_present": "Negative controls pass without a systematic gradient.",
+      "depeg_exposure_gradient_partial": "Negative controls pass but severity or exposure ordering is only partial.",
+      "invalid": "Price isolation, CRN or accounting fails.",
+      "not_operational": "No stable cell activates a stable-loss channel."
+    },
+    "C3": {
+      "contagion_erosion_present": "Both portfolios have two positive erosion metrics and at least one active stable-loss or displacement channel.",
+      "contagion_mixed": "Some erosion/transmission appears inconsistently.",
+      "contagion_not_present": "Advantages persist without material stable deterioration.",
+      "contagion_reversal_present": "At least one portfolio has two adverse joint-stress advantages with intervals below zero and an active stable loss channel.",
+      "invalid": "A registered validity gate fails.",
+      "not_operational": "Stable shock does not activate stable losses."
+    }
+  },
+  "experiment_c_parent_commit": "97364e62aee94b083b251ac89d361e3d7e235374",
+  "experiment_id": "C_stable_collateral_tradeoff",
+  "experiment_identity": "cb6d00877c54011cc49714bdfe23fad83140fef001568ea9b43d355811c9129b",
+  "family_order": [
+    "ETH",
+    "WBTC",
+    "STABLE"
+  ],
+  "final_validation_data_used": false,
+  "h3_hierarchy": [
+    "H3_stable_contagion_reversal_supported",
+    "H3_stable_tradeoff_supported",
+    "H3_stable_tradeoff_partially_supported",
+    "H3_stable_support_without_material_depeg_cost",
+    "H3_stable_depeg_cost_without_crypto_protection",
+    "H3_no_clear_stable_collateral_tradeoff",
+    "H3_stable_tradeoff_experiment_not_operational",
+    "H3_stable_tradeoff_experiment_invalid"
+  ],
+  "held_out_data_used": false,
+  "horizon": {
+    "post_shock_hours": 720,
+    "pre_shock_hours": 48,
+    "recovery_band": [
+      0.995,
+      1.005
+    ],
+    "recovery_window_hours": 24,
+    "rmst_cap_hours": 720,
+    "total_hours": 768
+  },
+  "hypothesis": "H3",
+  "materiality_thresholds": {
+    "accounting_tolerance_dai": 1e-05,
+    "contrast_interval_confidence": 0.95,
+    "failure_share_invalid": 0.01,
+    "numerical_tolerance": 1e-10,
+    "stable_price_tolerance": 1e-12,
+    "stable_unsafe_activity_threshold": 0.0
+  },
+  "metric_directions": {
+    "active_bad_debt_share": -1,
+    "backlog_area_share": -1,
+    "below_peg_burden": -1,
+    "capacity_rejected_opportunities": -1,
+    "debt_weighted_liquidated_vault_share": -1,
+    "liquidated_debt_share": -1,
+    "mean_absolute_peg_deviation": -1,
+    "minimum_dai_price": -1,
+    "positive_realised_bad_debt": -1,
+    "realised_bad_debt_share": -1,
+    "recovery_probability_720h": 1,
+    "restricted_mean_recovery_time": -1,
+    "successful_closure_count": -1,
+    "unresolved_tab_share": -1
+  },
+  "negative_control": {
+    "failure_classification": "invalid",
+    "pairs": [
+      [
+        "stable_depeg_moderate",
+        "stable_depeg_severe"
+      ],
+      [
+        "joint_crypto_high_correlation",
+        "joint_crypto_stable_stress"
+      ]
+    ],
+    "portfolio": "empirical_crypto",
+    "registered_non_vault_stable_channel": false,
+    "stable_exposure": 0.0
+  },
+  "peg_solvency_hierarchy": [
+    "solvency_and_peg_tradeoff",
+    "solvency_improves_peg_unchanged",
+    "depeg_costs_solvent_system_peg_unchanged",
+    "peg_deteriorates_solvent_system_unchanged",
+    "solvency_and_peg_deteriorate",
+    "solvency_and_peg_diverge",
+    "neither_materially_changes",
+    "relationship_mixed",
+    "relationship_invalid"
+  ],
+  "portfolio_order": [
+    "empirical_crypto",
+    "stable_supported",
+    "stable_heavy"
+  ],
+  "portfolio_selection_permitted": false,
+  "portfolio_tradeoff_statuses": [
+    "protection_with_reversal",
+    "protection_with_material_erosion",
+    "protection_with_limited_depeg_cost",
+    "depeg_cost_without_crypto_protection",
+    "protection_without_material_depeg_cost",
+    "mixed",
+    "not_operational",
+    "invalid"
+  ],
+  "primary_solvency_metrics": [
+    "backlog_area_share",
+    "liquidated_debt_share",
+    "unresolved_tab_share",
+    "realised_bad_debt_share"
+  ],
+  "profile": {
+    "identifier": "empirical_integrated_multicollateral",
+    "identity": "d0241808701d0472532c1f7c502ab6637afd60a50082b94bed9ff66f7ec2d53e",
+    "runtime_adopted": false,
+    "sha256": "a2da654cdc9fc053c50f13aacb18e63ce7854bf47d6ad1519352467f6c7986fc",
+    "target_system_collateral_ratio": 3.6089387701260205,
+    "total_debt_dai": 2500000.0,
+    "vault_count": 500
+  },
+  "programme_identity": "084dd8495ec29717a94cc2d6d5427a78f377d82989abf2d119547fb1db376260",
+  "registry_checksums": {
+    "collateral": "75268fed6b3db5a80a822a80b8629291491cd73ce62b4c3e6cf3975060b4eb6d",
+    "confidence": "d455306fd7b7553f113099b6d51f962939d8b4793439a02c4638c646a63b25da",
+    "keeper": "58c5754ed95dead1ad283a7961fb0588496804a94f58ddb0e196a57601ee1e1b",
+    "portfolio": "76aa03afa352d86be76fbc7e0153981589f50798c52aed7dfad897061b7960b1",
+    "shock": "a98df90e3e743fc22d9f92c38d53cf46a893928d3fe48eda9e609a20aa108581"
+  },
+  "replications": 128,
+  "research_question": "RQ4",
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "scientific_code_identity": "e9cccf942a84976d428669a0c2943150d155f087b1a1a4d2ac1583dc2619fa51",
+  "seed_namespace": "final-stable-collateral-tradeoff-v1",
+  "seed_registry_sha256": "a4bfc03e855aac1f8df25ae500b2f9b733f0efda0fb94c5018a65e51e068cdff",
+  "seed_streams": [
+    "initialisation_key",
+    "market_gas_blocks",
+    "keeper_gas_units",
+    "liquidation_arrivals",
+    "stage1_residual_blocks"
+  ],
+  "shock_order": [
+    "joint_crypto_high_correlation",
+    "stable_depeg_moderate",
+    "stable_depeg_severe",
+    "joint_crypto_stable_stress"
+  ],
+  "simulation_core_identity": "72ac0425d3033bdd2dea97e3522e3f97c4fbb45b66a10e125cacb0f92e0af6f7",
+  "stable_owner": {
+    "depeg_floors": {
+      "moderate": 0.95,
+      "severe": 0.9
+    },
+    "liquidation_penalty": 0.05,
+    "liquidation_ratio": 1.1,
+    "ordinary_price": "clean_stable_proxy",
+    "scenario_defined": true,
+    "status": "counterfactual_stable_proxy",
+    "usdc_svb_used": false
+  },
+  "stage1_owners": {
+    "above_peg_response": 0.105131,
+    "below_peg_response": 0.199381,
+    "residual_block_sha256": "6f55b51acfc1da23836b3d847153bd4f68e4a38fc33fd967e9d3b795737bf28c",
+    "residual_sequence_sha256": "3fa2319cee9e1749405c0dc477e0f11ef9c31dd83c371b619bd33eda23c37c30"
+  },
+  "substantive_simulations": 1536,
+  "system_diagnostics": [
+    "positive_demand_hours",
+    "binding_hours",
+    "mean_capacity_utilisation",
+    "maximum_capacity_utilisation",
+    "maximum_simultaneously_unsafe_families",
+    "maximum_backlog_duration",
+    "hours_one_unsafe_family",
+    "hours_at_least_two_unsafe_families",
+    "hours_all_applicable_volatile_families_unsafe",
+    "hours_eth_wbtc_simultaneously_unsafe",
+    "share_hours_eth_wbtc_simultaneously_unsafe",
+    "maximum_simultaneous_active_backlog_families",
+    "stable_minimum_price",
+    "stable_hours_below_0_99",
+    "stable_hours_below_0_95",
+    "stable_hours_below_0_90"
+  ],
+  "system_metrics": [
+    "realised_bad_debt_share",
+    "positive_realised_bad_debt",
+    "active_bad_debt_share",
+    "unresolved_tab_share",
+    "backlog_area_share",
+    "liquidated_debt_share",
+    "debt_weighted_liquidated_vault_share",
+    "successful_closure_count",
+    "capacity_rejected_opportunities",
+    "below_peg_burden",
+    "mean_absolute_peg_deviation",
+    "minimum_dai_price",
+    "restricted_mean_recovery_time",
+    "recovery_probability_720h"
+  ],
+  "usdc_svb_used": false
+}

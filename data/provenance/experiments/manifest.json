@@ -1,5 +1,5 @@
 {
-  "artefact_count": 43,
+  "artefact_count": 51,
   "artefacts": [
     {
       "classification": "scenario_defined_experimental_design",
@@ -210,6 +210,62 @@
       "runtime_adopted": false,
       "sha256": "e6da0af839c53ddffb6eeaea596174d26499afeb55ca0d1910be49c679cd740d",
       "size_bytes": 82029
+    },
+    {
+      "classification": "pre_registered_final_stable_collateral_tradeoff_experiment",
+      "path": "data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_benchmark.json",
+      "runtime_adopted": false,
+      "sha256": "4f4167c00fa9b99cb489c4d6a79b7a093eca86977dfe65a51d2add42cac771bd",
+      "size_bytes": 1087
+    },
+    {
+      "classification": "pre_registered_final_stable_collateral_tradeoff_experiment",
+      "path": "data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_cell_summary.csv",
+      "runtime_adopted": false,
+      "sha256": "bc5a1f388a8ebed2c98d0f743cd8f8e41a3c861a7311873a105373ecc3b74d0b",
+      "size_bytes": 91886
+    },
+    {
+      "classification": "pre_registered_final_stable_collateral_tradeoff_experiment",
+      "path": "data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_collateral_summary.csv",
+      "runtime_adopted": false,
+      "sha256": "6975956e5836c5913a6886e20e81f79578374bfd44bd235dc0ee834e3d0da4c3",
+      "size_bytes": 166606
+    },
+    {
+      "classification": "pre_registered_final_stable_collateral_tradeoff_experiment",
+      "path": "data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_contrasts.csv",
+      "runtime_adopted": false,
+      "sha256": "db193c063033599fb1353887727badfbf7638e58cd08c06fae67005a3bb464bb",
+      "size_bytes": 110942
+    },
+    {
+      "classification": "pre_registered_final_stable_collateral_tradeoff_experiment",
+      "path": "data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_decision.json",
+      "runtime_adopted": false,
+      "sha256": "9aa54888c6592859944f7ed5fa3e3b99fecaf29bfcf5518b566d8cdb24489cef",
+      "size_bytes": 4741
+    },
+    {
+      "classification": "pre_registered_final_stable_collateral_tradeoff_experiment",
+      "path": "data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_registry.csv",
+      "runtime_adopted": false,
+      "sha256": "83edd199f7648f09aa01bc095f0feab55ed1d8c008db72fad7b699a6bacab93f",
+      "size_bytes": 3159
+    },
+    {
+      "classification": "pre_registered_final_stable_collateral_tradeoff_experiment",
+      "path": "data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_reproducibility.json",
+      "runtime_adopted": false,
+      "sha256": "185faa58c4efe3940532544d9a4acbbaf4ab0cc43fb1273bc24425735f4fa1aa",
+      "size_bytes": 18409
+    },
+    {
+      "classification": "pre_registered_final_stable_collateral_tradeoff_experiment",
+      "path": "data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_specification.json",
+      "runtime_adopted": false,
+      "sha256": "e5d9469e415c6fdf91e5514281b3c3751a34b81f31c96c60e2923ca80c0272dd",
+      "size_bytes": 15242
     },
     {
       "classification": "pre_registered_final_dissertation_experiment_programme",

@@ -34,6 +34,9 @@ destination for the pre-registered
 - [Experiment B — correlated stress](final/correlated_stress.md)
   — the completed eight-cell, 1,024-simulation registered joint-stress
   experiment, with its bundled-treatment limitation retained.
+- [Experiment C — stable-collateral trade-off](final/stable_collateral_tradeoff.md)
+  — the completed twelve-cell, 1,536-simulation counterfactual stable-proxy
+  experiment.
 
 The established multi-collateral runner above is a protected historical
 stylised experiment
@@ -42,11 +45,12 @@ portfolio names and five historical shock names are not the newly frozen
 final design. The final design has five portfolios and seven shocks registered by the
 [multi-collateral integration validation](../validation/multicollateral_integration.md).
 No final portfolio or shock has been ranked or selected. Its core programme
-contains 43 cells and 5,504 planned simulations. Experiments A and B are
+contains 43 cells and 5,504 planned simulations. Experiments A–C are
 complete. Experiment A supports idiosyncratic diversification; Experiment B
 finds that the benefit weakens across the registered stress bundles without
-reversing, while peg outcomes remain unchanged. Experiment C is the next
-authorised pass; Experiments C–D are `preregistered_not_executed`; Experiment E is
+reversing, while Experiment C finds supported crypto buffering but no
+registered stable-depeg severity or exposure gradient. Experiment D is the
+next authorised pass and is `preregistered_not_executed`; Experiment E is
 `preregistered_blocked_pending_oracle_delay_freeze`; and the result-independent
 H4 evidence synthesis is `pending_evidence_synthesis`.
 

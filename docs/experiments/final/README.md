@@ -9,8 +9,10 @@ and 5,504 planned simulations, each with 128 replications.
 [Experiment A](idiosyncratic_diversification.md) is complete from its original
 128 authoritative checkpoints and 1,024 simulations.
 [Experiment B](correlated_stress.md) is also complete from 128 authoritative
-checkpoints and 1,024 simulations. Experiment C is the next authorised pass;
-Experiments C–E remain unexecuted.
+checkpoints and 1,024 simulations.
+[Experiment C](stable_collateral_tradeoff.md) is complete from 128
+authoritative checkpoints and 1,536 simulations. Experiment D is the next
+authorised pass; Experiments D–E remain unexecuted.
 
 The H4 evidence synthesis is a reporting programme rather than another core
 simulation matrix. It remains pending and contributes no additional cell or
@@ -75,7 +77,7 @@ defined them; they are not additional dissertation hypotheses.
 | --- | ---: | ---: | ---: | --- | --- |
 | Experiment A — idiosyncratic diversification | 8 | 128 | 1,024 | `completed` | RQ4 and H3 under isolated collateral-specific shocks |
 | Experiment B — correlated stress | 8 | 128 | 1,024 | `completed` | RQ4 and H3 across the two registered joint-stress bundles |
-| Experiment C — stable-collateral trade-off | 12 | 128 | 1,536 | `preregistered_not_executed` | RQ4 and H3 under stable-proxy depeg and joint stress |
+| Experiment C — stable-collateral trade-off | 12 | 128 | 1,536 | `completed` | RQ4 and H3 under stable-proxy depeg and joint stress |
 | Experiment D — shared keeper capacity | 9 | 128 | 1,152 | `preregistered_not_executed` | RQ2 and H1, with cross-collateral implications for RQ4 |
 | Experiment E — oracle delay | 6 | 128 | 768 | `preregistered_blocked_pending_oracle_delay_freeze` | RQ2 and H2 |
 | H4 evidence synthesis | 0 | — | 0 | `pending_evidence_synthesis` | RQ3 and H4, using pre-registered evidence rather than a new core matrix |
@@ -104,10 +106,18 @@ intervention—because severity, recovery and gas ownership also differ. The
 post-execution `evidence_row_ordering_infrastructure` repair changed compact
 row order only; it did not change checkpoints, values or decisions.
 
+Experiment C reports C1 `supported`, C2
+`depeg_exposure_gradient_inconsistent`, C3 `contagion_mixed` and overall
+`H3_stable_tradeoff_partially_supported`. Both stable-backed portfolios are
+`protection_without_material_depeg_cost`; this does not rank or select them.
+The stable family and its depeg paths remain counterfactual, and USDC/SVB was
+not used. The registered peg–solvency relationship is
+`solvency_improves_peg_unchanged`.
+
 ## Sequencing and no-retuning rule
 
-The programme is hierarchical. Completion of Experiment B records Experiment
-C as the next authorised pass; it does not authorise Experiments D–E, the H4
+The programme is hierarchical. Completion of Experiment C records Experiment
+D as the next authorised pass; it does not authorise Experiment E, the H4
 synthesis, robustness layers or held-out validation. Each later component
 must retain its registered design and receive its own execution authorisation.
 

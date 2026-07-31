@@ -146,6 +146,7 @@ POST_RESTRUCTURING_FEATURE_MODULES = {
     "tests/experiments/mechanism/test_constrained_eth_recovery.py",
     "tests/experiments/final/test_correlated_stress.py",
     "tests/experiments/final/test_idiosyncratic_diversification.py",
+    "tests/experiments/final/test_stable_collateral_tradeoff.py",
     "tests/experiments/final/test_programme.py",
     "tests/validation/test_integrated_eth.py",
     "tests/validation/test_multicollateral.py",
@@ -214,7 +215,7 @@ def test_no_test_module_remains_at_suite_root() -> None:
 
 def test_no_placeholder_or_duplicate_test_module_exists() -> None:
     modules = sorted(TESTS_ROOT.rglob("test_*.py"))
-    assert len(modules) == 66
+    assert len(modules) == 67
     assert all(path.stat().st_size > 100 for path in modules)
     assert len({path.resolve() for path in modules}) == len(modules)
 

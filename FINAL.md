@@ -51,12 +51,15 @@ Completed in the current end-stage pass:
 - final Experiment B, correlated stress: completed from 128 authoritative
   checkpoints and 1,024 simulations under experiment identity
   `e02c035162f8178c96d2cae71d0a581ce813ab33526854bd5810e8e2810ead83`,
+  without selecting a portfolio or shock; and
+- final Experiment C, stable-collateral trade-off: completed from 128
+  authoritative checkpoints and 1,536 simulations under experiment identity
+  `cb6d00877c54011cc49714bdfe23fad83140fef001568ea9b43d355811c9129b`,
   without selecting a portfolio or shock.
 
-Stages 1–5 and final Experiments A and B are complete. Experiment C, the
-stable-collateral trade-off, is the next authorised pass and remains
-unexecuted. No portfolio or shock has been selected from validation or
-experiment outcomes.
+Stages 1–5 and final Experiments A–C are complete. Experiment D, shared
+keeper capacity, is the next authorised pass and remains unexecuted. No
+portfolio or shock has been selected from validation or experiment outcomes.
 
 ---
 
@@ -863,8 +866,8 @@ ready with caveats rather than fully empirical.
 
 ## Stage 6 — Final multi-collateral experiments
 
-**Status:** in progress. Experiments A and B are complete; Experiment C is the
-next authorised pass; Experiments C–E remain unexecuted.
+**Status:** in progress. Experiments A–C are complete; Experiment D is the
+next authorised pass; Experiments D–E remain unexecuted.
 
 Use a hierarchical design rather than one enormous full factorial.
 
@@ -964,6 +967,25 @@ Shocks:
 Question:
 
 - does stable collateral exchange crypto-price risk for depeg-contagion risk?
+
+Result:
+
+- 128 authoritative checkpoints and 1,536 simulations completed;
+- the zero-STABLE negative control passed in all replications;
+- C1 is `supported`;
+- C2 is `depeg_exposure_gradient_inconsistent`;
+- C3 is `contagion_mixed`;
+- both stable-backed portfolios are
+  `protection_without_material_depeg_cost`;
+- the overall classification is
+  `H3_stable_tradeoff_partially_supported`; and
+- the peg–solvency relationship is
+  `solvency_improves_peg_unchanged`.
+
+The STABLE family is a counterfactual proxy, the depeg floors are
+scenario-defined, and USDC/SVB was not used. No portfolio or shock was ranked
+or selected. Experiments A and B remain unchanged. See the
+[Experiment C report](docs/experiments/final/stable_collateral_tradeoff.md).
 
 ### Experiment D — Shared keeper capacity
 
@@ -1289,14 +1311,15 @@ Do not:
 
 The next authorised pass is:
 
-> **Execute Experiment C: stable-collateral trade-off using the frozen master
+> **Execute Experiment D: shared keeper capacity using the frozen master
 > programme.**
 
 The final experiment registry must use the frozen five portfolios and seven
 shocks without result-based screening. The central treatment remains
-system-wide capacity 26 with `direct_cost_only`; 14 and 45 remain robustness
-points. Experiments A and B are complete; Experiments C–E have not been
-executed, and Experiment E remains blocked pending the oracle-delay freeze.
+system-wide capacity 26 with `direct_cost_only`; 14 and 45 are the registered
+Experiment D treatments. Experiments A–C are complete; Experiments D–E have
+not been executed, and Experiment E remains blocked pending the oracle-delay
+freeze.
 Population, positive-hurdle and oracle-delay cases remain separate
 robustness dimensions. The remaining final experiments, population robustness,
 oracle-delay robustness, held-out validation, USDC/SVB validation and final

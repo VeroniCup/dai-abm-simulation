@@ -1,0 +1,149 @@
+{
+  "C1": {
+    "classification": "supported",
+    "detail": {
+      "stable_heavy": {
+        "adverse_bad_debt_metrics": [],
+        "beneficial_metrics": [
+          "backlog_area_share",
+          "liquidated_debt_share",
+          "unresolved_tab_share"
+        ],
+        "passed": true
+      },
+      "stable_supported": {
+        "adverse_bad_debt_metrics": [],
+        "beneficial_metrics": [
+          "backlog_area_share",
+          "liquidated_debt_share",
+          "unresolved_tab_share"
+        ],
+        "passed": true
+      }
+    }
+  },
+  "C2": {
+    "classification": "depeg_exposure_gradient_inconsistent",
+    "detail": {
+      "exposure_normalised_gradient_metrics": [],
+      "opposite_exposure_metrics": [
+        "backlog_area_share",
+        "liquidated_debt_share",
+        "unresolved_tab_share"
+      ],
+      "opposite_exposure_normalised_metrics": [],
+      "opposite_stable_attributed_metrics": [],
+      "opposite_system_gradient_explained": false,
+      "severe_exposure_gradient_metrics": [],
+      "severity_worsening_metrics": {
+        "stable_heavy": [],
+        "stable_supported": []
+      },
+      "stable_activity": {
+        "stable_heavy": {
+          "backlog_area": 0.0,
+          "capacity_rejections": 0.0,
+          "displaced_candidates": 0.0,
+          "liquidated_debt": 39.49304388513702,
+          "selected_attempts": 0.0078125,
+          "unsafe_vault_count": 0.0078125
+        },
+        "stable_supported": {
+          "backlog_area": 0.0,
+          "capacity_rejections": 0.0,
+          "displaced_candidates": 0.0,
+          "liquidated_debt": 40.177617339004144,
+          "selected_attempts": 0.0078125,
+          "unsafe_vault_count": 0.0078125
+        }
+      },
+      "stable_attributed_exposure_gradient_metrics": []
+    }
+  },
+  "C3": {
+    "classification": "contagion_mixed",
+    "detail": {
+      "stable_heavy": {
+        "active_stable_channel": true,
+        "crypto_deterioration_metrics": [
+          "backlog_area"
+        ],
+        "erosion_metrics": [],
+        "reversal_metrics": [],
+        "stable_activity": {
+          "backlog_area": 0.0,
+          "capacity_rejections": 0.0,
+          "displaced_candidates": 0.0,
+          "liquidated_debt": 39.49304388513702,
+          "selected_attempts": 0.0078125,
+          "unsafe_vault_count": 0.0078125
+        }
+      },
+      "stable_supported": {
+        "active_stable_channel": true,
+        "crypto_deterioration_metrics": [
+          "backlog_area"
+        ],
+        "erosion_metrics": [],
+        "reversal_metrics": [],
+        "stable_activity": {
+          "backlog_area": 0.0,
+          "capacity_rejections": 0.0,
+          "displaced_candidates": 0.0,
+          "liquidated_debt": 40.177617339004144,
+          "selected_attempts": 0.0078125,
+          "unsafe_vault_count": 0.0078125
+        }
+      }
+    }
+  },
+  "experiment_e_blocked": true,
+  "experiment_id": "C_stable_collateral_tradeoff",
+  "experiment_identity": "cb6d00877c54011cc49714bdfe23fad83140fef001568ea9b43d355811c9129b",
+  "held_out_data_used": false,
+  "metric_operationality": {
+    "active_bad_debt_share": "degenerate",
+    "backlog_area_share": "operational",
+    "below_peg_burden": "operational",
+    "capacity_rejected_opportunities": "operational",
+    "debt_weighted_liquidated_vault_share": "operational",
+    "liquidated_debt_share": "operational",
+    "mean_absolute_peg_deviation": "operational",
+    "minimum_dai_price": "operational",
+    "positive_realised_bad_debt": "degenerate",
+    "realised_bad_debt_share": "degenerate",
+    "recovery_probability_720h": "degenerate",
+    "restricted_mean_recovery_time": "operational",
+    "successful_closure_count": "operational",
+    "unresolved_tab_share": "operational"
+  },
+  "next_authorised_pass": "Experiment D only",
+  "overall_h3_classification": "H3_stable_tradeoff_partially_supported",
+  "peg_solvency_relationship": "solvency_improves_peg_unchanged",
+  "portfolio_selected": false,
+  "portfolio_tradeoff_statuses": {
+    "stable_heavy": "protection_without_material_depeg_cost",
+    "stable_supported": "protection_without_material_depeg_cost"
+  },
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "shock_selected": false,
+  "stable_negative_control": {
+    "failure_count": 0,
+    "passed": true,
+    "registered_non_vault_stable_channel": false
+  },
+  "stable_proxy_status": "counterfactual_stable_proxy",
+  "usdc_svb_used": false,
+  "validity_audit": {
+    "accounting_failures": 0,
+    "checkpoint_failures": 0,
+    "crn_failures": 0,
+    "maximum_cell_failure_share": 0.0,
+    "numerical_failures": 0,
+    "passed": true,
+    "price_isolation_failures": 0,
+    "registry_resolution_failures": 0,
+    "stable_negative_control_failures": 0
+  }
+}

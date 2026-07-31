@@ -102,6 +102,16 @@ data/provenance/experiments/final/correlated_stress/*
 !data/provenance/experiments/final/correlated_stress/correlated_stress_decision.json
 !data/provenance/experiments/final/correlated_stress/correlated_stress_reproducibility.json
 !data/provenance/experiments/final/correlated_stress/correlated_stress_benchmark.json
+!data/provenance/experiments/final/stable_collateral_tradeoff/
+data/provenance/experiments/final/stable_collateral_tradeoff/*
+!data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_specification.json
+!data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_registry.csv
+!data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_cell_summary.csv
+!data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_collateral_summary.csv
+!data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_contrasts.csv
+!data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_decision.json
+!data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_reproducibility.json
+!data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_benchmark.json
 !data/provenance/calibration/
 data/provenance/calibration/*
 !data/provenance/calibration/manifest.json
