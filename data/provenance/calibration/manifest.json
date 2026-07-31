@@ -1353,6 +1353,132 @@
     },
     {
       "classification": "snapshot",
+      "context": "Result-blind oracle-delay freeze; transparent mechanism sensitivity only and not runtime adopted.",
+      "path": "data/provenance/calibration/oracle_delay/oracle_delay_decision.json",
+      "producer": "workflows.calibration.oracle_delay",
+      "schema": "Compact deterministic oracle-delay calibration provenance.",
+      "semantic_name": "oracle_delay_decision",
+      "sha256": "59c8d826b076e80bb91ffe7e3e9d419554027664579c75ece9cf5fcdebaaa2a7",
+      "size_bytes": 6663,
+      "source_inputs": [
+        "data/protocol/raw/spot_parameter_history.csv",
+        "data/protocol/processed/hourly_protocol_parameters.csv",
+        "data/market/processed/dune_hourly_market_prices_processed.csv",
+        "data/protocol/provenance/schema_discovery.json",
+        "data/protocol/provenance/parameter_source_mapping.csv",
+        "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_profile.json",
+        "docs/repository_restructuring_baseline_manifest.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Result-blind oracle-delay freeze; transparent mechanism sensitivity only and not runtime adopted.",
+      "dimensions": [
+        4,
+        15
+      ],
+      "path": "data/provenance/calibration/oracle_delay/oracle_delay_estimates.csv",
+      "producer": "workflows.calibration.oracle_delay",
+      "schema": "Compact deterministic oracle-delay calibration provenance.",
+      "semantic_name": "oracle_delay_estimates",
+      "sha256": "e1a8b2e5e338b19ffa0e0bb9794d1d15dbf004eaeae3b06c2e1f16560c181fbd",
+      "size_bytes": 761,
+      "source_inputs": [
+        "data/protocol/raw/spot_parameter_history.csv",
+        "data/protocol/processed/hourly_protocol_parameters.csv",
+        "data/market/processed/dune_hourly_market_prices_processed.csv",
+        "data/protocol/provenance/schema_discovery.json",
+        "data/protocol/provenance/parameter_source_mapping.csv",
+        "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_profile.json",
+        "docs/repository_restructuring_baseline_manifest.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Result-blind oracle-delay freeze; transparent mechanism sensitivity only and not runtime adopted.",
+      "path": "data/provenance/calibration/oracle_delay/oracle_delay_freeze_specification.json",
+      "producer": "workflows.calibration.oracle_delay",
+      "schema": "Compact deterministic oracle-delay calibration provenance.",
+      "semantic_name": "oracle_delay_freeze_specification",
+      "sha256": "f46199f26a69454cf8004092bcd63c8ddf769b8699b1f0c8363fb1d342b65ceb",
+      "size_bytes": 2080,
+      "source_inputs": [
+        "data/protocol/raw/spot_parameter_history.csv",
+        "data/protocol/processed/hourly_protocol_parameters.csv",
+        "data/market/processed/dune_hourly_market_prices_processed.csv",
+        "data/protocol/provenance/schema_discovery.json",
+        "data/protocol/provenance/parameter_source_mapping.csv",
+        "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_profile.json",
+        "docs/repository_restructuring_baseline_manifest.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Result-blind oracle-delay freeze; transparent mechanism sensitivity only and not runtime adopted.",
+      "dimensions": [
+        3,
+        7
+      ],
+      "path": "data/provenance/calibration/oracle_delay/oracle_delay_registry.csv",
+      "producer": "workflows.calibration.oracle_delay",
+      "schema": "Compact deterministic oracle-delay calibration provenance.",
+      "semantic_name": "oracle_delay_registry",
+      "sha256": "e9e6b380c8e183c7351fa86a3432ff2a24aa5406ee32d11d4c4827f03670505b",
+      "size_bytes": 569,
+      "source_inputs": [
+        "data/protocol/raw/spot_parameter_history.csv",
+        "data/protocol/processed/hourly_protocol_parameters.csv",
+        "data/market/processed/dune_hourly_market_prices_processed.csv",
+        "data/protocol/provenance/schema_discovery.json",
+        "data/protocol/provenance/parameter_source_mapping.csv",
+        "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_profile.json",
+        "docs/repository_restructuring_baseline_manifest.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Result-blind oracle-delay freeze; transparent mechanism sensitivity only and not runtime adopted.",
+      "path": "data/provenance/calibration/oracle_delay/oracle_delay_reproducibility.json",
+      "producer": "workflows.calibration.oracle_delay",
+      "schema": "Compact deterministic oracle-delay calibration provenance.",
+      "semantic_name": "oracle_delay_reproducibility",
+      "sha256": "cd3759bf1f1d732f2a697f9ae6acb21c4b12c7c5598f3b89ccf5ed66a7f69a9c",
+      "size_bytes": 1957,
+      "source_inputs": [
+        "data/protocol/raw/spot_parameter_history.csv",
+        "data/protocol/processed/hourly_protocol_parameters.csv",
+        "data/market/processed/dune_hourly_market_prices_processed.csv",
+        "data/protocol/provenance/schema_discovery.json",
+        "data/protocol/provenance/parameter_source_mapping.csv",
+        "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_profile.json",
+        "docs/repository_restructuring_baseline_manifest.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
+      "context": "Result-blind oracle-delay freeze; transparent mechanism sensitivity only and not runtime adopted.",
+      "dimensions": [
+        7,
+        21
+      ],
+      "path": "data/provenance/calibration/oracle_delay/oracle_delay_source_inventory.csv",
+      "producer": "workflows.calibration.oracle_delay",
+      "schema": "Compact deterministic oracle-delay calibration provenance.",
+      "semantic_name": "oracle_delay_source_inventory",
+      "sha256": "9af3e3bf5794c0e015c10d24f11afa5d1cdaea0bbf1f5a350b695f7a5959768f",
+      "size_bytes": 3861,
+      "source_inputs": [
+        "data/protocol/raw/spot_parameter_history.csv",
+        "data/protocol/processed/hourly_protocol_parameters.csv",
+        "data/market/processed/dune_hourly_market_prices_processed.csv",
+        "data/protocol/provenance/schema_discovery.json",
+        "data/protocol/provenance/parameter_source_mapping.csv",
+        "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_profile.json",
+        "docs/repository_restructuring_baseline_manifest.json"
+      ]
+    },
+    {
+      "classification": "snapshot",
       "context": "Canonical audit evidence preserving candidate provenance and conflicts.",
       "dimensions": [
         80,

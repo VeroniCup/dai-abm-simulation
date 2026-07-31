@@ -144,6 +144,20 @@ metrics remain degenerate under close-factor-one accounting. Capacities 14,
 was ranked, selected or runtime adopted. Experiments A–C remain unchanged,
 and Experiment E did not run.
 
+The result-blind
+[oracle-delay freeze](docs/calibration/oracle_delay.md) is complete under
+registry identity
+`2e562ef2618e472ce3b0551addf2596ddbe137910fa6d2ad5884ae71c674e46d`.
+The repository contains no eligible oracle observation or update-interval
+series and no tracked effective numerical delay rule, so the freeze is
+classified `transparent_sensitivity_not_empirically_identified`. The existing
+Experiment E identifiers resolve externally to 0, 1 and 2 hourly simulation
+steps. These are result-blind mechanism sensitivities, not estimates of
+historical Maker oracle latency. The readiness classification is
+`experiment_e_ready_with_transparent_delay_sensitivity`: Experiment E is ready
+but unexecuted, no delay was selected, no held-out data were used and the
+production zero-delay default remains unchanged.
+
 The separate
 [experiment-infrastructure maintenance](docs/validation/experiment_infrastructure_maintenance.md)
 is complete. The convenience reconstruction CLI now respects the keyword-only
@@ -230,12 +244,12 @@ review reproduced all of them without changing executable behaviour.
 
 ## Next research work
 
-Experiments A–D are complete. The next authorised scientific boundary is the
-result-independent oracle-delay freeze required before Experiment E.
-Experiment E remains unexecuted and blocked; H4 synthesis remains pending.
+Experiments A–D and the result-independent oracle-delay freeze are complete.
+Experiment E remains unexecuted but is ready; its execution with the frozen
+registry is the next scientific stage. H4 synthesis remains pending.
 The stable-impairment component of H3 is complete with partial support, while
 Experiment D provides mixed secondary shared-capacity transmission evidence.
-Population-scale robustness, oracle-delay closure and held-out final
+Population-scale robustness, Experiment E execution and held-out final
 validation, including USDC/SVB, remain outstanding. The five portfolios and
 seven shocks are frozen inputs, not result-based selections. Keeper candidates
 and both integrated profiles remain opt-in evidence rather than adopted

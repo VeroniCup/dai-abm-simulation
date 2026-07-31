@@ -60,6 +60,7 @@ WORKFLOW_MAPPING = {
 
 POST_RESTRUCTURING_WORKFLOWS = {
     "calibration/keeper_execution.py",
+    "calibration/oracle_delay.py",
     "experiments/mechanism/constrained_eth_recovery.py",
     "experiments/mechanism/eth_recovery.py",
     "experiments/final/correlated_stress.py",

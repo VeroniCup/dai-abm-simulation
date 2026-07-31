@@ -154,6 +154,14 @@ data/provenance/calibration/keeper/*
 !data/provenance/calibration/keeper/keeper_execution_decision.json
 !data/provenance/calibration/keeper/keeper_execution_reproducibility.json
 !data/provenance/calibration/keeper/keeper_execution_benchmark.json
+!data/provenance/calibration/oracle_delay/
+data/provenance/calibration/oracle_delay/*
+!data/provenance/calibration/oracle_delay/oracle_delay_freeze_specification.json
+!data/provenance/calibration/oracle_delay/oracle_delay_source_inventory.csv
+!data/provenance/calibration/oracle_delay/oracle_delay_estimates.csv
+!data/provenance/calibration/oracle_delay/oracle_delay_registry.csv
+!data/provenance/calibration/oracle_delay/oracle_delay_decision.json
+!data/provenance/calibration/oracle_delay/oracle_delay_reproducibility.json
 !data/provenance/calibration/parameter_readiness/
 data/provenance/calibration/parameter_readiness/*
 !data/provenance/calibration/parameter_readiness/representative_vault_parameter_readiness.csv

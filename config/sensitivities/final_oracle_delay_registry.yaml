@@ -1,0 +1,54 @@
+schema_version: 1
+registry_version: 1.0.0
+registry_identifier: final_oracle_delay_registry
+registry_identity: 2e562ef2618e472ce3b0551addf2596ddbe137910fa6d2ad5884ae71c674e46d
+parent_commit: d2e4b846cb9d7592bbf457e5c2a991671585a8c6
+source_classification: transparent_sensitivity_not_empirically_identified
+readiness_classification: experiment_e_ready_with_transparent_delay_sensitivity
+parameter_name: SimulationConfig.oracle_delay_steps
+parameter_semantic_owner: src/dai_sim/model/collateral_prices.py::_apply_oracle_delay
+unit: simulation_steps
+simulation_step:
+  duration_hours: 1
+  horizon_steps: 768
+scope:
+  global: true
+  collateral_families:
+  - ETH
+  - BTC
+  - STABLE
+  family_specific_coordinates: false
+evidence:
+  tier: 4
+  source_inventory_path: data/provenance/calibration/oracle_delay/oracle_delay_source_inventory.csv
+  source_inventory_sha256: 9af3e3bf5794c0e015c10d24f11afa5d1cdaea0bbf1f5a350b695f7a5959768f
+  eligible_source_sha256: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  eligible_observation_count: 0
+  calibration_boundary:
+    start_utc: '2021-06-01T00:00:00Z'
+    end_exclusive_utc: '2024-07-01T00:00:00Z'
+  held_out_exclusion:
+  - ftx
+  - usdc_svb
+  held_out_observations_used: 0
+derivation:
+  formula: transparent_zero_one_two_step_fallback
+  rounding_rule: deterministic_ceiling_to_integer_steps_with_unique_high
+  low_rule: transparent_no_delay_baseline
+treatments:
+  oracle_delay_low:
+    delay_steps: 0
+    equivalent_hours: 0
+    status: transparent_no_delay_baseline
+    source_tier: 4
+  oracle_delay_central:
+    delay_steps: 1
+    equivalent_hours: 1
+    status: transparent_one_step_sensitivity
+    source_tier: 4
+  oracle_delay_high:
+    delay_steps: 2
+    equivalent_hours: 2
+    status: transparent_two_step_sensitivity
+    source_tier: 4
+runtime_adopted: false

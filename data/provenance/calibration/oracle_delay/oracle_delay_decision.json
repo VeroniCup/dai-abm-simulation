@@ -1,0 +1,151 @@
+{
+  "delay_selected": false,
+  "evidence_classification": "transparent_sensitivity_not_empirically_identified",
+  "experiment_e_simulations": 0,
+  "experiment_e_status": "ready_but_unexecuted",
+  "extrapolation_boundary": "One global fixed-step lag is applied to all collateral families; the values are not historical Maker latency estimates.",
+  "limitations": [
+    "No repository-resident oracle observation timestamp series exists.",
+    "No repository-resident oracle update interval series exists.",
+    "The tracked OSM hop metadata contains no numeric effective value.",
+    "The common system-wide delay extrapolates equally to ETH, BTC and the counterfactual stable family."
+  ],
+  "numerical_coordinate_set": {
+    "equivalent_hours": [
+      0,
+      1,
+      2
+    ],
+    "oracle_delay_central": 1,
+    "oracle_delay_high": 2,
+    "oracle_delay_low": 0,
+    "unit": "simulation_steps"
+  },
+  "readiness_classification": "experiment_e_ready_with_transparent_delay_sensitivity",
+  "readiness_validation": {
+    "anchors": [
+      [
+        "empirical_crypto",
+        "joint_crypto_high_correlation"
+      ],
+      [
+        "stable_supported",
+        "joint_crypto_stable_stress"
+      ]
+    ],
+    "checkpoints_created": 0,
+    "common_random_number_contract": {
+      "identical_dai_residual_blocks": true,
+      "identical_gas_path": true,
+      "identical_initial_portfolio_state": true,
+      "identical_keeper_gas_unit_draws": true,
+      "identical_liquidation_arrivals": true,
+      "identical_non_delay_randomness": true,
+      "identical_shock_path": true,
+      "sole_treatment_difference": "oracle_delay_steps"
+    },
+    "experiment_e_simulations": 0,
+    "experiment_e_status": "ready_but_unexecuted",
+    "external_dependency_status": "resolved",
+    "master_programme_e_status": "preregistered_blocked_pending_oracle_delay_freeze",
+    "passed": true,
+    "planned_simulations": 768,
+    "programme_cells_unchanged": true,
+    "programme_identity": "084dd8495ec29717a94cc2d6d5427a78f377d82989abf2d119547fb1db376260",
+    "programme_planned_simulations_unchanged": true,
+    "readiness_classification": "experiment_e_ready_with_transparent_delay_sensitivity",
+    "replications_per_cell": 128,
+    "resolved_cell_count": 6,
+    "resolved_cells": [
+      {
+        "cell_identifier": "joint_crypto_high_correlation__empirical_crypto__oracle_delay_low",
+        "confidence_scenario_identifier": "stage1_only",
+        "hurdle_profile_identifier": "direct_cost_only",
+        "master_row_checksum": "89e8a346632061e9ed102e46de23df6e485645c25ebcf7afa56608f5cfa6dac3",
+        "maximum_liquidations_per_step": 26,
+        "oracle_delay_steps": 0,
+        "oracle_treatment_identifier": "oracle_delay_low",
+        "portfolio_identifier": "empirical_crypto",
+        "replication_count": 128,
+        "shock_identifier": "joint_crypto_high_correlation"
+      },
+      {
+        "cell_identifier": "joint_crypto_high_correlation__empirical_crypto__oracle_delay_central",
+        "confidence_scenario_identifier": "stage1_only",
+        "hurdle_profile_identifier": "direct_cost_only",
+        "master_row_checksum": "3c5b57ec2ac3a79b9b681b9755cfe4ecb4e1539d1e59229e387d19d16528d458",
+        "maximum_liquidations_per_step": 26,
+        "oracle_delay_steps": 1,
+        "oracle_treatment_identifier": "oracle_delay_central",
+        "portfolio_identifier": "empirical_crypto",
+        "replication_count": 128,
+        "shock_identifier": "joint_crypto_high_correlation"
+      },
+      {
+        "cell_identifier": "joint_crypto_high_correlation__empirical_crypto__oracle_delay_high",
+        "confidence_scenario_identifier": "stage1_only",
+        "hurdle_profile_identifier": "direct_cost_only",
+        "master_row_checksum": "94702453e785bb9166b2593937a42a3c9545e7f3026464ac6f4141888cf336be",
+        "maximum_liquidations_per_step": 26,
+        "oracle_delay_steps": 2,
+        "oracle_treatment_identifier": "oracle_delay_high",
+        "portfolio_identifier": "empirical_crypto",
+        "replication_count": 128,
+        "shock_identifier": "joint_crypto_high_correlation"
+      },
+      {
+        "cell_identifier": "joint_crypto_stable_stress__stable_supported__oracle_delay_low",
+        "confidence_scenario_identifier": "stage1_only",
+        "hurdle_profile_identifier": "direct_cost_only",
+        "master_row_checksum": "df8f1b2693fffb0e46330c64d654f013ed1ad4332c7322895f536da1ff559a96",
+        "maximum_liquidations_per_step": 26,
+        "oracle_delay_steps": 0,
+        "oracle_treatment_identifier": "oracle_delay_low",
+        "portfolio_identifier": "stable_supported",
+        "replication_count": 128,
+        "shock_identifier": "joint_crypto_stable_stress"
+      },
+      {
+        "cell_identifier": "joint_crypto_stable_stress__stable_supported__oracle_delay_central",
+        "confidence_scenario_identifier": "stage1_only",
+        "hurdle_profile_identifier": "direct_cost_only",
+        "master_row_checksum": "ca13d211571c23492b60a9d8dfdf5ef6993bcdad1f2bf46f68f7cf2ef435d6f8",
+        "maximum_liquidations_per_step": 26,
+        "oracle_delay_steps": 1,
+        "oracle_treatment_identifier": "oracle_delay_central",
+        "portfolio_identifier": "stable_supported",
+        "replication_count": 128,
+        "shock_identifier": "joint_crypto_stable_stress"
+      },
+      {
+        "cell_identifier": "joint_crypto_stable_stress__stable_supported__oracle_delay_high",
+        "confidence_scenario_identifier": "stage1_only",
+        "hurdle_profile_identifier": "direct_cost_only",
+        "master_row_checksum": "e36be5c723367ecb34f1ed813f3a0ce68976509963bf8d4b69296fe8f69ff577",
+        "maximum_liquidations_per_step": 26,
+        "oracle_delay_steps": 2,
+        "oracle_treatment_identifier": "oracle_delay_high",
+        "portfolio_identifier": "stable_supported",
+        "replication_count": 128,
+        "shock_identifier": "joint_crypto_stable_stress"
+      }
+    ],
+    "runtime_adopted": false,
+    "semantic_contract": {
+      "dai_price_process_contemporaneous": true,
+      "delayed_object": "protocol-observed collateral price path",
+      "gas_prices_contemporaneous": true,
+      "initial_buffer": "repeat first market price for the first delay_steps",
+      "interpolation": false,
+      "liquidation_eligibility": "uses delayed oracle prices",
+      "market_prices_contemporaneous": true,
+      "parameter_name": "SimulationConfig.oracle_delay_steps",
+      "passed": true,
+      "scope": "global across ETH, BTC and STABLE collateral families",
+      "step_duration_hours": 1,
+      "unit": "integer simulation steps"
+    }
+  },
+  "runtime_adopted": false,
+  "schema_version": 1
+}

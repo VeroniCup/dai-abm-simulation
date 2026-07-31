@@ -242,5 +242,9 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
         "tests/validation/test_confidence_scenarios.py": 9,
         "tests/validation/test_integrated_eth.py": 20,
         "tests/validation/test_multicollateral.py": 40,
+        "tests/calibration/test_oracle_delay.py": 8,
+        "tests/inputs/test_oracle_delay.py": 4,
+        "tests/validation/test_oracle_delay.py": 3,
+        "tests/workflows/test_oracle_delay.py": 3,
     }
     assert len(nodeids) == 420 + len(additions)

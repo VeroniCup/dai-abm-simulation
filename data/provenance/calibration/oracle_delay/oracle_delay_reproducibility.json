@@ -1,0 +1,28 @@
+{
+  "code_identity": "70f66afabc74dbc83cc1be6d85640c10dc89fa4e0fab8100016dc65fd2af9b04",
+  "config_sha256": "f62159b0219d42716aefe8866d120bd809fca825dc0645e114d4565e0ba43b47",
+  "delay_selected": false,
+  "deterministic_reconstruction": true,
+  "eligible_source_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "experiment_e_simulations": 0,
+  "experiments_a_to_d_simulations": 0,
+  "held_out_observations": 0,
+  "network_calls": 0,
+  "parent_commit": "d2e4b846cb9d7592bbf457e5c2a991671585a8c6",
+  "programme_identity": "084dd8495ec29717a94cc2d6d5427a78f377d82989abf2d119547fb1db376260",
+  "registry_identity": "2e562ef2618e472ce3b0551addf2596ddbe137910fa6d2ad5884ae71c674e46d",
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "source_checksums": {
+    "data/market/processed/dune_hourly_market_prices_processed.csv": "43f8a23aff2ec995a4e1ad5e8fc66f4b5223e8dcc9c8a36bd272d733ae1d4e25",
+    "data/protocol/processed/hourly_protocol_parameters.csv": "8190f1aa9f63a6ebd41ef5eb38ee33b64523631161199e37224ce859cb71f195",
+    "data/protocol/provenance/parameter_source_mapping.csv": "52966b1e890f4ce4a69d872a93c924bf620bc82009ef0989459e5736603a9649",
+    "data/protocol/provenance/schema_discovery.json": "31659ea7c58e71dc1d1d9beb78c34a65d79ad8100b75032cc136d10201de8697",
+    "data/protocol/raw/spot_parameter_history.csv": "ffbea6d45c5969e887a4af0372da577509652b2a5b73c23be6f78d9eaab03264",
+    "data/provenance/validation/integrated_empirical_eth/integrated_empirical_eth_profile.json": "411da8a21b0c669eb962979a2e015b93f399b58ba279d7f799d270420ce5f80b",
+    "docs/repository_restructuring_baseline_manifest.json": "cae567cee25a93779fc838df4ac0a238bb407d308437a4f27c1fb521bd5e92b1"
+  },
+  "source_inventory_content_sha256": "608ab1a4164da17d5cddfe987b5105a8bba3243734b9d5af0a597b065dce5a33",
+  "source_inventory_file_sha256": "9af3e3bf5794c0e015c10d24f11afa5d1cdaea0bbf1f5a350b695f7a5959768f",
+  "usdc_svb_observations": 0
+}

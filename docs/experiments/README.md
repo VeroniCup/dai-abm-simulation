@@ -58,9 +58,10 @@ B finds that the benefit weakens across the registered stress bundles without
 reversing; Experiment C finds supported crypto buffering but no registered
 stable-depeg severity or exposure gradient; and Experiment D finds one small
 threshold backlog effect, mixed shared-capacity transmission and unchanged
-peg outcomes, yielding `H1_no_clear_shared_capacity_effect`. Experiment E is
-`preregistered_blocked_pending_oracle_delay_freeze`; and the result-independent
-H4 evidence synthesis is `pending_evidence_synthesis`.
+peg outcomes, yielding `H1_no_clear_shared_capacity_effect`. The
+result-independent oracle-delay freeze resolves Experiment E to transparent
+zero-, one- and two-step sensitivities. Experiment E is ready but unexecuted,
+and the H4 evidence synthesis is `pending_evidence_synthesis`.
 
 Established scenario definitions are protected Python configuration factories in
 `scenarios.py`, with execution functions in `runner.py`. The new opt-in ETH

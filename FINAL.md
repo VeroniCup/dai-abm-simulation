@@ -59,12 +59,16 @@ Completed in the current end-stage pass:
 - final Experiment D, shared keeper capacity: completed from 128 authoritative
   checkpoints and 1,152 simulations under experiment identity
   `b324c31be7ef6dd7f61e504709b2086b0e88ce181c177f25dcaad182095c17e3`,
-  without selecting a capacity.
+  without selecting a capacity; and
+- result-blind oracle-delay freeze: completed under registry identity
+  `2e562ef2618e472ce3b0551addf2596ddbe137910fa6d2ad5884ae71c674e46d`
+  as `transparent_sensitivity_not_empirically_identified`, resolving low,
+  central and high to 0, 1 and 2 hourly steps without runtime adoption.
 
-Stages 1–5 and final Experiments A–D are complete. Experiment E remains
-unexecuted and blocked pending a result-independent oracle-delay freeze. No
-portfolio, shock or capacity has been selected from validation or experiment
-outcomes.
+Stages 1–5, final Experiments A–D and the result-independent oracle-delay
+freeze are complete. Experiment E is ready but remains unexecuted. No
+portfolio, shock, capacity or oracle delay has been selected from validation
+or experiment outcomes.
 
 ---
 
@@ -365,18 +369,22 @@ production default changed, and no substantive simulation ran. The host
 sandbox's process-semaphore restriction remains an environmental constraint
 documented separately from the repaired race.
 
-## 3.5 Oracle delay — required closure, not necessarily new estimation
+## 3.5 Oracle delay — result-blind freeze complete
 
-Mechanics exist, but the final status of the parameter must be frozen.
+The implemented global integer price lag is now frozen externally to the
+unchanged master programme. The repository contains Spot adapter mappings,
+hourly protocol state, market reference prices and OSM getter metadata, but no
+eligible oracle observation timestamp series, update-interval series or
+tracked effective numerical delay rule. No held-out data were used.
 
-Required audit:
-
-- determine whether adequate historical oracle timestamps exist;
-- estimate low, central and high delay where supported;
-- otherwise classify oracle delay as a transparent sensitivity;
-- do not call an arbitrary delay calibrated.
-
-A major new acquisition project is not required unless existing data are insufficient for even a sensitivity rationale.
+The evidence classification is
+`transparent_sensitivity_not_empirically_identified`. The three registered
+treatments are 0, 1 and 2 steps, equivalent to 0, 1 and 2 hours. Registry
+identity is
+`2e562ef2618e472ce3b0551addf2596ddbe137910fa6d2ad5884ae71c674e46d`.
+These coordinates are result-blind mechanism sensitivities rather than
+historical Maker latency estimates. The registry is not runtime adopted and
+does not select a preferred delay. Experiment E is ready but unexecuted.
 
 ## 3.6 Stable collateral process — frozen with a counterfactual boundary
 
@@ -452,9 +460,10 @@ exact debt shares, common collateralisation, source isolation, numerical
 states, one global ranking, one system cap, backlog carry-forward and
 collateral-to-system reconciliation.
 
-Population-scale validation, oracle-delay closure, quiet held-out validation,
-held-out crypto-stress validation and final USDC/SVB validation remain
-outstanding. No retuning may follow final validation.
+Population-scale validation, quiet held-out validation, held-out crypto-stress
+validation and final USDC/SVB validation remain outstanding. The oracle-delay
+freeze is complete, but Experiment E has not run. No retuning may follow final
+validation.
 
 The validation record is
 [`docs/validation/multicollateral_integration.md`](docs/validation/multicollateral_integration.md).
@@ -871,8 +880,8 @@ ready with caveats rather than fully empirical.
 
 ## Stage 6 — Final multi-collateral experiments
 
-**Status:** in progress. Experiments A–D are complete; Experiment E remains
-unexecuted and blocked pending the result-independent oracle-delay freeze.
+**Status:** in progress. Experiments A–D and the result-independent
+oracle-delay freeze are complete; Experiment E is ready but unexecuted.
 
 Use a hierarchical design rather than one enormous full factorial.
 
@@ -1275,7 +1284,7 @@ Do not:
 - [x] Integrated empirical ETH-only profile
 - [x] Distributional validation
 - [ ] Population-scale validation
-- [ ] Oracle-delay status freeze
+- [x] Oracle-delay status freeze
 
 ## Recovery
 
@@ -1338,16 +1347,15 @@ Do not:
 
 # 10. Immediate next pass
 
-The next authorised pass is:
+The next scientific stage is:
 
-> **Complete the result-blind oracle-delay freeze required before Experiment
-> E.**
+> **Execute Experiment E: oracle delay using the frozen oracle-delay
+> registry.**
 
 The final experiment registry continues to use the frozen five portfolios and
 seven shocks without result-based screening. Experiments A–D are complete.
-Experiment E has not been executed and remains blocked pending the
-oracle-delay freeze.
+Experiment E has not been executed but its numerical dependency is resolved.
 Population, positive-hurdle and oracle-delay cases remain separate
 robustness dimensions. The remaining final experiments, population robustness,
-oracle-delay robustness, held-out validation, USDC/SVB validation and final
-code freeze remain incomplete.
+held-out validation, USDC/SVB validation and final code freeze remain
+incomplete.

@@ -1,0 +1,60 @@
+{
+  "calibration_boundary": {
+    "end_exclusive_utc": "2024-07-01T00:00:00Z",
+    "start_utc": "2021-06-01T00:00:00Z"
+  },
+  "concept_distinctions": [
+    "oracle_update_cadence",
+    "oracle_observation_staleness",
+    "publication_latency",
+    "protocol_imposed_delay",
+    "simulation_price_lag",
+    "market_to_protocol_mismatch"
+  ],
+  "experiment_e_execution": false,
+  "fallback": {
+    "central_steps": 1,
+    "high_steps": 2,
+    "low_steps": 0
+  },
+  "held_out_exclusion": [
+    "ftx",
+    "usdc_svb"
+  ],
+  "objective": "Freeze three result-blind, system-wide oracle-delay treatments before Experiment E.",
+  "parent_commit": "d2e4b846cb9d7592bbf457e5c2a991671585a8c6",
+  "programme_identity": "084dd8495ec29717a94cc2d6d5427a78f377d82989abf2d119547fb1db376260",
+  "quantiles": {
+    "central": "q50 of positive direct staleness",
+    "high": "q90 of positive direct staleness",
+    "tier_2_central": "0.5 times q50 update interval",
+    "tier_2_high": "q90 update interval"
+  },
+  "result_blind": true,
+  "rounding": "deterministic ceiling to one-hour integer simulation steps; central at least one; high at least central plus one",
+  "runtime_adopted": false,
+  "sample_sufficiency": {
+    "minimum_calendar_days": 3,
+    "tier_1_minimum_observations": 30,
+    "tier_1_minimum_positive_observations": 10,
+    "tier_2_minimum_intervals": 20
+  },
+  "schema_version": 1,
+  "source_hierarchy": {
+    "tier_1": "direct_event_level_staleness",
+    "tier_2": "oracle_update_intervals",
+    "tier_3": "tracked_documented_protocol_rule",
+    "tier_4": "transparent_zero_one_two_step_sensitivity"
+  },
+  "target_parameter": {
+    "delayed_object": "protocol-observed collateral price",
+    "global_across_collateral_families": true,
+    "initial_boundary": "first market price repeated for delay_steps observations",
+    "integer_required": true,
+    "name": "SimulationConfig.oracle_delay_steps",
+    "semantic_owner": "src/dai_sim/model/collateral_prices.py::_apply_oracle_delay",
+    "step_duration_hours": 1,
+    "unit": "simulation_steps"
+  },
+  "usdc_svb_used": false
+}

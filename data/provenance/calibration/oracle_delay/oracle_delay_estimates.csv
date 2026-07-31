@@ -1,0 +1,5 @@
+collateral_or_pool,source_tier,sample_size,positive_sample_size,missingness,calendar_days,median_hours,p90_hours,units,raw_central_hours,raw_high_hours,converted_central_steps,converted_high_steps,eligibility,classification
+ETH,4,0,0,not_applicable_no_eligible_series,0,,,hours,,,,,no_eligible_evidence,transparent_sensitivity_not_empirically_identified
+WBTC,4,0,0,not_applicable_no_eligible_series,0,,,hours,,,,,no_eligible_evidence,transparent_sensitivity_not_empirically_identified
+STABLE,4,0,0,not_applicable_no_eligible_series,0,,,hours,,,,,no_eligible_evidence,transparent_sensitivity_not_empirically_identified
+pooled_system_wide,4,0,0,not_applicable_no_eligible_series,0,,,hours,,,1,2,fallback_applied,transparent_sensitivity_not_empirically_identified

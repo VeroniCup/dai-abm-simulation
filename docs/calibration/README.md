@@ -69,6 +69,10 @@ than calibration activities.
 - [System-wide keeper execution](keeper_execution.md) — pre-registered shared
   hourly capacity and proportional profit-hurdle candidates. Both are
   partially identified and remain opt-in, non-adopted sensitivities.
+- [Result-blind oracle-delay freeze](oracle_delay.md) — the implemented global
+  price-lag semantics, local evidence audit and transparent zero-, one- and
+  two-step Experiment E registry. The coordinates are not historical latency
+  estimates and remain non-adopted.
 - [Integrated empirical ETH-only validation](../validation/integrated_empirical_eth.md)
   — the opt-in 500-vault assembly of the accepted empirical owners. It is
   experiment-ready with caveats and remains non-adopted.

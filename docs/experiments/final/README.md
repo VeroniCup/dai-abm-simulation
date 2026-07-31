@@ -13,8 +13,10 @@ checkpoints and 1,024 simulations.
 [Experiment C](stable_collateral_tradeoff.md) is complete from 128
 authoritative checkpoints and 1,536 simulations.
 [Experiment D](shared_keeper_capacity.md) is complete from 128 authoritative
-checkpoints and 1,152 simulations. Experiment E remains unexecuted and
-blocked pending the result-independent oracle-delay freeze.
+checkpoints and 1,152 simulations. The result-independent
+[oracle-delay freeze](../../calibration/oracle_delay.md) now resolves the
+existing Experiment E treatment identifiers externally as zero, one and two
+hourly steps. Experiment E is ready but remains unexecuted.
 
 The H4 evidence synthesis is a reporting programme rather than another core
 simulation matrix. It remains pending and contributes no additional cell or
@@ -81,13 +83,15 @@ defined them; they are not additional dissertation hypotheses.
 | Experiment B — correlated stress | 8 | 128 | 1,024 | `completed` | RQ4 and H3 across the two registered joint-stress bundles |
 | Experiment C — stable-collateral trade-off | 12 | 128 | 1,536 | `completed` | RQ4 and H3 under stable-proxy depeg and joint stress |
 | Experiment D — shared keeper capacity | 9 | 128 | 1,152 | `completed` | RQ2 and H1, with cross-collateral implications for RQ4 |
-| Experiment E — oracle delay | 6 | 128 | 768 | `preregistered_blocked_pending_oracle_delay_freeze` | RQ2 and H2 |
+| Experiment E — oracle delay | 6 | 128 | 768 | `ready_but_unexecuted` | RQ2 and H2 |
 | H4 evidence synthesis | 0 | — | 0 | `pending_evidence_synthesis` | RQ3 and H4, using pre-registered evidence rather than a new core matrix |
 | **Total** | **43** |  | **5,504** |  |  |
 
-Experiment E has no numerical oracle-delay treatments yet. Its blocked status
-must remain until those values are frozen through a result-independent
-specification. No placeholder values may be inferred from earlier studies.
+The frozen master registry still carries the original unresolved treatment
+identifiers so its 43 rows and scientific identity remain byte-identical. The
+external content-addressed registry resolves those identifiers to 0, 1 and 2
+hourly steps. These are transparent result-blind mechanism sensitivities, not
+historical Maker latency estimates, and no preferred delay is selected.
 
 Experiment A reports A1 `supported`, A2
 `exposure_gradient_consistent`, A3 `shock_localisation_valid` and overall
@@ -127,11 +131,11 @@ selected or runtime adopted.
 
 ## Sequencing and no-retuning rule
 
-The programme is hierarchical. Completion of Experiment D does not authorise
-Experiment E, the H4 synthesis, robustness layers or held-out validation.
-The next boundary is the result-independent oracle-delay freeze required
-before Experiment E. Each later component must retain its registered design
-and receive its own execution authorisation.
+The programme is hierarchical. Completion of the oracle-delay freeze makes
+Experiment E ready but does not execute it or authorise the H4 synthesis,
+robustness layers or held-out validation. The next scientific stage is to
+execute Experiment E using the frozen registry. Each later component must
+retain its registered design and receive its own execution authorisation.
 
 Model mechanisms, parameters, empirical input pools, portfolio definitions,
 shock definitions, keeper settings, confidence scenarios and oracle-delay

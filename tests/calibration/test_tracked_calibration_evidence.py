@@ -35,7 +35,7 @@ def _is_ignored(relative_path: str) -> bool:
 def test_tracked_calibration_evidence_is_content_addressed() -> None:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     assert manifest["schema_version"] == 1
-    assert len(manifest["artefacts"]) == 99
+    assert len(manifest["artefacts"]) == 105
     structural_paths = {
         (
             "data/provenance/calibration/confidence/"
@@ -69,6 +69,23 @@ def test_tracked_calibration_evidence_is_content_addressed() -> None:
         )
     }
     assert structural_paths.issubset(
+        {record["path"] for record in manifest["artefacts"]}
+    )
+    oracle_delay_paths = {
+        (
+            "data/provenance/calibration/oracle_delay/"
+            f"{name}"
+        )
+        for name in (
+            "oracle_delay_freeze_specification.json",
+            "oracle_delay_source_inventory.csv",
+            "oracle_delay_estimates.csv",
+            "oracle_delay_registry.csv",
+            "oracle_delay_decision.json",
+            "oracle_delay_reproducibility.json",
+        )
+    }
+    assert oracle_delay_paths.issubset(
         {record["path"] for record in manifest["artefacts"]}
     )
     for record in manifest["artefacts"]:
