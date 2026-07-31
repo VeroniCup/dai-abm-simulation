@@ -93,8 +93,13 @@ share these seeds and the realised initial vault state. Only the deterministic
 ETH path and registered confidence activation differ.
 
 Detailed checkpoints are atomically written below the ignored
-`outputs/experiments/eth_recovery/<experiment-identity>/` hierarchy. A valid
-checkpoint is reused on resume; invalid or absent checkpoints are rerun.
+`outputs/experiments/mechanism/eth_recovery/<experiment-identity>/` hierarchy.
+A valid checkpoint is reused on resume; invalid or absent checkpoints are
+rerun.
+The frozen pre-registration YAML retains the output path recorded when the
+experiment ran. The authoritative workflow now replaces that operational field
+with the semantic mechanism-output owner; output location is excluded from the
+scientific experiment identity.
 
 ## 7. Sustained recovery and censoring
 

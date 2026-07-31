@@ -292,10 +292,14 @@ and the workflow is
 The compact evidence is content-addressed under
 `data/provenance/experiments/constrained_recovery/`. Detailed atomic
 checkpoints remain ignored under
-`outputs/experiments/constrained_eth_recovery/<experiment-identity>/`. The
-safe execution used one worker after a four-worker host attempt exposed an
-existing temporary profile-loader race before any checkpoint was written.
-The completed run used 12,000,298 bytes and retained more than 237 GB free.
+`outputs/experiments/mechanism/constrained_eth_recovery/<experiment-identity>/`.
+The safe execution used one worker after a four-worker host attempt exposed an
+existing temporary profile-loader race before any checkpoint was written. The
+completed run used 12,000,298 bytes and retained more than 237 GB free.
+The frozen pre-registration YAML retains the original execution path as
+historical provenance. The authoritative workflow replaces only that
+operational field with the semantic mechanism-output owner, which is excluded
+from the registered experiment identity.
 
 The subsequent
 [experiment-infrastructure maintenance](../validation/experiment_infrastructure_maintenance.md)

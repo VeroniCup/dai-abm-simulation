@@ -77,7 +77,11 @@ dai-abm-simulation/
 │   ├── {overview,model,data,calibration,validation,experiments}/
 │   └── archive/
 ├── sql/<domain>/{templates,generated}/
-└── outputs/{experiments,diagnostics,figures,tables}/
+└── outputs/
+    ├── experiments/{mechanism,final}/
+    ├── diagnostics/
+    ├── figures/
+    └── tables/
 ```
 
 Optional empty directories are not created for visual symmetry.

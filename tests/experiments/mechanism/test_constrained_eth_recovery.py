@@ -49,6 +49,9 @@ from dai_sim.experiments.mechanism.eth_recovery import (
     _recovery_metrics,
     path_checksum,
 )
+from dai_sim.experiments.mechanism.output_paths import (
+    resolve_mechanism_output_root,
+)
 from dai_sim.inputs.integrated_profile import (
     TOTAL_DEBT_DAI,
     VAULT_COUNT,
@@ -125,7 +128,12 @@ def _resolve_profile_path_for_worker(path: str) -> str:
 
 
 def _design():
-    return load_design()
+    return replace(
+        load_design(),
+        output_root=resolve_mechanism_output_root(
+            "constrained_eth_recovery"
+        ),
+    )
 
 
 def test_integrated_profile_identity_and_experimental_boundary() -> None:
@@ -426,6 +434,13 @@ def test_scientific_identity_is_deterministic_and_parent_bound() -> None:
     assert specification_payload(design)["starting_code_parent"] == (
         "ffb6c65cd1d57e1aa49b1e5b4dc77da1c212fcef"
     )
+    assert design.output_root == (
+        REPOSITORY_ROOT
+        / "outputs/experiments/mechanism/constrained_eth_recovery"
+    )
+    assert experiment_identity(
+        replace(design, output_root=REPOSITORY_ROOT / "outputs/elsewhere")
+    ) == REGISTERED_EXPERIMENT_IDENTITY
 
 
 def test_preflight_confirms_storage_profiles_and_protected_inputs() -> None:
@@ -548,7 +563,7 @@ def test_reconstruct_evidence_cli_uses_keyword_only_boundary(
         "workflows.experiments.mechanism.constrained_eth_recovery"
     )
     calls: list[tuple[object, dict[str, object]]] = []
-    design = type("Design", (), {"evidence_dir": tmp_path})()
+    design = replace(_design(), evidence_dir=tmp_path)
     benchmark = {"wall_time_seconds": 1.0, "host_dependent": True}
 
     def keyword_only_writer(

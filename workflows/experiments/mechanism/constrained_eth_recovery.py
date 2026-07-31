@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import replace
 import json
 from pathlib import Path
 import runpy
@@ -27,6 +28,9 @@ from dai_sim.experiments.mechanism.constrained_eth_recovery import (
     validate_evidence,
     write_evidence,
     write_preregistration,
+)
+from dai_sim.experiments.mechanism.output_paths import (
+    resolve_mechanism_output_root,
 )
 
 
@@ -77,7 +81,11 @@ def _benchmark(path: Path | None, evidence_dir: Path) -> dict:
 
 def main() -> int:
     args = build_parser().parse_args()
+    output_root = resolve_mechanism_output_root(
+        "constrained_eth_recovery"
+    )
     design = load_design(args.config) if args.config else load_design()
+    design = replace(design, output_root=output_root)
     operation = args.operation
     if operation == "validate":
         result = preflight(design)

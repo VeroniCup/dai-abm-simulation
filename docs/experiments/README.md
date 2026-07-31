@@ -38,6 +38,11 @@ destination for the pre-registered
   — the completed twelve-cell, 1,536-simulation counterfactual stable-proxy
   experiment.
 
+Generated detailed experiment outputs use the semantic namespaces
+`outputs/experiments/mechanism/` for controlled mechanism studies and
+`outputs/experiments/final/` for the final programme. These ignored outputs
+remain reproducible from their corresponding workflows.
+
 The established multi-collateral runner above is a protected historical
 stylised experiment
 and remains operational for regression compatibility. Its five historical

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import replace
 import json
 from pathlib import Path
 import runpy
@@ -25,6 +26,9 @@ from dai_sim.experiments.mechanism.eth_recovery import (
     validate_evidence,
     write_preregistration_snapshot,
     write_evidence,
+)
+from dai_sim.experiments.mechanism.output_paths import (
+    resolve_mechanism_output_root,
 )
 
 
@@ -87,9 +91,11 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     args = build_parser().parse_args()
+    output_root = resolve_mechanism_output_root("eth_recovery")
     design = load_recovery_design(
         args.config if args.config is not None else None
     ) if args.config is not None else load_recovery_design()
+    design = replace(design, output_root=output_root)
     paths = {
         definition.identifier: build_eth_path(design, definition)
         for definition in design.path_definitions

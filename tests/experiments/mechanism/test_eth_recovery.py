@@ -12,6 +12,7 @@ import pandas as pd
 import pytest
 
 from dai_sim.inputs.confidence_scenarios import EXPECTED_SCENARIO_ORDER
+from dai_sim.experiments.final import stable_collateral_tradeoff as experiment_c
 from dai_sim.experiments.mechanism.eth_recovery import (
     CONFIDENCE_CONTRASTS,
     PATH_ORDER,
@@ -23,6 +24,7 @@ from dai_sim.experiments.mechanism.eth_recovery import (
     build_eth_path,
     classify_experiment,
     derive_recovery_seed,
+    experiment_identity,
     interaction_contrasts,
     load_recovery_design,
     paired_contrasts,
@@ -32,10 +34,18 @@ from dai_sim.experiments.mechanism.eth_recovery import (
     smoothstep,
     validate_evidence,
 )
+from dai_sim.experiments.mechanism.output_paths import (
+    MechanismOutputMigrationRequiredError,
+    canonical_mechanism_output_root,
+    resolve_mechanism_output_root,
+)
 
 
 def _design():
-    return load_recovery_design()
+    return replace(
+        load_recovery_design(),
+        output_root=resolve_mechanism_output_root("eth_recovery"),
+    )
 
 
 def _paths():
@@ -88,7 +98,7 @@ def _synthetic_frame() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def test_design_has_exact_authoritative_boundaries() -> None:
+def test_design_has_exact_authoritative_boundaries(tmp_path: Path) -> None:
     design = _design()
     assert design.baseline_path.name == "legacy.yaml"
     assert design.pre_shock_price == 2000.0
@@ -97,6 +107,49 @@ def test_design_has_exact_authoritative_boundaries() -> None:
     assert design.post_shock_hours == 720
     assert design.total_hours == 768
     assert design.replications == 128
+    assert design.output_root == (
+        Path(__file__).resolve().parents[3]
+        / "outputs/experiments/mechanism/eth_recovery"
+    )
+    paths = {
+        definition.identifier: build_eth_path(design, definition)
+        for definition in design.path_definitions
+    }
+    cells = build_cell_registry(design, paths)
+    identity = experiment_identity(design, cells)
+    assert identity == (
+        "68afcef1166bb6b13813d0e481ce7bddff7605c0ac7326bf8b9d1400eacff20b"
+    )
+    assert experiment_identity(
+        replace(design, output_root=tmp_path / "relocated"),
+        cells,
+    ) == identity
+
+    for family in ("eth_recovery", "constrained_eth_recovery"):
+        clean_root = tmp_path / f"clean-{family}"
+        assert canonical_mechanism_output_root(
+            family,
+            repository_root=clean_root,
+        ) == clean_root / "outputs/experiments/mechanism" / family
+        old_only_root = tmp_path / f"old-only-{family}"
+        legacy = old_only_root / "outputs/experiments" / family
+        legacy.mkdir(parents=True)
+        with pytest.raises(
+            MechanismOutputMigrationRequiredError,
+            match="automatic migration is disabled",
+        ):
+            resolve_mechanism_output_root(
+                family,
+                repository_root=old_only_root,
+            )
+        assert not (
+            old_only_root / "outputs/experiments/mechanism" / family
+        ).exists()
+
+    assert experiment_c.OUTPUT_ROOT == (
+        Path(__file__).resolve().parents[3]
+        / "outputs/experiments/final/stable_collateral_tradeoff"
+    )
 
 
 @pytest.mark.parametrize(
@@ -442,6 +495,7 @@ def test_workflow_exposes_only_registered_recovery_operations() -> None:
         assert operation in workflow
     for forbidden in ("USDC", "SVB", "scenario-ranking", "registry-b"):
         assert forbidden not in workflow
+    assert 'resolve_mechanism_output_root("eth_recovery")' in workflow
 
 
 def test_reconstruction_preserves_existing_measured_benchmark(
