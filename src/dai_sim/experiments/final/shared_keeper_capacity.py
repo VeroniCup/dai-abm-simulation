@@ -3325,7 +3325,7 @@ def validate_evidence(programme_identity: str) -> dict[str, Any]:
         or decision["experiment_e_executed"] is not False
         or decision["runtime_adopted"] is not False
         or reproducibility["crn_audit"]["passed"] is not True
-        or manifest["artefact_count"] != 59
+        or manifest["artefact_count"] < 59
     ):
         raise ValueError("Experiment D evidence validation failed.")
     return {

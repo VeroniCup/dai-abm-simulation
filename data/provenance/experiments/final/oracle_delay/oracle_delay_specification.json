@@ -1,0 +1,409 @@
+{
+  "anchors": [
+    {
+      "portfolio": "empirical_crypto",
+      "shock": "joint_crypto_high_correlation"
+    },
+    {
+      "portfolio": "stable_supported",
+      "shock": "joint_crypto_stable_stress"
+    }
+  ],
+  "cell_order": [
+    "joint_crypto_high_correlation__empirical_crypto__oracle_delay_low",
+    "joint_crypto_high_correlation__empirical_crypto__oracle_delay_central",
+    "joint_crypto_high_correlation__empirical_crypto__oracle_delay_high",
+    "joint_crypto_stable_stress__stable_supported__oracle_delay_low",
+    "joint_crypto_stable_stress__stable_supported__oracle_delay_central",
+    "joint_crypto_stable_stress__stable_supported__oracle_delay_high"
+  ],
+  "cells": [
+    {
+      "capacity": 26,
+      "confidence": "stage1_only",
+      "delay_hours": 0,
+      "delay_steps": 0,
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_high_correlation__empirical_crypto__oracle_delay_low",
+      "master_row_checksum": "89e8a346632061e9ed102e46de23df6e485645c25ebcf7afa56608f5cfa6dac3",
+      "order": 1,
+      "portfolio": "empirical_crypto",
+      "replication_count": 128,
+      "shock": "joint_crypto_high_correlation",
+      "treatment": "oracle_delay_low"
+    },
+    {
+      "capacity": 26,
+      "confidence": "stage1_only",
+      "delay_hours": 1,
+      "delay_steps": 1,
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_high_correlation__empirical_crypto__oracle_delay_central",
+      "master_row_checksum": "3c5b57ec2ac3a79b9b681b9755cfe4ecb4e1539d1e59229e387d19d16528d458",
+      "order": 2,
+      "portfolio": "empirical_crypto",
+      "replication_count": 128,
+      "shock": "joint_crypto_high_correlation",
+      "treatment": "oracle_delay_central"
+    },
+    {
+      "capacity": 26,
+      "confidence": "stage1_only",
+      "delay_hours": 2,
+      "delay_steps": 2,
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_high_correlation__empirical_crypto__oracle_delay_high",
+      "master_row_checksum": "94702453e785bb9166b2593937a42a3c9545e7f3026464ac6f4141888cf336be",
+      "order": 3,
+      "portfolio": "empirical_crypto",
+      "replication_count": 128,
+      "shock": "joint_crypto_high_correlation",
+      "treatment": "oracle_delay_high"
+    },
+    {
+      "capacity": 26,
+      "confidence": "stage1_only",
+      "delay_hours": 0,
+      "delay_steps": 0,
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_stable_stress__stable_supported__oracle_delay_low",
+      "master_row_checksum": "df8f1b2693fffb0e46330c64d654f013ed1ad4332c7322895f536da1ff559a96",
+      "order": 4,
+      "portfolio": "stable_supported",
+      "replication_count": 128,
+      "shock": "joint_crypto_stable_stress",
+      "treatment": "oracle_delay_low"
+    },
+    {
+      "capacity": 26,
+      "confidence": "stage1_only",
+      "delay_hours": 1,
+      "delay_steps": 1,
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_stable_stress__stable_supported__oracle_delay_central",
+      "master_row_checksum": "ca13d211571c23492b60a9d8dfdf5ef6993bcdad1f2bf46f68f7cf2ef435d6f8",
+      "order": 5,
+      "portfolio": "stable_supported",
+      "replication_count": 128,
+      "shock": "joint_crypto_stable_stress",
+      "treatment": "oracle_delay_central"
+    },
+    {
+      "capacity": 26,
+      "confidence": "stage1_only",
+      "delay_hours": 2,
+      "delay_steps": 2,
+      "hurdle": "direct_cost_only",
+      "identifier": "joint_crypto_stable_stress__stable_supported__oracle_delay_high",
+      "master_row_checksum": "e36be5c723367ecb34f1ed813f3a0ce68976509963bf8d4b69296fe8f69ff577",
+      "order": 6,
+      "portfolio": "stable_supported",
+      "replication_count": 128,
+      "shock": "joint_crypto_stable_stress",
+      "treatment": "oracle_delay_high"
+    }
+  ],
+  "collateral_metrics": [
+    "initial_debt_exposure",
+    "absolute_mismatch_area",
+    "peak_absolute_mismatch",
+    "oracle_overvaluation_area",
+    "peak_oracle_overvaluation",
+    "oracle_undervaluation_area",
+    "peak_oracle_undervaluation",
+    "mismatch_hours",
+    "mismatch_hours_above_tolerance",
+    "false_safe_vault_hours",
+    "false_safe_debt_hours",
+    "peak_false_safe_debt",
+    "false_unsafe_vault_hours",
+    "false_unsafe_debt_hours",
+    "peak_false_unsafe_debt",
+    "eligible_liquidation_tab",
+    "selected_count",
+    "rejected_count",
+    "successful_closure_count",
+    "liquidated_debt",
+    "terminal_unresolved_tab",
+    "backlog_area",
+    "maximum_backlog",
+    "terminal_active_bad_debt",
+    "realised_bad_debt",
+    "keeper_profit_proxy"
+  ],
+  "common_settings": {
+    "capacity": 26,
+    "confidence": "stage1_only",
+    "hurdle": "direct_cost_only",
+    "max_close_factor": 1.0,
+    "risk_cost_rate": 0.0
+  },
+  "decision_rules": {
+    "E1": [
+      "supported",
+      "partially_supported",
+      "not_supported",
+      "not_operational",
+      "invalid"
+    ],
+    "E2": [
+      "supported",
+      "partially_supported",
+      "timing_effect_only",
+      "countervailing_effect",
+      "not_supported",
+      "not_operational",
+      "invalid"
+    ],
+    "E2_anchor": [
+      "delay_friction_supported",
+      "delay_friction_partial",
+      "timing_shift_without_net_deterioration",
+      "countervailing_delay_benefit",
+      "no_downstream_delay_effect",
+      "not_operational",
+      "invalid"
+    ],
+    "E3": [
+      "peg_delay_effect_present",
+      "peg_delay_effect_partial",
+      "peg_unchanged",
+      "peg_response_mixed",
+      "peg_not_operational",
+      "peg_response_invalid"
+    ],
+    "overall_h2": [
+      "H2_oracle_delay_supported",
+      "H2_oracle_delay_partially_supported",
+      "H2_oracle_mismatch_effect_only",
+      "H2_oracle_delay_countervailing_effect",
+      "H2_no_clear_oracle_delay_effect",
+      "H2_oracle_delay_not_operational",
+      "H2_oracle_delay_experiment_invalid"
+    ],
+    "peg_solvency": [
+      "solvency_and_peg_deteriorate_with_delay",
+      "solvency_deteriorates_peg_unchanged",
+      "peg_deteriorates_solvency_unchanged",
+      "solvency_and_peg_diverge",
+      "delay_changes_timing_not_terminal_outcomes",
+      "neither_materially_changes",
+      "relationship_mixed",
+      "relationship_invalid"
+    ],
+    "response_shape": [
+      "monotonic_deterioration",
+      "threshold_deterioration",
+      "non_monotonic_deterioration",
+      "no_delay_effect",
+      "countervailing_delay_benefit",
+      "not_operational",
+      "invalid"
+    ]
+  },
+  "delay_selection_permitted": false,
+  "delays": [
+    {
+      "hours": 0,
+      "steps": 0,
+      "treatment": "oracle_delay_low"
+    },
+    {
+      "hours": 1,
+      "steps": 1,
+      "treatment": "oracle_delay_central"
+    },
+    {
+      "hours": 2,
+      "steps": 2,
+      "treatment": "oracle_delay_high"
+    }
+  ],
+  "direction_normalised_deterioration": true,
+  "experiment_e_parent_commit": "2ccbdc688b7b47bde189fb1d8770fa66343dbb3e",
+  "experiment_id": "E_oracle_delay",
+  "experiment_identity": "67ec5a1e03492608c7f847861f7dbd506d2a526dbf4107298241b26c855eb0f8",
+  "family_order": [
+    "ETH",
+    "WBTC",
+    "STABLE"
+  ],
+  "final_validation_data_used": false,
+  "held_out_data_used": false,
+  "horizon": {
+    "post_shock_hours": 720,
+    "pre_shock_hours": 48,
+    "rmst_cap_hours": 720,
+    "total_hours": 768
+  },
+  "hypotheses": [
+    "H2"
+  ],
+  "materiality_thresholds": {
+    "accounting_tolerance_dai": 1e-05,
+    "contrast_interval_confidence": 0.95,
+    "failure_share_invalid": 0.01,
+    "initial_debt_exposure_scale": 4e-07,
+    "initial_total_debt_dai": 2500000.0,
+    "numerical_oracle_path_tolerance": 1e-12,
+    "simulation_step_hours": 1
+  },
+  "metric_directions": {
+    "backlog_area_share": 1,
+    "below_peg_burden": 1,
+    "capacity_binding_hours": 1,
+    "capacity_rejected_opportunity_count": 1,
+    "debt_weighted_absolute_mismatch_area": 1,
+    "debt_weighted_liquidated_vault_share": 1,
+    "debt_weighted_overvaluation_area": 1,
+    "debt_weighted_undervaluation_area": 1,
+    "false_safe_debt_hours": 1,
+    "false_safe_vault_hours": 1,
+    "false_unsafe_debt_hours": 1,
+    "false_unsafe_vault_hours": 1,
+    "five_busiest_eligible_tab_share": 1,
+    "hours_for_half_eligible_tab": 1,
+    "liquidated_debt_share": 1,
+    "liquidation_completion_ratio": -1,
+    "market_unsafe_debt_not_oracle_eligible_share": 1,
+    "maximum_unresolved_tab_share": 1,
+    "mean_absolute_peg_deviation": 1,
+    "minimum_dai_price": -1,
+    "oracle_unsafe_debt_already_market_safe_share": 1,
+    "peak_debt_weighted_mismatch": 1,
+    "peak_eligible_tab_share": 1,
+    "peak_false_safe_debt": 1,
+    "peak_false_unsafe_debt": 1,
+    "peak_new_eligible_tab_share": 1,
+    "peak_selected_attempts": 1,
+    "peak_successful_closures": 1,
+    "positive_realised_bad_debt": 1,
+    "realised_bad_debt_share": 1,
+    "recognition_lag_mean": 1,
+    "recognition_lag_median": 1,
+    "recovery_probability_720h": -1,
+    "recovery_staleness_mean": 1,
+    "recovery_staleness_median": 1,
+    "restricted_mean_recovery_time": 1,
+    "successful_closure_count": 1,
+    "terminal_active_bad_debt_share": 1,
+    "terminal_unresolved_tab_share": 1
+  },
+  "mismatch_definitions": {
+    "absolute_gap": "abs(gap)",
+    "gap": "log(market_price/oracle_price)",
+    "overvaluation_gap": "max(-gap,0)",
+    "system_weight": "frozen_initial_debt_share",
+    "undervaluation_gap": "max(gap,0)"
+  },
+  "operationality_classes": [
+    "operational",
+    "degenerate",
+    "not_operational",
+    "invalid"
+  ],
+  "oracle_registry_identity": "2e562ef2618e472ce3b0551addf2596ddbe137910fa6d2ad5884ae71c674e46d",
+  "oracle_registry_sha256": "f62159b0219d42716aefe8866d120bd809fca825dc0645e114d4565e0ba43b47",
+  "oracle_semantics": {
+    "global_family_scope": true,
+    "initial_price_repetition": true,
+    "interpolation": false,
+    "market_gas_and_dai_remain_contemporaneous": true,
+    "owner": "dai_sim.model.collateral_prices._apply_oracle_delay"
+  },
+  "profile": {
+    "identifier": "empirical_integrated_multicollateral",
+    "identity": "d0241808701d0472532c1f7c502ab6637afd60a50082b94bed9ff66f7ec2d53e",
+    "runtime_adopted": false,
+    "sha256": "a2da654cdc9fc053c50f13aacb18e63ce7854bf47d6ad1519352467f6c7986fc",
+    "target_system_collateral_ratio": 3.6089387701260205,
+    "total_debt_dai": 2500000.0,
+    "vault_count": 500
+  },
+  "programme_identity": "084dd8495ec29717a94cc2d6d5427a78f377d82989abf2d119547fb1db376260",
+  "raw_contrasts": [
+    "delay_1_minus_0",
+    "delay_2_minus_1",
+    "delay_2_minus_0"
+  ],
+  "registry_checksums": {
+    "collateral": "75268fed6b3db5a80a822a80b8629291491cd73ce62b4c3e6cf3975060b4eb6d",
+    "confidence": "d455306fd7b7553f113099b6d51f962939d8b4793439a02c4638c646a63b25da",
+    "keeper": "58c5754ed95dead1ad283a7961fb0588496804a94f58ddb0e196a57601ee1e1b",
+    "oracle_delay": "f62159b0219d42716aefe8866d120bd809fca825dc0645e114d4565e0ba43b47",
+    "portfolio": "76aa03afa352d86be76fbc7e0153981589f50798c52aed7dfad897061b7960b1",
+    "shock": "a98df90e3e743fc22d9f92c38d53cf46a893928d3fe48eda9e609a20aa108581"
+  },
+  "replications": 128,
+  "research_questions": [
+    "RQ2"
+  ],
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "scientific_classification": "transparent_sensitivity_not_empirically_identified",
+  "scientific_code_identity": "f70bda49fefe011e3fd64203674ac1b3f3c466704a5763a11d5bdf29e4f7bdea",
+  "seed_namespace": "final-oracle-delay-v1",
+  "seed_registry_sha256": "9f528c38a9a684df28174e6028242b159af04efafbf2fb919590c199af2a8eb2",
+  "seed_streams": [
+    "initialisation_key",
+    "market_gas_blocks",
+    "keeper_gas_units",
+    "liquidation_arrivals",
+    "stage1_residual_blocks"
+  ],
+  "simulation_core_identity": "6ee0a73fab7e4fd195664448a489c4f0cda16c07c68a67d862a7c36997ec3030",
+  "stage1_owners": {
+    "above_peg_response": 0.105131,
+    "below_peg_response": 0.199381,
+    "residual_block_sha256": "6f55b51acfc1da23836b3d847153bd4f68e4a38fc33fd967e9d3b795737bf28c",
+    "residual_sequence_sha256": "3fa2319cee9e1749405c0dc477e0f11ef9c31dd83c371b619bd33eda23c37c30"
+  },
+  "substantive_simulations": 768,
+  "system_metrics": [
+    "debt_weighted_absolute_mismatch_area",
+    "debt_weighted_overvaluation_area",
+    "debt_weighted_undervaluation_area",
+    "peak_debt_weighted_mismatch",
+    "false_safe_vault_hours",
+    "false_safe_debt_hours",
+    "peak_false_safe_debt",
+    "false_unsafe_vault_hours",
+    "false_unsafe_debt_hours",
+    "peak_false_unsafe_debt",
+    "market_unsafe_debt_not_oracle_eligible_share",
+    "oracle_unsafe_debt_already_market_safe_share",
+    "recognition_lag_mean",
+    "recognition_lag_median",
+    "recovery_staleness_mean",
+    "recovery_staleness_median",
+    "backlog_area_share",
+    "maximum_unresolved_tab_share",
+    "terminal_unresolved_tab_share",
+    "liquidation_completion_ratio",
+    "peak_eligible_tab_share",
+    "peak_new_eligible_tab_share",
+    "peak_selected_attempts",
+    "peak_successful_closures",
+    "hours_for_half_eligible_tab",
+    "five_busiest_eligible_tab_share",
+    "capacity_binding_hours",
+    "capacity_rejected_opportunity_count",
+    "successful_closure_count",
+    "liquidated_debt_share",
+    "debt_weighted_liquidated_vault_share",
+    "realised_bad_debt_share",
+    "positive_realised_bad_debt",
+    "terminal_active_bad_debt_share",
+    "below_peg_burden",
+    "mean_absolute_peg_deviation",
+    "minimum_dai_price",
+    "restricted_mean_recovery_time",
+    "recovery_probability_720h"
+  ],
+  "timing_definitions": {
+    "never_both_states": "not_applicable",
+    "recognition_lag": "first_oracle_unsafe-first_market_unsafe",
+    "recovery_staleness": "first_oracle_resafe-first_market_resafe"
+  },
+  "usdc_svb_used": false
+}

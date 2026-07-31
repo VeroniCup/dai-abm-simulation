@@ -1,0 +1,122 @@
+{
+  "E1": {
+    "classification": "supported"
+  },
+  "E2": {
+    "classification": "partially_supported"
+  },
+  "E3": {
+    "classification": "peg_unchanged"
+  },
+  "anchor_downstream_statuses": {
+    "empirical_crypto__joint_crypto_high_correlation": "delay_friction_partial",
+    "stable_supported__joint_crypto_stable_stress": "delay_friction_partial"
+  },
+  "anchor_e1_rules": {
+    "empirical_crypto__joint_crypto_high_correlation": true,
+    "stable_supported__joint_crypto_stable_stress": true
+  },
+  "anchor_peg_statuses": {
+    "empirical_crypto__joint_crypto_high_correlation": "peg_unchanged",
+    "stable_supported__joint_crypto_stable_stress": "peg_unchanged"
+  },
+  "bad_debt_evaluation_boundary": {
+    "interpretation": "Degenerate bad-debt outcomes are excluded under the retained close-factor-one boundary.",
+    "positive_realised_bad_debt": "degenerate",
+    "realised_bad_debt_share": "degenerate",
+    "terminal_active_bad_debt_share": "degenerate"
+  },
+  "cross_anchor_sensitivity": {
+    "backlog_area_share": "crypto_stable_anchor_more_sensitive",
+    "capacity_binding_hours": "similar_sensitivity",
+    "capacity_rejected_opportunity_count": "similar_sensitivity",
+    "debt_weighted_absolute_mismatch_area": "crypto_anchor_more_sensitive",
+    "debt_weighted_liquidated_vault_share": "crypto_stable_anchor_more_sensitive",
+    "debt_weighted_overvaluation_area": "crypto_anchor_more_sensitive",
+    "debt_weighted_undervaluation_area": "crypto_anchor_more_sensitive",
+    "five_busiest_eligible_tab_share": "crypto_anchor_more_sensitive",
+    "hours_for_half_eligible_tab": "similar_sensitivity",
+    "liquidated_debt_share": "crypto_stable_anchor_more_sensitive",
+    "liquidation_completion_ratio": "crypto_stable_anchor_more_sensitive",
+    "maximum_unresolved_tab_share": "crypto_anchor_more_sensitive",
+    "overall": "metric_specific",
+    "peak_debt_weighted_mismatch": "crypto_anchor_more_sensitive",
+    "peak_eligible_tab_share": "crypto_stable_anchor_more_sensitive",
+    "peak_new_eligible_tab_share": "crypto_anchor_more_sensitive",
+    "peak_selected_attempts": "crypto_anchor_more_sensitive",
+    "peak_successful_closures": "crypto_stable_anchor_more_sensitive",
+    "successful_closure_count": "crypto_anchor_more_sensitive",
+    "terminal_unresolved_tab_share": "similar_sensitivity"
+  },
+  "delay_selected": false,
+  "experiment_id": "E_oracle_delay",
+  "experiment_identity": "67ec5a1e03492608c7f847861f7dbd506d2a526dbf4107298241b26c855eb0f8",
+  "metric_operationality": {
+    "backlog_area_share": "operational",
+    "below_peg_burden": "operational",
+    "capacity_binding_hours": "degenerate",
+    "capacity_rejected_opportunity_count": "degenerate",
+    "debt_weighted_absolute_mismatch_area": "operational",
+    "debt_weighted_liquidated_vault_share": "operational",
+    "debt_weighted_overvaluation_area": "operational",
+    "debt_weighted_undervaluation_area": "operational",
+    "false_safe_debt_hours": "operational",
+    "false_safe_vault_hours": "operational",
+    "false_unsafe_debt_hours": "operational",
+    "false_unsafe_vault_hours": "operational",
+    "five_busiest_eligible_tab_share": "operational",
+    "hours_for_half_eligible_tab": "operational",
+    "liquidated_debt_share": "operational",
+    "liquidation_completion_ratio": "operational",
+    "market_unsafe_debt_not_oracle_eligible_share": "operational",
+    "maximum_unresolved_tab_share": "operational",
+    "mean_absolute_peg_deviation": "operational",
+    "minimum_dai_price": "operational",
+    "oracle_unsafe_debt_already_market_safe_share": "operational",
+    "peak_debt_weighted_mismatch": "operational",
+    "peak_eligible_tab_share": "operational",
+    "peak_false_safe_debt": "operational",
+    "peak_false_unsafe_debt": "operational",
+    "peak_new_eligible_tab_share": "operational",
+    "peak_selected_attempts": "operational",
+    "peak_successful_closures": "operational",
+    "positive_realised_bad_debt": "degenerate",
+    "realised_bad_debt_share": "degenerate",
+    "recognition_lag_mean": "operational",
+    "recognition_lag_median": "operational",
+    "recovery_probability_720h": "degenerate",
+    "recovery_staleness_mean": "operational",
+    "recovery_staleness_median": "operational",
+    "restricted_mean_recovery_time": "operational",
+    "successful_closure_count": "operational",
+    "terminal_active_bad_debt_share": "degenerate",
+    "terminal_unresolved_tab_share": "degenerate"
+  },
+  "next_authorised_stage": "pre_registered_h4_recovery_and_behavioural_stabilisation_synthesis",
+  "overall_h2_classification": "H2_oracle_delay_partially_supported",
+  "path_validation": {
+    "delay_zero_structural_zero": true,
+    "passed": true
+  },
+  "peg_solvency_relationship": "solvency_deteriorates_peg_unchanged",
+  "preferred_delay": null,
+  "programme_identity": "084dd8495ec29717a94cc2d6d5427a78f377d82989abf2d119547fb1db376260",
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "scientific_classification": "transparent_sensitivity_not_empirically_identified",
+  "validity_audit": {
+    "cell_failure_counts": {
+      "joint_crypto_high_correlation__empirical_crypto__oracle_delay_central": 0,
+      "joint_crypto_high_correlation__empirical_crypto__oracle_delay_high": 0,
+      "joint_crypto_high_correlation__empirical_crypto__oracle_delay_low": 0,
+      "joint_crypto_stable_stress__stable_supported__oracle_delay_central": 0,
+      "joint_crypto_stable_stress__stable_supported__oracle_delay_high": 0,
+      "joint_crypto_stable_stress__stable_supported__oracle_delay_low": 0
+    },
+    "checkpoint_complete": true,
+    "delay_selected": false,
+    "held_out_data_used": false,
+    "passed": true,
+    "usdc_svb_used": false
+  }
+}

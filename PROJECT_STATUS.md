@@ -142,7 +142,7 @@ peg–solvency relationship is `neither_materially_changes`. Realised bad-debt
 metrics remain degenerate under close-factor-one accounting. Capacities 14,
 26 and 45 remain partially identified sensitivity coordinates: no capacity
 was ranked, selected or runtime adopted. Experiments A–C remain unchanged,
-and Experiment E did not run.
+and Experiment E did not rerun them.
 
 The result-blind
 [oracle-delay freeze](docs/calibration/oracle_delay.md) is complete under
@@ -154,9 +154,21 @@ classified `transparent_sensitivity_not_empirically_identified`. The existing
 Experiment E identifiers resolve externally to 0, 1 and 2 hourly simulation
 steps. These are result-blind mechanism sensitivities, not estimates of
 historical Maker oracle latency. The readiness classification is
-`experiment_e_ready_with_transparent_delay_sensitivity`: Experiment E is ready
-but unexecuted, no delay was selected, no held-out data were used and the
-production zero-delay default remains unchanged.
+`experiment_e_ready_with_transparent_delay_sensitivity`.
+
+The fifth final-programme study,
+[Experiment E — oracle delay](docs/experiments/final/oracle_delay.md), is
+complete from 128 authoritative checkpoints and 768 simulations under
+experiment identity
+`67ec5a1e03492608c7f847861f7dbd506d2a526dbf4107298241b26c855eb0f8`.
+E1 is `supported`, E2 is `partially_supported`, E3 is `peg_unchanged`, and
+the overall result is `H2_oracle_delay_partially_supported`. Mismatch and
+recognition lag grow at both anchors, while downstream liquidation effects
+are modest and peg outcomes are unchanged. The peg–solvency relationship is
+`solvency_deteriorates_peg_unchanged`; bad-debt metrics remain degenerate
+under close-factor-one accounting. No delay was selected, no held-out or
+USDC/SVB data were used, and the production zero-delay default remains
+unchanged. Experiments A–D remain byte-identical.
 
 The separate
 [experiment-infrastructure maintenance](docs/validation/experiment_infrastructure_maintenance.md)
@@ -244,13 +256,14 @@ review reproduced all of them without changing executable behaviour.
 
 ## Next research work
 
-Experiments A–D and the result-independent oracle-delay freeze are complete.
-Experiment E remains unexecuted but is ready; its execution with the frozen
-registry is the next scientific stage. H4 synthesis remains pending.
+Experiments A–E and the result-independent oracle-delay freeze are complete.
+The five-experiment core final programme is complete. The next scientific
+stage is the pre-registered H4 recovery and behavioural-stabilisation evidence
+synthesis.
 The stable-impairment component of H3 is complete with partial support, while
 Experiment D provides mixed secondary shared-capacity transmission evidence.
-Population-scale robustness, Experiment E execution and held-out final
-validation, including USDC/SVB, remain outstanding. The five portfolios and
+Population-scale robustness and held-out final validation, including
+USDC/SVB, remain outstanding. The five portfolios and
 seven shocks are frozen inputs, not result-based selections. Keeper candidates
 and both integrated profiles remain opt-in evidence rather than adopted
 defaults.

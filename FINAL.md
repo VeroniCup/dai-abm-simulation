@@ -64,9 +64,13 @@ Completed in the current end-stage pass:
   `2e562ef2618e472ce3b0551addf2596ddbe137910fa6d2ad5884ae71c674e46d`
   as `transparent_sensitivity_not_empirically_identified`, resolving low,
   central and high to 0, 1 and 2 hourly steps without runtime adoption.
+- final Experiment E, oracle delay: completed from 128 authoritative
+  checkpoints and 768 simulations under experiment identity
+  `67ec5a1e03492608c7f847861f7dbd506d2a526dbf4107298241b26c855eb0f8`,
+  without selecting or runtime-adopting a delay.
 
-Stages 1–5, final Experiments A–D and the result-independent oracle-delay
-freeze are complete. Experiment E is ready but remains unexecuted. No
+Stages 1–5, final Experiments A–E and the result-independent oracle-delay
+freeze are complete. The five-experiment core final programme is complete. No
 portfolio, shock, capacity or oracle delay has been selected from validation
 or experiment outcomes.
 
@@ -384,7 +388,20 @@ identity is
 `2e562ef2618e472ce3b0551addf2596ddbe137910fa6d2ad5884ae71c674e46d`.
 These coordinates are result-blind mechanism sensitivities rather than
 historical Maker latency estimates. The registry is not runtime adopted and
-does not select a preferred delay. Experiment E is ready but unexecuted.
+does not select a preferred delay.
+
+Experiment E is complete under the same transparent-sensitivity boundary.
+Its identity is
+`67ec5a1e03492608c7f847861f7dbd506d2a526dbf4107298241b26c855eb0f8`.
+E1 is `supported`, E2 is `partially_supported`, E3 is `peg_unchanged`, and
+the overall classification is `H2_oracle_delay_partially_supported`.
+Mismatch and recognition lag increase at both registered anchors; downstream
+liquidation effects are partial and peg outcomes are unchanged. The
+peg–solvency relationship is `solvency_deteriorates_peg_unchanged`.
+Realised-bad-debt metrics remain degenerate under close-factor-one accounting.
+No delay was selected, no held-out or USDC/SVB data were used, Experiments
+A–D remain unchanged, and `runtime_adopted` remains false. See
+[`docs/experiments/final/oracle_delay.md`](docs/experiments/final/oracle_delay.md).
 
 ## 3.6 Stable collateral process — frozen with a counterfactual boundary
 
@@ -462,7 +479,7 @@ collateral-to-system reconciliation.
 
 Population-scale validation, quiet held-out validation, held-out crypto-stress
 validation and final USDC/SVB validation remain outstanding. The oracle-delay
-freeze is complete, but Experiment E has not run. No retuning may follow final
+freeze and Experiment E are complete. No retuning may follow final
 validation.
 
 The validation record is
@@ -880,8 +897,8 @@ ready with caveats rather than fully empirical.
 
 ## Stage 6 — Final multi-collateral experiments
 
-**Status:** in progress. Experiments A–D and the result-independent
-oracle-delay freeze are complete; Experiment E is ready but unexecuted.
+**Status:** core programme complete. Experiments A–E and the result-independent
+oracle-delay freeze are complete; H4 evidence synthesis remains pending.
 
 Use a hierarchical design rather than one enormous full factorial.
 
@@ -1349,12 +1366,11 @@ Do not:
 
 The next scientific stage is:
 
-> **Execute Experiment E: oracle delay using the frozen oracle-delay
-> registry.**
+> **Complete the pre-registered H4 recovery and behavioural-stabilisation
+> evidence synthesis.**
 
 The final experiment registry continues to use the frozen five portfolios and
-seven shocks without result-based screening. Experiments A–D are complete.
-Experiment E has not been executed but its numerical dependency is resolved.
+seven shocks without result-based screening. Experiments A–E are complete.
 Population, positive-hurdle and oracle-delay cases remain separate
 robustness dimensions. The remaining final experiments, population robustness,
 held-out validation, USDC/SVB validation and final code freeze remain

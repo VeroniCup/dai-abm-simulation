@@ -16,7 +16,8 @@ authoritative checkpoints and 1,536 simulations.
 checkpoints and 1,152 simulations. The result-independent
 [oracle-delay freeze](../../calibration/oracle_delay.md) now resolves the
 existing Experiment E treatment identifiers externally as zero, one and two
-hourly steps. Experiment E is ready but remains unexecuted.
+hourly steps. [Experiment E](oracle_delay.md) is complete without selecting or
+runtime-adopting a delay.
 
 The H4 evidence synthesis is a reporting programme rather than another core
 simulation matrix. It remains pending and contributes no additional cell or
@@ -83,7 +84,7 @@ defined them; they are not additional dissertation hypotheses.
 | Experiment B — correlated stress | 8 | 128 | 1,024 | `completed` | RQ4 and H3 across the two registered joint-stress bundles |
 | Experiment C — stable-collateral trade-off | 12 | 128 | 1,536 | `completed` | RQ4 and H3 under stable-proxy depeg and joint stress |
 | Experiment D — shared keeper capacity | 9 | 128 | 1,152 | `completed` | RQ2 and H1, with cross-collateral implications for RQ4 |
-| Experiment E — oracle delay | 6 | 128 | 768 | `ready_but_unexecuted` | RQ2 and H2 |
+| Experiment E — oracle delay | 6 | 128 | 768 | `completed` | RQ2 and H2 |
 | H4 evidence synthesis | 0 | — | 0 | `pending_evidence_synthesis` | RQ3 and H4, using pre-registered evidence rather than a new core matrix |
 | **Total** | **43** |  | **5,504** |  |  |
 
@@ -129,12 +130,20 @@ peg–solvency relationship is `neither_materially_changes`. Capacities 14, 26
 and 45 remain partially identified sensitivity coordinates: none is ranked,
 selected or runtime adopted.
 
+Experiment E reports E1 `supported`, E2 `partially_supported`, E3
+`peg_unchanged` and overall `H2_oracle_delay_partially_supported`. Mismatch,
+false-safe debt-hours and recognition lag grow with delay at both anchors;
+downstream liquidation effects are modest and metric-specific, while peg
+outcomes are unchanged. The registered peg–solvency relationship is
+`solvency_deteriorates_peg_unchanged`. Delays 0, 1 and 2 remain transparent
+sensitivities: none is ranked, selected or runtime adopted.
+
 ## Sequencing and no-retuning rule
 
-The programme is hierarchical. Completion of the oracle-delay freeze makes
-Experiment E ready but does not execute it or authorise the H4 synthesis,
-robustness layers or held-out validation. The next scientific stage is to
-execute Experiment E using the frozen registry. Each later component must
+The programme is hierarchical. Completion of Experiment E closes the five-
+experiment core programme and authorises the next pre-registered stage: H4
+recovery and behavioural-stabilisation evidence synthesis. Robustness layers
+and held-out validation remain separately gated. Each later component must
 retain its registered design and receive its own execution authorisation.
 
 Model mechanisms, parameters, empirical input pools, portfolio definitions,

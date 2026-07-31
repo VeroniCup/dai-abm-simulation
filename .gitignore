@@ -122,6 +122,16 @@ data/provenance/experiments/final/shared_keeper_capacity/*
 !data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_decision.json
 !data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_reproducibility.json
 !data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_benchmark.json
+!data/provenance/experiments/final/oracle_delay/
+data/provenance/experiments/final/oracle_delay/*
+!data/provenance/experiments/final/oracle_delay/oracle_delay_specification.json
+!data/provenance/experiments/final/oracle_delay/oracle_delay_registry.csv
+!data/provenance/experiments/final/oracle_delay/oracle_delay_cell_summary.csv
+!data/provenance/experiments/final/oracle_delay/oracle_delay_collateral_summary.csv
+!data/provenance/experiments/final/oracle_delay/oracle_delay_contrasts.csv
+!data/provenance/experiments/final/oracle_delay/oracle_delay_decision.json
+!data/provenance/experiments/final/oracle_delay/oracle_delay_reproducibility.json
+!data/provenance/experiments/final/oracle_delay/oracle_delay_benchmark.json
 !data/provenance/calibration/
 data/provenance/calibration/*
 !data/provenance/calibration/manifest.json

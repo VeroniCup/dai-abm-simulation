@@ -1,5 +1,5 @@
 {
-  "artefact_count": 59,
+  "artefact_count": 67,
   "artefacts": [
     {
       "classification": "scenario_defined_experimental_design",
@@ -210,6 +210,62 @@
       "runtime_adopted": false,
       "sha256": "e6da0af839c53ddffb6eeaea596174d26499afeb55ca0d1910be49c679cd740d",
       "size_bytes": 82029
+    },
+    {
+      "classification": "pre_registered_final_oracle_delay_experiment",
+      "path": "data/provenance/experiments/final/oracle_delay/oracle_delay_benchmark.json",
+      "runtime_adopted": false,
+      "sha256": "11f08828fa0ee9329000f5c1b9a4a6e9514a119a0dad259ae31a1f2e85b72331",
+      "size_bytes": 912
+    },
+    {
+      "classification": "pre_registered_final_oracle_delay_experiment",
+      "path": "data/provenance/experiments/final/oracle_delay/oracle_delay_cell_summary.csv",
+      "runtime_adopted": false,
+      "sha256": "da5cd5ce0a96eea9abd00ebcf646bacf358bdc4ee6fee6f2c59d78c47bf5f868",
+      "size_bytes": 80363
+    },
+    {
+      "classification": "pre_registered_final_oracle_delay_experiment",
+      "path": "data/provenance/experiments/final/oracle_delay/oracle_delay_collateral_summary.csv",
+      "runtime_adopted": false,
+      "sha256": "feab86942634d5a7c799518ffeef88c77e64f175b43758e59704b086e567a452",
+      "size_bytes": 150278
+    },
+    {
+      "classification": "pre_registered_final_oracle_delay_experiment",
+      "path": "data/provenance/experiments/final/oracle_delay/oracle_delay_contrasts.csv",
+      "runtime_adopted": false,
+      "sha256": "8999bbd962f3f354a8854620deb1b3b6074e6e667fa698c3ddb74169161a7f72",
+      "size_bytes": 263838
+    },
+    {
+      "classification": "pre_registered_final_oracle_delay_experiment",
+      "path": "data/provenance/experiments/final/oracle_delay/oracle_delay_decision.json",
+      "runtime_adopted": false,
+      "sha256": "a9745d751f77b07ec3d44eb1c54449ca6a15f71340ab23af9b9e1ac750b62776",
+      "size_bytes": 5694
+    },
+    {
+      "classification": "pre_registered_final_oracle_delay_experiment",
+      "path": "data/provenance/experiments/final/oracle_delay/oracle_delay_registry.csv",
+      "runtime_adopted": false,
+      "sha256": "0ee162fb47b8f417a67ea9e88ae4b4ae82781f4264d200c8f7db93b8b159609c",
+      "size_bytes": 1959
+    },
+    {
+      "classification": "pre_registered_final_oracle_delay_experiment",
+      "path": "data/provenance/experiments/final/oracle_delay/oracle_delay_reproducibility.json",
+      "runtime_adopted": false,
+      "sha256": "5056febd30b658a2089daa2aa15f843fb9eef493e0b2d6b0e0ea30926e2ebc96",
+      "size_bytes": 4691
+    },
+    {
+      "classification": "pre_registered_final_oracle_delay_experiment",
+      "path": "data/provenance/experiments/final/oracle_delay/oracle_delay_specification.json",
+      "runtime_adopted": false,
+      "sha256": "acce1aafeabcc8ccfd63b4ca353e9839c1cc11373043432a47c31389eb8f0537",
+      "size_bytes": 13624
     },
     {
       "classification": "pre_registered_final_shared_keeper_capacity_experiment",

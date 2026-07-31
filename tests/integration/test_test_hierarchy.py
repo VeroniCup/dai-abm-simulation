@@ -30,9 +30,7 @@ EXPECTED_MAPPING = {
     "tests/test_documentation_links.py": (
         "tests/integration/test_documentation_links.py"
     ),
-    "tests/test_domain_data_paths.py": (
-        "tests/integration/test_domain_data_paths.py"
-    ),
+    "tests/test_domain_data_paths.py": ("tests/integration/test_domain_data_paths.py"),
     "tests/test_dune_gas_pipeline.py": "tests/workflows/gas/test_acquisition.py",
     "tests/test_dune_liquidation_diagnostic.py": (
         "tests/workflows/liquidations/test_diagnostic.py"
@@ -55,46 +53,30 @@ EXPECTED_MAPPING = {
     "tests/test_dune_vat_activation_diagnostic.py": (
         "tests/workflows/protocol/test_activation.py"
     ),
-    "tests/test_dune_vault_discovery.py": (
-        "tests/workflows/vaults/test_discovery.py"
-    ),
+    "tests/test_dune_vault_discovery.py": ("tests/workflows/vaults/test_discovery.py"),
     "tests/test_dune_vault_production.py": (
         "tests/workflows/vaults/test_acquisition.py"
     ),
-    "tests/test_empirical_tranche_a_config.py": (
-        "tests/inputs/test_configuration.py"
-    ),
+    "tests/test_empirical_tranche_a_config.py": ("tests/inputs/test_configuration.py"),
     "tests/test_model_input_paths.py": "tests/inputs/test_model_input_paths.py",
-    "tests/test_package_and_paths.py": (
-        "tests/integration/test_package_and_paths.py"
-    ),
-    "tests/test_parameter_adoption_review.py": (
-        "tests/calibration/test_adoption.py"
-    ),
+    "tests/test_package_and_paths.py": ("tests/integration/test_package_and_paths.py"),
+    "tests/test_parameter_adoption_review.py": ("tests/calibration/test_adoption.py"),
     "tests/test_phase1e_b_representative_vaults.py": (
         "tests/workflows/vaults/test_representative_windows.py"
     ),
-    "tests/test_phase2a_candidate_review.py": (
-        "tests/calibration/test_validation.py"
-    ),
+    "tests/test_phase2a_candidate_review.py": ("tests/calibration/test_validation.py"),
     "tests/test_phase2a_estimation.py": (
         "tests/calibration/test_market_gas_protocol.py"
     ),
-    "tests/test_phase2b_vault_estimation.py": (
-        "tests/calibration/test_vaults.py"
-    ),
+    "tests/test_phase2b_vault_estimation.py": ("tests/calibration/test_vaults.py"),
     "tests/test_phase2c_liquidation_estimation.py": (
         "tests/calibration/test_liquidations.py"
     ),
-    "tests/test_process_dune_hourly_gas.py": (
-        "tests/workflows/gas/test_processing.py"
-    ),
+    "tests/test_process_dune_hourly_gas.py": ("tests/workflows/gas/test_processing.py"),
     "tests/test_process_dune_market_prices.py": (
         "tests/workflows/market/test_processing.py"
     ),
-    "tests/test_provenance_paths.py": (
-        "tests/integration/test_provenance_paths.py"
-    ),
+    "tests/test_provenance_paths.py": ("tests/integration/test_provenance_paths.py"),
     "tests/test_source_package_migration.py": (
         "tests/integration/test_source_package_migration.py"
     ),
@@ -102,9 +84,7 @@ EXPECTED_MAPPING = {
     "tests/test_sql_integrity.py": "tests/integration/test_sql_integrity.py",
     "tests/test_tranche_b_vault_initialisation.py": "tests/inputs/test_vaults.py",
     "tests/test_tranche_c_environment_inputs.py": "tests/inputs/test_environment.py",
-    "tests/test_tranche_d_liquidation_demand.py": (
-        "tests/inputs/test_liquidations.py"
-    ),
+    "tests/test_tranche_d_liquidation_demand.py": ("tests/inputs/test_liquidations.py"),
     "tests/test_workflow_migration.py": "tests/workflows/test_migration.py",
 }
 STAGE9_MODULES = {
@@ -148,6 +128,7 @@ POST_RESTRUCTURING_FEATURE_MODULES = {
     "tests/experiments/final/test_idiosyncratic_diversification.py",
     "tests/experiments/final/test_stable_collateral_tradeoff.py",
     "tests/experiments/final/test_shared_keeper_capacity.py",
+    "tests/experiments/final/test_final_oracle_delay.py",
     "tests/experiments/final/test_programme.py",
     "tests/validation/test_integrated_eth.py",
     "tests/validation/test_multicollateral.py",
@@ -204,9 +185,7 @@ def test_only_populated_semantic_categories_exist() -> None:
     populated = {
         path.name
         for path in TESTS_ROOT.iterdir()
-        if path.is_dir()
-        and path.name != "fixtures"
-        and any(path.rglob("test_*.py"))
+        if path.is_dir() and path.name != "fixtures" and any(path.rglob("test_*.py"))
     }
     assert populated == APPROVED_CATEGORIES
     assert (TESTS_ROOT / "experiments/mechanism/test_eth_recovery.py").is_file()
@@ -220,7 +199,7 @@ def test_no_test_module_remains_at_suite_root() -> None:
 
 def test_no_placeholder_or_duplicate_test_module_exists() -> None:
     modules = sorted(TESTS_ROOT.rglob("test_*.py"))
-    assert len(modules) == 72
+    assert len(modules) == 73
     assert all(path.stat().st_size > 100 for path in modules)
     assert len({path.resolve() for path in modules}) == len(modules)
 

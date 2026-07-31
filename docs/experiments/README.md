@@ -60,8 +60,10 @@ stable-depeg severity or exposure gradient; and Experiment D finds one small
 threshold backlog effect, mixed shared-capacity transmission and unchanged
 peg outcomes, yielding `H1_no_clear_shared_capacity_effect`. The
 result-independent oracle-delay freeze resolves Experiment E to transparent
-zero-, one- and two-step sensitivities. Experiment E is ready but unexecuted,
-and the H4 evidence synthesis is `pending_evidence_synthesis`.
+zero-, one- and two-step sensitivities. Experiment E is complete with
+`H2_oracle_delay_partially_supported`, no selected delay and no runtime
+adoption; see the [final report](final/oracle_delay.md). The H4 evidence
+synthesis remains `pending_evidence_synthesis`.
 
 Established scenario definitions are protected Python configuration factories in
 `scenarios.py`, with execution functions in `runner.py`. The new opt-in ETH
