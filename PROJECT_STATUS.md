@@ -98,6 +98,21 @@ improves for the qualifying diversified portfolios while the registered peg
 outcomes remain unchanged. No portfolio, shock or runtime configuration was
 ranked, selected or adopted.
 
+The second final-programme study,
+[Experiment B — correlated stress](docs/experiments/final/correlated_stress.md),
+is complete from 128 authoritative checkpoints and 1,024 simulations under
+experiment identity
+`e02c035162f8178c96d2cae71d0a581ce813ab33526854bd5810e8e2810ead83`.
+B1 is `supported`, B2 is `correlation_deterioration_present`, B3 is
+`transmission_mixed`, and the overall result is
+`H3_correlation_deterioration_supported`. All three diversified portfolios
+are descriptively `weakens_but_remains`; none reverses. The registered
+peg–solvency relationship is `solvency_deteriorates_peg_unchanged`. B2
+compares two frozen bundles whose severity, recovery and gas ownership also
+differ, so it is not a ceteris-paribus causal correlation estimate. Experiment
+A remains unchanged, no portfolio or shock was selected, and no runtime
+configuration was adopted.
+
 The separate
 [experiment-infrastructure maintenance](docs/validation/experiment_infrastructure_maintenance.md)
 is complete. The convenience reconstruction CLI now respects the keyword-only
@@ -184,10 +199,11 @@ review reproduced all of them without changing executable behaviour.
 
 ## Next research work
 
-The next authorised scientific boundary is Experiment B, correlated stress.
-It will test whether the isolated-shock diversification evidence from
-Experiment A survives increasing cross-asset dependence. Experiments B–E have
-not been executed.
+The next authorised scientific boundary is Experiment C, the
+stable-collateral trade-off. Experiments A and B are complete; Experiments
+C–E remain unexecuted, and Experiment E remains blocked pending a
+result-independent oracle-delay freeze. The stable-impairment component of H3
+is therefore not complete.
 Population-scale robustness, oracle-delay closure and held-out final
 validation, including USDC/SVB, remain outstanding. The five portfolios and
 seven shocks are frozen inputs, not result-based selections. Keeper candidates

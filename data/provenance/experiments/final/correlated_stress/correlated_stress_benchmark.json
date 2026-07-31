@@ -1,0 +1,23 @@
+{
+  "calibration_runs": 0,
+  "checkpoint_count": 128,
+  "completed_replications": 128,
+  "completed_simulations": 1024,
+  "execution_command": "PYTHONPATH=src python workflows/experiments/final/correlated_stress.py all --workers 4",
+  "experiment_a_simulations": 0,
+  "experiments_c_to_e_simulations": 0,
+  "failed_replications": 0,
+  "free_storage_bytes": 234578243584,
+  "full_wall_time_seconds": 412.7999641895294,
+  "held_out_validation_runs": 0,
+  "measurement_timestamp_utc": "2026-07-31T03:10:00+00:00",
+  "network_calls": 0,
+  "output_size_bytes": 7680899,
+  "rerun_replications": 0,
+  "resumed_replications": 0,
+  "reused_replications": 0,
+  "schema_version": 1,
+  "smoke_wall_time_seconds": 12.817620277404785,
+  "throughput_simulations_per_second": 2.4806203702330007,
+  "worker_count": 4
+}

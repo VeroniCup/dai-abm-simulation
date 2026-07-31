@@ -1,7 +1,7 @@
 # Project structure
 
-This is the implemented repository map after completion of the first final
-multi-collateral experiment. It distinguishes scientific roles,
+This is the implemented repository map after completion of the first two
+final multi-collateral experiments. It distinguishes scientific roles,
 authoritative inputs and generated outputs.
 
 ## 1. Scientific architecture
@@ -14,7 +14,7 @@ flowchart TD
     D["Simulation model<br/>economic mechanisms"]
     E["Validation<br/>frozen inputs and contracts"]
     F["Mechanism experiments<br/>controlled pre-final studies"]
-    G["Final experiments<br/>Experiment A complete"]
+    G["Final experiments<br/>Experiments A and B complete"]
     H["Compact provenance"]
     I["Generated figures, tables and diagnostics"]
 
@@ -30,7 +30,8 @@ Calibration may conclude that a parameter is unidentified; it does not need to
 produce a point estimate. Validation checks frozen compositions and
 cross-layer behaviour without estimating values. Mechanism experiments test
 controlled causal effects. The final package owns the principal hierarchical
-dissertation programme; Experiment A is complete and Experiment B is next.
+dissertation programme; Experiments A and B are complete and Experiment C is
+next.
 
 ## 2. Actual repository tree
 
@@ -57,7 +58,7 @@ dai-abm-simulation/
 │   ├── validation/                  frozen-input and contract validation
 │   ├── experiments/
 │   │   ├── mechanism/               ETH recovery studies
-│   │   ├── final/                   final programme and Experiment A
+│   │   ├── final/                   final programme and Experiments A and B
 │   │   └── {runner,scenarios,summaries,plots}.py [protected established]
 │   └── common/                      shared repository infrastructure
 ├── workflows/
@@ -91,8 +92,8 @@ flowchart LR
     D["Mechanism recovery studies<br/>complete"]
     E["Multi-collateral input validation<br/>complete"]
     T["Scientific package taxonomy<br/>complete with protected exceptions"]
-    F["Experiment A<br/>complete"]
-    B2["Experiment B<br/>next"]
+    F["Experiments A and B<br/>complete"]
+    B2["Experiment C<br/>next"]
     G["Held-out validation<br/>pending"]
     H["Code freeze<br/>pending"]
 
@@ -100,8 +101,8 @@ flowchart LR
 ```
 
 The final programme retains separate registered, operational and generated
-evidence boundaries. Experiment A changes no production default; its next
-unambiguous boundary is Experiment B under the frozen master programme.
+evidence boundaries. Experiments A and B change no production default; the
+next unambiguous boundary is Experiment C under the frozen master programme.
 
 ## 4. Ownership map
 
@@ -121,7 +122,7 @@ unambiguous boundary is Experiment B under the frozen master programme.
 | Sustained recovery metrics | `dai_sim.experiments.mechanism.eth_recovery._recovery_metrics` | Constrained study imports the same owner |
 | Integrated ETH validation API | `dai_sim.validation.integrated_eth` | Protected implementation remains under calibration |
 | Multi-collateral validation API | `dai_sim.validation.multicollateral` | Protected implementation remains under calibration |
-| Final experiment code | `dai_sim.experiments.final` | Master programme and completed Experiment A |
+| Final experiment code | `dai_sim.experiments.final` | Master programme and completed Experiments A and B |
 | Evidence manifests | `data/provenance/{calibration,validation,experiments}/manifest.json` | Cross-class provenance index |
 
 Values, typed resolution, economic application and scientific validation are

@@ -1,5 +1,5 @@
 {
-  "artefact_count": 35,
+  "artefact_count": 43,
   "artefacts": [
     {
       "classification": "scenario_defined_experimental_design",
@@ -98,6 +98,62 @@
       "runtime_adopted": false,
       "sha256": "7c8ef81f874a41451b111087d4890c04ae5cd525e0d9d236c31cfd4c2ac72c06",
       "size_bytes": 30170
+    },
+    {
+      "classification": "pre_registered_final_correlated_stress_experiment",
+      "path": "data/provenance/experiments/final/correlated_stress/correlated_stress_benchmark.json",
+      "runtime_adopted": false,
+      "sha256": "5338cc6cb8f51644ec7b57c394b1a7261aad1c33066af190a04c8ce6d28aa25b",
+      "size_bytes": 802
+    },
+    {
+      "classification": "pre_registered_final_correlated_stress_experiment",
+      "path": "data/provenance/experiments/final/correlated_stress/correlated_stress_cell_summary.csv",
+      "runtime_adopted": false,
+      "sha256": "b1975e29da3278cba665bf922b7d7746e8cb941b8d82a428c3ba262dd5832c76",
+      "size_bytes": 51230
+    },
+    {
+      "classification": "pre_registered_final_correlated_stress_experiment",
+      "path": "data/provenance/experiments/final/correlated_stress/correlated_stress_collateral_summary.csv",
+      "runtime_adopted": false,
+      "sha256": "ed4397574529662ec641f09e3565b66a68f8195a9fcec5a47dc013b048038e7c",
+      "size_bytes": 87374
+    },
+    {
+      "classification": "pre_registered_final_correlated_stress_experiment",
+      "path": "data/provenance/experiments/final/correlated_stress/correlated_stress_contrasts.csv",
+      "runtime_adopted": false,
+      "sha256": "09eeebd447d6bfcb713bc3e5a6974b275529b74b8b48c17184da691f2562ab4a",
+      "size_bytes": 85334
+    },
+    {
+      "classification": "pre_registered_final_correlated_stress_experiment",
+      "path": "data/provenance/experiments/final/correlated_stress/correlated_stress_decision.json",
+      "runtime_adopted": false,
+      "sha256": "dc669354d036060ce9477fdca4a863877af3a88ead73a9130d804c1a66b3add6",
+      "size_bytes": 10153
+    },
+    {
+      "classification": "pre_registered_final_correlated_stress_experiment",
+      "path": "data/provenance/experiments/final/correlated_stress/correlated_stress_registry.csv",
+      "runtime_adopted": false,
+      "sha256": "6c8b9984300b159c427aae350bca12756e50a50ddbe61e2597353b29949bc89b",
+      "size_bytes": 1675
+    },
+    {
+      "classification": "pre_registered_final_correlated_stress_experiment",
+      "path": "data/provenance/experiments/final/correlated_stress/correlated_stress_reproducibility.json",
+      "runtime_adopted": false,
+      "sha256": "94f07e9f18b724ab9dd595c9fc8684d0f76cf29007045b4f7d8fc4d03d8fb5de",
+      "size_bytes": 20513
+    },
+    {
+      "classification": "pre_registered_final_correlated_stress_experiment",
+      "path": "data/provenance/experiments/final/correlated_stress/correlated_stress_specification.json",
+      "runtime_adopted": false,
+      "sha256": "89f38e38b26426800c14f5b31a32e25aff783cf5951692adc4af0f92e870c680",
+      "size_bytes": 117575
     },
     {
       "classification": "pre_registered_final_idiosyncratic_diversification_experiment",

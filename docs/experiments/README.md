@@ -31,6 +31,9 @@ destination for the pre-registered
   the registered Experiment A–E and H4-synthesis boundaries.
 - [Experiment A — idiosyncratic diversification](final/idiosyncratic_diversification.md)
   — the completed eight-cell, 1,024-simulation isolated-shock experiment.
+- [Experiment B — correlated stress](final/correlated_stress.md)
+  — the completed eight-cell, 1,024-simulation registered joint-stress
+  experiment, with its bundled-treatment limitation retained.
 
 The established multi-collateral runner above is a protected historical
 stylised experiment
@@ -39,10 +42,11 @@ portfolio names and five historical shock names are not the newly frozen
 final design. The final design has five portfolios and seven shocks registered by the
 [multi-collateral integration validation](../validation/multicollateral_integration.md).
 No final portfolio or shock has been ranked or selected. Its core programme
-contains 43 cells and 5,504 planned simulations. Experiment A is complete and
-supports idiosyncratic diversification, with solvency improvements but
-unchanged peg outcomes. Experiment B is the next authorised pass but remains
-unexecuted; Experiments C–D are `preregistered_not_executed`; Experiment E is
+contains 43 cells and 5,504 planned simulations. Experiments A and B are
+complete. Experiment A supports idiosyncratic diversification; Experiment B
+finds that the benefit weakens across the registered stress bundles without
+reversing, while peg outcomes remain unchanged. Experiment C is the next
+authorised pass; Experiments C–D are `preregistered_not_executed`; Experiment E is
 `preregistered_blocked_pending_oracle_delay_freeze`; and the result-independent
 H4 evidence synthesis is `pending_evidence_synthesis`.
 

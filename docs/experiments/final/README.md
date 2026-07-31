@@ -7,8 +7,10 @@ programme. It is separate from the protected historical runners and the
 completed ETH-only mechanism studies. The programme contains 43 core cells
 and 5,504 planned simulations, each with 128 replications.
 [Experiment A](idiosyncratic_diversification.md) is complete from its original
-128 authoritative checkpoints and 1,024 simulations. Experiment B is the next
-authorised pass but is not yet executed. Experiments B–E remain unexecuted.
+128 authoritative checkpoints and 1,024 simulations.
+[Experiment B](correlated_stress.md) is also complete from 128 authoritative
+checkpoints and 1,024 simulations. Experiment C is the next authorised pass;
+Experiments C–E remain unexecuted.
 
 The H4 evidence synthesis is a reporting programme rather than another core
 simulation matrix. It remains pending and contributes no additional cell or
@@ -72,7 +74,7 @@ defined them; they are not additional dissertation hypotheses.
 | Programme component | Core cells | Replications | Planned simulations | Status | Principal role |
 | --- | ---: | ---: | ---: | --- | --- |
 | Experiment A — idiosyncratic diversification | 8 | 128 | 1,024 | `completed` | RQ4 and H3 under isolated collateral-specific shocks |
-| Experiment B — correlated stress | 8 | 128 | 1,024 | `authorised_next_not_executed` | RQ4 and H3 as cross-asset dependence rises |
+| Experiment B — correlated stress | 8 | 128 | 1,024 | `completed` | RQ4 and H3 across the two registered joint-stress bundles |
 | Experiment C — stable-collateral trade-off | 12 | 128 | 1,536 | `preregistered_not_executed` | RQ4 and H3 under stable-proxy depeg and joint stress |
 | Experiment D — shared keeper capacity | 9 | 128 | 1,152 | `preregistered_not_executed` | RQ2 and H1, with cross-collateral implications for RQ4 |
 | Experiment E — oracle delay | 6 | 128 | 768 | `preregistered_blocked_pending_oracle_delay_freeze` | RQ2 and H2 |
@@ -92,10 +94,20 @@ post-execution NumPy-to-JSON repair, classified
 `evidence_serialization_infrastructure`, changed only the serialisation
 boundary and did not change any scientific calculation or decision.
 
+Experiment B reports B1 `supported`, B2
+`correlation_deterioration_present`, B3 `transmission_mixed` and overall
+`H3_correlation_deterioration_supported`. Every diversified portfolio is
+classified `weakens_but_remains`, with no reversal. The registered
+peg–solvency relationship is `solvency_deteriorates_peg_unchanged`. B2 is a
+comparison of frozen bundled treatments—not a pure correlation coefficient
+intervention—because severity, recovery and gas ownership also differ. The
+post-execution `evidence_row_ordering_infrastructure` repair changed compact
+row order only; it did not change checkpoints, values or decisions.
+
 ## Sequencing and no-retuning rule
 
-The programme is hierarchical. Completion of Experiment A records Experiment
-B as the next authorised pass; it does not authorise Experiments C–E, the H4
+The programme is hierarchical. Completion of Experiment B records Experiment
+C as the next authorised pass; it does not authorise Experiments D–E, the H4
 synthesis, robustness layers or held-out validation. Each later component
 must retain its registered design and receive its own execution authorisation.
 

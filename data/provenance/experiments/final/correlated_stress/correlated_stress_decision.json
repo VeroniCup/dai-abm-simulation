@@ -1,0 +1,316 @@
+{
+  "B1": "supported",
+  "B1_detail": {
+    "operational_metrics": [
+      "backlog_area_share",
+      "liquidated_debt_share",
+      "unresolved_tab_share"
+    ],
+    "portfolio_results": {
+      "balanced_crypto": {
+        "adverse_bad_debt_metrics": [],
+        "beneficial_metrics": [
+          "backlog_area_share",
+          "liquidated_debt_share",
+          "unresolved_tab_share"
+        ],
+        "beneficial_rule_satisfied": true
+      },
+      "empirical_crypto": {
+        "adverse_bad_debt_metrics": [],
+        "beneficial_metrics": [
+          "backlog_area_share",
+          "liquidated_debt_share",
+          "unresolved_tab_share"
+        ],
+        "beneficial_rule_satisfied": true
+      },
+      "stable_supported": {
+        "adverse_bad_debt_metrics": [],
+        "beneficial_metrics": [
+          "backlog_area_share",
+          "liquidated_debt_share",
+          "unresolved_tab_share"
+        ],
+        "beneficial_rule_satisfied": true
+      }
+    },
+    "qualifying_portfolio_count": 3
+  },
+  "B2": "correlation_deterioration_present",
+  "B2_detail": {
+    "deterioration_portfolio_count": 3,
+    "operational_metrics": [
+      "backlog_area_share",
+      "liquidated_debt_share",
+      "unresolved_tab_share"
+    ],
+    "portfolio_results": {
+      "balanced_crypto": {
+        "deteriorating_metrics": [
+          "backlog_area_share",
+          "liquidated_debt_share",
+          "unresolved_tab_share"
+        ],
+        "deterioration_rule_satisfied": true,
+        "material_opposite_metrics": [],
+        "reversal_metrics": []
+      },
+      "empirical_crypto": {
+        "deteriorating_metrics": [
+          "backlog_area_share",
+          "liquidated_debt_share"
+        ],
+        "deterioration_rule_satisfied": true,
+        "material_opposite_metrics": [],
+        "reversal_metrics": []
+      },
+      "stable_supported": {
+        "deteriorating_metrics": [
+          "backlog_area_share",
+          "liquidated_debt_share",
+          "unresolved_tab_share"
+        ],
+        "deterioration_rule_satisfied": true,
+        "material_opposite_metrics": [],
+        "reversal_metrics": []
+      }
+    },
+    "portfolios_with_at_least_one_deteriorating_metric": 3,
+    "reversal_portfolio_count": 0
+  },
+  "B3": "transmission_mixed",
+  "B3_detail": {
+    "at_least_two_conditions_portfolio_count": 3,
+    "complete_rule_portfolio_count": 0,
+    "portfolio_results": {
+      "balanced_crypto": {
+        "condition_count": 2,
+        "conditions": {
+          "at_least_two_backlog_families": true,
+          "eth_and_wbtc_activity": true,
+          "positive_displacement": false,
+          "simultaneous_unsafe_share_increases": false
+        },
+        "mean_simultaneous_unsafe_share_change": -0.0015407986111111113,
+        "paired_simultaneous_unsafe_share_change": {
+          "ci95_lower": -0.0024258888457357256,
+          "ci95_upper": -0.000655708376486497,
+          "maximum": 0.005555555555555557,
+          "mean": -0.0015407986111111113,
+          "median": 0.0,
+          "minimum": -0.03888888888888889,
+          "p05": -0.010624999999999997,
+          "p25": 0.0,
+          "p75": 0.0,
+          "p90": 0.0,
+          "p95": 0.0,
+          "positive_share": 0.03125,
+          "standard_error": 0.00045157665031868077
+        }
+      },
+      "empirical_crypto": {
+        "condition_count": 3,
+        "conditions": {
+          "at_least_two_backlog_families": true,
+          "eth_and_wbtc_activity": true,
+          "positive_displacement": true,
+          "simultaneous_unsafe_share_increases": false
+        },
+        "mean_simultaneous_unsafe_share_change": -0.0016384548611111114,
+        "paired_simultaneous_unsafe_share_change": {
+          "ci95_lower": -0.0027206050893018516,
+          "ci95_upper": -0.0005563046329203714,
+          "maximum": 0.033333333333333326,
+          "mean": -0.0016384548611111114,
+          "median": 0.0,
+          "minimum": -0.025,
+          "p05": -0.013402777777777777,
+          "p25": -0.0013888888888888887,
+          "p75": 0.0,
+          "p90": 0.0,
+          "p95": 0.0031944444444444208,
+          "positive_share": 0.0703125,
+          "standard_error": 0.0005521174633626224
+        }
+      },
+      "stable_supported": {
+        "condition_count": 2,
+        "conditions": {
+          "at_least_two_backlog_families": true,
+          "eth_and_wbtc_activity": true,
+          "positive_displacement": false,
+          "simultaneous_unsafe_share_increases": false
+        },
+        "mean_simultaneous_unsafe_share_change": -0.00041232638888888894,
+        "paired_simultaneous_unsafe_share_change": {
+          "ci95_lower": -0.0007610196090204026,
+          "ci95_upper": -6.363316875737521e-05,
+          "maximum": 0.0013888888888888883,
+          "mean": -0.00041232638888888894,
+          "median": 0.0,
+          "minimum": -0.016666666666666666,
+          "p05": -0.0013888888888888892,
+          "p25": 0.0,
+          "p75": 0.0,
+          "p90": 0.0,
+          "p95": 0.0,
+          "positive_share": 0.0078125,
+          "standard_error": 0.0001779047041487315
+        }
+      }
+    },
+    "shared_capacity_operational": true
+  },
+  "experiment_identity": "e02c035162f8178c96d2cae71d0a581ce813ab33526854bd5810e8e2810ead83",
+  "experiment_valid": true,
+  "high_correlation_persistence": {
+    "balanced_crypto": {
+      "adverse_metrics": [],
+      "beneficial_metrics": [
+        "backlog_area_share",
+        "liquidated_debt_share",
+        "unresolved_tab_share"
+      ],
+      "classification": "weakens_but_remains",
+      "deteriorating_metrics": [
+        "backlog_area_share",
+        "liquidated_debt_share",
+        "unresolved_tab_share"
+      ],
+      "operational_metrics": [
+        "backlog_area_share",
+        "liquidated_debt_share",
+        "unresolved_tab_share"
+      ]
+    },
+    "empirical_crypto": {
+      "adverse_metrics": [],
+      "beneficial_metrics": [
+        "liquidated_debt_share",
+        "unresolved_tab_share"
+      ],
+      "classification": "weakens_but_remains",
+      "deteriorating_metrics": [
+        "backlog_area_share",
+        "liquidated_debt_share"
+      ],
+      "operational_metrics": [
+        "backlog_area_share",
+        "liquidated_debt_share",
+        "unresolved_tab_share"
+      ]
+    },
+    "stable_supported": {
+      "adverse_metrics": [],
+      "beneficial_metrics": [
+        "backlog_area_share",
+        "liquidated_debt_share",
+        "unresolved_tab_share"
+      ],
+      "classification": "weakens_but_remains",
+      "deteriorating_metrics": [
+        "backlog_area_share",
+        "liquidated_debt_share",
+        "unresolved_tab_share"
+      ],
+      "operational_metrics": [
+        "backlog_area_share",
+        "liquidated_debt_share",
+        "unresolved_tab_share"
+      ]
+    }
+  },
+  "identification_limitation": "B2 compares the two frozen registered joint-stress bundles. The smooth ETH and WBTC multiplier kernels co-move closely and differ in severity and recovery as registered, while the empirical treatment also owns its selected gas block. B2 therefore identifies deterioration across the registered bundles, not a pure causal correlation coefficient.",
+  "metric_operationality": {
+    "active_bad_debt_share": "degenerate",
+    "backlog_area_share": "operational",
+    "below_peg_burden": "operational",
+    "capacity_rejected_opportunities": "operational",
+    "debt_weighted_liquidated_vault_share": "operational",
+    "liquidated_debt_share": "operational",
+    "mean_absolute_peg_deviation": "operational",
+    "minimum_dai_price": "operational",
+    "positive_realised_bad_debt": "degenerate",
+    "realised_bad_debt_share": "degenerate",
+    "recovery_probability_720h": "operational",
+    "restricted_mean_recovery_time": "operational",
+    "successful_closure_count": "operational",
+    "unresolved_tab_share": "operational"
+  },
+  "next_authorised_pass": "C_stable_collateral_tradeoff",
+  "overall_h3_classification": "H3_correlation_deterioration_supported",
+  "peg_solvency_detail": {
+    "peg": {
+      "material_deteriorating_rows": [],
+      "material_improving_rows": [],
+      "state": "unchanged"
+    },
+    "solvency": {
+      "material_deteriorating_rows": [
+        {
+          "metric": "backlog_area_share",
+          "portfolio": "empirical_crypto"
+        },
+        {
+          "metric": "liquidated_debt_share",
+          "portfolio": "empirical_crypto"
+        },
+        {
+          "metric": "backlog_area_share",
+          "portfolio": "balanced_crypto"
+        },
+        {
+          "metric": "liquidated_debt_share",
+          "portfolio": "balanced_crypto"
+        },
+        {
+          "metric": "unresolved_tab_share",
+          "portfolio": "balanced_crypto"
+        },
+        {
+          "metric": "backlog_area_share",
+          "portfolio": "stable_supported"
+        },
+        {
+          "metric": "liquidated_debt_share",
+          "portfolio": "stable_supported"
+        },
+        {
+          "metric": "unresolved_tab_share",
+          "portfolio": "stable_supported"
+        }
+      ],
+      "material_improving_rows": [],
+      "state": "deteriorates"
+    }
+  },
+  "peg_solvency_relationship": "solvency_deteriorates_peg_unchanged",
+  "portfolio_ranked": false,
+  "portfolio_selected": null,
+  "runtime_adopted": false,
+  "schema_version": 1,
+  "shock_ranked": false,
+  "shock_selected": null,
+  "stable_collateral_component_complete": false,
+  "validity_audit": {
+    "accounting_failure_count": 0,
+    "checkpoint_ownership_failure_count": 0,
+    "crn_failure_count": 0,
+    "experiment_valid": true,
+    "final_validation_data_used": false,
+    "gas_unit_crn_failure_count": 0,
+    "joint_path_failure_count": 0,
+    "maximum_cell_failure_share": 0.0,
+    "nested_initialisation_failure_count": 0,
+    "numerical_failure_count": 0,
+    "path_order_failure_count": 0,
+    "price_ownership_failure_count": 0,
+    "registry_resolution_failure_count": 0,
+    "simulation_invariant_failure_count": 0,
+    "state_reuse_failure_count": 0,
+    "treatment_gas_component_failure_count": 0,
+    "treatment_gas_environment_failure_count": 0,
+    "treatment_gas_owner_failure_count": 0
+  }
+}

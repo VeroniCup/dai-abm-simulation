@@ -47,11 +47,16 @@ Completed in the current end-stage pass:
 - final Experiment A, idiosyncratic diversification: completed from 128
   authoritative checkpoints and 1,024 simulations under experiment identity
   `a9d7c3fa5dc5da9bcf61314a57501ea5a8be506e305eee6f45afaae3131600bb`,
+  without selecting a portfolio or shock; and
+- final Experiment B, correlated stress: completed from 128 authoritative
+  checkpoints and 1,024 simulations under experiment identity
+  `e02c035162f8178c96d2cae71d0a581ce813ab33526854bd5810e8e2810ead83`,
   without selecting a portfolio or shock.
 
-Stages 1–5 and final Experiment A are complete. Experiment B, correlated
-stress, is the next authorised pass and remains unexecuted. No portfolio or
-shock has been selected from validation or experiment outcomes.
+Stages 1–5 and final Experiments A and B are complete. Experiment C, the
+stable-collateral trade-off, is the next authorised pass and remains
+unexecuted. No portfolio or shock has been selected from validation or
+experiment outcomes.
 
 ---
 
@@ -858,8 +863,8 @@ ready with caveats rather than fully empirical.
 
 ## Stage 6 — Final multi-collateral experiments
 
-**Status:** in progress. Experiment A is complete; Experiment B is the next
-authorised pass; Experiments B–E remain unexecuted.
+**Status:** in progress. Experiments A and B are complete; Experiment C is the
+next authorised pass; Experiments C–E remain unexecuted.
 
 Use a hierarchical design rather than one enormous full factorial.
 
@@ -919,6 +924,27 @@ Shocks:
 Question:
 
 - do diversification benefits collapse as correlation rises?
+
+Result:
+
+- 128 authoritative checkpoints and 1,024 simulations completed;
+- B1 is `supported`;
+- B2 is `correlation_deterioration_present`;
+- B3 is `transmission_mixed`;
+- every diversified portfolio is `weakens_but_remains`;
+- the overall classification is
+  `H3_correlation_deterioration_supported`; and
+- the peg–solvency relationship is
+  `solvency_deteriorates_peg_unchanged`.
+
+The result must not be described as a ceteris-paribus effect of increasing
+correlation. The two frozen treatment bundles also differ in shock severity,
+recovery and gas ownership; the empirical bundle has the larger realised
+stress-window correlation and deeper drawdown, while the high-correlation
+labelled bundle has more jointly negative hours. The decision applies to the
+registered bundled-treatment contrast. No portfolio, shock or runtime
+configuration was ranked, selected or adopted. See the
+[Experiment B report](docs/experiments/final/correlated_stress.md).
 
 ### Experiment C — Stable-collateral trade-off
 
@@ -1232,7 +1258,7 @@ Do not:
 ## Final experiments
 
 - [x] Idiosyncratic diversification
-- [ ] Stress correlation
+- [x] Stress correlation
 - [ ] Stable-collateral trade-off
 - [ ] Shared keeper capacity
 - [ ] H4 evidence synthesis
@@ -1263,13 +1289,14 @@ Do not:
 
 The next authorised pass is:
 
-> **Execute Experiment B: correlated stress using the frozen master
+> **Execute Experiment C: stable-collateral trade-off using the frozen master
 > programme.**
 
 The final experiment registry must use the frozen five portfolios and seven
 shocks without result-based screening. The central treatment remains
 system-wide capacity 26 with `direct_cost_only`; 14 and 45 remain robustness
-points. Experiment A is complete; Experiments B–E have not been executed.
+points. Experiments A and B are complete; Experiments C–E have not been
+executed, and Experiment E remains blocked pending the oracle-delay freeze.
 Population, positive-hurdle and oracle-delay cases remain separate
 robustness dimensions. The remaining final experiments, population robustness,
 oracle-delay robustness, held-out validation, USDC/SVB validation and final

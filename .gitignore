@@ -92,6 +92,16 @@ data/provenance/experiments/final/idiosyncratic_diversification/*
 !data/provenance/experiments/final/idiosyncratic_diversification/idiosyncratic_diversification_decision.json
 !data/provenance/experiments/final/idiosyncratic_diversification/idiosyncratic_diversification_reproducibility.json
 !data/provenance/experiments/final/idiosyncratic_diversification/idiosyncratic_diversification_benchmark.json
+!data/provenance/experiments/final/correlated_stress/
+data/provenance/experiments/final/correlated_stress/*
+!data/provenance/experiments/final/correlated_stress/correlated_stress_specification.json
+!data/provenance/experiments/final/correlated_stress/correlated_stress_registry.csv
+!data/provenance/experiments/final/correlated_stress/correlated_stress_cell_summary.csv
+!data/provenance/experiments/final/correlated_stress/correlated_stress_collateral_summary.csv
+!data/provenance/experiments/final/correlated_stress/correlated_stress_contrasts.csv
+!data/provenance/experiments/final/correlated_stress/correlated_stress_decision.json
+!data/provenance/experiments/final/correlated_stress/correlated_stress_reproducibility.json
+!data/provenance/experiments/final/correlated_stress/correlated_stress_benchmark.json
 !data/provenance/calibration/
 data/provenance/calibration/*
 !data/provenance/calibration/manifest.json

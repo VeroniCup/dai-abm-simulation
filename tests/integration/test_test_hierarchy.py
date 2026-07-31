@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from hashlib import sha256
-from pathlib import Path
 
 from tests.support import REPOSITORY_ROOT
 
@@ -145,6 +144,7 @@ POST_RESTRUCTURING_FEATURE_MODULES = {
     "tests/workflows/test_confidence_calibration.py",
     "tests/experiments/mechanism/test_eth_recovery.py",
     "tests/experiments/mechanism/test_constrained_eth_recovery.py",
+    "tests/experiments/final/test_correlated_stress.py",
     "tests/experiments/final/test_idiosyncratic_diversification.py",
     "tests/experiments/final/test_programme.py",
     "tests/validation/test_integrated_eth.py",
@@ -214,7 +214,7 @@ def test_no_test_module_remains_at_suite_root() -> None:
 
 def test_no_placeholder_or_duplicate_test_module_exists() -> None:
     modules = sorted(TESTS_ROOT.rglob("test_*.py"))
-    assert len(modules) == 65
+    assert len(modules) == 66
     assert all(path.stat().st_size > 100 for path in modules)
     assert len({path.resolve() for path in modules}) == len(modules)
 
