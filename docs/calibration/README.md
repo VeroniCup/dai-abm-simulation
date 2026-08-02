@@ -80,6 +80,5 @@ than calibration activities.
 
 Candidate estimation and adoption are separate. A statistically estimated
 value is not an adopted configuration value until its semantics, provenance,
-uncertainty and model interface have been reviewed. Chronological estimation
-and implementation reports are preserved in the
-[documentation archive](../archive/README.md).
+uncertainty and model interface have been reviewed. The active semantic guides
+record the current methods, evidence boundaries and implementation status.

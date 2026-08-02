@@ -87,8 +87,8 @@ will retain the result indefinitely.
 
 ## Historical evidence
 
-Chronological reports and plans are under
-[`docs/archive/`](../../docs/archive/README.md). They preserve original paths,
-costs, limitations and execution decisions. Active guides describe current
-paths; archived code spans may refer to the repository layout that existed
-when the work was performed.
+The byte-preserved
+[historical acquisition plan](../archive/historical_plans/DATA_ACQUISITION_PLAN.md)
+retains the original acquisition rationale and execution constraints. Active
+guides describe current paths; historical code spans may refer to the
+repository layout that existed when the work was performed.

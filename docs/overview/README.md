@@ -13,13 +13,13 @@ These documents explain the repository from a reader's perspective:
 - [Scientific package taxonomy](scientific_package_taxonomy.md) — the
   implemented boundary between calibration, validation, mechanism studies and
   the reserved final experiment programme.
-- [Repository restructuring final review](../validation/repository_restructuring.md)
-  — closure evidence for the domain-first migration and tracked-only
-  reproducibility boundary.
+- [Regression validation](../validation/regression.md) — protected checksums,
+  tracked-clone reproducibility and structural validation.
 - [Research design](research_design.md) — the empirical questions,
   identification strategy, experiments and validation logic.
 
 Detailed mechanics are under [model documentation](../model/README.md).
 Calibration methods are under
-[calibration documentation](../calibration/README.md), while historical
-implementation records are kept in the [archive](../archive/README.md).
+[calibration documentation](../calibration/README.md), while the
+[historical acquisition plan](../archive/historical_plans/DATA_ACQUISITION_PLAN.md)
+retains the original empirical acquisition rationale.

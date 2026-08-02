@@ -29,40 +29,14 @@ CHRONOLOGY = re.compile(
     re.IGNORECASE,
 )
 
-DOCUMENT_MIGRATIONS = {
-    "data/DATA_ACQUISITION_PLAN.md":
-        "docs/archive/historical_plans/DATA_ACQUISITION_PLAN.md",
-    "structure.txt":
-        "docs/archive/historical_plans/structure_snapshot.txt",
-    "docs/parameter_adoption_and_model_interface_plan.md":
-        "docs/calibration/parameter_adoption.md",
-    "docs/parameter_estimation_plan.md":
-        "docs/calibration/parameter_estimation.md",
-    "docs/phase1e_representative_calibration_strategy.md":
-        "docs/calibration/vaults.md",
-    "docs/phase1e_b_terra_cefi_acquisition_report.md":
-        "docs/archive/phase_reports/phase1e_b_terra_cefi_acquisition_report.md",
-    "docs/phase1e_b_tranche1_acquisition_report.md":
-        "docs/archive/phase_reports/phase1e_b_tranche1_acquisition_report.md",
-    "docs/phase1e_b_usdc_svb_acquisition_report.md":
-        "docs/archive/phase_reports/phase1e_b_usdc_svb_acquisition_report.md",
-    "docs/phase2a_candidate_review.md":
-        "docs/archive/phase_reports/phase2a_candidate_review.md",
-    "docs/phase2a_parameter_estimation_report.md":
-        "docs/archive/phase_reports/phase2a_parameter_estimation_report.md",
-    "docs/phase2b_vault_parameter_estimation_report.md":
-        "docs/archive/phase_reports/phase2b_vault_parameter_estimation_report.md",
-    "docs/phase2c_liquidation_parameter_estimation_report.md":
-        "docs/archive/phase_reports/phase2c_liquidation_parameter_estimation_report.md",
-    "docs/tranche_a_empirical_configuration_report.md":
-        "docs/archive/tranche_reports/tranche_a_empirical_configuration_report.md",
-    "docs/tranche_b_distributional_vault_initialisation_report.md":
-        "docs/archive/tranche_reports/tranche_b_distributional_vault_initialisation_report.md",
-    "docs/tranche_c_empirical_market_and_gas_report.md":
-        "docs/archive/tranche_reports/tranche_c_empirical_market_and_gas_report.md",
-    "docs/tranche_d_liquidation_arrival_and_capacity_report.md":
-        "docs/archive/tranche_reports/tranche_d_liquidation_arrival_and_capacity_report.md",
-}
+CANONICAL_METHOD_DOCUMENTS = (
+    "docs/calibration/parameter_adoption.md",
+    "docs/calibration/parameter_estimation.md",
+    "docs/calibration/vaults.md",
+    "docs/calibration/liquidations.md",
+    "docs/calibration/market_and_gas.md",
+    "docs/data/acquisition.md",
+)
 
 
 def active_documents() -> list[Path]:
@@ -76,21 +50,13 @@ def active_documents() -> list[Path]:
 
 
 def test_every_populated_documentation_category_has_real_content() -> None:
-    for category in (*ACTIVE_CATEGORIES, "archive"):
+    for category in ACTIVE_CATEGORIES:
         directory = DOCS / category
         files = [path for path in directory.rglob("*") if path.is_file()]
         assert directory.is_dir(), category
         assert files, category
         for path in files:
             assert path.stat().st_size > 0, path
-
-    empty_directories = [
-        path
-        for path in DOCS.rglob("*")
-        if path.is_dir() and not any(path.iterdir())
-    ]
-    assert empty_directories == []
-
 
 def test_active_document_names_and_headings_are_semantic() -> None:
     for path in active_documents():
@@ -112,9 +78,6 @@ def test_phase_and_tranche_reports_are_archived() -> None:
     ]
     assert active == []
 
-    assert list((DOCS / "archive" / "phase_reports").glob("phase*.md"))
-    assert list((DOCS / "archive" / "tranche_reports").glob("tranche*.md"))
-
 
 def test_root_entry_points_exist_and_link_to_semantic_detail() -> None:
     for name in ROOT_DOCUMENTS:
@@ -130,10 +93,16 @@ def test_root_entry_points_exist_and_link_to_semantic_detail() -> None:
 
 
 def test_document_migration_ledger_covers_every_moved_source() -> None:
-    assert len(DOCUMENT_MIGRATIONS) == 16
-    for old, new in DOCUMENT_MIGRATIONS.items():
-        assert not (ROOT / old).exists(), old
-        assert (ROOT / new).is_file(), new
+    for path in CANONICAL_METHOD_DOCUMENTS:
+        assert (ROOT / path).is_file(), path
+
+    obsolete_root_documents = (
+        "docs/parameter_adoption_and_model_interface_plan.md",
+        "docs/parameter_estimation_plan.md",
+        "docs/phase1e_representative_calibration_strategy.md",
+    )
+    for path in obsolete_root_documents:
+        assert not (ROOT / path).exists(), path
 
 
 def test_acquisition_plan_is_preserved_byte_for_byte() -> None:

@@ -79,7 +79,7 @@ def local_links(path: Path) -> list[tuple[str, str | None]]:
 
 def test_all_local_markdown_links_and_anchors_resolve() -> None:
     failures = []
-    for source in documentation_files():
+    for source in active_documents():
         for target, anchor in local_links(source):
             destination = source if not target else (source.parent / target).resolve()
             if not destination.exists():

@@ -29,10 +29,8 @@ from dai_sim.calibration.simulated_moments_diagnostics import (
     LADDER_REPLICATIONS,
     PANEL_SIZE,
     PRIMARY_HORIZON,
-    SEARCH_ROOT,
     analytic_contrast_mcse,
     analytic_equal_event_mcse,
-    audit_completed_search,
     censoring_imbalance,
     classify_recovery_censoring,
     convergence_slope,
@@ -46,6 +44,7 @@ from dai_sim.calibration.simulated_moments_diagnostics import (
     validate_objective_identification_evidence,
     _recovery_replacement_decision,
 )
+from tests.evidence_contracts import validate_monte_carlo_estimator_audit
 
 
 def _records(
@@ -291,7 +290,7 @@ def test_paired_difference_preserves_absolute_gate_boundary() -> None:
 
 
 def test_completed_estimator_audit_preserves_negative_eligibility() -> None:
-    audit = audit_completed_search(SEARCH_ROOT)
+    audit = validate_monte_carlo_estimator_audit()
     assert audit["existing_estimator_classification"] == (
         "correct_hierarchical_mcse"
     )

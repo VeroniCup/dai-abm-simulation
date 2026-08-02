@@ -41,9 +41,10 @@ This document deliberately does not:
 
 The bounded Phase 2A tranche has implemented the parts of this plan that are
 identifiable from validated Phase 1A--1D data. Its generated candidate bundle
-is under `outputs/diagnostics/calibration/market_gas_protocol/`, and its
-concise technical record is the
-[market, gas and protocol estimation report](../archive/phase_reports/phase2a_parameter_estimation_report.md).
+is under `outputs/diagnostics/calibration/market_gas_protocol/`, while the
+current methods and evidence boundary are recorded in
+[market and gas calibration](market_and_gas.md) and
+[protocol calibration](protocol.md).
 No candidate has been written into simulator configuration.
 
 Phase 2A does not supersede the Phase 1E-B dependency recorded below.
@@ -54,30 +55,29 @@ The completed Terra/CeFi window contributes 649 exact Bark–grab links and
 pre-grab states. Phase 2C has now used them to produce a protocol-level
 `max_close_factor = 1.0` review candidate; the value remains unadopted.
 
-The separate Tranche A empirical configuration bundle now documents the first
-configuration-only adoption step in
-[the empirical configuration implementation report](../archive/tranche_reports/tranche_a_empirical_configuration_report.md).
+The separate empirical configuration bundle documents the first
+configuration-only adoption step in the
+[parameter-adoption record](parameter_adoption.md).
 It is opt-in only and does not change the methodological classification below.
 
-The subsequent Tranche B implementation introduces the optional
-distribution-aware vault-initialisation interface described in
-[the distribution-aware initialisation report](../archive/tranche_reports/tranche_b_distributional_vault_initialisation_report.md).
+The subsequent implementation introduces the optional distribution-aware
+vault-initialisation interface described in
+[vault calibration](vaults.md).
 It provides a runtime bridge for paired empirical debt and collateral-ratio
 evidence, while preserving the distinction between candidate estimation and
 parameter adoption.
 
-Tranche C extends that bridge to empirical market and gas inputs. The opt-in
+The empirical input bridge extends to market and gas inputs. The opt-in
 implementation is documented in
-[the empirical market and gas implementation report](../archive/tranche_reports/tranche_c_empirical_market_and_gas_report.md).
+[market and gas calibration](market_and_gas.md).
 It consumes validated hourly return and gas artefacts without re-estimating
 parameters or changing the equations that consume prices and gas costs.
 
-Tranche D adds the corresponding opt-in bridge for liquidation-arrival demand
+The corresponding opt-in bridge adds liquidation-arrival demand
 and keeper-throughput separation. It uses the Phase 2C Terra/CeFi
 Bark--grab/hourly evidence to sample a hurdle-count demand process before the
 existing keeper-profit and capacity rules are applied. The implementation is
-documented in
-[the liquidation-arrival and capacity report](../archive/tranche_reports/tranche_d_liquidation_arrival_and_capacity_report.md).
+documented in [liquidation calibration](liquidations.md).
 
 The later
 [system-wide keeper execution calibration](keeper_execution.md) now provides
@@ -86,11 +86,9 @@ keeper hurdle. It uses start-of-hour unsafe inventory, not positive closures,
 and classifies both candidate families as partially identified. No value is
 runtime adopted.
 
-The first Phase 1E-B tranche is documented in the
-[quiet-mature acquisition report](../archive/phase_reports/phase1e_b_tranche1_acquisition_report.md).
-Its quiet-mature reconstruction is complete after the bounded Method B rate
-repair. The separately authorised
-[USDC/SVB window](../archive/phase_reports/phase1e_b_usdc_svb_acquisition_report.md) also passes exact
+The quiet-mature reconstruction described in
+[vault calibration](vaults.md) is complete after the bounded Method B rate
+repair. The separately authorised USDC/SVB window also passes exact
 opening-to-closing replay. These results establish estimation readiness; they
 do not themselves estimate or adopt any simulator value.
 
@@ -100,8 +98,7 @@ The bounded Phase 2B tranche has now estimated the nine authorised
 vault-population candidates supported by the quiet-mature and USDC/SVB
 reconstructions. The generated registry and diagnostics are under
 `outputs/diagnostics/calibration/vaults/`, and the methods and results are
-documented in the
-[vault-parameter estimation report](../archive/phase_reports/phase2b_vault_parameter_estimation_report.md).
+documented in [vault calibration](vaults.md).
 No estimate has been adopted. Raw debt and collateral-ratio moments remain
 provisional distribution choices because the current global Gaussian
 interfaces do not preserve the observed heavy tails or exact-ilk

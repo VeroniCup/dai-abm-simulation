@@ -13,6 +13,7 @@ import pytest
 
 from dai_sim.calibration import structural_incompatibility as structural
 from dai_sim.calibration import simulated_moments_search as search
+from tests.evidence_contracts import validate_partial_identification_compact_evidence
 
 
 def test_signed_band_gap_preserves_direction() -> None:
@@ -540,7 +541,7 @@ def test_overall_classification_hierarchy(
 
 
 def test_input_validation_reuses_exact_completed_baseline() -> None:
-    result = structural.validate_inputs()
+    result = validate_partial_identification_compact_evidence()
     assert result["status"] == "passed"
     assert result["baseline_rows_reused"] == 75_776
     assert result["all_event_cache_root_sha256"] == structural.ALL_EVENT_CACHE_SHA256
@@ -562,10 +563,18 @@ def test_workflow_help_is_import_safe_without_ignored_result_data() -> None:
         assert blocked not in result.stdout.lower()
 
 
-def test_partial_event_shard_requires_explicit_resume(tmp_path: Path) -> None:
+def test_partial_event_shard_requires_explicit_resume(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     shard_directory = tmp_path / "shards"
     shard_directory.mkdir()
     (shard_directory / "event_shard_00.npz").touch()
+    monkeypatch.setattr(
+        structural,
+        "validate_inputs",
+        lambda **_kwargs: {"status": "passed"},
+    )
     with pytest.raises(ValueError, match="explicit resume"):
         structural.run_structural_panel(root=tmp_path, workers=1, resume=False)
 

@@ -10,8 +10,8 @@ semantic validation modules delegate without redefining behaviour.
 
 - [Regression validation](regression.md) — protected smoke, experiment and
   runtime-input identities.
-- [Repository restructuring](repository_restructuring.md) — tracked-clone
-  architecture and reproducibility closure.
+- [Repository guide](../overview/repository_guide.md) — tracked-clone
+  architecture and semantic ownership.
 - [Experiment-infrastructure maintenance](experiment_infrastructure_maintenance.md)
   — invocation repair and concurrency-safe semantic profile resolution.
 - [Integrated empirical ETH-only profile](integrated_empirical_eth.md) —

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import csv
+import hashlib
 import importlib
 from pathlib import Path
 import re
@@ -11,7 +11,6 @@ import sys
 
 from tests.support import REPOSITORY_ROOT
 SQL_ROOT = REPOSITORY_ROOT / "sql"
-PATH_MAP = REPOSITORY_ROOT / "docs/repository_restructuring_path_map.csv"
 if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 HISTORICAL_TEMPLATE_TARGETS = {
@@ -25,34 +24,31 @@ HISTORICAL_TEMPLATE_TARGETS = {
 POST_RESTRUCTURING_ACTIVE_SQL = {
     "sql/market/templates/hourly_market_prices.sql",
 }
+CURRENT_SQL_INVENTORY_SHA256 = (
+    "74789454e55f5d2f68e16cd8422b8ba797a47388712ac1c9b535010e49a5e554"
+)
 
 
-def _sql_mapping() -> list[dict[str, str]]:
-    with PATH_MAP.open(encoding="utf-8", newline="") as handle:
-        return [
-            row
-            for row in csv.DictReader(handle)
-            if row["current_path"].startswith("sql/")
-        ]
+def _sql_paths() -> list[Path]:
+    return sorted(SQL_ROOT.rglob("*.sql"))
 
 
 def test_sql_inventory_maps_once_to_unique_targets() -> None:
-    mapping = _sql_mapping()
-    sources = [row["current_path"] for row in mapping]
-    targets = [row["proposed_path"] for row in mapping]
-    assert len(mapping) == 117
-    assert len(sources) == len(set(sources))
-    assert len(targets) == len(set(targets))
-    assert all(row["migration_stage"] == "07_sql" for row in mapping)
-    actual = {
-        path.relative_to(REPOSITORY_ROOT).as_posix()
-        for path in SQL_ROOT.rglob("*.sql")
-    }
-    assert actual == set(targets) | POST_RESTRUCTURING_ACTIVE_SQL
+    paths = _sql_paths()
+    rows = "".join(
+        f"{path.relative_to(REPOSITORY_ROOT).as_posix()}\0"
+        f"{hashlib.sha256(path.read_bytes()).hexdigest()}\n"
+        for path in paths
+    )
+    assert len(paths) == 118
+    assert len(paths) == len(set(paths))
+    assert hashlib.sha256(rows.encode()).hexdigest() == (
+        CURRENT_SQL_INVENTORY_SHA256
+    )
 
 
 def test_sql_hierarchy_contains_only_populated_semantic_domains() -> None:
-    sql_files = tuple(SQL_ROOT.rglob("*.sql"))
+    sql_files = tuple(_sql_paths())
     assert len(sql_files) == 117 + len(POST_RESTRUCTURING_ACTIVE_SQL)
     assert {path.relative_to(SQL_ROOT).parts[0] for path in sql_files} == {
         "gas",
@@ -74,8 +70,6 @@ def test_sql_hierarchy_contains_only_populated_semantic_domains() -> None:
 
 
 def test_template_and_generated_storage_matches_approved_map() -> None:
-    mapping = _sql_mapping()
-    target_rows = {row["proposed_path"]: row for row in mapping}
     template_paths = {
         path.relative_to(REPOSITORY_ROOT).as_posix()
         for path in (SQL_ROOT).glob("*/templates/**/*.sql")
@@ -89,35 +83,25 @@ def test_template_and_generated_storage_matches_approved_map() -> None:
     assert POST_RESTRUCTURING_ACTIVE_SQL <= template_paths
     assert HISTORICAL_TEMPLATE_TARGETS <= generated_paths
     assert all(
-        target_rows[path]["archive_status"] == "historical"
-        for path in HISTORICAL_TEMPLATE_TARGETS
-    )
-    assert all(
-        target_rows[path]["current_role"] == "SQL template or diagnostic"
+        "/generated/history/" in path
         for path in HISTORICAL_TEMPLATE_TARGETS
     )
 
 
 def test_obsolete_sql_paths_are_absent() -> None:
-    for row in _sql_mapping():
-        source = REPOSITORY_ROOT / row["current_path"]
-        target = REPOSITORY_ROOT / row["proposed_path"]
-        assert target.is_file()
-        if source != target:
-            assert not source.exists()
     assert not tuple(SQL_ROOT.glob("*.sql"))
+    assert not tuple(REPOSITORY_ROOT.glob("sql/dune_*.sql"))
 
 
 def test_workflows_and_wrappers_have_no_obsolete_sql_literals() -> None:
-    obsolete = {
-        row["current_path"]
-        for row in _sql_mapping()
-        if row["current_path"] != row["proposed_path"]
-    }
     for directory in ("workflows", "scripts"):
         for path in (REPOSITORY_ROOT / directory).rglob("*.py"):
             text = path.read_text(encoding="utf-8")
-            assert not (obsolete & set(re.findall(r"sql/[A-Za-z0-9_./-]+\.sql", text)))
+            references = set(
+                re.findall(r"sql/[A-Za-z0-9_./-]+\.sql", text)
+            )
+            assert not any(reference.startswith("sql/dune_") for reference in references)
+            assert all((REPOSITORY_ROOT / reference).is_file() for reference in references)
     assert not any(
         ".sql" in path.read_text(encoding="utf-8")
         for path in (REPOSITORY_ROOT / "scripts").rglob("*.py")

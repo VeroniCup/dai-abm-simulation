@@ -213,6 +213,7 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
         "tests/integration/test_test_collection_integrity.py": 6,
         "tests/integration/test_test_hierarchy.py": 7,
         "tests/integration/test_compatibility_removal.py": 9,
+        "tests/integration/test_diagnostic_independence.py": 1,
         "tests/inputs/test_multicollateral.py": 9,
         "tests/workflows/test_canonical_commands.py": 22,
         "tests/workflows/test_semantic_output_paths.py": 5,

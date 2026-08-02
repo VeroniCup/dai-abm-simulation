@@ -106,6 +106,7 @@ CLEAN_CLONE_CORRECTION_MODULES = {
     "tests/calibration/test_tracked_calibration_evidence.py",
 }
 POST_RESTRUCTURING_FEATURE_MODULES = {
+    "tests/integration/test_diagnostic_independence.py",
     "tests/calibration/test_confidence_evidence.py",
     "tests/calibration/test_confidence_infrastructure_evidence.py",
     "tests/inputs/test_confidence_scenario_resolution.py",
@@ -202,7 +203,7 @@ def test_no_test_module_remains_at_suite_root() -> None:
 
 def test_no_placeholder_or_duplicate_test_module_exists() -> None:
     modules = sorted(TESTS_ROOT.rglob("test_*.py"))
-    assert len(modules) == 76
+    assert len(modules) == 77
     assert all(path.stat().st_size > 100 for path in modules)
     assert len({path.resolve() for path in modules}) == len(modules)
 

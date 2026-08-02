@@ -86,6 +86,6 @@ cell invalidates interpretation.
 The Stage 12 final review collected and passed `491` tests in both the working
 repository and a tracked-only checkout, with no failures, skips or warnings.
 It also reproduced the runtime inputs, smoke checks and Experiments 1–5
-without changing assertions, expected values or tolerances. The complete
-structural evidence is recorded in the
-[repository restructuring final review](repository_restructuring.md).
+without changing assertions, expected values or tolerances. The current
+structural contract is summarised in the
+[repository guide](../overview/repository_guide.md).

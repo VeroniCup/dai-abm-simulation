@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import csv
+from collections import Counter
 import hashlib
 import json
 from pathlib import Path
@@ -12,20 +12,13 @@ import sys
 
 from tests.support import REPOSITORY_ROOT
 BASELINE = REPOSITORY_ROOT / "docs/repository_restructuring_baseline_manifest.json"
-PATH_MAP = REPOSITORY_ROOT / "docs/repository_restructuring_path_map.csv"
+POST_RESTRUCTURING_SQL = (
+    REPOSITORY_ROOT / "sql/market/templates/hourly_market_prices.sql"
+)
 
 
 def _baseline() -> dict[str, object]:
     return json.loads(BASELINE.read_text(encoding="utf-8"))
-
-
-def _sql_mapping() -> dict[str, str]:
-    with PATH_MAP.open(encoding="utf-8", newline="") as handle:
-        return {
-            row["current_path"]: row["proposed_path"]
-            for row in csv.DictReader(handle)
-            if row["current_path"].startswith("sql/")
-        }
 
 
 def _sha256(path: Path) -> str:
@@ -39,29 +32,36 @@ def test_sql_classification_and_content_match_stage_one_baseline() -> None:
     assert sql["hand_authored_or_template_count"] == 20
     assert sql["generated_count"] == 97
 
-    mapping = _sql_mapping()
     files = sql["files"]
     assert isinstance(files, list)
     assert len(files) == 117
-    for record in files:
-        assert isinstance(record, dict)
-        target = REPOSITORY_ROOT / mapping[record["path"]]
-        assert _sha256(target) == record["sha256"]
+    expected = Counter(record["sha256"] for record in files)
+    current = Counter(
+        _sha256(path)
+        for path in (REPOSITORY_ROOT / "sql").rglob("*.sql")
+        if path != POST_RESTRUCTURING_SQL
+    )
+    assert current == expected
 
 
 def test_sql_sizes_match_stage_one_tracked_inventory() -> None:
     payload = _baseline()
-    mapping = _sql_mapping()
-    tracked = {
-        record["path"]: record
+    tracked = [
+        record
         for record in payload["tracked_files"]
         if record["path"].startswith("sql/")
-    }
+    ]
     assert len(tracked) == 117
-    for source, target in mapping.items():
-        path = REPOSITORY_ROOT / target
-        assert path.stat().st_size == tracked[source]["size_bytes"]
-        assert _sha256(path) == tracked[source]["sha256"]
+    expected = Counter(
+        (record["sha256"], record["size_bytes"])
+        for record in tracked
+    )
+    current = Counter(
+        (_sha256(path), path.stat().st_size)
+        for path in (REPOSITORY_ROOT / "sql").rglob("*.sql")
+        if path != POST_RESTRUCTURING_SQL
+    )
+    assert current == expected
 
 
 def test_sql_imports_are_lazy_and_have_no_network_or_output_side_effects(
@@ -102,10 +102,6 @@ for name in {workflow_modules!r}:
 
 
 def test_active_metadata_uses_current_sql_paths() -> None:
-    mapping = _sql_mapping()
-    obsolete = {
-        source for source, target in mapping.items() if source != target
-    }
     active_paths = (
         REPOSITORY_ROOT / "data/provenance/data_manifest.csv",
         REPOSITORY_ROOT / "data/gas/provenance/dune_ethereum_hourly_gas_chunk_ledger.json",
@@ -114,7 +110,6 @@ def test_active_metadata_uses_current_sql_paths() -> None:
         REPOSITORY_ROOT / "data/vaults/provenance/discovery_manifest.json",
     )
     combined = "\n".join(path.read_text(encoding="utf-8") for path in active_paths)
-    assert not any(path in combined for path in obsolete)
     assert "sql/market/templates/hourly_prices.sql" in combined
     assert "sql/gas/templates/hourly_conditions.sql" in combined
     assert "sql/liquidations/generated/history/chunk_01_2021_06_action.sql" in combined

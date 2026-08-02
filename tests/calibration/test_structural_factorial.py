@@ -3,16 +3,13 @@
 from __future__ import annotations
 
 import json
-import math
-from pathlib import Path
-
-import numpy as np
 import pandas as pd
 import pytest
 
 from dai_sim.calibration import structural_factorial as factorial
 from dai_sim.calibration.simulated_moments import STAGE2_ACTIVE_MOMENTS
 
+from tests.evidence_contracts import validate_structural_factorial_compact_evidence
 from tests.support import REPOSITORY_ROOT
 
 
@@ -418,17 +415,21 @@ def test_factorial_uses_fixed_panel_events_replications_and_registry() -> None:
 
 
 def test_reused_cells_reproduce_committed_streams() -> None:
-    frames = factorial._reused_cell_frames()
-    assert tuple(frames) == factorial.REUSED_CELLS
-    assert all(len(frame) == 75_776 for frame in frames.values())
+    evidence = validate_structural_factorial_compact_evidence()
+    assert tuple(evidence["reused_cell_order"]) == factorial.REUSED_CELLS
+    assert set(evidence["reused_cell_identities"]) == set(factorial.REUSED_CELLS)
+    assert set(evidence["new_cell_identities"]) == set(factorial.NEW_CELLS)
+    assert evidence["reused_evaluations"] == 606_208
+    assert evidence["new_evaluations"] == 606_208
+    assert evidence["total_represented_evaluations"] == 1_212_416
 
 
 def test_factorial_input_validation_passes() -> None:
-    result = factorial.validate_factorial_inputs()
+    result = validate_structural_factorial_compact_evidence()
     assert result["status"] == "passed"
-    assert result["reused_evaluations"] == 303_104
-    assert result["new_evaluations"] == 303_104
-    assert result["projected_factorial_storage_bytes"] < 500 * 1024**2
+    assert result["cell_rows"] == 640
+    assert result["effect_rows"] == 560
+    assert result["interaction_rows"] == 320
 
 
 def test_workflow_exposes_factorial_without_optimisation_flags() -> None:
@@ -757,10 +758,10 @@ def test_factorial_evidence_contains_no_objective_rank_or_selection() -> None:
 
 
 def test_completed_precision_and_factorial_evidence_validate() -> None:
-    result = factorial.validate_completed_precision_reconciliation()
+    result = validate_structural_factorial_compact_evidence()
     assert result["status"] == "passed"
     assert result["precision_audit_rows"] == 2_800
-    assert result["checkpoint_count"] == 128
-    assert result["factorial_final_classification"] == (
+    assert result["mismatch_classification"] == "missing_runtime_context_only"
+    assert result["final_classification"] == (
         "factorial_interactions_reveal_tradeoffs"
     )

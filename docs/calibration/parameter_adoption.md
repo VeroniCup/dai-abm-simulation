@@ -491,9 +491,9 @@ legacy outputs. Stop if a supposedly ready field requires mechanics changes.
 Current defaults and Experiments 1–5 remain untouched unless the empirical
 configuration is explicitly selected.
 
-Implementation note: Tranche A is now implemented as an opt-in bundle under
-`config/profiles/`, with its audit report in the
-[historical implementation archive](../archive/tranche_reports/tranche_a_empirical_configuration_report.md).
+Implementation note: the empirical configuration is implemented as an opt-in
+bundle under `config/profiles/`, with its evidence boundary recorded in the
+[parameter-estimation plan](parameter_estimation.md).
 The implementation adopts
 only current-interface-compatible rows. Exact-ilk protocol constants, scalar
 GBM moments with unresolved hourly conversion and generator-only collateral
@@ -506,12 +506,11 @@ fallback. Update `vault.py`, `simulation.py`, `collateral.py` and a small
 configuration adapter. Test economic support, tails, dependence, deterministic
 seeds, small-pool fallback and exact ETH-only equivalence.
 
-Implementation note: Tranche B is now implemented as an opt-in
-distribution-aware initialisation path. The runtime pool and configuration are
+Implementation note: the distribution-aware initialisation path is implemented
+as an opt-in interface. The runtime pool and configuration are
 under `config/profiles/`, while historical diagnostic outputs remain under the ignored
-`outputs/diagnostics/input_construction/vaults/` directory, and the implementation
-report is
-[implementation report](../archive/tranche_reports/tranche_b_distributional_vault_initialisation_report.md).
+`outputs/diagnostics/input_construction/vaults/` directory. The current
+evidence owner is [vault calibration](vaults.md).
 The legacy
 Gaussian initialiser remains the default, and Tranche A continues to use its
 configuration-only behaviour unless the Tranche B bundle is explicitly
@@ -523,12 +522,11 @@ Add aligned moving blocks and a regime-labelled gas sampler while retaining
 GBM and scalar gas modes. Test block boundaries, correlations, seed
 reproducibility, zero-gas handling and unit conversion.
 
-Implementation note: Tranche C is now implemented as an opt-in empirical
+Implementation note: empirical market and gas sampling is implemented as an opt-in
 environment-input layer. It adds aligned ETH/WBTC return blocks, compact
 market/gas and liquidation-gas runtime pools, and explicit empirical gas input
-modes while preserving legacy GBM and scalar gas defaults. The implementation
-report is in the
-[historical implementation archive](../archive/tranche_reports/tranche_c_empirical_market_and_gas_report.md).
+modes while preserving legacy GBM and scalar gas defaults. The current
+evidence owner is [market and gas calibration](market_and_gas.md).
 
 ### Liquidation demand and throughput
 

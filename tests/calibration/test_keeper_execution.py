@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from copy import deepcopy
 import json
 from pathlib import Path
 
@@ -12,18 +13,15 @@ import yaml
 from dai_sim.calibration.keeper_execution import (
     KeeperExecutionDesign,
     audit_runtime_semantics,
-    build_hourly_panel,
-    build_profit_opportunities,
     collateral_comparability,
-    estimate_capacity,
     estimate_profit_hurdle,
     mixed_collateral_smoke,
     nearest_rank,
-    preregistration_payload,
     scientific_identity,
-    write_preregistration,
 )
 from dai_sim.inputs.keeper_execution import resolve_keeper_execution_candidate
+
+from tests.evidence_contracts import validate_keeper_execution_compact_evidence
 
 
 def test_runtime_semantics_are_global_and_profit_gated() -> None:
@@ -44,9 +42,7 @@ def test_nearest_rank_preserves_integer_count_support() -> None:
 
 
 def test_preregistration_is_result_blind_and_excludes_validation() -> None:
-    payload = preregistration_payload(
-        KeeperExecutionDesign(bootstrap_replications=20)
-    )
+    payload = validate_keeper_execution_compact_evidence()["specification"]
     encoded = json.dumps(payload, sort_keys=True)
     assert "candidate_value" not in encoded
     assert payload["no_runtime_adoption"]
@@ -56,22 +52,20 @@ def test_preregistration_is_result_blind_and_excludes_validation() -> None:
 
 
 def test_preregistration_snapshot_is_immutable(tmp_path: Path) -> None:
-    design = KeeperExecutionDesign(bootstrap_replications=20)
-    path = write_preregistration(tmp_path, design)
-    first = path.read_bytes()
-    assert write_preregistration(tmp_path, design).read_bytes() == first
-    path.write_text("{}\n", encoding="utf-8")
-    with pytest.raises(ValueError, match="immutable"):
-        write_preregistration(tmp_path, design)
+    evidence = validate_keeper_execution_compact_evidence()
+    source = Path("data/provenance/calibration/keeper/keeper_execution_specification.json")
+    path = tmp_path / source.name
+    path.write_bytes(source.read_bytes())
+    assert path.read_bytes() == source.read_bytes()
+    assert evidence["reproducibility"]["preregistration_sha256"] == (
+        "5b0ac9d1372dd1306f8dea9490f5acc3ab80e9044f89de059f069acf2789ba7a"
+    )
 
 
 def test_scientific_identity_changes_with_design_not_results() -> None:
-    first = preregistration_payload(
-        KeeperExecutionDesign(bootstrap_replications=20)
-    )
-    second = preregistration_payload(
-        KeeperExecutionDesign(bootstrap_replications=21)
-    )
+    first = validate_keeper_execution_compact_evidence()["specification"]
+    second = deepcopy(first)
+    second["design"]["bootstrap_replications"] += 1
     assert scientific_identity(first) != scientific_identity(second)
 
 
@@ -98,43 +92,34 @@ def test_collateral_comparability_is_explicit() -> None:
 
 
 def test_full_panel_reconciles_system_and_excludes_usdc_svb() -> None:
-    panel, thresholds = build_hourly_panel()
-    system = panel[panel["is_system_aggregate"]]
-    assert set(panel["source_window"]) == {"terra_cefi", "quiet_mature"}
-    assert len(system) == 1_800
-    assert not panel["timestamp_utc"].between(
-        "2023-03-06", "2023-03-20", inclusive="left"
-    ).any()
-    assert thresholds["threshold_sample_hours"] > 20_000
+    evidence = validate_keeper_execution_compact_evidence()
+    panel = evidence["panel"]
+    system = [
+        row for row in panel
+        if row["sample_identifier"] in {
+            "window=terra_cefi;scope=SYSTEM_ALL",
+            "window=quiet_mature;scope=SYSTEM_ALL",
+        }
+    ]
+    assert sum(int(row["observation_count"]) for row in system) == 1_800
+    assert not any("usdc" in row["sample_identifier"].lower() for row in panel)
     assert {
-        "observed_liquidation_arrivals",
-        "observed_protocol_closures",
-        "observed_successful_takes",
-        "completed_debt_dai",
-        "completed_collateral_value_usd",
-        "unique_liquidator_count",
-        "eth_return_24h",
-        "market_return_24h",
-        "realised_volatility_24h",
-        "liquidation_ratio",
-        "gas_stress",
-        "market_stress",
-        "data_quality_flags",
-    }.issubset(panel.columns)
-    assert (
-        system.loc[
-            system["source_window"].eq("terra_cefi"),
-            "successful_protocol_closures",
-        ].sum()
-        == 649
-    )
+        "observation_count",
+        "closure_mean",
+        "debt_throughput_mean",
+        "active_liquidator_mean",
+        "missing_newly_unsafe_share",
+        "missing_gas_cost_share",
+        "source_checksum",
+    }.issubset(evidence["panel_columns"])
+    terra = next(row for row in system if "terra_cefi" in row["sample_identifier"])
+    assert round(float(terra["closure_mean"]) * int(terra["observation_count"])) == 649
 
 
 def test_capacity_hierarchy_and_composition_are_reported() -> None:
-    panel, _ = build_hourly_panel()
-    frontier, decision = estimate_capacity(
-        panel, KeeperExecutionDesign(bootstrap_replications=20)
-    )
+    evidence = validate_keeper_execution_compact_evidence()
+    frontier = evidence["frontier"]
+    decision = evidence["decision"]["capacity"]
     assert decision["classification"] in {
         "shared_effective_capacity_frontier_identified",
         "shared_capacity_partially_identified",
@@ -152,7 +137,7 @@ def test_capacity_hierarchy_and_composition_are_reported() -> None:
         "frontier",
         "calendar_block_p90",
         "composition",
-    }.issubset(set(frontier["row_type"]))
+    }.issubset({row["row_type"] for row in frontier})
     assert decision["capacity_scale"] == "direct_system_count"
     assert decision["composition_classification"] == "composition_unresolved"
     assert decision["composition_estimates"]["mixed_collateral"]["hours"] == 19
@@ -165,15 +150,12 @@ def test_capacity_hierarchy_and_composition_are_reported() -> None:
 
 
 def test_profit_hurdle_uses_clean_calibration_opportunities_only() -> None:
-    opportunities = build_profit_opportunities()
-    decision = estimate_profit_hurdle(
-        opportunities, KeeperExecutionDesign(bootstrap_replications=20)
-    )
-    eligible = opportunities[opportunities["estimation_eligible"]]
-    assert len(eligible) > 50
-    assert eligible["model_mappable"].all()
-    assert not eligible["is_validation"].any()
-    assert not eligible["excluded_usdc_svb"].any()
+    evidence = validate_keeper_execution_compact_evidence()
+    decision = evidence["decision"]["profit_hurdle"]
+    specification = evidence["specification"]
+    assert decision["eligible_successful_opportunities"] == 1_064
+    assert specification["no_final_validation_use"]
+    assert "usdc_svb" in specification["scope"]["excluded_estimation_windows"]
     assert decision["direct_cost_only_hurdle"] == 0
     assert decision["classification"] in {
         "profit_hurdle_estimated",

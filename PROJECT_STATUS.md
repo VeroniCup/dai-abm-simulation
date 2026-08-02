@@ -239,7 +239,7 @@ Detailed current guidance:
 - [Empirical framework](empirical.md)
 - [Parameter methodology](parameters.md)
 - [Calibration documentation](docs/calibration/README.md)
-- [Historical empirical reports](docs/archive/README.md)
+- [Historical acquisition plan](docs/archive/historical_plans/DATA_ACQUISITION_PLAN.md)
 
 ## Repository restructuring
 
@@ -268,11 +268,11 @@ additions. The current multi-collateral integration pass collects 997 tests
 and completes with 996 passing and one documented skip; runtime inputs, smoke
 checks and Experiments 1–5 retain their frozen integrity evidence.
 
-Repository restructuring is closed. The
-[final restructuring review](docs/validation/repository_restructuring.md)
-records the architecture, 13-commit migration sequence, reproducibility
-boundary and remaining limitations. The historical baseline remains unchanged
-under `docs/repository_restructuring_baseline.md`.
+Repository restructuring is closed. The current architecture and
+reproducibility boundary are recorded in the
+[repository guide](docs/overview/repository_guide.md) and
+[regression guide](docs/validation/regression.md). The historical baseline
+remains unchanged under `docs/repository_restructuring_baseline.md`.
 
 ## Regression status
 

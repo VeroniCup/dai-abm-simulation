@@ -43,14 +43,11 @@ auction outcomes.
 
 ### Quiet-mature implementation note
 
-The first authorised tranche is recorded in
-[quiet-mature acquisition report](../archive/phase_reports/phase1e_b_tranche1_acquisition_report.md).
 Quiet-mature boundary, mutation and ownership evidence passed, and its
 historically unbounded rate result was replaced by the bounded Method B
 extraction. The same architecture subsequently completed the USDC/SVB window
-with exact replay and a 90.800-credit observed delta. The detailed records are
-the [quiet-mature report](../archive/phase_reports/phase1e_b_tranche1_acquisition_report.md) and the
-[USDC/SVB acquisition report](../archive/phase_reports/phase1e_b_usdc_svb_acquisition_report.md).
+with exact replay and a 90.800-credit observed delta. The traceability contract
+for these records is described in [data provenance](../data/provenance.md).
 
 ## Representative calibration windows
 
@@ -245,6 +242,5 @@ The 5 May–20 June 2022 Terra/CeFi window is complete. Its 5,111 boundary rows,
 17,593 raw Vat mutations, 6,565 ownership records and 4,086-row sparse rate
 ledger pass validation. Exact replay reconciles the closing boundary and all
 649 Phase 1C Barks link unambiguously to canonical grabs. This operational
-history does not revise the representative-window methodology. Details are in
-the
-[Terra/CeFi acquisition report](../archive/phase_reports/phase1e_b_terra_cefi_acquisition_report.md).
+history does not revise the representative-window methodology. Its evidence
+remains governed by the [data-provenance contract](../data/provenance.md).

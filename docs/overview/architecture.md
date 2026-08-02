@@ -120,4 +120,3 @@ collateral pools.
 - [Repository guide](repository_guide.md)
 - [Model mechanics](../model/README.md)
 - [Regression validation](../validation/regression.md)
-- [Restructuring specification](../repository_restructuring_specification.md)
