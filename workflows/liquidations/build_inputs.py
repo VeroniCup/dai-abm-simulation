@@ -1,8 +1,7 @@
-"""
-Build compact Tranche D liquidation-arrival runtime pools.
+"""Build compact liquidation-arrival runtime pools.
 
 This script is deterministic and local-only. It verifies already-produced
-Phase 2C artefacts, then writes compact runtime pools for the optional
+liquidation evidence, then writes compact runtime pools for the optional
 liquidation-arrival demand layer. It does not estimate new parameters.
 """
 
@@ -141,7 +140,7 @@ def build_hourly_pool(stress_tail: pd.DataFrame) -> pd.DataFrame:
 
 
 def build_sequence_pool(sequence_summary: pd.DataFrame) -> pd.DataFrame:
-    """Return one compact row per Phase 2C liquidation sequence."""
+    """Return one compact row per validated liquidation sequence."""
     sequences = sequence_summary.sort_values(["start_utc", "sequence_id"]).copy()
     starts = pd.to_datetime(sequences["start_utc"], utc=True)
     ends = pd.to_datetime(sequences["end_utc"], utc=True)

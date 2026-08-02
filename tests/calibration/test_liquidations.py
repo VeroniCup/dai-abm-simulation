@@ -1,4 +1,4 @@
-"""Focused synthetic tests for Phase 2C liquidation estimation."""
+"""Focused synthetic tests for liquidation and stress-tail estimation."""
 
 from __future__ import annotations
 

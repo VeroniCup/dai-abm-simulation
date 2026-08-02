@@ -1,5 +1,4 @@
-"""
-Run bounded Tranche C market/gas diagnostics and smoke simulations.
+"""Run bounded empirical market and gas diagnostics and smoke simulations.
 
 This script uses existing local artefacts only. It does not acquire data or
 estimate new parameters.

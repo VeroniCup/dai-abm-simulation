@@ -1,4 +1,4 @@
-"""Persist, validate and combine MCP-managed Phase 1B Dune gas chunks.
+"""Persist, validate and combine MCP-managed Dune gas chunks.
 
 Dune MCP is responsible for creating and executing each private temporary
 query exactly once. This local command renders the immutable SQL template,

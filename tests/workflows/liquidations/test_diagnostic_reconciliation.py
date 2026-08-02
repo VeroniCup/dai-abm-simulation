@@ -1,4 +1,4 @@
-"""Tests for the shallow Phase 1C attempt-three architecture."""
+"""Tests for liquidation-diagnostic reconciliation boundaries."""
 
 from __future__ import annotations
 

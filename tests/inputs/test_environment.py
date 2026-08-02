@@ -1,4 +1,4 @@
-"""Tests for opt-in Tranche C empirical market and gas inputs."""
+"""Tests for opt-in empirical market and gas environment inputs."""
 
 from __future__ import annotations
 

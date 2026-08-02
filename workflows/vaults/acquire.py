@@ -1,4 +1,4 @@
-"""Local persistence and validation for Phase 1E production acquisition.
+"""Persist and validate monthly Vat-mutation acquisition results locally.
 
 This module has no Dune client, credential handling or automatic retry path.
 The orchestrator creates one private temporary query at a time and writes its

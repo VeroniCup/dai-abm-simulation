@@ -1,4 +1,4 @@
-"""Structural checks for the semantic Stage 10 output hierarchy."""
+"""Structural checks for the semantic output hierarchy."""
 
 from __future__ import annotations
 

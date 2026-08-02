@@ -1,4 +1,4 @@
-"""Canonical workflow command gates after Stage 11 wrapper removal."""
+"""Canonical workflow command and wrapper-removal gates."""
 
 from __future__ import annotations
 

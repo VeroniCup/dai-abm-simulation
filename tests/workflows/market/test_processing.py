@@ -1,4 +1,4 @@
-"""Tests for deterministic local Phase 1A market-price processing."""
+"""Tests for deterministic local market-price processing."""
 
 from __future__ import annotations
 

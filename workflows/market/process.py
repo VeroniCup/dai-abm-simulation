@@ -1,4 +1,4 @@
-"""Construct and validate the Phase 1A processed Dune market-price panel.
+"""Construct and validate the processed Dune market-price panel.
 
 This command is entirely local. It verifies the immutable raw result, pivots
 the four price series without aggregation, calculates transparent derived
@@ -172,7 +172,7 @@ def validate_raw_integrity(
     start: pd.Timestamp = DEFAULT_START,
     end_exclusive: pd.Timestamp = DEFAULT_END_EXCLUSIVE,
 ) -> tuple[pd.DataFrame, dict[str, Any]]:
-    """Enforce the Phase 1A structural gate before any processing occurs."""
+    """Enforce the raw market-data gate before processing."""
     if not raw_path.exists():
         raise ProcessingError(f"Raw Dune file does not exist: {raw_path}.")
     if not raw_validation_path.exists():
@@ -890,7 +890,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> int:
-    """Run the complete local Phase 1A processing workflow."""
+    """Run the complete local market-processing workflow."""
     args = parse_args()
     output_directory = args.output_directory
     provenance_directory = args.provenance_directory

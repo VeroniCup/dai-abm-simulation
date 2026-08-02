@@ -1,6 +1,6 @@
-"""Construct validated Phase 1B gas and joined market--gas panels locally.
+"""Construct validated gas and joined market--gas panels locally.
 
-This script has no network path. It verifies the immutable Phase 1A and 1B
+This script has no network path. It verifies the immutable market and gas
 inputs, preserves every raw gas field, derives transparent descriptive gas
 measures, performs an exact UTC join, creates hypothetical gas-cost indices,
 and writes validation and descriptive provenance. It does not estimate keeper
@@ -214,7 +214,7 @@ def validate_raw_gas_integrity(
     validation_path: Path,
     expected_sha256: str = EXPECTED_RAW_GAS_SHA256,
 ) -> tuple[pd.DataFrame, dict[str, Any]]:
-    """Enforce the complete Phase 1B raw-data gate before processing."""
+    """Enforce the complete raw-gas gate before processing."""
     raw_path = _resolve(raw_path)
     validation_path = _resolve(validation_path)
     if not raw_path.exists() or not validation_path.exists():
@@ -297,7 +297,7 @@ def validate_market_integrity(
     market_path: Path,
     expected_sha256: str = EXPECTED_MARKET_SHA256,
 ) -> tuple[pd.DataFrame, dict[str, Any]]:
-    """Verify the immutable Phase 1A market panel before the exact join."""
+    """Verify the immutable market panel before the exact UTC join."""
     market_path = _resolve(market_path)
     if not market_path.exists():
         raise GasProcessingError(f"Processed market panel is missing: {market_path}.")
@@ -1034,7 +1034,7 @@ def update_manifest(
     joined_validation_path: Path,
     metadata_path: Path,
 ) -> int:
-    """Attach Phase 1B processing provenance to the existing gas manifest row."""
+    """Attach processing provenance to the existing gas manifest row."""
     with manifest_path.open("r", encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle)
         fieldnames = list(reader.fieldnames or [])
@@ -1116,7 +1116,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> int:
-    """Run the deterministic local Phase 1B processing workflow."""
+    """Run the deterministic local gas-processing workflow."""
     args = parse_args()
     raw_gas_path = _resolve(args.gas_input)
     raw_validation_path = _resolve(args.gas_validation)

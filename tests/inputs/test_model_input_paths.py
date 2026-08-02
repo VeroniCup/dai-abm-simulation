@@ -1,4 +1,4 @@
-"""Stage 4 domain-owned compact runtime-input and protocol path gates."""
+"""Path gates for domain-owned runtime inputs and protocol data."""
 
 from __future__ import annotations
 

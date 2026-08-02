@@ -1,5 +1,4 @@
-"""
-Run bounded Tranche B vault-initialisation diagnostics.
+"""Run bounded empirical vault-initialisation diagnostics.
 
 This script does not estimate parameters. It validates the opt-in
 configuration, samples initial vault populations and runs very short smoke

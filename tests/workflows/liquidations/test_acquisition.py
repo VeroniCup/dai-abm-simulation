@@ -1,4 +1,4 @@
-"""Tests for bounded Phase 1C production acquisition."""
+"""Tests for bounded liquidation production acquisition."""
 
 from __future__ import annotations
 

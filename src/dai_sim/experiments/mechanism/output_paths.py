@@ -25,7 +25,7 @@ MECHANISM_EXPERIMENT_FAMILIES = frozenset(
 
 
 class MechanismOutputMigrationRequiredError(RuntimeError):
-    """Raised when only a superseded flat mechanism output tree exists."""
+    """Raised when mechanism outputs do not use the canonical family tree."""
 
 
 def canonical_mechanism_output_root(
@@ -52,7 +52,7 @@ def legacy_mechanism_output_root(
     *,
     repository_root: Path = REPOSITORY_ROOT,
 ) -> Path:
-    """Return the superseded flat family root for migration checks only."""
+    """Return the legacy flat family root used by compatibility checks."""
     if experiment_family not in MECHANISM_EXPERIMENT_FAMILIES:
         raise ValueError(
             f"Unknown mechanism experiment family: {experiment_family!r}."
@@ -65,11 +65,11 @@ def resolve_mechanism_output_root(
     *,
     repository_root: Path = REPOSITORY_ROOT,
 ) -> Path:
-    """Resolve a canonical family root and reject unmigrated old-only state.
+    """Resolve the canonical family root and reject legacy-only state.
 
-    Ordinary experiment execution never relocates output.  An old-only tree
-    requires an explicit, separately audited migration so that a resume cannot
-    silently fork one scientific run across two authoritative directories.
+    Experiment execution never relocates output. A legacy-only tree requires
+    explicit reconciliation so that a resume cannot split one scientific run
+    across two authoritative directories.
     """
     canonical = canonical_mechanism_output_root(
         experiment_family,

@@ -1,4 +1,4 @@
-"""Focused tests for the bounded Phase 2A empirical estimators."""
+"""Focused tests for bounded market, gas and protocol estimators."""
 
 from __future__ import annotations
 

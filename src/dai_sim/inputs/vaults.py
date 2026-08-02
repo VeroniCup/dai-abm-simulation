@@ -1,8 +1,7 @@
-"""
-Opt-in distribution-aware vault initialisation for Tranche B.
+"""Provide opt-in distribution-aware vault initialisation.
 
-Legacy Gaussian initialisation remains the simulator default. This module is
-only used when a caller explicitly selects a Tranche B initialisation mode.
+Legacy Gaussian initialisation remains the simulator default. Distributional
+sampling is used only when selected explicitly by a semantic profile.
 """
 
 from __future__ import annotations
@@ -246,7 +245,7 @@ def load_tranche_b_configuration(
     *,
     sensitivity_paths: tuple[Path | str, ...] = (),
 ) -> TrancheBConfigurationBundle:
-    """Load the explicit Tranche B configuration bundle."""
+    """Load empirical vault-initialisation controls from a semantic profile."""
     verify_adoption_review_checksums()
     config_path = Path(path).resolve()
     raw = load_configuration_payload(config_path, sensitivity_paths)
@@ -454,7 +453,7 @@ def initialise_vaults(
     simulation_config: SimulationConfig,
     init_config: VaultInitialisationConfig | None = None,
 ) -> InitialisationResult:
-    """Initialise vaults using the selected opt-in Tranche B mode."""
+    """Initialise vaults using the selected legacy or empirical mode."""
     config = init_config or VaultInitialisationConfig()
     config.validate()
 
@@ -527,7 +526,7 @@ def initialisation_provenance(
     init_config: VaultInitialisationConfig,
     fallback_counts: dict[str, int],
 ) -> dict[str, Any]:
-    """Return sidecar metadata for one Tranche B initialisation run."""
+    """Return sidecar metadata for one vault-initialisation run."""
     pool_checksum = None
     pool_path = None
     if init_config.pool_path is not None:
@@ -559,7 +558,7 @@ def initialisation_provenance(
 
 
 def write_initialisation_metadata(metadata: dict[str, Any], path: Path | str) -> None:
-    """Write deterministic Tranche B initialisation metadata."""
+    """Write deterministic vault-initialisation metadata."""
     output = Path(path)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8")

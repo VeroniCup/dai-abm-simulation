@@ -1169,7 +1169,7 @@ def _expect_value_error(function: Any, label: str) -> None:
 
 
 def run_synthetic_validation(write_outputs: bool = True) -> ProtocolPipelineResults:
-    """Execute Milestone 9 software checks using synthetic files only."""
+    """Validate the protocol pipeline against synthetic source files."""
     config = create_synthetic_fixture_config()
     raw_paths = [source.path for source in (*config.protocol_sources, *config.vault_sources, *config.liquidation_sources)]
     raw_before = {path: _sha256(path) for path in raw_paths}
@@ -1253,7 +1253,7 @@ def run_synthetic_validation(write_outputs: bool = True) -> ProtocolPipelineResu
 def run_baseline_protocol_pipeline(
     config_path: Path | str = REPOSITORY_ROOT / "config/protocol/parameters.yaml",
 ) -> ProtocolPipelineResults:
-    """Run a configured real baseline and write only Milestone 9 outputs."""
+    """Run the configured protocol baseline and write its processed panels."""
     config = load_protocol_config(config_path)
     results = run_protocol_pipeline(config, allow_unmapped=False)
     write_protocol_outputs(

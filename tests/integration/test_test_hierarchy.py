@@ -1,4 +1,4 @@
-"""Stage 9 semantic test-hierarchy and fixture-integrity gates."""
+"""Semantic test-hierarchy and fixture-integrity gates."""
 
 from __future__ import annotations
 

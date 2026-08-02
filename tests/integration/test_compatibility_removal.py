@@ -1,4 +1,4 @@
-"""Final-state gates for the Stage 11 compatibility removal."""
+"""Final-state gates for removed compatibility interfaces."""
 
 from __future__ import annotations
 

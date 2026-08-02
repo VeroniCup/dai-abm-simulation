@@ -1,4 +1,4 @@
-"""Focused deterministic tests for Phase 2B vault estimation."""
+"""Focused deterministic tests for representative-vault estimation."""
 
 from __future__ import annotations
 

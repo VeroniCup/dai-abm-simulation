@@ -1,4 +1,4 @@
-"""Tests for the bounded Phase 1B Dune gas acquisition pipeline."""
+"""Tests for the bounded Dune gas-acquisition pipeline."""
 
 from __future__ import annotations
 

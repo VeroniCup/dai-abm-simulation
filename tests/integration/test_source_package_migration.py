@@ -1,4 +1,4 @@
-"""Characterisation tests for the Stage 3 semantic source package."""
+"""Characterisation tests for the semantic source package."""
 
 from __future__ import annotations
 

@@ -1,7 +1,4 @@
-"""
-metrics.py
-
-Summary metric utilities for the DAI stability simulation.
+"""Compute scenario-level metrics for the DAI stability simulation.
 
 This module reads experiment outputs and computes clean scenario-level
 metrics for reporting and dissertation tables.
@@ -395,8 +392,6 @@ def build_and_save_clean_summary(
 
 
 if __name__ == "__main__":
-    # Run: PYTHONPATH=src python -m dai_sim.model.metrics
-
     clean_summary, save_path = build_and_save_clean_summary(
         experiment_name="baseline",
         shock_time=30,

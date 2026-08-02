@@ -1,4 +1,4 @@
-"""Stage 4 semantic profile and explicit sensitivity contracts."""
+"""Contracts for semantic profiles and explicit sensitivity overrides."""
 
 from __future__ import annotations
 

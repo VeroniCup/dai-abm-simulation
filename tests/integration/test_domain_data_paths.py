@@ -1,4 +1,4 @@
-"""Focused checks for the Stage 5 domain-first data hierarchy."""
+"""Focused checks for the domain-first data hierarchy."""
 
 from __future__ import annotations
 

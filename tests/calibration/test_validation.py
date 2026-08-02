@@ -1,4 +1,4 @@
-"""Focused tests for the bounded Phase 2A candidate review."""
+"""Focused tests for bounded parameter-candidate review."""
 
 from __future__ import annotations
 

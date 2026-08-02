@@ -1,4 +1,4 @@
-"""Stage 9 logical collection, marker and monkeypatch preservation gates."""
+"""Test-collection, marker and monkeypatch preservation gates."""
 
 from __future__ import annotations
 

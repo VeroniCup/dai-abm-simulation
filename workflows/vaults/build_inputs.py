@@ -1,5 +1,4 @@
-"""
-Build compact Tranche B vault initialisation pools from validated openings.
+"""Build compact vault-initialisation pools from validated openings.
 
 The script keeps runtime sampling independent of the large reconstructed vault
 datasets. It preserves only paired debt/collateral-ratio observations and

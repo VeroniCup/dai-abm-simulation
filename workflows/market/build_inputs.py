@@ -1,5 +1,4 @@
-"""
-Build compact Tranche C market and gas runtime pools.
+"""Build compact empirical market and gas runtime pools.
 
 This script performs deterministic runtime-pool construction only. It does
 not acquire data and does not estimate new parameters.
@@ -284,7 +283,7 @@ def _write_csv(frame: pd.DataFrame, path: Path) -> None:
 
 
 def write_outputs() -> None:
-    """Build and write all Tranche C runtime pools and manifests."""
+    """Build and write all market and gas runtime pools and manifests."""
     MARKET_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     LIQUIDATION_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     AUDIT_DIR.mkdir(parents=True, exist_ok=True)

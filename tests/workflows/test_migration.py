@@ -1,4 +1,4 @@
-"""Structural gates for the Stage 6 workflow migration."""
+"""Structural gates for domain-owned workflow commands."""
 
 from __future__ import annotations
 

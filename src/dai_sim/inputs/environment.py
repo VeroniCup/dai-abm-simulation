@@ -1,8 +1,7 @@
-"""
-Explicit Tranche C empirical environment-input configuration and generation.
+"""Resolve opt-in empirical market, gas, vault and liquidation-demand inputs.
 
-This module stitches together the opt-in Tranche B vault initialiser, Tranche C
-market blocks and Tranche C gas inputs. It does not alter simulator defaults.
+The legacy simulation remains the default; empirical inputs are generated only
+when a caller selects an empirical semantic profile.
 """
 
 from __future__ import annotations
@@ -53,7 +52,7 @@ VALID_SEMANTIC_PROFILE_MODES = {"legacy", "empirical", "empirical_stress"}
 
 @dataclass(frozen=True)
 class TrancheCConfigurationBundle:
-    """Loaded opt-in Tranche C configuration."""
+    """Empirical vault, market and gas configuration resolved for one run."""
 
     bundle_name: str
     config_path: Path
@@ -65,7 +64,7 @@ class TrancheCConfigurationBundle:
 
 @dataclass(frozen=True)
 class TrancheDConfigurationBundle:
-    """Loaded opt-in Tranche D configuration."""
+    """Empirical environment configuration with liquidation demand."""
 
     bundle_name: str
     config_path: Path
@@ -76,7 +75,7 @@ class TrancheDConfigurationBundle:
 
 @dataclass(frozen=True)
 class EnvironmentInputResult:
-    """Generated external inputs and provenance for one Tranche C run."""
+    """Generated external inputs and their provenance for one run."""
 
     price_paths: dict[str, Any]
     gas_cost_path: Any
@@ -216,7 +215,7 @@ def load_tranche_c_configuration(
     *,
     sensitivity_paths: tuple[Path | str, ...] = (),
 ) -> TrancheCConfigurationBundle:
-    """Load and validate the explicit Tranche C configuration."""
+    """Load empirical vault, market and gas controls from a semantic profile."""
     config_path = Path(path).resolve()
     raw = load_configuration_payload(config_path, sensitivity_paths)
     if not isinstance(raw, dict):
@@ -334,7 +333,7 @@ def configuration_behaviour_sha256(
 def generate_environment_inputs(
     bundle: TrancheCConfigurationBundle | TrancheDConfigurationBundle,
 ) -> EnvironmentInputResult:
-    """Generate explicit Tranche C price, gas and initial-vault inputs."""
+    """Generate empirical price, gas, initial-vault and demand inputs."""
     tranche_c_bundle = bundle.tranche_c_bundle if isinstance(
         bundle,
         TrancheDConfigurationBundle,
@@ -404,7 +403,7 @@ def generate_environment_inputs(
 
 
 def write_environment_provenance(provenance: dict[str, Any], path: Path | str) -> None:
-    """Write deterministic Tranche C sidecar provenance."""
+    """Write deterministic sidecar provenance for generated environment inputs."""
     output = Path(path)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(provenance, indent=2, sort_keys=True) + "\n", encoding="utf-8")

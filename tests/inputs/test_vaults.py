@@ -1,4 +1,4 @@
-"""Tests for opt-in Tranche B distribution-aware vault initialisation."""
+"""Tests for opt-in distribution-aware vault initialisation."""
 
 from __future__ import annotations
 

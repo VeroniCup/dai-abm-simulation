@@ -1,4 +1,4 @@
-"""Structural tests for the Stage 7 domain-based SQL hierarchy."""
+"""Structural tests for the domain-based SQL hierarchy."""
 
 from __future__ import annotations
 

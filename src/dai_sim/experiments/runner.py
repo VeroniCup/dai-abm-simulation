@@ -1344,7 +1344,7 @@ def save_multicollateral_diagnostics(
     diagnostics: Mapping[str, pd.DataFrame],
     output_dir: Path = MULTICOLLATERAL_DIAGNOSTICS_DIR,
 ) -> dict[str, Path]:
-    """Save Milestone 6 diagnostic tables without touching Experiment 06 CSVs."""
+    """Save multi-collateral diagnostics separately from experiment results."""
     filenames = {
         "stable_depeg_severity": "stable_depeg_severity_sweep.csv",
         "initial_collateral_risk": "initial_collateral_risk.csv",
@@ -1378,7 +1378,7 @@ def run_multicollateral_diagnostics(
     save_outputs: bool = True,
     tolerance: float = 1e-12,
 ) -> dict[str, pd.DataFrame]:
-    """Build all Milestone 6 diagnostics from existing Experiment 06 outputs."""
+    """Build multi-collateral diagnostics from existing experiment outputs."""
     system_path = MULTICOLLATERAL_RESULTS_DIR / "system_results.csv"
     collateral_path = MULTICOLLATERAL_RESULTS_DIR / "collateral_results.csv"
     if not system_path.exists() or not collateral_path.exists():
@@ -1424,7 +1424,6 @@ def run_multicollateral_diagnostics(
 
 
 if __name__ == "__main__":
-    # Run: PYTHONPATH=src python -m dai_sim.experiments.runner
     diagnostic_results = run_multicollateral_diagnostics()
 
     first_liquidatable = diagnostic_results[

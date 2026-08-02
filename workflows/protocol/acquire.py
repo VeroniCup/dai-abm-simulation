@@ -1,4 +1,4 @@
-"""Persist, validate and reconstruct Phase 1D protocol-parameter history.
+"""Persist, validate and reconstruct protocol-parameter history.
 
 This module deliberately contains no Dune client. MCP query responses are
 written to a module-specific payload file and passed directly to the atomic

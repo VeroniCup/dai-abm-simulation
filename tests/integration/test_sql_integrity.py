@@ -1,4 +1,4 @@
-"""Content-integrity tests for the Stage 7 SQL movement."""
+"""Content-integrity tests for domain-owned SQL templates."""
 
 from __future__ import annotations
 

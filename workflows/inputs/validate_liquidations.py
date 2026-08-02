@@ -1,7 +1,6 @@
-"""
-Run local Tranche D liquidation-arrival diagnostics.
+"""Run local liquidation-arrival diagnostics.
 
-The diagnostics compare the compact Phase 2C-derived arrival pool with
+The diagnostics compare the compact empirical arrival pool with
 deterministic synthetic draws from the opt-in hurdle-count process. They do
 not acquire data or rerun parameter estimation.
 """

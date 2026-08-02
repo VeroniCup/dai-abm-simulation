@@ -1,4 +1,4 @@
-"""Phase 1C bounded Maker Liquidations 2.0 production acquisition.
+"""Acquire bounded Maker Liquidations 2.0 production data.
 
 The module has no network or credential path. Dune MCP creates and executes one
 private temporary query at a time; this module renders the validated SQL,

@@ -1,4 +1,4 @@
-"""Deterministic tests for the Phase 1C liquidation diagnostic handoff."""
+"""Deterministic tests for the liquidation-diagnostic handoff."""
 
 from __future__ import annotations
 

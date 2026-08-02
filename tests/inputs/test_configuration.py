@@ -1,4 +1,4 @@
-"""Tests for the opt-in Phase 2 Tranche A empirical configuration bundle."""
+"""Tests for opt-in empirical configuration resolution."""
 
 from __future__ import annotations
 

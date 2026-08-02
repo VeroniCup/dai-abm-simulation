@@ -1,4 +1,4 @@
-"""Deterministic tests for local Phase 1B gas and market--gas processing."""
+"""Deterministic tests for local gas and market--gas processing."""
 
 from __future__ import annotations
 

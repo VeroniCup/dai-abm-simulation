@@ -1,4 +1,4 @@
-"""Tests for opt-in Tranche D liquidation-arrival demand."""
+"""Tests for opt-in empirical liquidation-arrival demand."""
 
 from __future__ import annotations
 

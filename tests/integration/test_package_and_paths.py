@@ -1,4 +1,4 @@
-"""Tests for the Stage 2 package and repository-path infrastructure."""
+"""Tests for package discovery and repository-path infrastructure."""
 
 from __future__ import annotations
 
