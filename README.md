@@ -44,7 +44,7 @@ package from the repository root:
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-python -m pip install -e .
+python -m pip install -e .[test]
 python -m pip check
 ```
 
@@ -58,6 +58,8 @@ python -m compileall src workflows tests
 pytest
 ```
 
+`pyproject.toml` is the authoritative dependency specification; the concise
+`requirements.txt` file is a compatibility wrapper for the same test extra.
 The test suite covers model mechanics, input validation, experiment contracts,
 portable runtime sources, SQL integrity and package structure.
 

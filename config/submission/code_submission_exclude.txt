@@ -2,6 +2,7 @@
 # Repository-relative paths only. Explicit include rules remain authoritative.
 
 outputs/
+config/submission/
 data/*/raw/
 data/*/processed/
 data/processed/

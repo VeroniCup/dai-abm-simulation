@@ -19,7 +19,7 @@ import subprocess
 import tempfile
 from typing import Any
 
-from dai_sim.common.submission_bundle import is_verified_bundle_member
+from dai_sim.common.archive_boundary import is_verified_bundle_member
 from dai_sim.inputs.configuration import REPOSITORY_ROOT, sha256_file
 
 

@@ -16,7 +16,7 @@ _WORKFLOW_BOOTSTRAP = next(
 )
 runpy.run_path(str(_WORKFLOW_BOOTSTRAP))["bootstrap_runtime"](__file__)
 
-from dai_sim.inputs.submission_portability import (  # noqa: E402
+from dai_sim.inputs.portability import (  # noqa: E402
     CONTRACTS_PATH,
     canonical_sha256,
     load_reconstruction_contracts,

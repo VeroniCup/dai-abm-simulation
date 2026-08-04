@@ -1,4 +1,2 @@
-numpy
-pandas
-matplotlib
-pyyaml
+# Authoritative runtime and test dependencies are declared in pyproject.toml.
+-e .[test]

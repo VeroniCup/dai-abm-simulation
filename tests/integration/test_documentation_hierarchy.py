@@ -3,6 +3,8 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+
+from dai_sim.common.archive_boundary import load_external_content_manifest
 from pathlib import Path
 
 
@@ -72,9 +74,12 @@ def test_document_migration_ledger_covers_every_moved_source() -> None:
         assert (ROOT / relative).is_file(), relative
 
     internal_roots = ("AGENTS.md", "PROJECT_STATUS.md", "empirical.md", "parameters.md")
-    include = (
-        ROOT / "config/submission/code_submission_include.txt"
-    ).read_text(encoding="utf-8").splitlines()
+    include_path = ROOT / "config/submission/code_submission_include.txt"
+    if include_path.is_file():
+        include = include_path.read_text(encoding="utf-8").splitlines()
+    else:
+        inventory = load_external_content_manifest(ROOT)
+        include = [item["path"] for item in inventory["included_files"]]
     assert not set(internal_roots).intersection(include)
     assert {line for line in include if line.endswith(".md")} == set(USER_DOCUMENTS)
 

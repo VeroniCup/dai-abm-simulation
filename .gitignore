@@ -56,6 +56,7 @@ data/provenance/maintenance/runtime_portability/*
 !data/provenance/maintenance/runtime_portability/runtime_source_manifest.json
 !data/provenance/maintenance/runtime_portability/runtime_portability_decision.json
 !data/provenance/maintenance/runtime_portability/runtime_portability_reproducibility.json
+!data/provenance/maintenance/runtime_portability/portability_layout_relocation.json
 !data/provenance/maintenance/submission_portability/
 data/provenance/maintenance/submission_portability/*
 !data/provenance/maintenance/submission_portability/portability_specification.json

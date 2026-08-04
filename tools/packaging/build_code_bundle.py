@@ -15,9 +15,10 @@ _WORKFLOW_BOOTSTRAP = next(
 )
 runpy.run_path(str(_WORKFLOW_BOOTSTRAP))["bootstrap_runtime"](__file__)
 
-from dai_sim.common.submission_bundle import (  # noqa: E402
+from dai_sim.common.archive_boundary import (  # noqa: E402
     build_bundle,
     build_inventory,
+    build_record,
     canonical_json_bytes,
     verify_bundle,
 )
@@ -32,6 +33,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--include-manifest", type=Path, required=True)
     parser.add_argument("--exclude-manifest", type=Path, required=True)
     parser.add_argument("--destination", type=Path)
+    parser.add_argument("--content-manifest", type=Path)
     parser.add_argument("--record", type=Path)
     return parser
 
@@ -54,13 +56,14 @@ def main(argv: list[str] | None = None) -> int:
         exclude_manifest=args.exclude_manifest.resolve(),
         builder_source=builder_source,
     )
-    if args.record is not None:
-        _write_record(args.record.resolve(), inventory)
-
     if args.command == "inventory":
+        if args.record is not None:
+            _write_record(args.record.resolve(), inventory)
         print(json.dumps(inventory, indent=2, sort_keys=True))
         return 0
     if args.command == "validate":
+        if args.record is not None:
+            _write_record(args.record.resolve(), inventory)
         print(
             json.dumps(
                 {
@@ -81,13 +84,32 @@ def main(argv: list[str] | None = None) -> int:
     if args.destination is None:
         raise ValueError(f"{args.command} requires --destination.")
     destination = args.destination.resolve()
+    content_manifest = (
+        None if args.content_manifest is None else args.content_manifest.resolve()
+    )
     if args.command == "verify":
-        print(json.dumps(verify_bundle(destination), sort_keys=True))
+        print(
+            json.dumps(
+                verify_bundle(destination, content_manifest), sort_keys=True
+            )
+        )
         return 0
     if args.command in {"build", "all"}:
-        build_bundle(root, destination, inventory)
+        _, manifest_path = build_bundle(
+            root,
+            destination,
+            inventory,
+            content_manifest=content_manifest,
+        )
+        record = build_record(inventory, manifest_path)
+        if args.record is not None:
+            _write_record(args.record.resolve(), record)
     if args.command == "all":
-        print(json.dumps(verify_bundle(destination), sort_keys=True))
+        print(
+            json.dumps(
+                verify_bundle(destination, manifest_path), sort_keys=True
+            )
+        )
     else:
         print(destination)
     return 0

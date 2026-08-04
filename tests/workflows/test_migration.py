@@ -5,6 +5,7 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
+from dai_sim.common.archive_boundary import is_manifest_filtered_bundle
 
 from tests.support import REPOSITORY_ROOT as ROOT
 
@@ -108,7 +109,7 @@ def test_only_real_populated_categories_exist() -> None:
 def test_development_packaging_is_outside_workflow_discovery() -> None:
     assert not (ROOT / "workflows/maintenance").exists()
     builder = ROOT / "tools/packaging/build_code_bundle.py"
-    if (ROOT / "SUBMISSION_CONTENT_MANIFEST.json").is_file():
+    if is_manifest_filtered_bundle(ROOT):
         assert not builder.exists()
     else:
         assert builder.is_file()

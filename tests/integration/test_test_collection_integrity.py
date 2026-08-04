@@ -204,7 +204,7 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
     counts = Counter(nodeid.split("::", 1)[0] for nodeid in additions)
     assert counts == {
         "tests/integration/test_ignore_rules.py": 6,
-        "tests/integration/test_submission_bundle.py": 15,
+        "tests/integration/test_archive_boundary.py": 15,
         "tests/integration/test_output_hierarchy.py": 12,
         "tests/integration/test_test_collection_integrity.py": 6,
         "tests/integration/test_test_hierarchy.py": 7,

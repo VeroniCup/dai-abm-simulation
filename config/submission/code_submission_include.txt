@@ -14,8 +14,6 @@ environment.yml
 src/
 config/**/*.yaml
 config/**/*.csv
-config/submission/code_submission_include.txt
-config/submission/code_submission_exclude.txt
 tests/
 
 workflows/calibration/

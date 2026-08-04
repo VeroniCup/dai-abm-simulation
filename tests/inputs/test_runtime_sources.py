@@ -12,7 +12,8 @@ import pytest
 
 from dai_sim.inputs import runtime_sources
 from dai_sim.inputs.stage1 import load_portable_stage1_residual_source
-from dai_sim.inputs.submission_portability import (
+from dai_sim.inputs.portability import (
+    LAYOUT_RELOCATION_PATH,
     MAINTENANCE_HISTORY_PATH,
     canonical_sha256,
     load_reconstruction_contracts,
@@ -48,7 +49,7 @@ PROCESSED_SOURCES = {
 
 def _portable_tree(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     mapping = runtime_sources.load_runtime_map()
-    map_path = tmp_path / "config/submission/runtime_input_map.yaml"
+    map_path = tmp_path / "config/runtime/runtime_input_map.yaml"
     map_path.parent.mkdir(parents=True)
     shutil.copy2(runtime_sources.RUNTIME_MAP_PATH, map_path)
     for entry in mapping["sources"].values():
@@ -293,9 +294,16 @@ def test_maintenance_relocation_preserves_historical_verifier_provenance() -> No
     assert verifier["historical_sha256"] == record[
         "historical_test_support_sources"
     ]["external_verifier"]["sha256"]
-    assert verifier["current_sha256"] == runtime_sources.sha256_file(
+    assert verifier["current_sha256"] == (
+        "488e893aa746a4488e688416ea4b8ce0554268f7d87bb6d320804bf49c4e5b32"
+    )
+    layout = json.loads(LAYOUT_RELOCATION_PATH.read_text(encoding="utf-8"))
+    assert layout["external_verifier_sha256"] == runtime_sources.sha256_file(
         REPOSITORY_ROOT / verifier["current_path"]
     )
+    assert layout["scientific_value_differences"] == 0
+    assert layout["scientific_decision_differences"] == 0
+    assert layout["production_default_differences"] == 0
     assert verifier["historical_sha256"] != verifier["current_sha256"]
     assert not (REPOSITORY_ROOT / "workflows/maintenance").exists()
 

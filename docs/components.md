@@ -82,7 +82,7 @@ generated separately from experiment output.
 The common package contains small infrastructure shared across scientific
 modules. `paths.py` finds the project root from stable layout markers and keeps
 resolved paths inside it. `serialization.py` supplies deterministic conversion
-and encoding helpers. `submission_bundle.py` validates the include and exclude
+and encoding helpers. `archive_boundary.py` validates the include and exclude
 manifests, copies the selected files atomically and verifies their content
 manifest.
 
@@ -119,9 +119,9 @@ inputs. `config/protocol/` records collateral definitions and protocol
 parameters. `config/sensitivities/` contains partial overrides and controlled
 treatment registries. `config/validation/` defines held-out windows.
 
-`config/submission/` contains packaging manifests and the runtime input map.
-These files determine archive membership and compact source resolution; they
-do not change the model equations.
+`config/runtime/` contains the neutral runtime input map used for compact
+source resolution. Development-only archive policy is not distributed. Neither
+changes the model equations.
 
 ## `data`
 

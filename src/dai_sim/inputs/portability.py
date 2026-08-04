@@ -23,6 +23,11 @@ SPECIFICATION_PATH = PORTABILITY_ROOT / "portability_specification.json"
 DECISION_PATH = PORTABILITY_ROOT / "portability_decision.json"
 REPRODUCIBILITY_PATH = PORTABILITY_ROOT / "portability_reproducibility.json"
 MAINTENANCE_HISTORY_PATH = PORTABILITY_ROOT / "maintenance_executable_history.json"
+LAYOUT_RELOCATION_PATH = (
+    REPOSITORY_ROOT
+    / "data/provenance/maintenance/runtime_portability/"
+    "portability_layout_relocation.json"
+)
 PORTABLE_SUBMISSION_CLASSIFICATION = "portable_submission_evidence_v1"
 
 
@@ -161,8 +166,28 @@ def validate_portability_bundle() -> dict[str, Any]:
         if item.get("classification") == "user_verification"
     )
     current_verifier = REPOSITORY_ROOT / verifier_relocation["current_path"]
-    if sha256_file(current_verifier) != verifier_relocation["current_sha256"]:
-        raise ValueError("Current external verifier checksum differs.")
+    current_verifier_sha = sha256_file(current_verifier)
+    if current_verifier_sha != verifier_relocation["current_sha256"]:
+        layout = json.loads(LAYOUT_RELOCATION_PATH.read_text(encoding="utf-8"))
+        from dai_sim.inputs.runtime_sources import portable_runtime_identity
+
+        required_layout = {
+            "classification": "portable_runtime_layout_relocation_v1",
+            "predecessor_portable_runtime_identity": (
+                "bbb89292dcec748261ec8cf8ca512f707316336eecb4b81252d80f0deba52f34"
+            ),
+            "portable_submission_identity": expected_identity,
+            "successor_portability_layout_identity": portable_runtime_identity(),
+            "runtime_input_map_sha256": (
+                "2f773477eb13488a918525c0b335bd2d7f84e459e2117c40572e7510076a9668"
+            ),
+            "external_verifier_sha256": current_verifier_sha,
+            "scientific_value_differences": 0,
+            "scientific_decision_differences": 0,
+            "production_default_differences": 0,
+        }
+        if any(layout.get(key) != value for key, value in required_layout.items()):
+            raise ValueError("Portability-layout relocation record differs.")
     if maintenance_history.get("portable_submission_evidence_identity") != expected_identity:
         raise ValueError("Maintenance history changed portable-submission identity.")
     required = {
@@ -179,6 +204,11 @@ def validate_portability_bundle() -> dict[str, Any]:
     return {
         "status": "passed",
         "portable_submission_identity": expected_identity,
+        "successor_portability_layout_identity": (
+            json.loads(LAYOUT_RELOCATION_PATH.read_text(encoding="utf-8"))[
+                "successor_portability_layout_identity"
+            ]
+        ),
         "study_count": len(contracts["studies"]),
         "readiness": decision["readiness"],
     }

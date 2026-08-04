@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import os
+import ast
 from pathlib import Path
 import runpy
 import subprocess
 import sys
 import tomllib
+import yaml
 
 import pytest
 from setuptools import find_packages
@@ -191,7 +193,21 @@ def test_pyproject_metadata_and_discovery_are_bounded() -> None:
     assert payload["project"]["name"] == "dai-abm-simulation"
     assert payload["project"]["version"] == "0.1.0a0"
     assert payload["project"]["requires-python"] == ">=3.11,<3.14"
-    assert payload["project"]["dynamic"] == ["dependencies"]
+    runtime_requirements = payload["project"]["dependencies"]
+    assert runtime_requirements == [
+        "matplotlib>=3.8",
+        "numpy>=1.26",
+        "pandas>=2.1",
+        "PyYAML>=6.0",
+        "scipy>=1.11",
+    ]
+    extras = payload["project"]["optional-dependencies"]
+    assert extras == {
+        "test": ["pytest>=8.0", "setuptools>=68"],
+        "lint": ["ruff>=0.14"],
+    }
+    assert "dynamic" not in payload["project"]
+    assert "dynamic" not in payload["tool"]["setuptools"]
     assert payload["build-system"]["build-backend"] == "setuptools.build_meta"
     assert payload["tool"]["setuptools"]["package-dir"] == {"": "src"}
     discovery = payload["tool"]["setuptools"]["packages"]["find"]
@@ -209,3 +225,51 @@ def test_pyproject_metadata_and_discovery_are_bounded() -> None:
         "dai_sim.model",
         "dai_sim.validation",
     ]
+
+    requirements = (REPOSITORY_ROOT / "requirements.txt").read_text(
+        encoding="utf-8"
+    ).splitlines()
+    assert requirements == [
+        "# Authoritative runtime and test dependencies are declared in pyproject.toml.",
+        "-e .[test]",
+    ]
+    assert not any(
+        marker in line
+        for line in requirements
+        for marker in ("@ file:", "file://", "/Users/", "/home/", "/opt/conda")
+    )
+
+    imported = {}
+    for root_name in ("src", "workflows", "tests"):
+        names = set()
+        for path in (REPOSITORY_ROOT / root_name).rglob("*.py"):
+            tree = ast.parse(path.read_text(encoding="utf-8"))
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Import):
+                    names.update(item.name.split(".")[0] for item in node.names)
+                elif isinstance(node, ast.ImportFrom) and node.module:
+                    names.add(node.module.split(".")[0])
+        imported[root_name] = names
+    runtime_imports = {"matplotlib", "numpy", "pandas", "scipy", "yaml"}
+    test_only_imports = {"pytest", "setuptools"}
+    assert runtime_imports <= imported["src"] | imported["workflows"]
+    assert test_only_imports <= imported["tests"]
+    declared_runtime_imports = {
+        "yaml" if item.lower().startswith("pyyaml") else item.split(">=")[0].lower()
+        for item in runtime_requirements
+    }
+    declared_test_imports = {
+        item.split(">=")[0].lower() for item in extras["test"]
+    }
+    assert declared_runtime_imports == runtime_imports
+    assert declared_test_imports == test_only_imports
+
+    environment = yaml.safe_load(
+        (REPOSITORY_ROOT / "environment.yml").read_text(encoding="utf-8")
+    )
+    environment_dependencies = set(environment["dependencies"])
+    assert "python>=3.11,<3.14" in environment_dependencies
+    normalised_environment = {item.lower() for item in environment_dependencies}
+    assert {item.lower() for item in runtime_requirements} <= normalised_environment
+    assert {item.lower() for item in extras["test"]} <= normalised_environment
+    assert {item.lower() for item in extras["lint"]} <= normalised_environment

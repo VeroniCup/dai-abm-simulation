@@ -27,7 +27,7 @@ dai-abm-simulation/
 │   ├── protocol/
 │   ├── sensitivities/
 │   ├── validation/
-│   └── submission/
+│   └── runtime/
 ├── data/
 │   ├── market/model_inputs/
 │   ├── gas/provenance/
@@ -85,11 +85,12 @@ when the package has not been installed. Package discovery is bounded to the
 `profiles/` contains complete runnable configurations, including the legacy
 and empirical profiles. `protocol/` records collateral and protocol settings.
 `sensitivities/` contains controlled overrides and treatment registries, and
-`validation/` contains held-out window definitions. `submission/` contains the
-include, exclude and compact-runtime maps used to build the portable archive.
+`validation/` contains held-out window definitions. `runtime/` contains the
+neutral compact-runtime source map used by the installed package.
 
 Configuration files are validated when loaded. A sensitivity file is not a
 complete profile, and an experimental setting is not automatically a default.
+Archive-construction policy remains development-only and is not distributed.
 
 ## Compact model inputs and provenance
 

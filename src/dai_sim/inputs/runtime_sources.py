@@ -18,7 +18,7 @@ import yaml
 
 
 REPOSITORY_ROOT: Final = Path(__file__).resolve().parents[3]
-RUNTIME_MAP_PATH: Final = REPOSITORY_ROOT / "config/submission/runtime_input_map.yaml"
+RUNTIME_MAP_PATH: Final = REPOSITORY_ROOT / "config/runtime/runtime_input_map.yaml"
 CLASSIFICATION: Final = "portable_runtime_resolution_v2"
 MIGRATION_PARENT_COMMIT: Final = "d0b59afe04321362836b9c616365df7e221c25d2"
 EQUIVALENCE_CONTRACT_VERSION: Final = "full_vs_compact_exact_v1"

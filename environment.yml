@@ -2,14 +2,12 @@ name: dai-sim
 channels:
   - defaults
 dependencies:
-  - python=3.11
-  - jupyterlab
-  - scipy
-  - matplotlib
-  - pandas
-  - tqdm
-  - pyyaml
-  - numpy
-  - plotly
-  - pytest
-  - statsmodels
+  - python>=3.11,<3.14
+  - matplotlib>=3.8
+  - numpy>=1.26
+  - pandas>=2.1
+  - pyyaml>=6.0
+  - scipy>=1.11
+  - pytest>=8.0
+  - setuptools>=68
+  - ruff>=0.14

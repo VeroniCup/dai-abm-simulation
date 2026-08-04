@@ -6,7 +6,7 @@ otherwise.
 ## Requirements
 
 The package metadata supports Python 3.11, 3.12 and 3.13. Runtime dependencies
-are NumPy, pandas, Matplotlib and PyYAML. The test suite uses pytest. A standard
+are NumPy, pandas, Matplotlib, PyYAML and SciPy. The test suite uses pytest. A standard
 `venv` environment is sufficient; `environment.yml` is available as an
 alternative for Conda users.
 
@@ -32,9 +32,13 @@ On Windows PowerShell use:
 Install the project in editable mode and check its declared dependencies:
 
 ```bash
-python -m pip install -e .
+python -m pip install -e .[test]
 python -m pip check
 ```
+
+`pyproject.toml` is the authoritative dependency specification. The short
+`requirements.txt` wrapper installs the same editable package and test extra
+for tools that expect a requirements file.
 
 Editable installation keeps imports pointed at the checked-out `src/` tree,
 so a code change is visible without rebuilding a wheel. Run the commands from
@@ -66,7 +70,7 @@ python -m compileall src workflows tests
 pytest
 ```
 
-The current expected result is 1,407 passed tests and one documented skip,
+The current expected result is 1,353 passed tests and one documented skip,
 with no failures or collection errors. A later archive may report additional
 passing tests when new software checks are added.
 
@@ -197,7 +201,7 @@ repository.
 if it contains an incompatible earlier installation.
 
 **A dependency is missing.** Run `python -m pip check`, then install the
-dependencies listed in `requirements.txt`. Offline installation requires those
+dependencies declared in `pyproject.toml`. Offline installation requires those
 packages to be supplied locally in advance.
 
 **The project root cannot be found.** Run the command from the archive root or

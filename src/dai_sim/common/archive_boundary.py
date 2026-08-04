@@ -19,7 +19,8 @@ import tempfile
 from typing import Any, Iterable, Sequence
 
 
-CONTENT_MANIFEST_NAME = "SUBMISSION_CONTENT_MANIFEST.json"
+LEGACY_CONTENT_MANIFEST_NAME = "SUBMISSION_CONTENT_MANIFEST.json"
+CONTENT_MANIFEST_SUFFIX = ".content-manifest.json"
 SCHEMA_VERSION = 1
 
 
@@ -43,6 +44,84 @@ def canonical_json_bytes(value: object) -> bytes:
         )
         + "\n"
     ).encode("utf-8")
+
+
+def external_content_manifest_path(destination: Path) -> Path:
+    """Return the default external content-manifest path for *destination*."""
+    return destination.with_name(f"{destination.name}{CONTENT_MANIFEST_SUFFIX}")
+
+
+def _load_content_manifest(path: Path) -> dict[str, Any]:
+    inventory = json.loads(path.read_text(encoding="utf-8"))
+    records = inventory["included_files"]
+    if submission_bundle_identity(records) != inventory[
+        "submission_bundle_identity"
+    ]:
+        raise ValueError("Submission content manifest identity differs.")
+    return inventory
+
+
+def locate_external_content_manifest(
+    bundle_root: Path,
+    explicit_path: Path | None = None,
+) -> Path:
+    """Locate one valid content manifest beside a Git-free payload root."""
+    root = bundle_root.resolve()
+    if explicit_path is not None:
+        path = explicit_path.resolve()
+        _load_content_manifest(path)
+        return path
+
+    default = external_content_manifest_path(root)
+    candidates = [default] if default.is_file() else []
+    candidates.extend(
+        path
+        for path in sorted(root.parent.glob(f"*{CONTENT_MANIFEST_SUFFIX}"))
+        if path not in candidates
+    )
+    matches = []
+    for path in candidates:
+        try:
+            inventory = _load_content_manifest(path)
+        except (KeyError, TypeError, ValueError, json.JSONDecodeError, OSError):
+            continue
+        records = inventory["included_files"]
+        if all(
+            (root / item["path"]).is_file()
+            and not (root / item["path"]).is_symlink()
+            and (root / item["path"]).stat().st_size == item["size_bytes"]
+            and sha256_file(root / item["path"]) == item["sha256"]
+            for item in records
+        ):
+            matches.append(path)
+    if len(matches) != 1:
+        raise FileNotFoundError(
+            "Exactly one matching external content manifest is required; "
+            f"found {len(matches)}."
+        )
+    return matches[0]
+
+
+def load_external_content_manifest(
+    bundle_root: Path,
+    explicit_path: Path | None = None,
+) -> dict[str, Any]:
+    """Load the verified external manifest for a Git-free payload."""
+    return _load_content_manifest(
+        locate_external_content_manifest(bundle_root, explicit_path)
+    )
+
+
+def is_manifest_filtered_bundle(bundle_root: Path) -> bool:
+    """Return whether *bundle_root* is a Git-free, externally bound payload."""
+    root = bundle_root.resolve()
+    if (root / ".git").exists():
+        return False
+    try:
+        locate_external_content_manifest(root)
+    except (FileNotFoundError, OSError, ValueError):
+        return False
+    return True
 
 
 @dataclass(frozen=True)
@@ -160,20 +239,16 @@ def discover_repository_files(repository_root: Path) -> tuple[str, ...]:
         capture_output=True,
     )
     if completed.returncode != 0:
-        manifest_path = repository_root / CONTENT_MANIFEST_NAME
-        if not manifest_path.is_file():
+        try:
+            inventory = load_external_content_manifest(repository_root)
+        except FileNotFoundError:
             raise subprocess.CalledProcessError(
                 completed.returncode,
                 completed.args,
                 output=completed.stdout,
                 stderr=completed.stderr,
             )
-        inventory = json.loads(manifest_path.read_text(encoding="utf-8"))
         records = inventory["included_files"]
-        if submission_bundle_identity(records) != inventory[
-            "submission_bundle_identity"
-        ]:
-            raise ValueError("Submission content manifest identity differs.")
         return tuple(sorted(item["path"] for item in records))
     values = completed.stdout.decode("utf-8").split("\0")
     paths = []
@@ -300,7 +375,7 @@ def build_inventory(
     )[:30]
     return {
         "schema_version": SCHEMA_VERSION,
-        "classification": "manifest_filtered_code_submission_v1",
+        "classification": "manifest_filtered_code_submission_v2",
         "submission_bundle_identity": identity,
         "include_manifest_sha256": sha256_file(include_manifest),
         "exclude_manifest_sha256": sha256_file(exclude_manifest),
@@ -316,7 +391,8 @@ def build_inventory(
         "unmatched_include_globs": list(unmatched_globs),
         "symlink_count": 0,
         "absolute_path_count": 0,
-        "content_manifest_sidecar": CONTENT_MANIFEST_NAME,
+        "content_manifest_location": "external_sidecar",
+        "content_manifest_suffix": CONTENT_MANIFEST_SUFFIX,
     }
 
 
@@ -324,8 +400,10 @@ def build_bundle(
     repository_root: Path,
     destination: Path,
     inventory: dict[str, Any],
-) -> Path:
-    """Atomically copy the selected payload and emit its manifest sidecar."""
+    *,
+    content_manifest: Path | None = None,
+) -> tuple[Path, Path]:
+    """Atomically copy the payload and write its manifest outside the root."""
     root = repository_root.resolve()
     destination = destination.resolve()
     if destination == root or root in destination.parents:
@@ -351,25 +429,58 @@ def build_bundle(
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source, target)
             os.chmod(target, stat.S_IMODE(source.stat().st_mode))
-        sidecar = staging / CONTENT_MANIFEST_NAME
-        sidecar.write_bytes(canonical_json_bytes(inventory))
         os.replace(staging, destination)
+        manifest_path = (
+            external_content_manifest_path(destination)
+            if content_manifest is None
+            else content_manifest.resolve()
+        )
+        if manifest_path == destination or destination in manifest_path.parents:
+            raise ValueError("Content manifest must remain outside the payload root.")
+        manifest_path.parent.mkdir(parents=True, exist_ok=True)
+        descriptor, temporary_name = tempfile.mkstemp(
+            prefix=f".{manifest_path.name}.", dir=manifest_path.parent
+        )
+        try:
+            with os.fdopen(descriptor, "wb") as handle:
+                handle.write(canonical_json_bytes(inventory))
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temporary_name, manifest_path)
+        finally:
+            if os.path.exists(temporary_name):
+                os.unlink(temporary_name)
     except Exception:
         shutil.rmtree(staging, ignore_errors=True)
         raise
-    return destination
+    return destination, manifest_path
 
 
-def verify_bundle(destination: Path) -> dict[str, Any]:
+def build_record(
+    inventory: dict[str, Any],
+    content_manifest: Path,
+) -> dict[str, Any]:
+    """Return a build record binding the external manifest by name and hash."""
+    return {
+        **inventory,
+        "external_content_manifest": content_manifest.name,
+        "content_manifest_sha256": sha256_file(content_manifest),
+    }
+
+
+def verify_bundle(
+    destination: Path,
+    content_manifest: Path | None = None,
+) -> dict[str, Any]:
     """Verify every copied byte, executable bit, and unexpected path."""
     root = destination.resolve()
-    manifest_path = root / CONTENT_MANIFEST_NAME
-    inventory = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest_path = locate_external_content_manifest(root, content_manifest)
+    inventory = _load_content_manifest(manifest_path)
     expected = {item["path"]: item for item in inventory["included_files"]}
     actual = {
         path.relative_to(root).as_posix()
         for path in root.rglob("*")
-        if path.is_file() and path != manifest_path
+        if path.is_file()
     }
     if actual != set(expected):
         missing = sorted(set(expected) - actual)
@@ -397,6 +508,8 @@ def verify_bundle(destination: Path) -> dict[str, Any]:
         "submission_bundle_identity": inventory["submission_bundle_identity"],
         "included_file_count": len(expected),
         "included_total_bytes": inventory["included_total_bytes"],
+        "content_manifest_sha256": sha256_file(manifest_path),
+        "content_manifest_name": manifest_path.name,
     }
 
 
@@ -408,16 +521,9 @@ def is_verified_bundle_member(bundle_root: Path, relative_path: str) -> bool:
     scientific evidence that requires proof of a committed source file.
     """
     root = bundle_root.resolve()
-    manifest_path = root / CONTENT_MANIFEST_NAME
-    if not manifest_path.is_file():
-        return False
     try:
-        inventory = json.loads(manifest_path.read_text(encoding="utf-8"))
+        inventory = load_external_content_manifest(root)
         records = inventory["included_files"]
-        if submission_bundle_identity(records) != inventory[
-            "submission_bundle_identity"
-        ]:
-            return False
         relative = _normalise_relative(relative_path)
         matches = [item for item in records if item["path"] == relative]
         if len(matches) != 1:

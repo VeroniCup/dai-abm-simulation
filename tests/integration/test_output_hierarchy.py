@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import inspect
-import json
 import os
 from pathlib import Path
 import runpy
@@ -12,6 +11,10 @@ import sys
 
 import pandas as pd
 
+from dai_sim.common.archive_boundary import (
+    is_manifest_filtered_bundle,
+    load_external_content_manifest,
+)
 from dai_sim.experiments import plots, runner
 from dai_sim.inputs import configuration, protocol
 from dai_sim.model import metrics
@@ -113,9 +116,8 @@ def test_multicollateral_default_separates_results_and_tables() -> None:
 
 
 def test_version_control_output_surface_contains_policy_only() -> None:
-    content_manifest = REPOSITORY_ROOT / "SUBMISSION_CONTENT_MANIFEST.json"
-    if content_manifest.is_file():
-        payload = json.loads(content_manifest.read_text(encoding="utf-8"))
+    if is_manifest_filtered_bundle(REPOSITORY_ROOT):
+        payload = load_external_content_manifest(REPOSITORY_ROOT)
         version_controlled = [
             item["path"]
             for item in payload["included_files"]

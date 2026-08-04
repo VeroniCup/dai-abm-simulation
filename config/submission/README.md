@@ -28,6 +28,7 @@ required by the structural suite, and the retrieval owner. The bundle builder
 itself remains a development-repository tool and is not part of the submitted
 payload.
 
-The generated `SUBMISSION_CONTENT_MANIFEST.json` is a bundle-control sidecar,
-not a source payload entry and therefore does not participate in its own
-content identity.
+This development-only directory is excluded from the distributed archive. The
+builder writes the ordered payload content manifest beside the archive rather
+than inside it, so that sidecar does not participate in its own content
+identity.

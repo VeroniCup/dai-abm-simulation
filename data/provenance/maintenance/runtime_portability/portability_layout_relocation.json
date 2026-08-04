@@ -1,0 +1,30 @@
+{
+  "classification": "portable_runtime_layout_relocation_v1",
+  "external_verifier_sha256": "e12c62ec24f8169943cfc86d9af3b6e340682408a3d152133e3f9e843efb2ef4",
+  "path_relocations": [
+    {
+      "new_path": "config/runtime/runtime_input_map.yaml",
+      "old_path": "config/submission/runtime_input_map.yaml"
+    },
+    {
+      "new_path": "src/dai_sim/common/archive_boundary.py",
+      "old_path": "src/dai_sim/common/submission_bundle.py"
+    },
+    {
+      "new_path": "src/dai_sim/inputs/portability.py",
+      "old_path": "src/dai_sim/inputs/submission_portability.py"
+    },
+    {
+      "new_path": "tests/integration/test_archive_boundary.py",
+      "old_path": "tests/integration/test_submission_bundle.py"
+    }
+  ],
+  "portable_submission_identity": "e0e58222253204ee87f39a93b0d6edd650a64e47af81b2dd7521d2bd35d7a33b",
+  "predecessor_portable_runtime_identity": "bbb89292dcec748261ec8cf8ca512f707316336eecb4b81252d80f0deba52f34",
+  "production_default_differences": 0,
+  "runtime_input_map_sha256": "2f773477eb13488a918525c0b335bd2d7f84e459e2117c40572e7510076a9668",
+  "schema_version": 1,
+  "scientific_decision_differences": 0,
+  "scientific_value_differences": 0,
+  "successor_portability_layout_identity": "7c84335d8f9baf91d3e14828ea5d59ee9735598a122230ce218f1ead65970577"
+}

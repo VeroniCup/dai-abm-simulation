@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from dai_sim.common import submission_bundle as bundle
+from dai_sim.common import archive_boundary as bundle
 from tests.integration.test_documentation_links import local_links
 from tests.support import REPOSITORY_ROOT
 
@@ -34,6 +34,8 @@ def _rules(tmp_path: Path, include: str, exclude: str = "ignored/\n"):
 
 
 def _repository_inventory() -> dict[str, object]:
+    if not INCLUDE.is_file() or not EXCLUDE.is_file():
+        return bundle.load_external_content_manifest(REPOSITORY_ROOT)
     builder_source = BUILDER if BUILDER.is_file() else Path(bundle.__file__)
     return bundle.build_inventory(
         repository_root=REPOSITORY_ROOT,
@@ -159,19 +161,26 @@ def test_atomic_build_preserves_bytes_modes_and_verifies(tmp_path: Path) -> None
         builder_source=Path(bundle.__file__),
         candidate_paths=("script.py",),
     )
-    bundle.build_bundle(repository, destination, inventory)
+    _, manifest_path = bundle.build_bundle(repository, destination, inventory)
     result = bundle.verify_bundle(destination)
     assert result["status"] == "passed"
     assert (destination / "script.py").read_bytes() == (
         repository / "script.py"
     ).read_bytes()
     assert (destination / "script.py").stat().st_mode & 0o111
+    assert manifest_path.parent == destination.parent
+    assert not (destination / bundle.LEGACY_CONTENT_MANIFEST_NAME).exists()
 
 
 def test_final_md_is_intentionally_absent_from_submission() -> None:
-    rules = bundle.parse_manifest(INCLUDE)
     assert not (REPOSITORY_ROOT / "FINAL.md").exists()
-    assert all(rule.pattern != "FINAL.md" for rule in rules)
+    if INCLUDE.is_file():
+        rules = bundle.parse_manifest(INCLUDE)
+        assert all(rule.pattern != "FINAL.md" for rule in rules)
+    else:
+        assert "FINAL.md" not in {
+            item["path"] for item in _repository_inventory()["included_files"]
+        }
 
     record_path = (
         REPOSITORY_ROOT
@@ -199,6 +208,15 @@ def test_repository_inventory_includes_complete_sql_and_verifier() -> None:
     assert "workflows/verification/verify_external_artifacts.py" in paths
     assert not any(path.startswith("workflows/maintenance/") for path in paths)
     assert not any(path.startswith("tools/") for path in paths)
+    assert "config/runtime/runtime_input_map.yaml" in paths
+    assert not any(path.startswith("config/submission/") for path in paths)
+    assert not any(
+        "submission" in path
+        for path in paths
+        if not path.startswith(
+            "data/provenance/maintenance/submission_portability/"
+        )
+    )
     assert inventory["unmatched_include_globs"] == []
 
 
@@ -275,11 +293,21 @@ def test_content_manifest_sidecar_is_not_self_hashed(tmp_path: Path) -> None:
         builder_source=Path(bundle.__file__),
         candidate_paths=("payload.txt",),
     )
-    bundle.build_bundle(repository, destination, inventory)
-    sidecar = json.loads(
-        (destination / bundle.CONTENT_MANIFEST_NAME).read_text(encoding="utf-8")
-    )
-    assert bundle.CONTENT_MANIFEST_NAME not in {
+    _, manifest_path = bundle.build_bundle(repository, destination, inventory)
+    sidecar = json.loads(manifest_path.read_text(encoding="utf-8"))
+    listed_paths = {item["path"] for item in sidecar["included_files"]}
+    actual_paths = {
+        path.relative_to(destination).as_posix()
+        for path in destination.rglob("*")
+        if path.is_file()
+    }
+    assert bundle.LEGACY_CONTENT_MANIFEST_NAME not in listed_paths
+    assert listed_paths == actual_paths
+    assert not (destination / bundle.LEGACY_CONTENT_MANIFEST_NAME).exists()
+    record = bundle.build_record(inventory, manifest_path)
+    assert record["external_content_manifest"] == manifest_path.name
+    assert record["content_manifest_sha256"] == bundle.sha256_file(manifest_path)
+    assert manifest_path.name not in {
         item["path"] for item in sidecar["included_files"]
     }
 

@@ -6,6 +6,7 @@ import hashlib
 from pathlib import Path
 import re
 
+from dai_sim.common.archive_boundary import is_manifest_filtered_bundle
 
 from tests.support import REPOSITORY_ROOT, is_ignored
 DATA_ROOT = REPOSITORY_ROOT / "data"
@@ -68,7 +69,7 @@ def _is_ignored(relative_path: str) -> bool:
 
 
 def test_domain_lifecycle_directories_are_populated_without_placeholders() -> None:
-    filtered_bundle = (REPOSITORY_ROOT / "SUBMISSION_CONTENT_MANIFEST.json").is_file()
+    filtered_bundle = is_manifest_filtered_bundle(REPOSITORY_ROOT)
     for domain, expected in EXPECTED_LIFECYCLES.items():
         domain_root = DATA_ROOT / domain
         assert domain_root.is_dir()

@@ -94,7 +94,7 @@ CLEAN_CLONE_CORRECTION_MODULES = {
 }
 POST_RESTRUCTURING_FEATURE_MODULES = {
     "tests/integration/test_diagnostic_independence.py",
-    "tests/integration/test_submission_bundle.py",
+    "tests/integration/test_archive_boundary.py",
     "tests/calibration/test_confidence_evidence.py",
     "tests/calibration/test_confidence_infrastructure_evidence.py",
     "tests/inputs/test_confidence_scenario_resolution.py",

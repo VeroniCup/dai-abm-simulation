@@ -8,7 +8,22 @@ version = "0.1.0a0"
 description = "Agent-based simulation of DAI stability under market stress"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
-dynamic = ["dependencies"]
+dependencies = [
+    "matplotlib>=3.8",
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "PyYAML>=6.0",
+    "scipy>=1.11",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0",
+    "setuptools>=68",
+]
+lint = [
+    "ruff>=0.14",
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -16,6 +31,3 @@ package-dir = {"" = "src"}
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["dai_sim*"]
-
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
