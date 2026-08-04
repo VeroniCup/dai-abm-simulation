@@ -42,6 +42,14 @@ POST_RESTRUCTURING_WORKFLOWS = {
     "experiments/final/stable_collateral_tradeoff.py",
     "experiments/final/shared_keeper_capacity.py",
     "experiments/final/oracle_delay.py",
+    "experiments/final/animation_presentation_style.py",
+    "experiments/final/build_animation_series_contact_sheet.py",
+    "experiments/final/build_balance_sheet_animation_frames.py",
+    "experiments/final/build_oracle_delay_animation_frames.py",
+    "experiments/final/replay_balance_sheet_hourly.py",
+    "experiments/final/replay_oracle_delay_hourly.py",
+    "experiments/final/render_balance_sheet_animation.py",
+    "experiments/final/render_oracle_delay_animation.py",
     "experiments/final/recovery_behaviour_synthesis.py",
     "experiments/final/selected_robustness.py",
     "inputs/validate_integrated_eth.py",
@@ -118,8 +126,7 @@ def test_development_packaging_is_outside_workflow_discovery() -> None:
     )
 
     relocation_path = (
-        ROOT
-        / "data/provenance/maintenance/runtime_portability/"
+        ROOT / "data/provenance/maintenance/runtime_portability/"
         "portability_layout_relocation.json"
     )
     relocation = json.loads(relocation_path.read_text(encoding="utf-8"))
@@ -130,8 +137,7 @@ def test_development_packaging_is_outside_workflow_discovery() -> None:
         "2f773477eb13488a918525c0b335bd2d7f84e459e2117c40572e7510076a9668"
     )
     assert {
-        (item["old_path"], item["new_path"])
-        for item in relocation["path_relocations"]
+        (item["old_path"], item["new_path"]) for item in relocation["path_relocations"]
     } >= {
         (
             "config/submission/runtime_input_map.yaml",
@@ -140,8 +146,7 @@ def test_development_packaging_is_outside_workflow_discovery() -> None:
     }
 
     history_path = (
-        ROOT
-        / "data/provenance/maintenance/submission_portability/"
+        ROOT / "data/provenance/maintenance/submission_portability/"
         "maintenance_executable_history.json"
     )
     history = json.loads(history_path.read_text(encoding="utf-8"))

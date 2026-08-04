@@ -24,7 +24,7 @@ from pathlib import Path
 import shutil
 import tempfile
 import time
-from typing import Any
+from typing import Any, Callable
 
 import numpy as np
 import pandas as pd
@@ -1017,6 +1017,7 @@ def _simulate_cell_liquidations(
     gas_costs: np.ndarray,
     arrivals: Mapping[str, Any],
     portfolio_config: CollateralPortfolioConfig,
+    reporting_observer: Callable[..., None] | None = None,
 ) -> dict[str, Any]:
     """Compose canonical ranking/execution into one compact cell result."""
     vaults = deepcopy(list(initialisation.vaults))
@@ -1348,6 +1349,25 @@ def _simulate_cell_liquidations(
                 abs_tol=1e-8,
             ):
                 reconciliation_failures += 1
+        if reporting_observer is not None:
+            active_snapshot = tuple(
+                (
+                    int(vault.vault_id),
+                    _family(vault.collateral_type),
+                    float(vault.debt_dai),
+                    float(vault.collateral_ratio(prices)),
+                    float(vault.liquidation_ratio),
+                    bool(vault.is_liquidatable(prices)),
+                    int(vault.vault_id) in selected_set,
+                )
+                for vault in vaults
+                if vault.is_active
+            )
+            reporting_observer(
+                step,
+                tuple((family, float(prices[family])) for family in prices),
+                active_snapshot,
+            )
     final_debt = {
         family: float(
             sum(

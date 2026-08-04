@@ -237,6 +237,8 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
         "tests/experiments/final/test_stable_collateral_tradeoff.py": 63,
         "tests/experiments/final/test_shared_keeper_capacity.py": 59,
         "tests/experiments/final/test_final_oracle_delay.py": 38,
+        "tests/experiments/final/test_balance_sheet_animation.py": 10,
+        "tests/experiments/final/test_oracle_delay_animation.py": 11,
         "tests/experiments/final/test_programme.py": 9,
         "tests/experiments/final/test_recovery_behaviour_synthesis.py": 40,
         "tests/experiments/final/test_selected_robustness.py": 22,
