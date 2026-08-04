@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import subprocess
 
 from dai_sim.common.archive_boundary import load_external_content_manifest
 from pathlib import Path
@@ -31,6 +32,35 @@ HISTORICAL_RECORD = (
 
 def active_documents() -> list[Path]:
     return [ROOT / name for name in USER_DOCUMENTS]
+
+
+def repository_inventory_paths() -> set[str]:
+    """Return the candidate tracked paths in Git or the archive manifest."""
+    probe = subprocess.run(
+        ["git", "-C", str(ROOT), "rev-parse", "--is-inside-work-tree"],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if probe.returncode == 0 and probe.stdout.strip() == "true":
+        listed = subprocess.run(
+            ["git", "-C", str(ROOT), "ls-files", "--stage", "-z"],
+            check=True,
+            capture_output=True,
+        )
+        paths = set()
+        for entry in listed.stdout.split(b"\0"):
+            if not entry:
+                continue
+            metadata, encoded_path = entry.split(b"\t", maxsplit=1)
+            _mode, _object_id, stage = metadata.decode("ascii").split()
+            if stage != "0":
+                raise ValueError("Git index contains unresolved merge stages.")
+            paths.add(encoded_path.decode("utf-8"))
+        return paths
+
+    inventory = load_external_content_manifest(ROOT)
+    return {item["path"] for item in inventory["included_files"]}
 
 
 def test_every_populated_documentation_category_has_real_content() -> None:
@@ -74,14 +104,12 @@ def test_document_migration_ledger_covers_every_moved_source() -> None:
         assert (ROOT / relative).is_file(), relative
 
     internal_roots = ("AGENTS.md", "PROJECT_STATUS.md", "empirical.md", "parameters.md")
-    include_path = ROOT / "config/submission/code_submission_include.txt"
-    if include_path.is_file():
-        include = include_path.read_text(encoding="utf-8").splitlines()
-    else:
-        inventory = load_external_content_manifest(ROOT)
-        include = [item["path"] for item in inventory["included_files"]]
-    assert not set(internal_roots).intersection(include)
-    assert {line for line in include if line.endswith(".md")} == set(USER_DOCUMENTS)
+    paths = repository_inventory_paths()
+    assert not set(internal_roots).intersection(paths)
+    assert {path for path in paths if path.endswith(".md")} == set(USER_DOCUMENTS)
+    assert "outputs/README.md" not in paths
+    assert not any(path.startswith("config/submission/") for path in paths)
+    assert not any(path.startswith("tools/packaging/") for path in paths)
 
 
 def test_acquisition_plan_is_preserved_byte_for_byte() -> None:

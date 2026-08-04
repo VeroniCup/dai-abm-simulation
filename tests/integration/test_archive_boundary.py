@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
+from pathlib import PurePosixPath
+import subprocess
+from typing import Any
 
 import pytest
 
@@ -33,16 +37,250 @@ def _rules(tmp_path: Path, include: str, exclude: str = "ignored/\n"):
     )
 
 
-def _repository_inventory() -> dict[str, object]:
-    if not INCLUDE.is_file() or not EXCLUDE.is_file():
-        return bundle.load_external_content_manifest(REPOSITORY_ROOT)
-    builder_source = BUILDER if BUILDER.is_file() else Path(bundle.__file__)
-    return bundle.build_inventory(
-        repository_root=REPOSITORY_ROOT,
-        include_manifest=INCLUDE,
-        exclude_manifest=EXCLUDE,
-        builder_source=builder_source,
+def _normalise_inventory(inventory: dict[str, Any]) -> dict[str, object]:
+    """Return the shared, minimal Git/archive inventory contract."""
+    records = inventory.get("included_files")
+    if not isinstance(records, list):
+        raise ValueError("Inventory included_files must be a list.")
+
+    normalised = []
+    seen = set()
+    for record in records:
+        if not isinstance(record, dict):
+            raise ValueError("Inventory file records must be objects.")
+        path = record.get("path")
+        size = record.get("size_bytes")
+        checksum = record.get("sha256")
+        executable = record.get("executable")
+        if (
+            not isinstance(path, str)
+            or not path
+            or PurePosixPath(path).is_absolute()
+            or any(part in {"", ".", ".."} for part in PurePosixPath(path).parts)
+        ):
+            raise ValueError(f"Inventory path is not canonical: {path!r}.")
+        if path in seen:
+            raise ValueError(f"Inventory path is duplicated: {path}.")
+        if not isinstance(size, int) or isinstance(size, bool) or size < 0:
+            raise ValueError(f"Inventory size is invalid: {path}.")
+        if (
+            not isinstance(checksum, str)
+            or len(checksum) != 64
+            or any(character not in "0123456789abcdef" for character in checksum)
+        ):
+            raise ValueError(f"Inventory checksum is invalid: {path}.")
+        if not isinstance(executable, bool):
+            raise ValueError(f"Inventory executable flag is invalid: {path}.")
+        seen.add(path)
+        normalised.append(
+            {
+                "path": path,
+                "size_bytes": size,
+                "sha256": checksum,
+                "executable": executable,
+            }
+        )
+
+    normalised.sort(key=lambda item: item["path"])
+    count = inventory.get("included_file_count")
+    total = inventory.get("included_total_bytes")
+    identity = inventory.get("submission_bundle_identity")
+    if count != len(normalised):
+        raise ValueError("Inventory file count differs from its records.")
+    if total != sum(item["size_bytes"] for item in normalised):
+        raise ValueError("Inventory byte count differs from its records.")
+    expected_identity = bundle.submission_bundle_identity(normalised)
+    if identity != expected_identity:
+        raise ValueError("Inventory identity differs from its records.")
+    unmatched = inventory.get("unmatched_include_globs", [])
+    if not isinstance(unmatched, list) or not all(
+        isinstance(item, str) for item in unmatched
+    ):
+        raise ValueError("Inventory unmatched globs must be a list of strings.")
+    return {
+        "included_files": normalised,
+        "included_file_count": len(normalised),
+        "included_total_bytes": total,
+        "submission_bundle_identity": identity,
+        "unmatched_include_globs": unmatched,
+    }
+
+
+def _git_index_inventory(repository_root: Path) -> dict[str, object] | None:
+    """Return the staged tracked-file inventory, or ``None`` outside Git."""
+    probe = subprocess.run(
+        ["git", "-C", str(repository_root), "rev-parse", "--is-inside-work-tree"],
+        check=False,
+        capture_output=True,
+        text=True,
     )
+    if probe.returncode != 0 or probe.stdout.strip() != "true":
+        return None
+    listed = subprocess.run(
+        ["git", "-C", str(repository_root), "ls-files", "--stage", "-z"],
+        check=True,
+        capture_output=True,
+    )
+    records = []
+    for entry in listed.stdout.split(b"\0"):
+        if not entry:
+            continue
+        metadata, encoded_path = entry.split(b"\t", maxsplit=1)
+        mode, object_id, stage = metadata.decode("ascii").split()
+        if stage != "0":
+            raise ValueError("Git index contains unresolved merge stages.")
+        if mode not in {"100644", "100755"}:
+            raise ValueError(
+                "Git inventory supports regular files only; "
+                f"found mode {mode}."
+            )
+        path = encoded_path.decode("utf-8")
+        blob = subprocess.run(
+            ["git", "-C", str(repository_root), "cat-file", "blob", object_id],
+            check=True,
+            capture_output=True,
+        ).stdout
+        records.append(
+            {
+                "path": path,
+                "size_bytes": len(blob),
+                "sha256": hashlib.sha256(blob).hexdigest(),
+                "executable": mode == "100755",
+            }
+        )
+    records.sort(key=lambda item: item["path"])
+    inventory = {
+        "included_files": records,
+        "included_file_count": len(records),
+        "included_total_bytes": sum(item["size_bytes"] for item in records),
+        "submission_bundle_identity": bundle.submission_bundle_identity(records),
+        "unmatched_include_globs": [],
+    }
+    return _normalise_inventory(inventory)
+
+
+def _repository_inventory(
+    repository_root: Path = REPOSITORY_ROOT,
+    external_manifest: Path | None = None,
+) -> dict[str, object]:
+    git_inventory = _git_index_inventory(repository_root)
+    if git_inventory is not None:
+        return git_inventory
+    try:
+        inventory = bundle.load_external_content_manifest(
+            repository_root,
+            external_manifest,
+        )
+    except FileNotFoundError as exc:
+        raise FileNotFoundError(
+            "Repository inventory requires either a valid Git worktree "
+            "or one matching external content manifest."
+        ) from exc
+    return _normalise_inventory(inventory)
+
+
+def _run_git(repository: Path, *arguments: str) -> None:
+    subprocess.run(
+        ["git", "-C", str(repository), *arguments],
+        check=True,
+        capture_output=True,
+    )
+
+
+def _initialise_git_repository(repository: Path) -> None:
+    repository.mkdir()
+    _run_git(repository, "init", "--quiet")
+    _run_git(repository, "config", "user.email", "test@example.invalid")
+    _run_git(repository, "config", "user.name", "Archive Boundary Test")
+
+
+def _write_external_manifest(
+    repository: Path,
+    inventory: dict[str, object],
+) -> Path:
+    manifest = bundle.external_content_manifest_path(repository)
+    manifest.write_bytes(bundle.canonical_json_bytes(inventory))
+    return manifest
+
+
+def _assert_git_inventory_reads_candidate_index_without_external_manifest(
+    tmp_path: Path,
+) -> None:
+    repository = tmp_path / "git-candidate"
+    _initialise_git_repository(repository)
+    _write(repository / ".gitignore", "ignored.txt\n")
+    _write(repository / "retained.txt", "staged bytes\n")
+    _write(repository / "deleted.txt")
+    _run_git(repository, "add", ".gitignore", "retained.txt", "deleted.txt")
+    _write(repository / "retained.txt", "unstaged replacement\n")
+    _run_git(repository, "rm", "--cached", "deleted.txt")
+    _write(repository / "added.txt", "new staged file\n")
+    _run_git(repository, "add", "added.txt")
+    _write(repository / "untracked.txt")
+    _write(repository / "ignored.txt")
+
+    inventory = _repository_inventory(repository)
+    records = {
+        item["path"]: item for item in inventory["included_files"]
+    }
+    assert set(records) == {".gitignore", "added.txt", "retained.txt"}
+    assert records["retained.txt"]["sha256"] == hashlib.sha256(
+        b"staged bytes\n"
+    ).hexdigest()
+    assert not bundle.external_content_manifest_path(repository).exists()
+
+
+def _assert_archive_inventory_uses_external_manifest(tmp_path: Path) -> None:
+    repository = tmp_path / "archive-inventory"
+    repository.mkdir()
+    _write(repository / "payload.txt", "archive bytes\n")
+    record = {
+        "path": "payload.txt",
+        "size_bytes": len(b"archive bytes\n"),
+        "sha256": hashlib.sha256(b"archive bytes\n").hexdigest(),
+        "executable": False,
+    }
+    inventory = {
+        "included_files": [record],
+        "included_file_count": 1,
+        "included_total_bytes": record["size_bytes"],
+        "submission_bundle_identity": bundle.submission_bundle_identity([record]),
+        "unmatched_include_globs": [],
+    }
+    manifest = _write_external_manifest(repository, inventory)
+
+    assert _repository_inventory(repository, manifest) == inventory
+
+
+def _assert_git_and_manifest_inventories_normalise_identically(
+    tmp_path: Path,
+) -> None:
+    git_repository = tmp_path / "git-equivalence"
+    _initialise_git_repository(git_repository)
+    _write(git_repository / "payload.txt", "shared bytes\n")
+    _run_git(git_repository, "add", "payload.txt")
+    git_inventory = _repository_inventory(git_repository)
+
+    archive = tmp_path / "archive-equivalence"
+    archive.mkdir()
+    _write(archive / "payload.txt", "shared bytes\n")
+    _write_external_manifest(archive, git_inventory)
+
+    assert _repository_inventory(archive) == git_inventory
+
+
+def _assert_repository_inventory_fails_without_git_or_manifest(
+    tmp_path: Path,
+) -> None:
+    repository = tmp_path / "unbound"
+    repository.mkdir()
+    _write(repository / "payload.txt")
+
+    with pytest.raises(
+        FileNotFoundError,
+        match="valid Git worktree or one matching external content manifest",
+    ):
+        _repository_inventory(repository)
 
 
 def test_manifest_parser_ignores_comments_and_blank_lines(tmp_path: Path) -> None:
@@ -331,3 +569,7 @@ def test_content_manifest_supplies_verified_archive_membership(tmp_path: Path) -
     assert bundle.is_verified_bundle_member(destination, "evidence.json")
     (destination / "evidence.json").write_text("changed\n", encoding="utf-8")
     assert not bundle.is_verified_bundle_member(destination, "evidence.json")
+    _assert_git_inventory_reads_candidate_index_without_external_manifest(tmp_path)
+    _assert_archive_inventory_uses_external_manifest(tmp_path)
+    _assert_git_and_manifest_inventories_normalise_identically(tmp_path)
+    _assert_repository_inventory_fails_without_git_or_manifest(tmp_path)

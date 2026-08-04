@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import ast
+import hashlib
+import json
 from pathlib import Path
-
-from dai_sim.common.archive_boundary import is_manifest_filtered_bundle
 
 from tests.support import REPOSITORY_ROOT as ROOT
 
@@ -108,11 +108,68 @@ def test_only_real_populated_categories_exist() -> None:
 
 def test_development_packaging_is_outside_workflow_discovery() -> None:
     assert not (ROOT / "workflows/maintenance").exists()
-    builder = ROOT / "tools/packaging/build_code_bundle.py"
-    if is_manifest_filtered_bundle(ROOT):
-        assert not builder.exists()
-    else:
-        assert builder.is_file()
+    assert not (ROOT / "tools/packaging").exists()
+    assert not (ROOT / "config/submission").exists()
+
+    runtime_map = ROOT / "config/runtime/runtime_input_map.yaml"
+    assert runtime_map.is_file()
+    assert hashlib.sha256(runtime_map.read_bytes()).hexdigest() == (
+        "2f773477eb13488a918525c0b335bd2d7f84e459e2117c40572e7510076a9668"
+    )
+
+    relocation_path = (
+        ROOT
+        / "data/provenance/maintenance/runtime_portability/"
+        "portability_layout_relocation.json"
+    )
+    relocation = json.loads(relocation_path.read_text(encoding="utf-8"))
+    assert relocation["successor_portability_layout_identity"] == (
+        "7c84335d8f9baf91d3e14828ea5d59ee9735598a122230ce218f1ead65970577"
+    )
+    assert relocation["runtime_input_map_sha256"] == (
+        "2f773477eb13488a918525c0b335bd2d7f84e459e2117c40572e7510076a9668"
+    )
+    assert {
+        (item["old_path"], item["new_path"])
+        for item in relocation["path_relocations"]
+    } >= {
+        (
+            "config/submission/runtime_input_map.yaml",
+            "config/runtime/runtime_input_map.yaml",
+        )
+    }
+
+    history_path = (
+        ROOT
+        / "data/provenance/maintenance/submission_portability/"
+        "maintenance_executable_history.json"
+    )
+    history = json.loads(history_path.read_text(encoding="utf-8"))
+    packaging_records = [
+        item
+        for item in history["relocations"]
+        if item["classification"] == "development_packaging"
+    ]
+    assert packaging_records == [
+        {
+            "classification": "development_packaging",
+            "historical_path": "workflows/maintenance/build_code_submission.py",
+            "historical_sha256": (
+                "a0b8ba6b4668e12d97e9f52c91d32ef22c150954e1dc88efff1e4f32a705df17"
+            ),
+            "current_path": "tools/packaging/build_code_bundle.py",
+            "current_sha256": (
+                "8721b96f62783bbebe025f03a8be0511d88122404501ad18d19db58d3c85f623"
+            ),
+            "included_in_filtered_bundle": False,
+        }
+    ]
+
+    for root in (ROOT / "src", ROOT / "workflows"):
+        for path in root.rglob("*.py"):
+            text = path.read_text(encoding="utf-8")
+            assert "tools.packaging" not in text, path
+            assert "build_code_bundle" not in text, path
     assert "tools" not in EXPECTED_CATEGORIES
 
 

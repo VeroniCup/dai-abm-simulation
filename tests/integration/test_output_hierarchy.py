@@ -11,10 +11,6 @@ import sys
 
 import pandas as pd
 
-from dai_sim.common.archive_boundary import (
-    is_manifest_filtered_bundle,
-    load_external_content_manifest,
-)
 from dai_sim.experiments import plots, runner
 from dai_sim.inputs import configuration, protocol
 from dai_sim.model import metrics
@@ -115,32 +111,43 @@ def test_multicollateral_default_separates_results_and_tables() -> None:
     )
 
 
-def test_version_control_output_surface_contains_policy_only() -> None:
-    if is_manifest_filtered_bundle(REPOSITORY_ROOT):
-        payload = load_external_content_manifest(REPOSITORY_ROOT)
-        version_controlled = [
-            item["path"]
-            for item in payload["included_files"]
-            if item["path"].startswith("outputs/")
-        ]
-        assert version_controlled == []
-        return
+def test_version_control_output_surface_contains_policy_only(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    output_root = tmp_path / "outputs"
+    assert not (REPOSITORY_ROOT / "outputs/README.md").exists()
+    assert not output_root.exists()
 
-    version_controlled = subprocess.run(
+    subprocess.run(
         [
-            "git",
-            "ls-files",
-            "--cached",
-            "--others",
-            "--exclude-standard",
-            "outputs",
+            sys.executable,
+            "-c",
+            (
+                "import dai_sim.experiments.runner;"
+                "import dai_sim.experiments.plots;"
+                "import dai_sim.model.metrics"
+            ),
         ],
-        cwd=REPOSITORY_ROOT,
+        cwd=tmp_path,
         check=True,
-        capture_output=True,
-        text=True,
-    ).stdout.splitlines()
-    assert version_controlled == ["outputs/README.md"]
+        env={
+            **os.environ,
+            "PYTHONPATH": str(REPOSITORY_ROOT / "src"),
+        },
+    )
+    assert not output_root.exists()
+
+    table_dir = output_root / "tables" / "baseline"
+    monkeypatch.setitem(metrics.EXPERIMENT_TABLE_DIRS, "baseline", table_dir)
+    result = metrics.save_clean_summary(
+        pd.DataFrame({"scenario": ["clean-clone"], "value": [1]}),
+        experiment_name="baseline",
+    )
+
+    assert result == table_dir / "summary_clean.csv"
+    assert result.is_file()
+    assert result.relative_to(output_root)
 
 
 def test_active_code_has_no_obsolete_output_root() -> None:
