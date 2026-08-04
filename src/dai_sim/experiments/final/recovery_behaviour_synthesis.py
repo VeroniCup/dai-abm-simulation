@@ -19,6 +19,7 @@ import subprocess
 import tempfile
 from typing import Any
 
+from dai_sim.common.submission_bundle import is_verified_bundle_member
 from dai_sim.inputs.configuration import REPOSITORY_ROOT, sha256_file
 
 
@@ -446,7 +447,9 @@ def _is_committed_source(relative: str) -> bool:
         check=False,
         capture_output=True,
     )
-    return result.returncode == 0
+    return result.returncode == 0 or is_verified_bundle_member(
+        REPOSITORY_ROOT, relative
+    )
 
 
 def _validate_file(relative: str, expected_sha256: str) -> None:

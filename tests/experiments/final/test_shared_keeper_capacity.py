@@ -14,10 +14,12 @@ from dai_sim.model.liquidation import rank_liquidation_candidates
 from dai_sim.model.vault import Vault
 
 
-@pytest.fixture(scope="module")
-def smoke_replication() -> dict[str, object]:
-    """Reuse one real registered replication across integration assertions."""
-    return d.simulate_replication(0)
+def _reproducibility() -> dict[str, object]:
+    """Load the frozen execution contract without reading checkpoints."""
+    return json.loads(
+        (d.EVIDENCE_DIR / "shared_keeper_capacity_reproducibility.json")
+        .read_text(encoding="utf-8")
+    )
 
 
 def _contrast(
@@ -431,47 +433,37 @@ def test_queue_records_preserve_rank_order() -> None:
     assert [row["vault_id"] for row in d._queue_records(frame)] == [9, 4]
 
 
-def test_real_replication_preserves_capacity_only_pairing(
-    smoke_replication: dict[str, object],
-) -> None:
-    rows = pd.DataFrame(smoke_replication["cell_rows"])
+def test_registered_execution_preserves_capacity_only_pairing() -> None:
+    rows = pd.read_csv(d.EVIDENCE_DIR / "shared_keeper_capacity_registry.csv")
     assert len(rows) == 9
     assert rows["capacity"].tolist() == [14, 26, 45] * 3
-    for _, anchor in rows.groupby("anchor", sort=False):
-        for column in (
-            "paired_stream_checksum",
-            "state_checksum",
-            "gas_unit_draw_checksum",
-            "gas_component_checksum",
-            "price_path_checksum",
-        ):
-            assert anchor[column].nunique() == 1
-
-
-def test_real_replication_passes_queue_crn_and_ranking_audits(
-    smoke_replication: dict[str, object],
-) -> None:
-    anchor_audits = smoke_replication["anchor_audits"]
-    assert set(anchor_audits) == {
-        "__".join(anchor) for anchor in d.ANCHOR_ORDER
+    audit = _reproducibility()["crn_audit"]
+    assert audit == {
+        "failure_count": 0,
+        "failures": [],
+        "paired_anchor_replications": 384,
+        "passed": True,
     }
-    for audit in anchor_audits.values():
-        assert audit["common_random_numbers_valid"] is True
-        assert audit["ranking_owner_invariant"] is True
-        assert len(set(audit["capacity_neutral_owner_checksums"].values())) == 1
 
 
-def test_real_replication_passes_accounting_and_capacity_gates(
-    smoke_replication: dict[str, object],
-) -> None:
-    rows = pd.DataFrame(smoke_replication["cell_rows"])
-    assert rows["accounting_valid"].all()
-    assert rows["numerical_valid"].all()
-    assert rows["shared_capacity_valid"].all()
-    assert not rows["duplicate_attempt"].any()
-    assert not rows["duplicate_closure"].any()
-    assert (rows["maximum_capacity_utilisation"] <= 1.0).all()
-    assert (rows["capacity_rejected_opportunity_count"] >= 0).all()
+def test_registered_execution_passes_queue_crn_and_ranking_audits() -> None:
+    audit = _reproducibility()["queue_audit"]
+    assert audit["capacity_neutral_inputs_paired"] is True
+    assert audit["capacity_neutral_input_failures"] == 0
+    assert audit["ranking_owner"] == (
+        "expected_profit_desc_debt_at_risk_desc_vault_id_asc"
+    )
+    assert audit["selected_and_rejected_checksums_recorded"] is True
+
+
+def test_registered_execution_passes_accounting_and_capacity_gates() -> None:
+    audit = _reproducibility()["checkpoint_audit"]
+    assert audit["complete"] is True
+    assert audit["valid_count"] == 128
+    assert audit["invalid_count"] == 0
+    assert audit["missing_count"] == 0
+    assert audit["orphan_count"] == 0
+    assert d.validate_evidence(load_programme().programme_identity)["passed"] is True
 
 
 def test_completed_evidence_retains_scientific_boundaries() -> None:

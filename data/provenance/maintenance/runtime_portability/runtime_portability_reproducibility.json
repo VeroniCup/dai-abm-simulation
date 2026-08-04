@@ -1,0 +1,41 @@
+{
+  "compact_derivative_sha256": "e2f6d8206b0dd040ddbf4ee302b75c575ffcec412c920db6ddd2c1f04cda1ade",
+  "clean_checkout": {
+    "complete_suite": {
+      "errors": 11,
+      "failed": 27,
+      "passed": 1348,
+      "skipped": 1
+    },
+    "focused_portability": {
+      "failed": 0,
+      "passed": 19
+    },
+    "ignored_processed_source_reads": 3,
+    "network_calls": 0,
+    "result": "not_ready_test_failure",
+    "user_home_fallbacks": 0
+  },
+  "equivalence_contract_version": "full_vs_compact_exact_v1",
+  "equivalence_report": "outputs/maintenance/runtime_portability_migration/full_compact_equivalence.json",
+  "historical_source_checksums": {
+    "data/market/processed/combined/hourly_market_gas_panel.csv": "86ed2ac5a5d364cc57e8b41e137ef369a0fce7a393d386b4b38fc1ebd1be0545",
+    "data/market/processed/dune_hourly_market_prices_processed.csv": "43f8a23aff2ec995a4e1ad5e8fc66f4b5223e8dcc9c8a36bd272d733ae1d4e25",
+    "data/protocol/processed/hourly_protocol_parameters.csv": "8190f1aa9f63a6ebd41ef5eb38ee33b64523631161199e37224ce859cb71f195"
+  },
+  "legacy_snapshot_checksums": {
+    "data/provenance/maintenance/runtime_portability/legacy_sources/final_validation.py.txt": "4cb99d79d7d768629eb1f51861f055e246385b1035e5714dff64632a088bbb30",
+    "data/provenance/maintenance/runtime_portability/legacy_sources/multicollateral.py.txt": "4e215ff709d00b02fdddaad05e8e3738efe0be5a0b5dd022cfa93039323ef7a9"
+  },
+  "maximum_numeric_difference": 0,
+  "network_calls": 0,
+  "portable_resolver_checksums": {
+    "src/dai_sim/inputs/multicollateral.py": "8bd1ab8142fcd0dd887c5c3c2f0ecae41f6b3b4e343aeb80d4feeedf88e0b5db",
+    "src/dai_sim/inputs/runtime_sources.py": "60a9905d2a74ce115f197134b0237f515733a7c20c408fabb66a29a347f4b692",
+    "src/dai_sim/validation/final_validation.py": "5dead86deef82ca727dbbb6aea129f204f6bfbbac70ae67273a333715be320c5"
+  },
+  "portable_runtime_identity": "bbb89292dcec748261ec8cf8ca512f707316336eecb4b81252d80f0deba52f34",
+  "runtime_input_map_sha256": "2f773477eb13488a918525c0b335bd2d7f84e459e2117c40572e7510076a9668",
+  "schema_version": 1,
+  "scientific_value_differences": 0
+}

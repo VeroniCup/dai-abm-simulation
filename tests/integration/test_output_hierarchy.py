@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import inspect
+import json
 import os
 from pathlib import Path
 import runpy
@@ -112,6 +113,17 @@ def test_multicollateral_default_separates_results_and_tables() -> None:
 
 
 def test_version_control_output_surface_contains_policy_only() -> None:
+    content_manifest = REPOSITORY_ROOT / "SUBMISSION_CONTENT_MANIFEST.json"
+    if content_manifest.is_file():
+        payload = json.loads(content_manifest.read_text(encoding="utf-8"))
+        version_controlled = [
+            item["path"]
+            for item in payload["included_files"]
+            if item["path"].startswith("outputs/")
+        ]
+        assert version_controlled == []
+        return
+
     version_controlled = subprocess.run(
         [
             "git",

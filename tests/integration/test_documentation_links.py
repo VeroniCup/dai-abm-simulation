@@ -10,12 +10,11 @@ import pytest
 
 
 from tests.support import REPOSITORY_ROOT as ROOT
-ROOT_DOCUMENTS = (
+USER_DOCUMENTS = (
     ROOT / "README.md",
-    ROOT / "PROJECT_STATUS.md",
-    ROOT / "AGENTS.md",
-    ROOT / "empirical.md",
-    ROOT / "parameters.md",
+    ROOT / "docs/repository_structure.md",
+    ROOT / "docs/components.md",
+    ROOT / "docs/running.md",
 )
 MARKDOWN_LINK = re.compile(
     r"(?<!!)\[[^\]]*\]\(([^)]+)\)|!\[[^\]]*\]\(([^)]+)\)"
@@ -24,24 +23,11 @@ HEADING = re.compile(r"^#{1,6}\s+(.+?)\s*$")
 
 
 def documentation_files() -> list[Path]:
-    return [
-        *ROOT_DOCUMENTS,
-        *sorted((ROOT / "docs").rglob("*.md")),
-        *sorted((ROOT / "data").rglob("README.md")),
-    ]
+    return list(USER_DOCUMENTS)
 
 
 def active_documents() -> list[Path]:
-    return [
-        *ROOT_DOCUMENTS,
-        *[
-            path
-            for path in sorted((ROOT / "docs").rglob("*.md"))
-            if "archive" not in path.parts
-            and not path.name.startswith("repository_restructuring_")
-        ],
-        *sorted((ROOT / "data").rglob("README.md")),
-    ]
+    return documentation_files()
 
 
 def github_slug(text: str) -> str:
@@ -87,10 +73,7 @@ def test_all_local_markdown_links_and_anchors_resolve() -> None:
                 continue
             if anchor and destination.is_file() and destination.suffix == ".md":
                 if anchor not in anchors(destination):
-                    failures.append(
-                        f"{source.relative_to(ROOT)} -> "
-                        f"{target}#{anchor}"
-                    )
+                    failures.append(f"{source.relative_to(ROOT)} -> {target}#{anchor}")
     assert failures == []
 
 
@@ -112,7 +95,13 @@ def test_active_docs_do_not_present_obsolete_paths_as_authoritative() -> None:
         "docs/tranche_",
     )
     flat_source = re.compile(r"`src/(?!dai_sim/)[a-z_]+\.py`")
-
+    banned_user_phrases = re.compile(
+        r"\b(Codex|prompt|assistant|current HEAD|working tree|marker-facing|"
+        r"submission guide|current pass|portability migration phase|"
+        r"readiness classification|scientific owner|semantic owner|"
+        r"historical identity replacement|internal development|audit result)\b",
+        re.IGNORECASE,
+    )
     failures = []
     for path in active_documents():
         text = path.read_text(encoding="utf-8")
@@ -121,6 +110,9 @@ def test_active_docs_do_not_present_obsolete_paths_as_authoritative() -> None:
                 failures.append(f"{path.relative_to(ROOT)}: {literal}")
         if flat_source.search(text):
             failures.append(f"{path.relative_to(ROOT)}: flat src module")
+    for path in USER_DOCUMENTS:
+        if banned_user_phrases.search(path.read_text(encoding="utf-8")):
+            failures.append(f"{path.relative_to(ROOT)}: development-history prose")
     assert failures == []
 
 
@@ -153,8 +145,12 @@ def test_active_shell_commands_reference_existing_paths() -> None:
     missing = []
     for path in active_documents():
         for target in command.findall(path.read_text(encoding="utf-8")):
-            if target == "-m":
+            if target in {"-m", "-c"}:
                 continue
             if not (ROOT / target).exists():
                 missing.append(f"{path.relative_to(ROOT)}: {target}")
     assert missing == []
+
+    user_text = "\n".join(path.read_text(encoding="utf-8") for path in USER_DOCUMENTS)
+    assert "confidence was calibrated" not in user_text.lower()
+    assert "historical maker oracle latency estimate" not in user_text.lower()

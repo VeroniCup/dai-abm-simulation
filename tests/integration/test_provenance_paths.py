@@ -4,12 +4,10 @@ from __future__ import annotations
 
 import csv
 import json
-from pathlib import Path
 import re
-import subprocess
 
 
-from tests.support import REPOSITORY_ROOT
+from tests.support import REPOSITORY_ROOT, is_ignored
 DATA_ROOT = REPOSITORY_ROOT / "data"
 
 OLD_ACTIVE_PREFIXES = (
@@ -38,6 +36,50 @@ DURABLE_PROVENANCE = (
     "data/provenance/calibration/manifest.json",
     "data/provenance/experiments/manifest.json",
     "data/provenance/validation/manifest.json",
+    (
+        "data/provenance/maintenance/runtime_portability/"
+        "runtime_portability_specification.json"
+    ),
+    (
+        "data/provenance/maintenance/runtime_portability/"
+        "runtime_source_manifest.json"
+    ),
+    (
+        "data/provenance/maintenance/runtime_portability/"
+        "runtime_portability_decision.json"
+    ),
+    (
+        "data/provenance/maintenance/runtime_portability/"
+        "runtime_portability_reproducibility.json"
+    ),
+    (
+        "data/provenance/maintenance/runtime_portability/legacy_sources/"
+        "multicollateral.py.txt"
+    ),
+    (
+        "data/provenance/maintenance/runtime_portability/legacy_sources/"
+        "final_validation.py.txt"
+    ),
+    (
+        "data/provenance/maintenance/submission_portability/"
+        "portability_specification.json"
+    ),
+    (
+        "data/provenance/maintenance/submission_portability/"
+        "omitted_dependency_inventory.csv"
+    ),
+    (
+        "data/provenance/maintenance/submission_portability/"
+        "historical_reconstruction_contracts.json"
+    ),
+    (
+        "data/provenance/maintenance/submission_portability/"
+        "portability_decision.json"
+    ),
+    (
+        "data/provenance/maintenance/submission_portability/"
+        "portability_reproducibility.json"
+    ),
     (
         "data/provenance/validation/integrated_empirical_eth/"
         "integrated_empirical_eth_specification.json"
@@ -141,12 +183,7 @@ DURABLE_PROVENANCE = (
 
 
 def _is_ignored(relative_path: str) -> bool:
-    result = subprocess.run(
-        ["git", "check-ignore", "-q", relative_path],
-        cwd=REPOSITORY_ROOT,
-        check=False,
-    )
-    return result.returncode == 0
+    return is_ignored(relative_path)
 
 
 def test_root_provenance_contains_only_cross_domain_entry_points() -> None:
@@ -158,6 +195,7 @@ def test_root_provenance_contains_only_cross_domain_entry_points() -> None:
     assert entries == {
         "calibration",
         "experiments",
+        "maintenance",
         "validation",
         "data_manifest.csv",
         "index.json",

@@ -1,0 +1,11 @@
+{
+  "classification": "portable_runtime_resolution_v2",
+  "historical_runtime_source_packaged": false,
+  "historical_scientific_identities_preserved": true,
+  "network_calls": 0,
+  "portable_runtime_identity": "bbb89292dcec748261ec8cf8ca512f707316336eecb4b81252d80f0deba52f34",
+  "readiness_classification": "not_ready_test_failure",
+  "runtime_adopted_for_clean_checkout": true,
+  "schema_version": 1,
+  "scientific_value_changes": 0
+}

@@ -460,6 +460,24 @@ def source_inventory(
     *, repository_root: Path = REPOSITORY_ROOT
 ) -> list[dict[str, Any]]:
     """Inspect all pre-registered local candidates without using outcomes."""
+    missing = [
+        candidate for candidate in SOURCE_CANDIDATES
+        if not (repository_root / candidate.path).is_file()
+    ]
+    if missing:
+        if repository_root != REPOSITORY_ROOT:
+            raise FileNotFoundError(
+                f"Missing oracle-delay source: {repository_root / missing[0].path}"
+            )
+        frozen = (
+            REPOSITORY_ROOT
+            / "data/provenance/calibration/oracle_delay/"
+            "oracle_delay_source_inventory.csv"
+        )
+        frame = pd.read_csv(frozen, keep_default_na=False)
+        if len(frame) != 7 or frame["source_identifier"].duplicated().any():
+            raise ValueError("Frozen oracle-delay source inventory differs.")
+        return frame.to_dict(orient="records")
     rows: list[dict[str, Any]] = []
     for candidate in SOURCE_CANDIDATES:
         path = repository_root / candidate.path

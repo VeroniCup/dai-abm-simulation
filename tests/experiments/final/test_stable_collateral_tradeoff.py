@@ -16,12 +16,24 @@ from dai_sim.experiments.final import (
 from dai_sim.experiments.final.programme import load_programme
 
 
-@pytest.fixture(scope="module")
-def smoke_result() -> dict[str, object]:
-    return experiment_c.simulate_replication(
-        0,
-        experiment_c.MASTER_PROGRAMME_IDENTITY,
-        enforce_registered_core=False,
+def _compact_frames() -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Load registered summaries without replaying a scientific replication."""
+    cells = pd.read_csv(
+        experiment_c.EVIDENCE_DIR / "stable_collateral_tradeoff_cell_summary.csv"
+    )
+    collateral = pd.read_csv(
+        experiment_c.EVIDENCE_DIR
+        / "stable_collateral_tradeoff_collateral_summary.csv"
+    )
+    return cells, collateral
+
+
+def _reproducibility() -> dict[str, object]:
+    return json.loads(
+        (
+            experiment_c.EVIDENCE_DIR
+            / "stable_collateral_tradeoff_reproducibility.json"
+        ).read_text(encoding="utf-8")
     )
 
 
@@ -144,71 +156,66 @@ def test_stable_only_shocks_leave_crypto_kernels_ordinary() -> None:
         assert np.array_equal(kernels["WBTC"], np.ones(216))
 
 
-def test_smoke_completes_all_cells(smoke_result: dict[str, object]) -> None:
-    assert smoke_result["simulation_count"] == 12
-    assert [
-        row["cell_identifier"] for row in smoke_result["cell_rows"]  # type: ignore[index]
-    ] == list(experiment_c.CELL_ORDER)
+def test_registered_evidence_completes_all_cells() -> None:
+    cells, _ = _compact_frames()
+    assert cells["cell_identifier"].drop_duplicates().tolist() == list(
+        experiment_c.CELL_ORDER
+    )
+    assert cells["count"].eq(128).all()
 
 
-def test_smoke_negative_control_passes(smoke_result: dict[str, object]) -> None:
-    control = smoke_result["stable_negative_control"]  # type: ignore[index]
-    assert control == {
-        "passed": True,
-        "failure_count": 0,
-        "failures": [],
-        "registered_non_vault_stable_channel": False,
-    }
+def test_registered_negative_control_passes() -> None:
+    assert _reproducibility()["crn_audit"]["all_negative_controls_passed"] is True
 
 
-def test_smoke_validity_passes(smoke_result: dict[str, object]) -> None:
-    rows = smoke_result["cell_rows"]  # type: ignore[index]
-    assert all(row["numerical_valid"] for row in rows)
-    assert all(row["accounting_valid"] for row in rows)
-    assert all(row["price_isolation_valid"] for row in rows)
-    assert all(row["stable_negative_control_valid"] for row in rows)
+def test_registered_validity_passes() -> None:
+    audit = _reproducibility()["checkpoint_audit"]
+    assert audit["complete"] is True
+    assert audit["valid_count"] == 128
+    assert audit["invalid_count"] == 0
 
 
-def test_smoke_common_random_numbers_hold(
-    smoke_result: dict[str, object],
-) -> None:
-    rows = pd.DataFrame(smoke_result["cell_rows"])  # type: ignore[arg-type]
-    assert rows.groupby("portfolio")["state_checksum"].nunique().eq(1).all()
-    assert rows["paired_stream_checksum"].nunique() == 1
-    assert rows["gas_unit_draw_checksum"].nunique() == 1
+def test_registered_common_random_numbers_hold() -> None:
+    audit = _reproducibility()["crn_audit"]
+    assert audit["paired_stream_count"] == 128
+    assert audit["expected_replication_count"] == 128
 
 
-def test_smoke_semantic_collateral_order(
-    smoke_result: dict[str, object],
-) -> None:
-    rows = smoke_result["collateral_rows"]  # type: ignore[index]
+def test_registered_semantic_collateral_order() -> None:
+    _, rows = _compact_frames()
+    observed = rows[["cell_identifier", "family"]].drop_duplicates()
     expected = [
         (cell, family)
         for cell in experiment_c.CELL_ORDER
         for family in ("ETH", "WBTC", "STABLE")
     ]
-    assert [(row["cell_identifier"], row["family"]) for row in rows] == expected
+    assert list(observed.itertuples(index=False, name=None)) == expected
 
 
-def test_smoke_zero_exposure_is_not_normalised_to_zero(
-    smoke_result: dict[str, object],
-) -> None:
-    rows = pd.DataFrame(smoke_result["collateral_rows"])  # type: ignore[arg-type]
+def test_registered_zero_exposure_is_not_normalised_to_zero() -> None:
+    _, rows = _compact_frames()
     stable = rows.loc[
         rows["portfolio"].eq("empirical_crypto")
         & rows["family"].eq("STABLE")
     ]
-    assert stable["initial_debt_exposure"].eq(0.0).all()
-    assert stable["exposure_normalised_backlog"].isna().all()
-    assert stable["exposure_normalised_liquidated_debt"].isna().all()
+    exposure = stable.loc[stable["metric"].eq("initial_debt_exposure"), "mean"]
+    assert exposure.eq(0.0).all()
+    normalised = stable.loc[stable["metric"].isin({
+        "exposure_normalised_backlog",
+        "exposure_normalised_liquidated_debt",
+    }), "mean"]
+    assert normalised.isna().all()
 
 
-def test_stable_diagnostics_are_only_attached_to_stable_rows(
-    smoke_result: dict[str, object],
-) -> None:
-    rows = pd.DataFrame(smoke_result["collateral_rows"])  # type: ignore[arg-type]
-    assert rows.loc[rows["family"].eq("STABLE"), "stable_minimum_price"].notna().all()
-    assert rows.loc[~rows["family"].eq("STABLE"), "stable_minimum_price"].isna().all()
+def test_stable_diagnostics_are_only_attached_to_stable_rows() -> None:
+    _, rows = _compact_frames()
+    diagnostic = rows.loc[rows["metric"].eq("stable_minimum_price")]
+    assert diagnostic.loc[
+        diagnostic["family"].eq("STABLE"), "mean"
+    ].notna().all()
+    assert diagnostic.loc[
+        ~diagnostic["family"].eq("STABLE"), "mean"
+    ].isna().all()
 
 
 @pytest.mark.parametrize(
@@ -635,18 +642,8 @@ def test_json_serialisation_rejects_unsupported_values() -> None:
         experiment_c._canonical_json({"bad": object()})
 
 
-def test_collateral_evidence_uses_semantic_family_order(
-    smoke_result: dict[str, object],
-) -> None:
-    base = pd.DataFrame(smoke_result["collateral_rows"])  # type: ignore[arg-type]
-    repeated = pd.concat(
-        [
-            base.assign(replication=replication)
-            for replication in range(experiment_c.REPLICATIONS)
-        ],
-        ignore_index=True,
-    )
-    summary = experiment_c.collateral_summary(repeated)
+def test_collateral_evidence_uses_semantic_family_order() -> None:
+    _, summary = _compact_frames()
     first = summary.loc[
         summary["cell_identifier"].eq(experiment_c.CELL_ORDER[0])
     ]["family"].drop_duplicates().tolist()

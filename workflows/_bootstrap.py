@@ -14,11 +14,14 @@ def _repository_root(script_path: str | Path) -> Path:
     for candidate in resolved.parents:
         if (
             (candidate / "pyproject.toml").is_file()
-            and (candidate / "AGENTS.md").is_file()
             and (candidate / "src" / "dai_sim").is_dir()
+            and (candidate / "config").is_dir()
         ):
             return candidate
-    raise RuntimeError(f"Cannot locate repository root above {resolved}")
+    raise RuntimeError(
+        "Cannot locate a repository root containing pyproject.toml, "
+        f"src/dai_sim/ and config/ above {resolved}"
+    )
 
 
 def _load_dai_sim(repository_root: Path) -> None:

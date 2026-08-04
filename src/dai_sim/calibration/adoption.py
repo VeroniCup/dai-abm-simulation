@@ -3,14 +3,13 @@
 from __future__ import annotations
 
 import ast
-import hashlib
 import json
 import os
 import re
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -21,7 +20,10 @@ from .data_loading import PROJECT_ROOT, sha256_file
 DEFAULT_OUTPUT = (
     PROJECT_ROOT / "outputs/diagnostics/calibration/parameter_adoption"
 )
-PARAMETER_PLAN = PROJECT_ROOT / "docs/calibration/parameter_estimation.md"
+PARAMETER_REGISTRY = (
+    PROJECT_ROOT
+    / "data/provenance/calibration/parameter_adoption/parameter_adoption_matrix.csv"
+)
 CALIBRATION_EVIDENCE = PROJECT_ROOT / "data/provenance/calibration"
 PHASE2A_STATUS = (
     CALIBRATION_EVIDENCE / "market_gas_protocol/parameter_status.csv"
@@ -422,9 +424,16 @@ def _write_json(path: Path, payload: Any) -> None:
 def authoritative_parameter_headings(
     text: str | None = None,
 ) -> list[tuple[str, str]]:
-    """Parse the authoritative Phase 2 parameter subsections."""
-    source = PARAMETER_PLAN.read_text(encoding="utf-8") if text is None else text
-    headings = PARAMETER_HEADING_PATTERN.findall(source)
+    """Return the compact parameter registry headings or parse supplied text."""
+    if text is None:
+        registry = pd.read_csv(PARAMETER_REGISTRY, dtype=str)
+        headings = list(
+            registry[["parameter_subsection", "parameter"]].itertuples(
+                index=False, name=None
+            )
+        )
+    else:
+        headings = PARAMETER_HEADING_PATTERN.findall(text)
     if len(headings) != len(set(code for code, _ in headings)):
         raise ValueError("Duplicate authoritative parameter subsection")
     return headings
@@ -1234,7 +1243,8 @@ def run_adoption_review(
     config: AdoptionReviewConfig = AdoptionReviewConfig(),
 ) -> dict[str, Any]:
     """Generate all adoption-review artefacts without touching configuration."""
-    protected_initial = {_relative(path): sha256_file(path) for path in PROTECTED}
+    protected = tuple(path for path in PROTECTED if path.is_file())
+    protected_initial = {_relative(path): sha256_file(path) for path in protected}
     registry_hashes = {
         name: sha256_file(path) for name, path in REGISTRIES.items()
     }
@@ -1257,7 +1267,7 @@ def run_adoption_review(
     }
     for name, frame in outputs.items():
         _write_csv(config.output_dir / name, frame)
-    protected_final = {_relative(path): sha256_file(path) for path in PROTECTED}
+    protected_final = {_relative(path): sha256_file(path) for path in protected}
     if protected_initial != protected_final:
         raise ValueError("Protected file changed during adoption review")
     metadata = {

@@ -1,0 +1,24 @@
+{
+  "classification": "historical_document_checksum_record",
+  "documents": [
+    {
+      "path": "docs/archive/historical_plans/DATA_ACQUISITION_PLAN.md",
+      "sha256": "05587f17600f148d90cc26df4f281258d299188dad8dd53d2ab00f351863ee60",
+      "size_bytes": 12321,
+      "submission_treatment": "excluded_historical_checksum_bound"
+    },
+    {
+      "path": "docs/repository_restructuring_baseline.md",
+      "sha256": "8130b55f025f25b8783a4bfb555538110a332840b3314edf45be1cbab85a6a6e",
+      "size_bytes": 13496,
+      "submission_treatment": "excluded_historical_checksum_bound"
+    },
+    {
+      "path": "docs/repository_restructuring_baseline_manifest.json",
+      "sha256": "cae567cee25a93779fc838df4ac0a238bb407d308437a4f27c1fb521bd5e92b1",
+      "size_bytes": 283944,
+      "submission_treatment": "excluded_historical_checksum_bound"
+    }
+  ],
+  "schema_version": 1
+}

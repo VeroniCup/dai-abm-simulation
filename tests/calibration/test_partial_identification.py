@@ -312,8 +312,32 @@ def test_checkpoint_identity_and_checksum_are_enforced(tmp_path: Path) -> None:
         )
 
 
-def test_scientific_identity_excludes_output_root() -> None:
+def test_scientific_identity_excludes_output_root(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    benchmark = json.loads(
+        (
+            partial.CONFIDENCE_EVIDENCE
+            / "monte_carlo_precision_benchmark.json"
+        ).read_text(encoding="utf-8")
+    )
+    registered_cache = {
+        "event_count": partial.EVENT_COUNT,
+        "cache_root_sha256": benchmark["primary_cache_root_sha256"],
+        "package_count": benchmark["primary_cache_packages"],
+    }
+    monkeypatch.setattr(
+        partial,
+        "validate_diagnostic_cache",
+        lambda *_args, **_kwargs: registered_cache,
+    )
+    registered_identity = json.loads(
+        (
+            partial.CONFIDENCE_EVIDENCE
+            / "partial_identification_reproducibility.json"
+        ).read_text(encoding="utf-8")
+    )["set_id"]
     first, _ = partial.partial_identification_identity()
-    second = partial.partial_identification_directory(root=Path("/tmp/one")).name
-    third = partial.partial_identification_directory(root=Path("/tmp/two")).name
-    assert first == second == third
+    second = partial.partial_identification_directory(root=tmp_path / "one").name
+    third = partial.partial_identification_directory(root=tmp_path / "two").name
+    assert first == second == third == registered_identity

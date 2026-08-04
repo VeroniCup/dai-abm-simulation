@@ -1,0 +1,45 @@
+{
+  "classification": "portable_runtime_resolution_v2",
+  "equivalence_contract_version": "full_vs_compact_exact_v1",
+  "historical_identity_boundary": {
+    "experiment_a_identity": "a9d7c3fa5dc5da9bcf61314a57501ea5a8be506e305eee6f45afaae3131600bb",
+    "final_validation_freeze_identity": "1bc40998534dd3842a229c701743494147d24832d956622411afba7863d3c295",
+    "final_validation_identity": "a5e281a810892454539f0528c30536696d01c664bbd6cceda17584b88d5f3ed2",
+    "final_validation_source_identity": "991d182036bab98d0efa0c70ae2b8f070fb60b467d3075173df551ef3c1d899c",
+    "multicollateral_scientific_code_identity": "4e514cad4deac4cd32cd7e2c4c3d9fec83f52688d80ade9a7760262a08712632"
+  },
+  "legacy_source_snapshots": [
+    {
+      "historical_identities": [
+        "multicollateral_scientific_code_identity",
+        "experiment_a_identity"
+      ],
+      "never_imported_or_executed": true,
+      "original_path": "src/dai_sim/inputs/multicollateral.py",
+      "parent_commit": "d0b59afe04321362836b9c616365df7e221c25d2",
+      "sha256": "4e215ff709d00b02fdddaad05e8e3738efe0be5a0b5dd022cfa93039323ef7a9",
+      "snapshot_path": "data/provenance/maintenance/runtime_portability/legacy_sources/multicollateral.py.txt"
+    },
+    {
+      "historical_identities": [
+        "final_validation_source_identity",
+        "final_validation_freeze_identity",
+        "final_validation_identity"
+      ],
+      "never_imported_or_executed": true,
+      "original_path": "src/dai_sim/validation/final_validation.py",
+      "parent_commit": "d0b59afe04321362836b9c616365df7e221c25d2",
+      "sha256": "4cb99d79d7d768629eb1f51861f055e246385b1035e5714dff64632a088bbb30",
+      "snapshot_path": "data/provenance/maintenance/runtime_portability/legacy_sources/final_validation.py.txt"
+    }
+  ],
+  "migration_parent_commit": "d0b59afe04321362836b9c616365df7e221c25d2",
+  "network_calls": 0,
+  "portable_runtime_boundary": {
+    "historical_runtime_source_packaged": false,
+    "runtime_adopted_for_clean_checkout": true,
+    "runtime_input_map": "config/submission/runtime_input_map.yaml",
+    "scientific_value_changes": 0
+  },
+  "schema_version": 1
+}

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import runpy
 import subprocess
 import sys
 import tomllib
@@ -29,8 +30,8 @@ def _make_sentinel_root(path: Path) -> Path:
     """Create the minimum repository sentinel structure for an isolated test."""
     path.mkdir()
     (path / "pyproject.toml").touch()
-    (path / "AGENTS.md").touch()
-    (path / "src").mkdir()
+    (path / "src/dai_sim").mkdir(parents=True)
+    (path / "config").mkdir()
     return path
 
 
@@ -66,10 +67,25 @@ def test_import_outside_repository_has_no_filesystem_side_effect(
     assert list(tmp_path.iterdir()) == []
 
 
-def test_find_repository_root_from_root_nested_directory_and_file() -> None:
+def test_find_repository_root_from_root_nested_directory_and_file(
+    tmp_path: Path,
+) -> None:
     assert find_repository_root(REPOSITORY_ROOT) == REPOSITORY_ROOT
     assert find_repository_root(REPOSITORY_ROOT / "src/dai_sim/common") == REPOSITORY_ROOT
-    assert find_repository_root(REPOSITORY_ROOT / "AGENTS.md") == REPOSITORY_ROOT
+
+    filtered = _make_sentinel_root(tmp_path / "filtered")
+    nested = filtered / "src/dai_sim/nested"
+    nested.mkdir()
+    assert not (filtered / "AGENTS.md").exists()
+    assert not (filtered / ".git").exists()
+    assert not (filtered / "README.md").exists()
+    assert find_repository_root(filtered) == filtered
+    assert find_repository_root(nested) == filtered
+
+    workflow_root = runpy.run_path(
+        str(REPOSITORY_ROOT / "workflows/_bootstrap.py")
+    )["_repository_root"]
+    assert workflow_root(nested / "workflow.py") == filtered
 
 
 def test_find_repository_root_from_relative_path(
@@ -80,8 +96,18 @@ def test_find_repository_root_from_relative_path(
 
 
 def test_find_repository_root_fails_outside_repository(tmp_path: Path) -> None:
-    with pytest.raises(RepositoryRootNotFoundError, match="No repository root"):
-        find_repository_root(tmp_path)
+    unrelated_parent = tmp_path / "unrelated-parent"
+    unrelated_parent.mkdir()
+    (unrelated_parent / "pyproject.toml").touch()
+    (unrelated_parent / "AGENTS.md").touch()
+    (unrelated_parent / "src").mkdir()
+    nested = unrelated_parent / "unrelated-work"
+    nested.mkdir()
+    with pytest.raises(
+        RepositoryRootNotFoundError,
+        match=r"pyproject\.toml, src/dai_sim/ and config/",
+    ):
+        find_repository_root(nested)
 
 
 def test_find_repository_root_rejects_nonexistent_start(tmp_path: Path) -> None:
@@ -89,16 +115,23 @@ def test_find_repository_root_rejects_nonexistent_start(tmp_path: Path) -> None:
         find_repository_root(tmp_path / "missing")
 
 
-@pytest.mark.parametrize("sentinel", ("pyproject.toml", "AGENTS.md", "src"))
+@pytest.mark.parametrize("sentinel", ("pyproject.toml", "src/dai_sim", "config"))
 def test_single_weak_sentinel_is_not_accepted(
     tmp_path: Path,
     sentinel: str,
 ) -> None:
-    candidate = tmp_path / "candidate"
-    candidate.mkdir()
+    candidate = _make_sentinel_root(tmp_path / "candidate")
     marker = candidate / sentinel
-    marker.mkdir() if sentinel == "src" else marker.touch()
-    with pytest.raises(RepositoryRootNotFoundError):
+    if marker.is_dir():
+        marker.rmdir()
+        if sentinel == "src/dai_sim":
+            (candidate / "src").rmdir()
+    else:
+        marker.unlink()
+    with pytest.raises(
+        RepositoryRootNotFoundError,
+        match=r"pyproject\.toml, src/dai_sim/ and config/",
+    ):
         find_repository_root(candidate)
 
 

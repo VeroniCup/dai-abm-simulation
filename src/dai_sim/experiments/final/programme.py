@@ -244,6 +244,14 @@ def _decimal(value: Any, context: str) -> Decimal:
 
 
 def _repository_file(value: Any, context: str) -> Path:
+    path = _repository_path(value, context)
+    if not path.is_file():
+        raise ValueError(f"{context} does not exist: {value}.")
+    return path
+
+
+def _repository_path(value: Any, context: str) -> Path:
+    """Resolve a bounded repository path without requiring a live snapshot."""
     if not isinstance(value, str) or not value:
         raise ValueError(f"{context} must be a repository-relative path.")
     path = (REPOSITORY_ROOT / value).resolve()
@@ -251,8 +259,6 @@ def _repository_file(value: Any, context: str) -> Path:
         path.relative_to(REPOSITORY_ROOT)
     except ValueError as exc:
         raise ValueError(f"{context} must remain inside the repository.") from exc
-    if not path.is_file():
-        raise ValueError(f"{context} does not exist: {value}.")
     return path
 
 
@@ -1040,7 +1046,7 @@ def load_final_experiment_programme(
     ):
         raise ValueError("Final-programme parent boundary differs.")
     taxonomy = _mapping(parent.get("package_taxonomy"), "package taxonomy")
-    taxonomy_path = _repository_file(taxonomy.get("path"), "package taxonomy path")
+    taxonomy_path = _repository_path(taxonomy.get("path"), "package taxonomy path")
     taxonomy_sha = _validate_sha256(
         taxonomy.get("sha256"), "package taxonomy SHA-256"
     )

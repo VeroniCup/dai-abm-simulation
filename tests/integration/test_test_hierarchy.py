@@ -32,12 +32,6 @@ EXPECTED_MAPPING = {
     ),
     "tests/test_domain_data_paths.py": ("tests/integration/test_domain_data_paths.py"),
     "tests/test_dune_gas_pipeline.py": "tests/workflows/gas/test_acquisition.py",
-    "tests/test_dune_liquidation_diagnostic.py": (
-        "tests/workflows/liquidations/test_diagnostic.py"
-    ),
-    "tests/test_dune_liquidation_diagnostic_attempt3.py": (
-        "tests/workflows/liquidations/test_diagnostic_reconciliation.py"
-    ),
     "tests/test_dune_liquidation_production.py": (
         "tests/workflows/liquidations/test_acquisition.py"
     ),
@@ -47,13 +41,6 @@ EXPECTED_MAPPING = {
     "tests/test_dune_protocol_parameter_history.py": (
         "tests/workflows/protocol/test_history.py"
     ),
-    "tests/test_dune_protocol_parameters.py": (
-        "tests/workflows/protocol/test_acquisition.py"
-    ),
-    "tests/test_dune_vat_activation_diagnostic.py": (
-        "tests/workflows/protocol/test_activation.py"
-    ),
-    "tests/test_dune_vault_discovery.py": ("tests/workflows/vaults/test_discovery.py"),
     "tests/test_dune_vault_production.py": (
         "tests/workflows/vaults/test_acquisition.py"
     ),
@@ -107,6 +94,7 @@ CLEAN_CLONE_CORRECTION_MODULES = {
 }
 POST_RESTRUCTURING_FEATURE_MODULES = {
     "tests/integration/test_diagnostic_independence.py",
+    "tests/integration/test_submission_bundle.py",
     "tests/calibration/test_confidence_evidence.py",
     "tests/calibration/test_confidence_infrastructure_evidence.py",
     "tests/inputs/test_confidence_scenario_resolution.py",
@@ -137,6 +125,7 @@ POST_RESTRUCTURING_FEATURE_MODULES = {
     "tests/validation/test_multicollateral.py",
     "tests/validation/test_final_validation.py",
     "tests/inputs/test_multicollateral.py",
+    "tests/inputs/test_runtime_sources.py",
     "tests/calibration/test_oracle_delay.py",
     "tests/inputs/test_oracle_delay.py",
     "tests/validation/test_oracle_delay.py",
@@ -169,7 +158,7 @@ def _relative_test_modules() -> set[str]:
 
 
 def test_pre_migration_mapping_is_complete_and_one_to_one() -> None:
-    assert len(EXPECTED_MAPPING) == 34
+    assert len(EXPECTED_MAPPING) == 29
     assert len(set(EXPECTED_MAPPING.values())) == len(EXPECTED_MAPPING)
     assert (
         set(EXPECTED_MAPPING.values())
@@ -203,7 +192,7 @@ def test_no_test_module_remains_at_suite_root() -> None:
 
 def test_no_placeholder_or_duplicate_test_module_exists() -> None:
     modules = sorted(TESTS_ROOT.rglob("test_*.py"))
-    assert len(modules) == 77
+    assert len(modules) == 74
     assert all(path.stat().st_size > 100 for path in modules)
     assert len({path.resolve() for path in modules}) == len(modules)
 

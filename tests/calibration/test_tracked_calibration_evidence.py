@@ -6,12 +6,11 @@ import csv
 import hashlib
 import json
 from pathlib import Path
-import subprocess
 
 from dai_sim.calibration import adoption
 from dai_sim.inputs import configuration
 
-from tests.support import REPOSITORY_ROOT
+from tests.support import REPOSITORY_ROOT, is_ignored
 
 
 MANIFEST_PATH = (
@@ -24,12 +23,7 @@ def _sha256(path: Path) -> str:
 
 
 def _is_ignored(relative_path: str) -> bool:
-    result = subprocess.run(
-        ["git", "check-ignore", "-q", relative_path],
-        cwd=REPOSITORY_ROOT,
-        check=False,
-    )
-    return result.returncode == 0
+    return is_ignored(relative_path)
 
 
 def test_tracked_calibration_evidence_is_content_addressed() -> None:

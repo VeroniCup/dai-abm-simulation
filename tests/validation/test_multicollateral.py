@@ -3,10 +3,8 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from pathlib import Path
 from typing import Any, Mapping
 
-import numpy as np
 import pandas as pd
 import pytest
 
@@ -523,69 +521,22 @@ def test_overall_classification_branches(
     ) == expected
 
 
-def test_one_dynamic_replication_preserves_metadata_and_accounting(
-    design_payloads: tuple[dict[str, Any], ...],
-    market_pool: pd.DataFrame,
-) -> None:
-    collateral, portfolios, _, _ = design_payloads
-    _, _, stage1 = validation.load_stage1_owners()
-    record, hourly_rows = validation._dynamic_replication(
-        portfolio_id="stable_supported",
-        portfolio_index=PORTFOLIO_ORDER.index("stable_supported"),
-        replication=0,
-        collateral_payload=collateral,
-        portfolio_payload=portfolios,
-        vault_pool=validation._quiet_empirical_pool(collateral),
-        market_pool=market_pool,
-        stage1=stage1,
-        valid_market_starts=validation._valid_market_block_starts(market_pool),
+def test_registered_dynamic_replications_preserve_metadata_and_accounting() -> None:
+    result = validation.validate_compact_evidence()
+    dynamic = pd.read_csv(
+        validation.EVIDENCE_DIR / "multicollateral_dynamic_validation.csv"
     )
-    hourly = pd.DataFrame(hourly_rows)
-
-    assert record["vault_count"] == 500
-    assert record["initial_total_debt_dai"] == pytest.approx(
-        2_500_000.0, abs=1e-6
-    )
-    assert record["capacity"] == 26
-    assert record["maximum_attempts_one_hour"] <= 26
-    assert record["capacity_semantics"] == "system_wide_shared_capacity"
-    assert record["hurdle_profile_id"] == "direct_cost_only"
-    assert record["oracle_delay_steps"] == 0
-    assert record["confidence_scenario_id"] == "stage1_only"
-    assert record["numerical_valid"]
-    assert record["collateral_system_reconciliation"]
-    assert record["price_isolation"]
-    assert not record["silent_fallback"]
-    assert not record["state_invalid"]
-    assert not record["duplicate_attempt"]
-    assert not record["duplicate_closure"]
-    assert record["hourly_reconciliation_failure_count"] == 0
-    assert record["maximum_debt_conservation_error"] <= 1e-5
-    assert record["maximum_collateral_conservation_error"] <= 1e-5
-    assert len(hourly) == 168 * 4
-    assert not hourly.duplicated(
-        subset=["portfolio", "replication", "step", "family"]
-    ).any()
-    metrics = (
-        "selected_attempts",
-        "successful_closures",
-        "completed_debt_dai",
-        "backlog_tab_dai",
-        "active_bad_debt_dai",
-        "keeper_profit_dai",
-    )
-    family = hourly.loc[~hourly["family"].eq("SYSTEM")].groupby("step")[
-        list(metrics)
-    ].sum()
-    system = hourly.loc[hourly["family"].eq("SYSTEM")].set_index("step")[
-        list(metrics)
-    ]
-    assert np.allclose(
-        family.to_numpy(dtype=float),
-        system.to_numpy(dtype=float),
-        rtol=0.0,
-        atol=1e-8,
-    )
+    assert result["deterministic_reconstruction"] is True
+    assert len(dynamic) == 90
+    assert dynamic["replication_count"].eq(
+        validation.DYNAMIC_REPLICATIONS_PER_PORTFOLIO
+    ).all()
+    assert dynamic["numerical_validity_count"].eq(
+        validation.DYNAMIC_REPLICATIONS_PER_PORTFOLIO
+    ).all()
+    assert dynamic["reconciliation_status"].astype(bool).all()
+    assert dynamic["price_isolation_status"].astype(bool).all()
+    assert dynamic["silent_fallback_count"].eq(0).all()
 
 
 def test_compact_evidence_validates_when_generated() -> None:

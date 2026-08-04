@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "classification": "non_scientific_maintenance_executable_history",
+  "portable_runtime_identity": "bbb89292dcec748261ec8cf8ca512f707316336eecb4b81252d80f0deba52f34",
+  "portable_submission_evidence_identity": "e0e58222253204ee87f39a93b0d6edd650a64e47af81b2dd7521d2bd35d7a33b",
+  "historical_test_support_sources": {
+    "portability_validator": {
+      "path": "src/dai_sim/inputs/submission_portability.py",
+      "sha256": "7139282e828b5a1d5e4111c3bbba3f46bac6a9fc623710444cee1262b653e871"
+    },
+    "external_verifier": {
+      "path": "workflows/maintenance/verify_external_scientific_artifacts.py",
+      "sha256": "39b5bb912624441d427dd0f6a62d523de9629ee5a1f5269be77c4aedff4ca6b5"
+    }
+  },
+  "relocations": [
+    {
+      "classification": "user_verification",
+      "historical_path": "workflows/maintenance/verify_external_scientific_artifacts.py",
+      "historical_sha256": "39b5bb912624441d427dd0f6a62d523de9629ee5a1f5269be77c4aedff4ca6b5",
+      "current_path": "workflows/verification/verify_external_artifacts.py",
+      "current_sha256": "488e893aa746a4488e688416ea4b8ce0554268f7d87bb6d320804bf49c4e5b32",
+      "included_in_filtered_bundle": true
+    },
+    {
+      "classification": "development_packaging",
+      "historical_path": "workflows/maintenance/build_code_submission.py",
+      "historical_sha256": "a0b8ba6b4668e12d97e9f52c91d32ef22c150954e1dc88efff1e4f32a705df17",
+      "current_path": "tools/packaging/build_code_bundle.py",
+      "current_sha256": "8721b96f62783bbebe025f03a8be0511d88122404501ad18d19db58d3c85f623",
+      "included_in_filtered_bundle": false
+    }
+  ],
+  "retirements": [
+    {
+      "path": "workflows/maintenance/archive/debt_ceiling_diagnostic.py",
+      "sha256": "f8b506c95890585453a16ef34391c644a2d819b686a57a412fce85c29e0de1fc",
+      "classification": "historical_reconstruction"
+    },
+    {
+      "path": "workflows/maintenance/archive/diagnose_vat_activation.py",
+      "sha256": "ef12ae79109203695f6443bf43d9aba92370ae129ce7f2d781c53a7fd5118007",
+      "classification": "historical_reconstruction"
+    },
+    {
+      "path": "workflows/maintenance/archive/discover_vault_events.py",
+      "sha256": "0e6ac083f61148a9d6b952419b14d064d441a5d17b56b4b5c309d3a5ed8f257f",
+      "classification": "historical_reconstruction"
+    },
+    {
+      "path": "workflows/maintenance/archive/liquidation_diagnostic.py",
+      "sha256": "e3148b565f3d7dcc61ec5357dfb48ea0b8fae0ae028e7518b0a7f9fe5da236ed",
+      "classification": "historical_reconstruction"
+    },
+    {
+      "path": "workflows/maintenance/archive/liquidation_diagnostic_attempt3.py",
+      "sha256": "7b097ebef4f3ef7ec50ff16c1bbdaf233e8ea3ab9e8e06c87a52049eb660351b",
+      "classification": "historical_reconstruction"
+    },
+    {
+      "path": "workflows/maintenance/archive/repair_quiet_rates.py",
+      "sha256": "87d33c9640c75c2e36f9c8d0e68de81d174025e52beccdf7a7a5f9c40a507066",
+      "classification": "historical_reconstruction"
+    },
+    {
+      "path": "workflows/maintenance/retrieve_result.py",
+      "sha256": "ef30d307ae375c5ec646d2532ad3a0afc0c906f4e5620fd4f5d16b72eb1a0ce4",
+      "classification": "dead_or_superseded"
+    }
+  ],
+  "active_code_extraction": {
+    "historical_sources": [
+      "workflows/maintenance/archive/liquidation_diagnostic.py",
+      "workflows/maintenance/archive/liquidation_diagnostic_attempt3.py"
+    ],
+    "current_path": "workflows/liquidations/_support.py",
+    "current_sha256": "28ac7e26e2c5052dd72979a7705687a15bf32fcaedd8e3c48fa6d9a340cf12bf",
+    "purpose": "Preserve unchanged liquidation acquisition persistence and reconciliation helpers without retaining historical diagnostic commands."
+  },
+  "historical_path_fields_preserved": true,
+  "scientific_identity_involvement": false,
+  "scientific_value_changes": 0,
+  "scientific_decision_changes": 0,
+  "historical_identity_replacements": 0
+}

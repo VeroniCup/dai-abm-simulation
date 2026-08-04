@@ -9,7 +9,6 @@ from tests.support import REPOSITORY_ROOT
 if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 
-from workflows.maintenance import retrieve_result as retrieval
 from workflows.vaults import acquire as vaults
 
 
@@ -72,8 +71,10 @@ def test_root_trace_requires_present_validated_serialisation():
 
 def test_root_calls_in_different_transactions_are_deterministic():
     chunk = vaults.MonthChunk(1, pd.Timestamp("2021-06-01T00:00:00Z"), pd.Timestamp("2021-07-01T00:00:00Z"))
-    first = mutation_row(); first["trace_position"] = ""
-    second = dict(first); second["transaction_hash"] = "0x" + "9" * 64
+    first = mutation_row()
+    first["trace_position"] = ""
+    second = dict(first)
+    second["transaction_hash"] = "0x" + "9" * 64
     second["transaction_index"] = "3"
     report = vaults.validate_mutations([first, second], chunk)
     assert report["validation_passed"]
@@ -82,8 +83,10 @@ def test_root_calls_in_different_transactions_are_deterministic():
 
 def test_same_transaction_root_collision_fails():
     chunk = vaults.MonthChunk(1, pd.Timestamp("2021-06-01T00:00:00Z"), pd.Timestamp("2021-07-01T00:00:00Z"))
-    first = mutation_row(); first["trace_position"] = ""
-    second = dict(first); second["urn"] = "0x" + "8" * 40
+    first = mutation_row()
+    first["trace_position"] = ""
+    second = dict(first)
+    second["urn"] = "0x" + "8" * 40
     report = vaults.validate_mutations([first, second], chunk)
     assert not report["validation_passed"]
     assert report["unresolved_ordering_tie_count"] == 1
@@ -287,37 +290,3 @@ def test_direct_result_envelope_is_normalised():
     assert parsed == rows
     assert tuple(columns) == vaults.MUTATION_COLUMNS
     assert metadata["totalRowCount"] == 2
-
-
-def test_direct_page_retrieval_is_one_request_and_never_persists_key(
-    tmp_path, monkeypatch
-):
-    class Response:
-        def raise_for_status(self):
-            return None
-
-        def json(self):
-            return {
-                "state": "QUERY_STATE_COMPLETED",
-                "result": {
-                    "rows": [{"value": 1}],
-                    "metadata": {"total_row_count": 1, "column_names": ["value"]},
-                },
-            }
-
-    calls = []
-
-    def fake_get(url, **kwargs):
-        calls.append((url, kwargs))
-        return Response()
-
-    monkeypatch.setenv("DUNE_API_KEY", "test-secret-not-for-disk")
-    monkeypatch.setattr(retrieval.requests, "get", fake_get)
-    output = tmp_path / "page.json"
-    report = retrieval.retrieve_page(
-        "01TEST", output, limit=32_000, offset=0
-    )
-    assert report["physical_request_count"] == 1
-    assert len(calls) == 1
-    assert "test-secret-not-for-disk" not in output.read_text()
-    assert calls[0][1]["params"] == {"limit": 32_000, "offset": 0}

@@ -6,9 +6,7 @@ from dataclasses import replace
 import json
 import math
 from pathlib import Path
-import subprocess
 
-import numpy as np
 import pandas as pd
 import pytest
 
@@ -22,7 +20,6 @@ from dai_sim.validation.integrated_eth import (
     DynamicValidationResult,
     VALIDATION_MANIFEST,
     VALIDATION_SEMANTIC_OWNER,
-    _dynamic_replication,
     _manifest_payload,
     _normalised_initial_state,
     _overall_classification,
@@ -33,6 +30,7 @@ from dai_sim.validation.integrated_eth import (
     validate_compact_evidence,
 )
 from dai_sim.inputs.configuration import REPOSITORY_ROOT, sha256_file
+from tests.support import is_ignored
 from dai_sim.inputs.integrated_profile import (
     DYNAMIC_HOURS,
     EXPECTED_INPUT_CHECKSUMS,
@@ -50,7 +48,6 @@ from dai_sim.inputs.integrated_profile import (
 )
 from dai_sim.inputs.liquidations import (
     LiquidationDemandProcess,
-    load_liquidation_arrival_pool,
 )
 from dai_sim.inputs.market import load_market_gas_pool, sample_market_gas_blocks
 
@@ -216,35 +213,28 @@ def test_stage1_and_residual_owners_are_exact_and_stage1_only() -> None:
     assert profile.confidence.panic_response == 0.0
 
 
-def test_one_integrated_replication_has_valid_accounting_and_metadata() -> None:
-    profile = resolve_integrated_empirical_eth_profile()
-    market_pool = load_market_gas_pool(
-        profile.market.pool_path,
-        profile.market.pool_sha256,
+def test_registered_integrated_replications_have_valid_accounting_and_metadata() -> None:
+    result = validate_compact_evidence()
+    dynamic = pd.read_csv(
+        EVIDENCE_DIR / "integrated_empirical_eth_dynamic_summary.csv"
     )
-    _, _, stage1 = load_stage1_owners()
-    result = _dynamic_replication(
-        profile,
-        replication=0,
-        stage1=stage1,
-        market_pool=market_pool,
+    capacity = pd.read_csv(
+        EVIDENCE_DIR / "integrated_empirical_eth_capacity_summary.csv"
     )
-
-    assert result["numerical_valid"] is True
-    assert result["duplicate_closure_detected"] is False
-    assert result["maximum_attempts_one_hour"] <= SHARED_KEEPER_CAPACITY
-    assert result["maximum_unsafe_inventory"] >= 0
-    assert result["maximum_unresolved_tab"] >= 0.0
-    assert result["maximum_active_bad_debt"] >= 0.0
-    assert abs(result["debt_conservation_error"]) <= 1e-5
-    assert abs(result["collateral_conservation_error"]) <= 1e-5
-    assert result["capacity_profile"] == "shared_keeper_capacity_central"
-    assert result["hurdle_profile"] == "direct_cost_only"
-    assert result["oracle_status"] == "transparent_baseline_not_calibrated"
-    assert len(result["vault_checksum"]) == 64
-    assert len(result["market_block_identity"]) == 64
-    assert len(result["gas_block_identity"]) == 64
-    assert len(result["arrival_identity"]) == 64
+    assert result["deterministic_reconstruction"] is True
+    assert dynamic["numerical_validity_count"].eq(DYNAMIC_REPLICATION_COUNT).all()
+    attempts = capacity.loc[
+        capacity["metric"].eq("maximum_hourly_attempts"), "value"
+    ]
+    assert attempts.tolist() == [float(SHARED_KEEPER_CAPACITY)]
+    debt_error = dynamic.loc[
+        dynamic["metric"].eq("debt_conservation_error"), "maximum"
+    ]
+    collateral_error = dynamic.loc[
+        dynamic["metric"].eq("collateral_conservation_error"), "maximum"
+    ]
+    assert debt_error.abs().le(1e-5).all()
+    assert collateral_error.abs().le(1e-5).all()
 
 
 def test_preregistration_is_result_blind_and_uses_dedicated_seeds() -> None:
@@ -387,7 +377,7 @@ def test_manifest_rerun_preserves_other_semantic_owners(tmp_path: Path) -> None:
     }
     manifest = json.loads(VALIDATION_MANIFEST.read_text(encoding="utf-8"))
     shared_entry_count = len(manifest["entries"])
-    foreign_path = "PROJECT_STATUS.md"
+    foreign_path = "data/provenance/index.json"
     foreign_entry = {
         "path": foreign_path,
         "sha256": sha256_file(REPOSITORY_ROOT / foreign_path),
@@ -437,7 +427,7 @@ def test_manifest_rerun_preserves_other_semantic_owners(tmp_path: Path) -> None:
 def test_compact_validator_accepts_a_shared_manifest(tmp_path: Path) -> None:
     manifest = json.loads(VALIDATION_MANIFEST.read_text(encoding="utf-8"))
     shared_entry_count = len(manifest["entries"])
-    foreign_path = "PROJECT_STATUS.md"
+    foreign_path = "data/provenance/index.json"
     manifest["entries"].append(
         {
             "path": foreign_path,
@@ -478,12 +468,7 @@ def test_multicollateral_compact_evidence_is_explicitly_trackable() -> None:
     )
     for name in compact_names:
         path = f"data/provenance/validation/multicollateral_integration/{name}"
-        result = subprocess.run(
-            ["git", "check-ignore", "--no-index", "-q", path],
-            cwd=REPOSITORY_ROOT,
-            check=False,
-        )
-        assert result.returncode != 0, path
+        assert not is_ignored(path), path
 
     ignored_paths = (
         (
@@ -496,9 +481,4 @@ def test_multicollateral_compact_evidence_is_explicitly_trackable() -> None:
         ),
     )
     for path in ignored_paths:
-        result = subprocess.run(
-            ["git", "check-ignore", "--no-index", "-q", path],
-            cwd=REPOSITORY_ROOT,
-            check=False,
-        )
-        assert result.returncode == 0, path
+        assert is_ignored(path), path

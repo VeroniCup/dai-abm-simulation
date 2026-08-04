@@ -5,10 +5,9 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 import re
-import subprocess
 
 
-from tests.support import REPOSITORY_ROOT
+from tests.support import REPOSITORY_ROOT, is_ignored
 DATA_ROOT = REPOSITORY_ROOT / "data"
 
 EXPECTED_LIFECYCLES = {
@@ -65,21 +64,20 @@ def _tree_digest(root: Path, lifecycle: str) -> str:
 
 
 def _is_ignored(relative_path: str) -> bool:
-    result = subprocess.run(
-        ["git", "check-ignore", "-q", relative_path],
-        cwd=REPOSITORY_ROOT,
-        check=False,
-    )
-    return result.returncode == 0
+    return is_ignored(relative_path)
 
 
 def test_domain_lifecycle_directories_are_populated_without_placeholders() -> None:
+    filtered_bundle = (REPOSITORY_ROOT / "SUBMISSION_CONTENT_MANIFEST.json").is_file()
     for domain, expected in EXPECTED_LIFECYCLES.items():
         domain_root = DATA_ROOT / domain
         assert domain_root.is_dir()
         for lifecycle in expected:
             lifecycle_path = domain_root / lifecycle
             assert lifecycle_path == DATA_ROOT / domain / lifecycle
+            if filtered_bundle and lifecycle in {"raw", "processed"}:
+                assert not lifecycle_path.exists()
+                continue
             assert not (lifecycle_path / ".gitkeep").exists()
             if lifecycle in {"raw", "processed"}:
                 assert _is_ignored(
@@ -99,12 +97,13 @@ def test_domain_lifecycle_directories_are_populated_without_placeholders() -> No
 
 def test_old_active_domain_paths_are_absent() -> None:
     assert not [path for path in OLD_DOMAIN_PATHS if path.exists()]
+    temporary_root = DATA_ROOT / "processed"
     temporary_entries = {
         path.name
-        for path in (DATA_ROOT / "processed").iterdir()
+        for path in temporary_root.iterdir()
         if path.name != ".DS_Store"
-    }
-    assert temporary_entries == {"README.md"}
+    } if temporary_root.is_dir() else set()
+    assert temporary_entries in (set(), {"README.md"})
 
 
 def test_combined_market_gas_panel_is_market_owned() -> None:

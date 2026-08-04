@@ -530,6 +530,18 @@ def _collateral_family(ilk: str) -> str:
 
 def collateral_comparability() -> pd.DataFrame:
     """Return the explicit collateral inclusion and comparability audit."""
+    if not LIQUIDATION_ACTIONS.is_file():
+        frozen = (
+            PROJECT_ROOT
+            / "data/provenance/calibration/keeper/"
+            "keeper_collateral_comparability.csv"
+        )
+        if not frozen.is_file():
+            raise FileNotFoundError(
+                "Neither the historical liquidation actions nor their frozen "
+                "collateral-comparability evidence is available."
+            )
+        return pd.read_csv(frozen, low_memory=False)
     actions = pd.read_csv(
         LIQUIDATION_ACTIONS,
         usecols=["record_type", "ilk", "block_time"],

@@ -8,13 +8,9 @@ the explicitly excluded working-tree change, the active environment, runtime
 inputs, tests, deterministic simulations and Experiments 1–5 before any path
 or package migration.
 
-The approved target remains in
-[`repository_restructuring_specification.md`](repository_restructuring_specification.md).
-The file-level design and reference surface are in
-[`repository_restructuring_path_map.csv`](repository_restructuring_path_map.csv)
-and
-[`repository_restructuring_reference_inventory.csv`](repository_restructuring_reference_inventory.csv).
-The complete machine-readable freeze is
+The restructuring specification, path map, and reference inventory were
+retired after the migration closed. Their historical content remains available
+through Git history. The complete machine-readable pre-migration freeze is
 [`repository_restructuring_baseline_manifest.json`](repository_restructuring_baseline_manifest.json).
 
 ## Baseline status

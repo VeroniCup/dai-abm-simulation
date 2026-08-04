@@ -1,0 +1,32 @@
+schema_version: 1
+classification: portable_runtime_resolution_v2
+network_fallback: false
+sources:
+  data/protocol/processed/hourly_protocol_parameters.csv:
+    historical_sha256: 8190f1aa9f63a6ebd41ef5eb38ee33b64523631161199e37224ce859cb71f195
+    role: provenance_only
+    primary_runtime_owner:
+      path: config/protocol/final_collateral_registry.yaml
+      sha256: 75268fed6b3db5a80a822a80b8629291491cd73ce62b4c3e6cf3975060b4eb6d
+      owner_type: frozen_collateral_registry
+    optional_full_source_verification: true
+  data/market/processed/dune_hourly_market_prices_processed.csv:
+    historical_sha256: 43f8a23aff2ec995a4e1ad5e8fc66f4b5223e8dcc9c8a36bd272d733ae1d4e25
+    role: provenance_source_for_existing_runtime_pool
+    primary_runtime_owner:
+      path: data/market/model_inputs/multicollateral_blocks/pool.csv
+      sha256: e97570b94b2140f9a6dc6436b386ba0ea9e91d9de73b755cc38d8e971d91ed2e
+      owner_type: existing_multicollateral_market_block_pool
+    supporting_runtime_owner:
+      path: data/market/model_inputs/multicollateral_blocks/manifest.json
+      sha256: 4018f9f84e76abbf07cbb1edb275222670f6277a4bdc8f492ea42337ee73774c
+      owner_type: market_block_pool_manifest
+    optional_full_source_verification: true
+  data/market/processed/combined/hourly_market_gas_panel.csv:
+    historical_sha256: 86ed2ac5a5d364cc57e8b41e137ef369a0fce7a393d386b4b38fc1ebd1be0545
+    role: compact_final_validation_paths
+    primary_runtime_owner:
+      path: data/model_inputs/validation/final_validation_market_gas_paths.csv
+      sha256: e2f6d8206b0dd040ddbf4ee302b75c575ffcec412c920db6ddd2c1f04cda1ade
+      owner_type: exact_held_out_market_gas_derivative
+    optional_full_source_verification: true

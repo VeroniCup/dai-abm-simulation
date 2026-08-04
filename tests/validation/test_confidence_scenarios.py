@@ -135,9 +135,24 @@ def test_existing_profile_behaviour_remains_frozen(profile: str) -> None:
 
 
 def test_scenario_documentation_records_coupling_and_prohibited_interpretation() -> None:
-    text = (
-        ROOT / "docs/experiments/confidence_scenarios.md"
-    ).read_text(encoding="utf-8")
+    specification = json.loads(
+        (
+            ROOT
+            / "data/provenance/experiments/confidence/"
+            "confidence_scenario_specification.json"
+        ).read_text(encoding="utf-8")
+    )
+    transform = specification["authoritative_inverse_transform"]
+    assert transform["recovery_ratio"] == "rho_r = u_r"
+    assert transform["recovery_adjustment"] == "alpha_r = alpha_d * rho_r"
+    assert specification["no_model_selection"] is True
+    assert specification["no_empirical_estimate_claim"] is True
+    assert specification["default_scenario"] == "stage1_only"
+
+    document = ROOT / "docs/experiments/confidence_scenarios.md"
+    if not document.is_file():
+        return
+    text = document.read_text(encoding="utf-8")
     required = (
         r"\rho_r=u_r",
         r"\alpha_r=\alpha_d\rho_r",
@@ -161,6 +176,10 @@ def test_active_guides_link_the_scenario_registry() -> None:
         "docs/overview/architecture.md",
         "PROJECT_STATUS.md",
     )
-    for relative in paths:
+    present = [relative for relative in paths if (ROOT / relative).is_file()]
+    for relative in present:
         text = (ROOT / relative).read_text(encoding="utf-8")
         assert "confidence_scenarios" in text
+    if not present:
+        text = (ROOT / "docs/components.md").read_text(encoding="utf-8")
+        assert "confidence" in text.lower()

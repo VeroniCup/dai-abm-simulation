@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 
-_REPOSITORY_SENTINELS = ("pyproject.toml", "AGENTS.md", "src")
+_REPOSITORY_SENTINELS = ("pyproject.toml", "src/dai_sim", "config")
 
 
 class RepositoryRootNotFoundError(RuntimeError):
@@ -29,8 +29,8 @@ def _has_repository_sentinels(candidate: Path) -> bool:
     """Return whether a directory satisfies the conservative root contract."""
     return (
         (candidate / "pyproject.toml").is_file()
-        and (candidate / "AGENTS.md").is_file()
-        and (candidate / "src").is_dir()
+        and (candidate / "src/dai_sim").is_dir()
+        and (candidate / "config").is_dir()
     )
 
 
@@ -63,7 +63,7 @@ def find_repository_root(start: Path | str | None = None) -> Path:
             return candidate
 
     raise RepositoryRootNotFoundError(
-        "No repository root containing pyproject.toml, AGENTS.md and src/ "
+        "No repository root containing pyproject.toml, src/dai_sim/ and config/ "
         f"was found at or above: {search_directory}"
     )
 

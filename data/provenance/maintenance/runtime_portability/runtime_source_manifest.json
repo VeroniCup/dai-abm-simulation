@@ -1,0 +1,60 @@
+{
+  "classification": "portable_runtime_resolution_v2",
+  "creation_command": "python workflows/inputs/build_runtime_derivatives.py",
+  "network_calls": 0,
+  "runtime_sources": [
+    {
+      "historical_source_path": "data/protocol/processed/hourly_protocol_parameters.csv",
+      "historical_source_sha256": "8190f1aa9f63a6ebd41ef5eb38ee33b64523631161199e37224ce859cb71f195",
+      "historical_source_status": "optional_provenance_and_rebuild_source",
+      "role": "provenance_only",
+      "runtime_owner_path": "config/protocol/final_collateral_registry.yaml",
+      "runtime_owner_sha256": "75268fed6b3db5a80a822a80b8629291491cd73ce62b4c3e6cf3975060b4eb6d",
+      "runtime_owner_type": "frozen_collateral_registry"
+    },
+    {
+      "historical_source_path": "data/market/processed/dune_hourly_market_prices_processed.csv",
+      "historical_source_sha256": "43f8a23aff2ec995a4e1ad5e8fc66f4b5223e8dcc9c8a36bd272d733ae1d4e25",
+      "historical_source_status": "optional_provenance_and_rebuild_source",
+      "role": "provenance_source_for_existing_runtime_pool",
+      "runtime_owner_path": "data/market/model_inputs/multicollateral_blocks/pool.csv",
+      "runtime_owner_sha256": "e97570b94b2140f9a6dc6436b386ba0ea9e91d9de73b755cc38d8e971d91ed2e",
+      "runtime_owner_type": "existing_multicollateral_market_block_pool",
+      "supporting_manifest_path": "data/market/model_inputs/multicollateral_blocks/manifest.json",
+      "supporting_manifest_sha256": "4018f9f84e76abbf07cbb1edb275222670f6277a4bdc8f492ea42337ee73774c"
+    },
+    {
+      "asset_coverage": [
+        "ETH",
+        "WBTC",
+        "DAI",
+        "USDC"
+      ],
+      "columns": [
+        "timestamp_utc",
+        "eth_log_return",
+        "wbtc_log_return",
+        "dai_price_usd",
+        "usdc_price_usd",
+        "usdc_log_return",
+        "median_effective_gas_price_gwei"
+      ],
+      "derivative_bytes": 116678,
+      "derivative_path": "data/model_inputs/validation/final_validation_market_gas_paths.csv",
+      "derivative_sha256": "e2f6d8206b0dd040ddbf4ee302b75c575ffcec412c920db6ddd2c1f04cda1ade",
+      "historical_source_path": "data/market/processed/combined/hourly_market_gas_panel.csv",
+      "historical_source_sha256": "86ed2ac5a5d364cc57e8b41e137ef369a0fce7a393d386b4b38fc1ebd1be0545",
+      "historical_source_status": "optional_provenance_and_rebuild_source",
+      "maximum_timestamp": "2023-03-19T23:00:00Z",
+      "minimum_timestamp": "2022-11-01T00:00:00Z",
+      "role": "compact_final_validation_paths",
+      "row_count": 816,
+      "runtime_owner": "final_validation_historical_paths",
+      "schema_version": 1,
+      "transformation_code_path": "workflows/inputs/build_runtime_derivatives.py",
+      "transformation_code_sha256": "82e2e6518b356f74466ec12afd0b563c8346bc385bb0de139e8b01ce196c3237",
+      "transformation_id": "final_validation_held_out_exact_columns_v1"
+    }
+  ],
+  "schema_version": 1
+}

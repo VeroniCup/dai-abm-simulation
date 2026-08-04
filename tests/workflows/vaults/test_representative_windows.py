@@ -12,7 +12,6 @@ from tests.support import REPOSITORY_ROOT
 if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 
-from workflows.maintenance.archive import repair_quiet_rates as rate_repair
 from workflows.vaults import acquire_representative as representative
 
 
@@ -967,18 +966,6 @@ def test_rate_lookup_uses_numeric_same_block_order_without_future_leakage():
     )
     assert before == 10**27
     assert after == 10**27 + 10
-
-
-def test_local_rate_audit_distinguishes_duty_from_accumulated_rate():
-    audit = rate_repair.source_audit()
-    assert audit["selected_method"].startswith("B_")
-    assert not audit["local_method_a_exact"]
-    assert "Jug.drip.output_rate" in audit["method_a_blocker"]
-    hourly = next(
-        item for item in audit["candidate_sources"]
-        if item["path"].endswith("phase1d_protocol_parameters_hourly.csv")
-    )
-    assert not hourly["exact_replay_suitability"]
 
 
 def test_parameter_readiness_schema_is_stable():

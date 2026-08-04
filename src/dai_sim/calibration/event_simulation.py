@@ -54,7 +54,6 @@ from dai_sim.model.liquidation import (
     summarise_liquidations,
 )
 from dai_sim.model.market import coefficient_normalised_market_response
-from dai_sim.model.simulation import SimulationConfig
 from dai_sim.model.vault import Vault
 
 from .market import (
@@ -470,6 +469,8 @@ def _load_registered_json(path: Path) -> dict[str, Any]:
 def load_stage1_owners(
     panel_path: Path = CONFIDENCE_PANEL,
     evidence_dir: Path = CONFIDENCE_EVIDENCE,
+    *,
+    require_historical_panel: bool = False,
 ) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, Any]]:
     """Verify Stage 1, reconstruct residual blocks and return their owners."""
     stage1 = _load_registered_json(evidence_dir / "stage1_market_estimates.json")
@@ -484,21 +485,33 @@ def load_stage1_owners(
         raise ValueError("Calibration-only Stage 1 evidence is unexpectedly adopted.")
     if stage1.get("input_sha256") != CONFIDENCE_PANEL_SHA256:
         raise ValueError("Stage 1 does not own the canonical market panel.")
-    panel = load_confidence_panel(panel_path)
-    events = build_event_catalogue(panel)
-    hourly = ordinary_confidence_sample(
-        panel,
-        events,
-        daily=False,
-        require_lagged_eth=False,
-    )
     below = float(stage1["below_peg_response"]["point_estimate"])
     above = float(stage1["above_peg_response"]["point_estimate"])
-    source = build_residual_block_source(
-        hourly,
-        below_peg_response=below,
-        above_peg_response=above,
-    )
+    if Path(panel_path).is_file():
+        panel = load_confidence_panel(panel_path)
+        events = build_event_catalogue(panel)
+        hourly = ordinary_confidence_sample(
+            panel, events, daily=False, require_lagged_eth=False
+        )
+        source = build_residual_block_source(
+            hourly, below_peg_response=below, above_peg_response=above
+        )
+        source_owner = "verified_historical_panel"
+    else:
+        if require_historical_panel:
+            raise FileNotFoundError(
+                f"Historical Stage 1 panel is required for reconstruction: {panel_path}."
+            )
+        from dai_sim.inputs.stage1 import load_portable_stage1_residual_source
+
+        source, portable_manifest = load_portable_stage1_residual_source()
+        if float.fromhex(portable_manifest["below_peg_response_float64_hex"]) != below:
+            raise ValueError("Portable below-peg Stage 1 response differs.")
+        if float.fromhex(portable_manifest["above_peg_response_float64_hex"]) != above:
+            raise ValueError("Portable above-peg Stage 1 response differs.")
+        panel = pd.DataFrame()
+        events = pd.DataFrame()
+        source_owner = "portable_exact_residual_derivative"
     residual_values_hash = hashlib.sha256(
         np.asarray(source.centred_residuals, dtype="<f8").tobytes()
     ).hexdigest()
@@ -521,6 +534,7 @@ def load_stage1_owners(
         "residual_sequence_sha256": residual_values_hash,
         "block_specification_sha256": block_hash,
         "stage1": stage1,
+        "source_owner": source_owner,
     }
 
 
@@ -1521,7 +1535,9 @@ def run_event_simulation_evidence(
     """Run bounded validation, smoke and benchmark operations only."""
     if action not in {"validate", "initial-state", "gates", "smoke", "benchmark", "all"}:
         raise ValueError(f"Unsupported event-simulation action: {action}.")
-    panel, events, stage1 = load_stage1_owners(panel_path, source_evidence_dir)
+    panel, events, stage1 = load_stage1_owners(
+        panel_path, source_evidence_dir, require_historical_panel=True
+    )
     config = default_event_config(events)
     smoke_ids = select_event_smoke_subset(events)
     validation_boundary = validate_final_event_input(panel, events, config)
@@ -1541,7 +1557,6 @@ def run_event_simulation_evidence(
     )
     state_summary = initial_state_summary(reference_state)
     bundle = load_tranche_b_configuration(DEFAULT_TRANCHE_B_CONFIG_PATH)
-    profile = load_configuration_payload(DEFAULT_TRANCHE_B_CONFIG_PATH, ())
     state_evidence = {
         "schema_version": 1,
         "status": "validated_standardised_conditional_state",

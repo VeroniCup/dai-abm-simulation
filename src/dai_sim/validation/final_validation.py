@@ -29,6 +29,10 @@ from dai_sim.inputs.gas import component_gas_costs
 from dai_sim.inputs.integrated_profile import resolve_integrated_empirical_eth_profile
 from dai_sim.inputs.market import prices_from_log_returns
 from dai_sim.inputs.multicollateral import FAMILY_ORDER
+from dai_sim.inputs.runtime_sources import (
+    RuntimeSourceResolution,
+    resolve_runtime_source,
+)
 from dai_sim.validation import multicollateral as multicollateral_validation
 
 
@@ -54,6 +58,14 @@ COMPACT_FILENAMES = (
 )
 
 
+def _historical_source_resolution(
+    registry: Mapping[str, Any],
+) -> RuntimeSourceResolution:
+    """Resolve the frozen historical source to its portable tracked owner."""
+    source = registry["historical_source"]
+    return resolve_runtime_source(source["path"], source["sha256"])
+
+
 def load_registry(path: Path = REGISTRY_PATH) -> dict[str, Any]:
     raw = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(raw, dict) or raw.get("registry_id") != "frozen_model_held_out_validation":
@@ -66,9 +78,7 @@ def load_registry(path: Path = REGISTRY_PATH) -> dict[str, Any]:
         raise ValueError("A distinct quiet validation was invented.")
     if raw["windows"]["quiet"]["execute"] is not False:
         raise ValueError("Unregistered quiet validation cannot execute.")
-    source = REPOSITORY_ROOT / raw["historical_source"]["path"]
-    if not source.is_file() or sha256_file(source) != raw["historical_source"]["sha256"]:
-        raise ValueError("Held-out historical source checksum differs.")
+    _historical_source_resolution(raw)
     if raw["simulation"]["observed_dai_role"] != "comparison_target_only" or raw["simulation"]["synthetic_shock_overlay"] is not False:
         raise ValueError("Validation data boundary differs.")
     return raw
@@ -82,8 +92,7 @@ def _window_bounds(name: str) -> tuple[pd.Timestamp, pd.Timestamp]:
 
 def window_inventory() -> pd.DataFrame:
     registry = load_registry()
-    source_path = REPOSITORY_ROOT / registry["historical_source"]["path"]
-    source_sha = sha256_file(source_path)
+    source_sha = registry["historical_source"]["sha256"]
     rows = [
         {
             "identifier": "quiet",
@@ -246,7 +255,8 @@ def specification_payload(freeze: Mapping[str, Any] | None = None) -> dict[str, 
 
 def _historical_window(stage: str) -> pd.DataFrame:
     registry = load_registry()
-    frame = pd.read_csv(REPOSITORY_ROOT / registry["historical_source"]["path"])
+    source = _historical_source_resolution(registry)
+    frame = pd.read_csv(source.runtime_path)
     frame["timestamp_utc"] = pd.to_datetime(frame["timestamp_utc"], utc=True)
     start, end = _window_bounds(stage)
     selected = frame.loc[(frame["timestamp_utc"] >= start) & (frame["timestamp_utc"] < end)].copy().reset_index(drop=True)

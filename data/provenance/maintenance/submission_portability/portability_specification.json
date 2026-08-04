@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "classification": "portable_submission_evidence_v1",
+  "portable_submission_identity": "e0e58222253204ee87f39a93b0d6edd650a64e47af81b2dd7521d2bd35d7a33b",
+  "first_portable_runtime_identity": "bbb89292dcec748261ec8cf8ca512f707316336eecb4b81252d80f0deba52f34",
+  "historical_scientific_boundary": {
+    "identities_replaced": 0,
+    "decisions_changed": 0,
+    "scientific_values_changed": 0
+  },
+  "stage1": {
+    "historical_source_path": "data/market/processed/dune_hourly_dai_eth_market_prices_processed.csv",
+    "historical_source_sha256": "5d7f1ec9171023d442acbcebd41cd1837eb899769c37eb38b5c2561c9d64a5c9",
+    "historical_rows": 39456,
+    "consumed_columns": ["timestamp_utc", "dai_price", "eth_price"],
+    "calibration_interval": "registered Stage 1 interval with final held-out windows excluded",
+    "eligible_residual_rows": 28859,
+    "residual_block_hours": 24,
+    "below_peg_response": 0.199381,
+    "above_peg_response": 0.105131,
+    "derivative_path": "data/model_inputs/calibration/stage1_residual_source.csv",
+    "derivative_sha256": "21160b05af87c2687b5352105d861dad69cbefbb1507e86bce92c77fd8e6f9d4",
+    "derivative_manifest_sha256": "4f1be5b48f6ae5689e2591e318c08e9146b633f3ba963af43c59d379822757b8",
+    "residual_sequence_sha256": "3fa2319cee9e1749405c0dc477e0f11ef9c31dd83c371b619bd33eda23c37c30",
+    "residual_block_sha256": "6f55b51acfc1da23836b3d847153bd4f68e4a38fc33fd967e9d3b795737bf28c",
+    "full_compact_parser_equality": true
+  },
+  "oracle_delay": {
+    "registry_identity": "2e562ef2618e472ce3b0551addf2596ddbe137910fa6d2ad5884ae71c674e46d",
+    "classification": "transparent_sensitivity_not_empirically_identified",
+    "inventory_path": "data/provenance/calibration/oracle_delay/oracle_delay_source_inventory.csv",
+    "inventory_sha256": "9af3e3bf5794c0e015c10d24f11afa5d1cdaea0bbf1f5a350b695f7a5959768f",
+    "candidate_count": 7,
+    "eligible_direct_observations": 0,
+    "eligible_update_intervals": 0,
+    "delays_hours": [0, 1, 2]
+  },
+  "reconstruction_contract_path": "data/provenance/maintenance/submission_portability/historical_reconstruction_contracts.json",
+  "test_support_sources": {
+    "stage1_loader": "a524897006332ac10387f1df79c192a4efa0e7b9050c7c0d162d225670354898",
+    "portability_validator": "7139282e828b5a1d5e4111c3bbba3f46bac6a9fc623710444cee1262b653e871",
+    "external_verifier": "39b5bb912624441d427dd0f6a62d523de9629ee5a1f5269be77c4aedff4ca6b5",
+    "stage1_derivative_builder": "5975b859b68faff5f6f51dc0835a6be5929cf3913aff4de71b5f9255302d7055",
+    "stage1_runtime_adapter": "4312ac4e3ea1969b5acc8552d7b176a058229fcd43d3bd12a5a428f78e00fbbc",
+    "keeper_compact_fallback": "bddda3d94c2ab23dd9f112754ec5f2d01520e8e1bf0589ae38ba4e2dff561918",
+    "oracle_inventory_fallback": "3034a582867386448680eb55abfdfe59f4b55e1e2866c37f68a0f3b1c6980e3d",
+    "structural_registry_fallback": "cd8b1de781bb3888f0fd5a9e5b441317d1beff8524f7e89a0f14a166e465b36a",
+    "experiment_compact_fallback": "6dabc6eb33f62d6b7077ec02816c07f7a94323bd42d42f129490ba3a6c154d2b"
+  },
+  "clean_checkout_suite_contract": [
+    "runtime_profile_resolution",
+    "frozen_scientific_evidence_integrity",
+    "calibration_and_experiment_decisions",
+    "temporary_checkpoint_fixture_code_paths",
+    "optional_external_source_boundaries",
+    "no_hidden_local_dependencies"
+  ],
+  "excluded_source_categories": [
+    "raw_acquisition_files",
+    "omitted_full_processed_panels",
+    "raw_oracle_source_candidates",
+    "detailed_historical_checkpoints",
+    "generated_diagnostics",
+    "local_maintenance_audits"
+  ],
+  "network_calls": 0
+}

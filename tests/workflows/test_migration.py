@@ -10,31 +10,16 @@ from tests.support import REPOSITORY_ROOT as ROOT
 
 WORKFLOW_MAPPING = {
     "acquire_dune_hourly_gas.py": "gas/acquire.py",
-    "acquire_dune_liquidation_diagnostic.py": (
-        "maintenance/archive/liquidation_diagnostic.py"
-    ),
-    "acquire_dune_liquidation_diagnostic_attempt3.py": (
-        "maintenance/archive/liquidation_diagnostic_attempt3.py"
-    ),
     "acquire_dune_liquidations.py": "liquidations/acquire.py",
     "acquire_dune_market_prices.py": "market/acquire.py",
     "acquire_dune_protocol_parameter_history.py": "protocol/acquire.py",
-    "acquire_dune_protocol_parameters.py": (
-        "maintenance/archive/debt_ceiling_diagnostic.py"
-    ),
     "acquire_dune_vaults.py": "vaults/acquire.py",
     "acquire_phase1e_b_representative_vaults.py": ("vaults/acquire_representative.py"),
     "build_liquidation_arrival_runtime_pools.py": "liquidations/build_inputs.py",
     "build_market_gas_runtime_pools.py": "market/build_inputs.py",
     "build_vault_initialisation_pools.py": "vaults/build_inputs.py",
-    "diagnose_dune_vat_activation.py": (
-        "maintenance/archive/diagnose_vat_activation.py"
-    ),
-    "discover_dune_vault_events.py": ("maintenance/archive/discover_vault_events.py"),
     "process_dune_hourly_gas.py": "gas/process.py",
     "process_dune_market_prices.py": "market/process.py",
-    "repair_phase1e_b_quiet_rates.py": ("maintenance/archive/repair_quiet_rates.py"),
-    "retrieve_dune_execution_page.py": "maintenance/retrieve_result.py",
     "run_parameter_adoption_review.py": "calibration/adoption.py",
     "run_phase2a_candidate_review.py": "calibration/validate.py",
     "run_phase2a_parameter_estimation.py": ("calibration/market_gas_protocol.py"),
@@ -60,21 +45,23 @@ POST_RESTRUCTURING_WORKFLOWS = {
     "experiments/final/selected_robustness.py",
     "inputs/validate_integrated_eth.py",
     "inputs/validate_multicollateral.py",
+    "inputs/build_runtime_derivatives.py",
+    "inputs/build_stage1_residual_source.py",
+    "verification/verify_external_artifacts.py",
     "market/process_historical_evidence.py",
     "validation/final_validation.py",
 }
-
 EXPECTED_CATEGORIES = {
     "calibration",
     "experiments",
     "gas",
     "inputs",
     "liquidations",
-    "maintenance",
     "market",
     "protocol",
     "validation",
     "vaults",
+    "verification",
 }
 
 
@@ -82,16 +69,16 @@ def _tree(path: Path) -> ast.Module:
     return ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
 
 
-def test_exactly_27_unique_authoritative_workflows_exist() -> None:
-    assert len(WORKFLOW_MAPPING) == 27
-    assert len(set(WORKFLOW_MAPPING.values())) == 27
+def test_exactly_20_unique_authoritative_workflows_exist() -> None:
+    assert len(WORKFLOW_MAPPING) == 20
+    assert len(set(WORKFLOW_MAPPING.values())) == 20
     assert not (ROOT / "scripts").exists()
     for target in WORKFLOW_MAPPING.values():
         assert (ROOT / "workflows" / target).is_file()
     actual = {
         path.relative_to(ROOT / "workflows").as_posix()
         for path in (ROOT / "workflows").rglob("*.py")
-        if path.name != "_bootstrap.py"
+        if not path.name.startswith("_")
     }
     assert set(WORKFLOW_MAPPING.values()) | POST_RESTRUCTURING_WORKFLOWS == actual
 
@@ -99,7 +86,6 @@ def test_exactly_27_unique_authoritative_workflows_exist() -> None:
 def test_protocol_and_vault_workflow_responsibilities_remain_distinct() -> None:
     expected = {
         "protocol/acquire.py",
-        "maintenance/archive/debt_ceiling_diagnostic.py",
         "vaults/acquire.py",
         "vaults/acquire_representative.py",
     }
@@ -119,12 +105,14 @@ def test_only_real_populated_categories_exist() -> None:
         assert any((workflow_root / category).rglob("*.py"))
 
 
-def test_archived_debt_ceiling_diagnostic_is_a_real_implementation() -> None:
-    path = ROOT / "workflows/maintenance/archive/debt_ceiling_diagnostic.py"
-    tree = _tree(path)
-    functions = {node.name for node in tree.body if isinstance(node, ast.FunctionDef)}
-    assert {"main", "validate_rows", "write_json_atomic"} <= functions
-    assert len(path.read_text(encoding="utf-8").splitlines()) > 400
+def test_development_packaging_is_outside_workflow_discovery() -> None:
+    assert not (ROOT / "workflows/maintenance").exists()
+    builder = ROOT / "tools/packaging/build_code_bundle.py"
+    if (ROOT / "SUBMISSION_CONTENT_MANIFEST.json").is_file():
+        assert not builder.exists()
+    else:
+        assert builder.is_file()
+    assert "tools" not in EXPECTED_CATEGORIES
 
 
 def test_authoritative_workflows_use_no_old_wrappers_or_flat_shims() -> None:

@@ -16,8 +16,7 @@ result.
 from __future__ import annotations
 
 import argparse
-import csv
-from collections.abc import Mapping, Sequence
+from collections.abc import Mapping
 from dataclasses import dataclass, replace
 from datetime import datetime, timezone
 import hashlib
@@ -33,10 +32,7 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
-import yaml
-
 from dai_sim.inputs.sources import (
-    CANONICAL_INPUT_COLUMNS,
     MANIFEST_COLUMNS,
     PRICE_COLUMNS,
     REQUIRED_BASELINE_COLUMNS,
@@ -44,32 +40,22 @@ from dai_sim.inputs.sources import (
     EmpiricalSourceConfig,
     ExplicitUnitConversion,
     adapt_source_frame,
-    empirical_source_from_mapping,
     load_and_align_sources,
     validate_data_manifest,
-    validate_fixed_frequency,
     validate_manifest_records,
 )
 from dai_sim.inputs.market import (
-    DEFAULT_CONFIG_PATH,
     EmpiricalConfig,
-    _consecutive_log_return,
+    _frequency_timedelta,
     _quality_record,
-    _rolling_realised_volatility,
-    _sample_labels,
     build_market_time_panel,
-    collect_baseline_configuration_issues,
-    empirical_config_from_mapping,
     load_baseline_config,
-    load_empirical_config,
 )
 from .data_loading import (
     load_inputs,
     parse_utc_timestamp,
-    phase2a_input_specs,
     require_hourly_index,
     sha256_file,
-    validate_protocol_intervals,
     verify_all_inputs,
 )
 from .gas import _gas_outputs, _liquidation_outputs
@@ -82,7 +68,6 @@ from .statistics import (
     distribution_summary,
     estimate_regime_thresholds as _estimate_phase2a_regime_thresholds,
     moving_block_bootstrap_ci,
-    overdispersion_summary,
     regime_durations,
     transition_counts,
     transition_probabilities,
@@ -1294,7 +1279,10 @@ DEFAULT_FIGURES = (
 
 DEFAULT_REPORT = PROJECT_ROOT / "docs/phase2a_parameter_estimation_report.md"
 
-PARAMETER_PLAN = PROJECT_ROOT / "docs/calibration/parameter_estimation.md"
+PARAMETER_REGISTRY = (
+    PROJECT_ROOT
+    / "data/provenance/calibration/parameter_adoption/parameter_adoption_matrix.csv"
+)
 
 PARAMETER_STATUSES: dict[str, str] = {
     "4.1.1": "scenario_only",
@@ -1501,22 +1489,12 @@ def _relative(path: Path) -> str:
     return path.relative_to(PROJECT_ROOT).as_posix()
 
 def _parameter_plan_sections() -> list[tuple[str, str]]:
-    text = PARAMETER_PLAN.read_text(encoding="utf-8")
-    lines = text.splitlines()
-    sections: list[tuple[str, str]] = []
-    for index, line in enumerate(lines):
-        match = re.match(r"^#### (4\.\d+\.\d+) (.+)$", line)
-        if not match:
-            continue
-        number, title = match.groups()
-        continuation = index + 1
-        while continuation < len(lines):
-            next_line = lines[continuation]
-            if not next_line or next_line.startswith("#"):
-                break
-            title = f"{title} {next_line.strip()}"
-            continuation += 1
-        sections.append((number, title))
+    registry = pd.read_csv(PARAMETER_REGISTRY, dtype=str)
+    sections = list(
+        registry[["parameter_subsection", "simulator_field"]].itertuples(
+            index=False, name=None
+        )
+    )
     if set(number for number, _ in sections) != set(PARAMETER_STATUSES):
         raise ValueError(
             "Parameter-status mapping does not match the authoritative "
@@ -2141,7 +2119,6 @@ def _build_candidates(
                 notes="A selected deterministic severity remains a scenario choice.",
             )
         )
-    thresholds = regime_details["thresholds"]
     candidates.append(
         _candidate(
             field="market_regime",

@@ -2,19 +2,11 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-import subprocess
-
-from tests.support import REPOSITORY_ROOT
+from tests.support import REPOSITORY_ROOT, is_ignored
 
 
 def _ignored(path: str) -> bool:
-    result = subprocess.run(
-        ["git", "check-ignore", "--no-index", "-q", path],
-        cwd=REPOSITORY_ROOT,
-        check=False,
-    )
-    return result.returncode == 0
+    return is_ignored(path)
 
 
 def test_generated_output_categories_are_ignored() -> None:
@@ -22,6 +14,7 @@ def test_generated_output_categories_are_ignored() -> None:
     assert _ignored("outputs/figures/baseline/new_plot.png")
     assert _ignored("outputs/diagnostics/calibration/new_review.csv")
     assert _ignored("outputs/tables/baseline/new_summary.csv")
+    assert _ignored("outputs/reporting/dissertation/figures/new_figure.png")
 
 
 def test_empirical_payload_and_transient_provenance_policy_is_preserved() -> None:

@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "classification": "portable_submission_evidence_v1",
+  "registry_content_sha256": "5d1400a042f8c00affb83014f568718c2fa1561b0a853fdd65a9ec823d0886a6",
+  "studies": [
+    {
+      "study_identifier": "unbounded_eth_recovery",
+      "scientific_identity": "68afcef1166bb6b13813d0e481ce7bddff7605c0ac7326bf8b9d1400eacff20b",
+      "specification": {"path": "data/provenance/experiments/recovery/eth_recovery_specification.json", "sha256": "f8a747e4e53cdebece4d2fe826836df5b6ee63dc81f561644386720239aa552b"},
+      "seed_registry_sha256": "bea3ca5c7672900285adaef339843a2d086c7d97f26e85cbf93264d92fc105af",
+      "expected_cell_count": 16,
+      "expected_replication_count": 128,
+      "historical_checkpoint_count": 0,
+      "checkpoint_content_manifest": {"status": "not_applicable_no_checkpoint_design", "algorithm": "none", "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"},
+      "compact_evidence": [
+        {"path": "data/provenance/experiments/recovery/eth_recovery_specification.json", "sha256": "f8a747e4e53cdebece4d2fe826836df5b6ee63dc81f561644386720239aa552b"},
+        {"path": "data/provenance/experiments/recovery/eth_recovery_decision.json", "sha256": "2124186a748617044664942d68d56b740df3b112d84b6889f44c78b80727b59f"},
+        {"path": "data/provenance/experiments/recovery/eth_recovery_reproducibility.json", "sha256": "ab9767c80c31cb664e29fb68440a388edc3c565f7be2a64fa69ec492147d56f8"}
+      ],
+      "decision": {"path": "data/provenance/experiments/recovery/eth_recovery_decision.json", "sha256": "2124186a748617044664942d68d56b740df3b112d84b6889f44c78b80727b59f"},
+      "simulation_core_identity": "bcae5ed6a4ea0ee1a8990f468fdec96e49dc14757aef1329365a52d4716cbbbe",
+      "external_checkpoint_root": "outputs/experiments/mechanism/eth_recovery/68afcef1166bb6b13813d0e481ce7bddff7605c0ac7326bf8b9d1400eacff20b/checkpoints",
+      "reconstruction_status": "external_artifacts_optional",
+      "ordinary_submission_test_owner": "tests/experiments/mechanism/test_eth_recovery.py"
+    },
+    {
+      "study_identifier": "constrained_eth_recovery",
+      "scientific_identity": "6cfbd19384fc95fe8b06de74704d0b2a76638722b100242e0bc87a9ee3e05acc",
+      "specification": {"path": "data/provenance/experiments/constrained_recovery/constrained_recovery_specification.json", "sha256": "4016d213eed7cde1262af2cb7cc2318bcb27efd282f35669cdf8f8cb12d0ab70"},
+      "seed_registry_sha256": "fcd4b17789da5684bbbcbc3f3fcbf7825328bf593c0cf06bb4b40ffd75948b5c",
+      "expected_cell_count": 24,
+      "expected_replication_count": 128,
+      "historical_checkpoint_count": 128,
+      "checkpoint_content_manifest": {"status": "audit_record_only_no_content_map", "algorithm": "canonical_checkpoint_audit", "sha256": "459dbf71e1b438edb3a3a590c4c0ce200c4c003fbe219919a492e6705851890b"},
+      "compact_evidence": [
+        {"path": "data/provenance/experiments/constrained_recovery/constrained_recovery_specification.json", "sha256": "4016d213eed7cde1262af2cb7cc2318bcb27efd282f35669cdf8f8cb12d0ab70"},
+        {"path": "data/provenance/experiments/constrained_recovery/constrained_recovery_decision.json", "sha256": "b366f83fe8d217555aa7f56c8f924ad69d55e15be6f0b0a9713be364121103f6"},
+        {"path": "data/provenance/experiments/constrained_recovery/constrained_recovery_reproducibility.json", "sha256": "4acb1fb01a2de68c695e0ef54e21323077fadbb76b8d74d452ad0e12851adc05"}
+      ],
+      "decision": {"path": "data/provenance/experiments/constrained_recovery/constrained_recovery_decision.json", "sha256": "b366f83fe8d217555aa7f56c8f924ad69d55e15be6f0b0a9713be364121103f6"},
+      "simulation_core_identity": "17ace2ebe8a57e277c0bef0cedcc92956be02920991c597f20c6c8ceeb81ab08",
+      "external_checkpoint_root": "outputs/experiments/mechanism/constrained_eth_recovery/6cfbd19384fc95fe8b06de74704d0b2a76638722b100242e0bc87a9ee3e05acc/checkpoints",
+      "reconstruction_status": "external_artifacts_optional",
+      "ordinary_submission_test_owner": "tests/experiments/mechanism/test_constrained_eth_recovery.py"
+    },
+    {
+      "study_identifier": "experiment_a",
+      "scientific_identity": "a9d7c3fa5dc5da9bcf61314a57501ea5a8be506e305eee6f45afaae3131600bb",
+      "specification": {"path": "data/provenance/experiments/final/idiosyncratic_diversification/idiosyncratic_diversification_specification.json", "sha256": "e6da0af839c53ddffb6eeaea596174d26499afeb55ca0d1910be49c679cd740d"},
+      "seed_registry_sha256": "51fe62b5a27ab5901ed299e50b6bcbcb2ef5490b53226ae6513438f4d526a247",
+      "expected_cell_count": 8,
+      "expected_replication_count": 128,
+      "historical_checkpoint_count": 128,
+      "checkpoint_content_manifest": {"status": "recorded_content_map", "algorithm": "filename_sha256_map", "sha256": "aa31d65e4609db14e4b8392eb623dfdaae3c15cdf08eef6c100e313729508583"},
+      "compact_evidence": [
+        {"path": "data/provenance/experiments/final/idiosyncratic_diversification/idiosyncratic_diversification_specification.json", "sha256": "e6da0af839c53ddffb6eeaea596174d26499afeb55ca0d1910be49c679cd740d"},
+        {"path": "data/provenance/experiments/final/idiosyncratic_diversification/idiosyncratic_diversification_decision.json", "sha256": "cf720d855adc62c5270042f9d2cb85338ef14d7d80a2aa8cb70f7d0dc7b9f614"},
+        {"path": "data/provenance/experiments/final/idiosyncratic_diversification/idiosyncratic_diversification_reproducibility.json", "sha256": "d04a955c843b831ae95e9b4a9326b1cb65211041a12121b3e74b98922f562fe7"}
+      ],
+      "decision": {"path": "data/provenance/experiments/final/idiosyncratic_diversification/idiosyncratic_diversification_decision.json", "sha256": "cf720d855adc62c5270042f9d2cb85338ef14d7d80a2aa8cb70f7d0dc7b9f614"},
+      "simulation_core_identity": "759748068fec4d45c257a649189b37234d7dd6d23e7ccf4273067bd4c2d1c00a",
+      "external_checkpoint_root": "outputs/experiments/final/idiosyncratic_diversification/a9d7c3fa5dc5da9bcf61314a57501ea5a8be506e305eee6f45afaae3131600bb/checkpoints",
+      "reconstruction_status": "external_artifacts_optional",
+      "ordinary_submission_test_owner": "tests/experiments/final/test_idiosyncratic_diversification.py"
+    },
+    {
+      "study_identifier": "experiment_b",
+      "scientific_identity": "e02c035162f8178c96d2cae71d0a581ce813ab33526854bd5810e8e2810ead83",
+      "specification": {"path": "data/provenance/experiments/final/correlated_stress/correlated_stress_specification.json", "sha256": "89f38e38b26426800c14f5b31a32e25aff783cf5951692adc4af0f92e870c680"},
+      "seed_registry_sha256": "b6561e43f3d3682c4a117bc83ae8badfd88eaeea9a7dfccd7917a5e0e73ac950",
+      "expected_cell_count": 8,
+      "expected_replication_count": 128,
+      "historical_checkpoint_count": 128,
+      "checkpoint_content_manifest": {"status": "recorded_content_map", "algorithm": "filename_sha256_map", "sha256": "e780bc139e34e64975d3108f6565509ab3c5db93758023a246a4913f5766e781"},
+      "compact_evidence": [
+        {"path": "data/provenance/experiments/final/correlated_stress/correlated_stress_specification.json", "sha256": "89f38e38b26426800c14f5b31a32e25aff783cf5951692adc4af0f92e870c680"},
+        {"path": "data/provenance/experiments/final/correlated_stress/correlated_stress_decision.json", "sha256": "dc669354d036060ce9477fdca4a863877af3a88ead73a9130d804c1a66b3add6"},
+        {"path": "data/provenance/experiments/final/correlated_stress/correlated_stress_reproducibility.json", "sha256": "94f07e9f18b724ab9dd595c9fc8684d0f76cf29007045b4f7d8fc4d03d8fb5de"}
+      ],
+      "decision": {"path": "data/provenance/experiments/final/correlated_stress/correlated_stress_decision.json", "sha256": "dc669354d036060ce9477fdca4a863877af3a88ead73a9130d804c1a66b3add6"},
+      "simulation_core_identity": "82e9c612de87bc93717fb0197b87eb01f23846737ce2cd96337e1f8fcfa55bdd",
+      "external_checkpoint_root": "outputs/experiments/final/correlated_stress/e02c035162f8178c96d2cae71d0a581ce813ab33526854bd5810e8e2810ead83/checkpoints",
+      "reconstruction_status": "external_artifacts_optional",
+      "ordinary_submission_test_owner": "tests/experiments/final/test_correlated_stress.py"
+    },
+    {
+      "study_identifier": "experiment_c",
+      "scientific_identity": "cb6d00877c54011cc49714bdfe23fad83140fef001568ea9b43d355811c9129b",
+      "specification": {"path": "data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_specification.json", "sha256": "e5d9469e415c6fdf91e5514281b3c3751a34b81f31c96c60e2923ca80c0272dd"},
+      "seed_registry_sha256": "a4bfc03e855aac1f8df25ae500b2f9b733f0efda0fb94c5018a65e51e068cdff",
+      "expected_cell_count": 12,
+      "expected_replication_count": 128,
+      "historical_checkpoint_count": 128,
+      "checkpoint_content_manifest": {"status": "recorded_content_map", "algorithm": "relative_path_size_sha256_rows", "sha256": "a45a0cd09bcaf7112f70a0b3bd9b29b12609c6df8b451f723d0caafa82b5fef1"},
+      "compact_evidence": [
+        {"path": "data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_specification.json", "sha256": "e5d9469e415c6fdf91e5514281b3c3751a34b81f31c96c60e2923ca80c0272dd"},
+        {"path": "data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_decision.json", "sha256": "9aa54888c6592859944f7ed5fa3e3b99fecaf29bfcf5518b566d8cdb24489cef"},
+        {"path": "data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_reproducibility.json", "sha256": "185faa58c4efe3940532544d9a4acbbaf4ab0cc43fb1273bc24425735f4fa1aa"}
+      ],
+      "decision": {"path": "data/provenance/experiments/final/stable_collateral_tradeoff/stable_collateral_tradeoff_decision.json", "sha256": "9aa54888c6592859944f7ed5fa3e3b99fecaf29bfcf5518b566d8cdb24489cef"},
+      "simulation_core_identity": "72ac0425d3033bdd2dea97e3522e3f97c4fbb45b66a10e125cacb0f92e0af6f7",
+      "external_checkpoint_root": "outputs/experiments/final/stable_collateral_tradeoff/cb6d00877c54011cc49714bdfe23fad83140fef001568ea9b43d355811c9129b/checkpoints",
+      "reconstruction_status": "external_artifacts_optional",
+      "ordinary_submission_test_owner": "tests/experiments/final/test_stable_collateral_tradeoff.py"
+    },
+    {
+      "study_identifier": "experiment_d",
+      "scientific_identity": "b324c31be7ef6dd7f61e504709b2086b0e88ce181c177f25dcaad182095c17e3",
+      "specification": {"path": "data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_specification.json", "sha256": "10d7bd2062d6d52b03941c90558dded45954fb8ffbf1a501dc0dd05e4f2b28e0"},
+      "seed_registry_sha256": "74a6a4b46237bf1b1eecbda0aefef4e4dab6e72da508823dc18e190ce7d169ce",
+      "expected_cell_count": 9,
+      "expected_replication_count": 128,
+      "historical_checkpoint_count": 128,
+      "checkpoint_content_manifest": {"status": "recorded_content_map", "algorithm": "relative_path_size_sha256_rows", "sha256": "867e02701112185f49d767a6776a9b4f8b673d04c9ee61d35834a446a76effd3"},
+      "compact_evidence": [
+        {"path": "data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_specification.json", "sha256": "10d7bd2062d6d52b03941c90558dded45954fb8ffbf1a501dc0dd05e4f2b28e0"},
+        {"path": "data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_decision.json", "sha256": "ca6927dfadb88d22c4e7d8e5cdede644b3486ccddf53c1f4a6b690e179ba51f2"},
+        {"path": "data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_reproducibility.json", "sha256": "a62b7e301f1a91859835de3d4679a2a3eec5bb78d0eaee02c1a43fccfa130ecc"}
+      ],
+      "decision": {"path": "data/provenance/experiments/final/shared_keeper_capacity/shared_keeper_capacity_decision.json", "sha256": "ca6927dfadb88d22c4e7d8e5cdede644b3486ccddf53c1f4a6b690e179ba51f2"},
+      "simulation_core_identity": "7c1fd91903663779bb30c5b98448b1eac9ab2d426e17e9f6f47fb5db30a5dba4",
+      "external_checkpoint_root": "outputs/experiments/final/shared_keeper_capacity/b324c31be7ef6dd7f61e504709b2086b0e88ce181c177f25dcaad182095c17e3/checkpoints",
+      "reconstruction_status": "external_artifacts_optional",
+      "ordinary_submission_test_owner": "tests/experiments/final/test_shared_keeper_capacity.py"
+    },
+    {
+      "study_identifier": "experiment_e",
+      "scientific_identity": "67ec5a1e03492608c7f847861f7dbd506d2a526dbf4107298241b26c855eb0f8",
+      "specification": {"path": "data/provenance/experiments/final/oracle_delay/oracle_delay_specification.json", "sha256": "acce1aafeabcc8ccfd63b4ca353e9839c1cc11373043432a47c31389eb8f0537"},
+      "seed_registry_sha256": "9f528c38a9a684df28174e6028242b159af04efafbf2fb919590c199af2a8eb2",
+      "expected_cell_count": 6,
+      "expected_replication_count": 128,
+      "historical_checkpoint_count": 128,
+      "checkpoint_content_manifest": {"status": "recorded_content_map", "algorithm": "relative_path_size_sha256_rows", "sha256": "50d2e58cda379f364b1c7768aef43cefd1e8e7a6853c08f0f6bd3ea9bb23b82e"},
+      "compact_evidence": [
+        {"path": "data/provenance/experiments/final/oracle_delay/oracle_delay_specification.json", "sha256": "acce1aafeabcc8ccfd63b4ca353e9839c1cc11373043432a47c31389eb8f0537"},
+        {"path": "data/provenance/experiments/final/oracle_delay/oracle_delay_decision.json", "sha256": "a9745d751f77b07ec3d44eb1c54449ca6a15f71340ab23af9b9e1ac750b62776"},
+        {"path": "data/provenance/experiments/final/oracle_delay/oracle_delay_reproducibility.json", "sha256": "5056febd30b658a2089daa2aa15f843fb9eef493e0b2d6b0e0ea30926e2ebc96"}
+      ],
+      "decision": {"path": "data/provenance/experiments/final/oracle_delay/oracle_delay_decision.json", "sha256": "a9745d751f77b07ec3d44eb1c54449ca6a15f71340ab23af9b9e1ac750b62776"},
+      "simulation_core_identity": "6ee0a73fab7e4fd195664448a489c4f0cda16c07c68a67d862a7c36997ec3030",
+      "external_checkpoint_root": "outputs/experiments/final/oracle_delay/67ec5a1e03492608c7f847861f7dbd506d2a526dbf4107298241b26c855eb0f8/checkpoints",
+      "reconstruction_status": "external_artifacts_optional",
+      "ordinary_submission_test_owner": "tests/experiments/final/test_final_oracle_delay.py"
+    },
+    {
+      "study_identifier": "selected_robustness",
+      "scientific_identity": "59474cbc9e37d7df5d49fb5b9a0abbf4670ce300799f82ccb0ec21ed8a3aebbf",
+      "specification": {"path": "data/provenance/experiments/final/selected_robustness/selected_robustness_specification.json", "sha256": "c472655a466e8ea0ae4c9025347749873a319afd65d6793fb1943c698fe26292"},
+      "seed_registry_sha256": "e4b2e2c66be11e850e40bb306b2bc17961efb168997762c97b9863e2df653c95",
+      "expected_cell_count": 56,
+      "expected_replication_count": 64,
+      "historical_checkpoint_count": 64,
+      "checkpoint_content_manifest": {"status": "audit_record_only_no_content_map", "algorithm": "canonical_checkpoint_audit", "sha256": "64fd59a5bc0113024502a94b7337c33345421d3e4a171fe77287c5a28ae8ea67"},
+      "compact_evidence": [
+        {"path": "data/provenance/experiments/final/selected_robustness/selected_robustness_specification.json", "sha256": "c472655a466e8ea0ae4c9025347749873a319afd65d6793fb1943c698fe26292"},
+        {"path": "data/provenance/experiments/final/selected_robustness/selected_robustness_decision.json", "sha256": "0e8c3a3b50383ab133c72bae888106d6adf15908eb927b8ed5dde376764da36b"},
+        {"path": "data/provenance/experiments/final/selected_robustness/selected_robustness_reproducibility.json", "sha256": "454926b16bce218f7a5d00547bc896efbc9f72cdff38a50d75cb8aba65a063de"}
+      ],
+      "decision": {"path": "data/provenance/experiments/final/selected_robustness/selected_robustness_decision.json", "sha256": "0e8c3a3b50383ab133c72bae888106d6adf15908eb927b8ed5dde376764da36b"},
+      "simulation_core_identity": "62315e2a86dc9af77e12fa4759dc557f0991e3071b7a370a5e1fd8f208379c3d",
+      "external_checkpoint_root": "outputs/experiments/final/selected_robustness/59474cbc9e37d7df5d49fb5b9a0abbf4670ce300799f82ccb0ec21ed8a3aebbf/checkpoints",
+      "reconstruction_status": "external_artifacts_optional",
+      "ordinary_submission_test_owner": "tests/experiments/final/test_selected_robustness.py"
+    },
+    {
+      "study_identifier": "final_validation",
+      "scientific_identity": "a5e281a810892454539f0528c30536696d01c664bbd6cceda17584b88d5f3ed2",
+      "specification": {"path": "data/provenance/validation/final/final_validation_specification.json", "sha256": "ce87eb25585fbcd7e852ff63efaf48f0424e097c392f85704be2a71afede3f30"},
+      "seed_registry_sha256": null,
+      "expected_cell_count": 3,
+      "expected_replication_count": 128,
+      "historical_checkpoint_count": 256,
+      "checkpoint_content_manifest": {"status": "audit_record_only_no_content_map", "algorithm": "canonical_checkpoint_audit", "sha256": "daaf3c80f39dfc1fdd81d1509074a5203d75733e64a2869142befd35eda28d8c"},
+      "compact_evidence": [
+        {"path": "data/provenance/validation/final/final_validation_specification.json", "sha256": "ce87eb25585fbcd7e852ff63efaf48f0424e097c392f85704be2a71afede3f30"},
+        {"path": "data/provenance/validation/final/final_validation_decision.json", "sha256": "b04821e1d37b45e0f2f02b65904ef9bf1a1ece7ee82315deefc0fc03b1f17282"},
+        {"path": "data/provenance/validation/final/final_validation_reproducibility.json", "sha256": "921b963b44c8bb03e82d322c0d818089bb78f01be8fe7c3c25b02e40243a9958"}
+      ],
+      "decision": {"path": "data/provenance/validation/final/final_validation_decision.json", "sha256": "b04821e1d37b45e0f2f02b65904ef9bf1a1ece7ee82315deefc0fc03b1f17282"},
+      "simulation_core_identity": "1bc40998534dd3842a229c701743494147d24832d956622411afba7863d3c295",
+      "external_checkpoint_root": "outputs/validation/final/a5e281a810892454539f0528c30536696d01c664bbd6cceda17584b88d5f3ed2/checkpoints",
+      "reconstruction_status": "external_artifacts_optional",
+      "ordinary_submission_test_owner": "tests/validation/test_final_validation.py"
+    },
+    {
+      "study_identifier": "h4_synthesis",
+      "scientific_identity": "06f56e77ad56416483b2c010f0e63375b664baeff1830ec6306e37858c5920cb",
+      "specification": {"path": "data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_specification.json", "sha256": "2e79aaeed1271725a7107faa36af03399c5560313d5bfd6960b9992882970001"},
+      "seed_registry_sha256": null,
+      "expected_cell_count": 5,
+      "expected_replication_count": 0,
+      "historical_checkpoint_count": 0,
+      "checkpoint_content_manifest": {"status": "not_applicable_synthesis_only", "algorithm": "none", "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"},
+      "compact_evidence": [
+        {"path": "data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_specification.json", "sha256": "2e79aaeed1271725a7107faa36af03399c5560313d5bfd6960b9992882970001"},
+        {"path": "data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_decision.json", "sha256": "9e913eea00aa0b59a7f2d08785aaadf64e251dfe67f6710df2a2cc37cd4b545d"},
+        {"path": "data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_reproducibility.json", "sha256": "e3fd4e3d02ea5ac99e30eb2be0e15272d6a395709754a9eb0608876caef449a6"}
+      ],
+      "decision": {"path": "data/provenance/experiments/final/recovery_behaviour_synthesis/recovery_behaviour_synthesis_decision.json", "sha256": "9e913eea00aa0b59a7f2d08785aaadf64e251dfe67f6710df2a2cc37cd4b545d"},
+      "simulation_core_identity": "06f56e77ad56416483b2c010f0e63375b664baeff1830ec6306e37858c5920cb",
+      "external_checkpoint_root": "outputs/experiments/final/recovery_behaviour_synthesis/checkpoints",
+      "reconstruction_status": "external_artifacts_optional",
+      "ordinary_submission_test_owner": "tests/experiments/final/test_recovery_behaviour_synthesis.py"
+    }
+  ]
+}

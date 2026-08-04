@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import importlib
+import json
 import sys
-from pathlib import Path
 
 import yaml
 
@@ -21,7 +21,7 @@ def assert_paths(*paths: str) -> None:
 def test_model_journey() -> None:
     assert_paths(
         "README.md",
-        "docs/overview/architecture.md",
+        "docs/components.md",
         "src/dai_sim/model",
     )
     importlib.import_module("dai_sim.model.simulation")
@@ -29,7 +29,7 @@ def test_model_journey() -> None:
 
 def test_liquidation_mechanics_journey() -> None:
     assert_paths(
-        "docs/model/liquidations.md",
+        "docs/components.md",
         "src/dai_sim/model/liquidation.py",
     )
     module = importlib.import_module("dai_sim.model.liquidation")
@@ -39,7 +39,7 @@ def test_liquidation_mechanics_journey() -> None:
 
 def test_empirical_liquidation_input_journey() -> None:
     assert_paths(
-        "docs/calibration/liquidations.md",
+        "docs/components.md",
         "data/liquidations/model_inputs",
         "src/dai_sim/inputs/liquidations.py",
     )
@@ -48,7 +48,7 @@ def test_empirical_liquidation_input_journey() -> None:
 
 def test_empirical_profile_journey() -> None:
     assert_paths(
-        "docs/overview/repository_guide.md",
+        "docs/running.md",
         "config/profiles/empirical.yaml",
         "src/dai_sim/experiments/runner.py",
     )
@@ -61,7 +61,8 @@ def test_empirical_profile_journey() -> None:
 
 def test_multi_collateral_journey() -> None:
     assert_paths(
-        "docs/experiments/multi_collateral.md",
+        "README.md",
+        "docs/components.md",
         "src/dai_sim/experiments/scenarios.py",
         "src/dai_sim/experiments/runner.py",
     )
@@ -71,7 +72,7 @@ def test_multi_collateral_journey() -> None:
 
 def test_market_and_gas_calibration_journey() -> None:
     assert_paths(
-        "docs/calibration/market_and_gas.md",
+        "docs/components.md",
         "data/market/model_inputs/environment_blocks",
         "src/dai_sim/calibration/market.py",
         "src/dai_sim/calibration/gas.py",
@@ -81,19 +82,24 @@ def test_market_and_gas_calibration_journey() -> None:
 
 def test_data_provenance_journey() -> None:
     assert_paths(
-        "docs/data/provenance.md",
+        "docs/repository_structure.md",
         "data/provenance/index.json",
         "data/provenance/calibration/manifest.json",
-        "data/market/raw/README.md",
         "sql/market/templates/hourly_prices.sql",
         "workflows/market/acquire.py",
     )
 
 
 def test_regression_journey() -> None:
+    record_path = (
+        ROOT
+        / "data/provenance/maintenance/submission_portability/"
+        "historical_document_checksums.json"
+    )
     assert_paths(
-        "docs/validation/regression.md",
-        "docs/repository_restructuring_baseline.md",
-        "docs/repository_restructuring_baseline_manifest.json",
+        "docs/running.md",
+        record_path.relative_to(ROOT).as_posix(),
         "tests",
     )
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    assert record["classification"] == "historical_document_checksum_record"

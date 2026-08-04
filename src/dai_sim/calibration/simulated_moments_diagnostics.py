@@ -17,9 +17,8 @@ import multiprocessing as mp
 import os
 from pathlib import Path
 import shutil
-import tempfile
 import time
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Mapping, Sequence
 
 import numpy as np
 import pandas as pd
@@ -42,7 +41,6 @@ from .simulated_moments import (
     STAGE2_ACTIVE_MOMENTS,
     STAGE2_OBJECTIVE_GROUPS,
     STAGE2_OBJECTIVE_WEIGHTS,
-    StructuralParameters,
     array_sha256,
     fixed_horizon_recovery_indicator,
     fixed_strata_q4_q1_contrast,
@@ -1101,7 +1099,8 @@ def _cache_worker_initialise(
     search._thread_cap()
     run_dir = Path(run_dir_text)
     panel, events, stage1 = load_stage1_owners(
-        Path(panel_path_text), Path(evidence_dir_text)
+        Path(panel_path_text), Path(evidence_dir_text),
+        require_historical_panel=True,
     )
     base_config = default_event_config(events)
     config = replace(base_config, maximum_event_horizon_hours=int(horizon))

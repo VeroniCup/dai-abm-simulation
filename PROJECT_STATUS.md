@@ -1,5 +1,22 @@
 # Project status
 
+## Submission portability
+
+The second portability migration assigns clean-checkout owners to the accepted
+Stage 1 residual process, the frozen oracle-delay source inventory and completed
+historical experiment reconstruction contracts. No scientific value, identity,
+decision or production default changes. Readiness is classified as
+`ready_with_submission_exclusions`, subject to the recorded ordinary and
+detached-suite verification.
+
+The exact manifest-filtered archive now installs offline, passes `pip check`,
+compiles and passes 1,407 tests with the single existing documented skip. It
+includes all 118 tracked SQL files and compact runtime/scientific evidence,
+while excluding processed sources, checkpoints, diagnostics and generated
+reporting. `FINAL.md` remains intentionally retired. The non-scientific archive
+identity is recorded in the submission-bundle portability provenance rather
+than inside its own identity-bearing payload.
+
 ## Current implementation
 
 The simplified DAI model supports:
@@ -18,6 +35,23 @@ portfolio and shock experiment is implemented in
 the newly frozen final empirical-input design.
 
 ## Empirical inputs and calibration
+
+The portability boundary `portable_runtime_resolution_v2` now separates
+historical scientific evidence from current clean-checkout runtime ownership.
+The completed experiments and held-out validation used the complete processed
+sources and retain their frozen identities. Current runtime resolution uses the
+frozen collateral registry, the existing tracked multi-collateral market-block
+pool and an exact 816-row held-out market–gas derivative. Full-versus-compact
+comparison has zero scientific-value differences; the original processed
+sources remain optional provenance and rebuild inputs. The final submission
+readiness classification is recorded after ordinary and detached-clean-checkout
+validation in the [readiness guide](docs/overview/code_submission_readiness.md).
+The original focused clean-checkout portability contract remains intact. The
+expanded second-boundary contract passes 82/82 focused tests, and both the
+ordinary and detached tracked-only suites pass 1,392 tests with the single
+pre-existing documented skip. The detached suite reads no ignored source,
+raw-inventory or historical-checkpoint artefact. Submission readiness is
+therefore `ready_with_submission_exclusions`.
 
 Continuous market, gas, liquidation and protocol evidence has been acquired
 and validated. Vault evidence uses representative ordinary and stress windows

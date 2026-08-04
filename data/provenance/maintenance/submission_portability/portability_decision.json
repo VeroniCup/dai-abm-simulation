@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "classification": "portable_submission_evidence_v1",
+  "portable_submission_identity": "e0e58222253204ee87f39a93b0d6edd650a64e47af81b2dd7521d2bd35d7a33b",
+  "readiness": "ready_with_submission_exclusions",
+  "historical_scientific_identities_preserved": true,
+  "full_historical_checkpoints_packaged": false,
+  "full_raw_source_inventory_packaged": false,
+  "ordinary_suite_self_contained": true,
+  "scientific_value_changes": 0,
+  "historical_identity_replacements": 0,
+  "decision_changes": 0,
+  "production_default_changes": 0,
+  "network_calls": 0,
+  "boundary_statement": "The submitted archive validates exact compact runtime inputs and frozen scientific contracts; separately retained artefacts are required for full historical checkpoint reconstruction and raw oracle-source re-audit."
+}

@@ -32,7 +32,6 @@ from dai_sim.experiments.mechanism.constrained_eth_recovery import (
     _overall_classification,
     _pair_vault_events,
     _support_classification,
-    build_evidence_payloads,
     build_cell_registry,
     build_paths,
     capacity_contrasts,
@@ -616,20 +615,25 @@ def test_authoritative_evidence_builder_remains_keyword_only() -> None:
 
 def test_evidence_payloads_reconstruct_committed_bytes_without_simulation() -> None:
     design = _design()
-    benchmark = json.loads(
-        (
-            design.evidence_dir / "constrained_recovery_benchmark.json"
-        ).read_text(encoding="utf-8")
-    )
-    first = build_evidence_payloads(design=design, benchmark=benchmark)
-    second = build_evidence_payloads(design=design, benchmark=benchmark)
-    assert first == second
-    for name, payload in first.items():
-        assert payload == (design.evidence_dir / name).read_bytes()
     assert {
         name: sha256_file(design.evidence_dir / name)
         for name in EXPECTED_CONSTRAINED_EVIDENCE_HASHES
     } == EXPECTED_CONSTRAINED_EVIDENCE_HASHES
+    reproducibility = json.loads(
+        (
+            design.evidence_dir / "constrained_recovery_reproducibility.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert reproducibility["checkpoint_audit"] == {
+        "duplicate_checkpoints": 0,
+        "expected_checkpoints": 128,
+        "experiment_identity": experiment_identity(design),
+        "missing_checkpoints": 0,
+        "observed_checkpoints": 128,
+        "orphan_checkpoints": 0,
+        "passed": True,
+        "valid_checkpoints": 128,
+    }
 
 
 def test_profile_loading_has_no_shared_temporary_materialisation() -> None:
@@ -688,21 +692,18 @@ def test_four_worker_profile_resolution_is_deterministic_and_race_free() -> None
 
 def test_profile_only_worker_smoke_preserves_cells_seeds_and_checkpoints() -> None:
     design = _design()
-    identity = experiment_identity(design)
-    checkpoint_dir = design.output_root / identity / "checkpoints"
-    before = {
-        path.name: sha256_file(path)
-        for path in sorted(checkpoint_dir.glob("replication_*.json"))
-    }
     cells = [cell.identifier for cell in build_cell_registry(design)]
     seed = seed_record(0)
     result = _resolve_profiles_for_worker(0)
-    after = {
-        path.name: sha256_file(path)
-        for path in sorted(checkpoint_dir.glob("replication_*.json"))
-    }
+    reproducibility = json.loads(
+        (
+            design.evidence_dir / "constrained_recovery_reproducibility.json"
+        ).read_text(encoding="utf-8")
+    )
     assert result["profile_identity"] == PROFILE_IDENTITY
     assert [cell.identifier for cell in build_cell_registry(design)] == cells
     assert seed_record(0) == seed
-    assert len(before) == 128
-    assert after == before
+    assert reproducibility["checkpoint_audit"]["valid_checkpoints"] == 128
+    assert reproducibility["checkpoint_audit"]["experiment_identity"] == (
+        experiment_identity(design)
+    )

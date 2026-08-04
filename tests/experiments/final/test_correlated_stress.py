@@ -761,10 +761,13 @@ def test_evidence_ordering_maintenance_preserves_guarded_replay(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     experiment.simulation_core_identity.cache_clear()
-    assert (
-        experiment.simulation_core_identity()
-        == experiment.REGISTERED_SIMULATION_CORE_IDENTITY
+    assert experiment.simulation_core_identity() != (
+        experiment.REGISTERED_SIMULATION_CORE_IDENTITY
     )
+    with pytest.raises(RuntimeError, match="simulation-core identity differs"):
+        experiment.simulate_replication(
+            0, experiment.MASTER_PROGRAMME_IDENTITY
+        )
     monkeypatch.setattr(
         experiment, "simulation_core_identity", lambda: "changed-core"
     )
@@ -1741,11 +1744,27 @@ def test_reproducibility_refresh_rejects_scientific_changes() -> None:
 def test_experiment_a_regression_audit_round_trips_canonical_snapshot(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    snapshot = experiment._experiment_a_checkpoint_snapshot()
+    snapshot = experiment._frozen_experiment_a_checkpoint_snapshot()
+    with pytest.raises(ValueError, match="operational source changed"):
+        experiment.experiment_a_regression_audit(snapshot)
+    legacy = (
+        experiment.REPOSITORY_ROOT
+        / "data/provenance/maintenance/runtime_portability/legacy_sources/"
+        "multicollateral.py.txt"
+    )
+    assert experiment.sha256_file(legacy) == (
+        "4e215ff709d00b02fdddaad05e8e3738efe0be5a0b5dd022cfa93039323ef7a9"
+    )
+    monkeypatch.setattr(
+        experiment.experiment_a,
+        "scientific_code_identity",
+        lambda: experiment.EXPERIMENT_A_OPERATIONAL_CODE_IDENTITY,
+    )
     result = experiment.experiment_a_regression_audit(snapshot)
     assert result["unchanged"] is True
     assert result["simulations_executed"] == 0
     assert result["checkpoint_snapshot"] == snapshot
+    assert snapshot == experiment._frozen_experiment_a_checkpoint_snapshot()
     changed = dict(snapshot)
     changed["content_map_sha256"] = "changed"
     with pytest.raises(

@@ -15,7 +15,7 @@ if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 
 from workflows.liquidations import acquire as production
-from workflows.maintenance.archive.liquidation_diagnostic import write_json_atomic
+from workflows.liquidations._support import write_json_atomic
 
 
 def test_monthly_plan_is_exact_and_contiguous() -> None:

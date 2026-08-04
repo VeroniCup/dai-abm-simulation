@@ -1,0 +1,13 @@
+{
+  "classification": "compact_historical_sql_integrity_baseline",
+  "generated_count": 97,
+  "hand_authored_or_template_count": 20,
+  "ordered_sha256_and_size_digest": "da2ab5737b048f0aa19c293433833cc32ca775e507f7cf33a3b68837014f3d50",
+  "ordered_sha256_digest": "b9a72f38e2cca50235afdfc30c438d4e7f371cd320922899854a0e210d4d4f83",
+  "schema_version": 1,
+  "source_record": {
+    "path": "docs/repository_restructuring_baseline_manifest.json",
+    "sha256": "cae567cee25a93779fc838df4ac0a238bb407d308437a4f27c1fb521bd5e92b1"
+  },
+  "total_count": 117
+}

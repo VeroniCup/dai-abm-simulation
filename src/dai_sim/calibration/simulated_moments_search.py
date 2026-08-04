@@ -19,7 +19,6 @@ import math
 import multiprocessing as mp
 import os
 from pathlib import Path
-import platform
 import shutil
 import socket
 import tempfile
@@ -70,7 +69,6 @@ from .simulated_moments import (
     CORE_GROUPS,
     DEFAULT_REGISTRY_IDS,
     SIMULATED_CORE_MOMENT_ORDER,
-    SimulatedCoreMoments,
     StructuralParameters,
     aggregate_simulated_core_moments,
     array_sha256,
@@ -509,7 +507,8 @@ def _cache_worker_initialise(
     _thread_cap()
     identity, design = load_search_identity(Path(evidence_dir_text))
     panel, events, stage1 = load_stage1_owners(
-        Path(panel_path_text), Path(evidence_dir_text)
+        Path(panel_path_text), Path(evidence_dir_text),
+        require_historical_panel=True,
     )
     config = default_event_config(events)
     rows = {
@@ -913,7 +912,7 @@ def prepare_search_cache(
     panel_path = Path(panel_path).resolve()
     evidence_dir = Path(evidence_dir).resolve()
     panel, events, stage1 = load_stage1_owners(
-        panel_path, evidence_dir
+        panel_path, evidence_dir, require_historical_panel=True
     )
     config = default_event_config(events)
     cache_dir.mkdir(parents=True, exist_ok=True)

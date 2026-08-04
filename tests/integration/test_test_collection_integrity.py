@@ -22,13 +22,13 @@ from tests.support import REPOSITORY_ROOT
 
 
 EXPECTED_CASE_DIGEST = (
-    "4dcc15b1151405679d4f8e2c7db2d548c4052b9815347b626c6cf8aa6cc2e25b"
+    "2054b2891c179229b3c08794af04dfd0d56edfec8c277ec0d17da1ed7cad42e4"
 )
 EXPECTED_DECORATOR_DIGEST = (
-    "6c6e0e67dc3cf4dbd66ad72253d56c7b75e76fba3d01528f0ad8da107dd3fac9"
+    "f4c54d66e12bc9ceb1b27d3367971f9af1adc956f1f3fb42e194ed41e9029411"
 )
 EXPECTED_MONKEYPATCH_DIGEST = (
-    "19d7b650cf2fe8cff524a23ed9b19bb3401dc272d3bd584b12871ee7e5942d32"
+    "d4041fbf5d7ae996d9b2786db57b61921a7cd2d44288e49f407167dd1f24d187"
 )
 EXPECTED_CASE_COUNTS = {
     "tests/calibration/test_adoption.py": 13,
@@ -54,17 +54,12 @@ EXPECTED_CASE_COUNTS = {
     "tests/workflows/gas/test_acquisition.py": 19,
     "tests/workflows/gas/test_processing.py": 10,
     "tests/workflows/liquidations/test_acquisition.py": 17,
-    "tests/workflows/liquidations/test_diagnostic.py": 16,
-    "tests/workflows/liquidations/test_diagnostic_reconciliation.py": 14,
     "tests/workflows/market/test_acquisition.py": 7,
     "tests/workflows/market/test_processing.py": 4,
-    "tests/workflows/protocol/test_acquisition.py": 4,
-    "tests/workflows/protocol/test_activation.py": 7,
     "tests/workflows/protocol/test_history.py": 19,
     "tests/workflows/test_migration.py": 8,
-    "tests/workflows/vaults/test_acquisition.py": 19,
-    "tests/workflows/vaults/test_discovery.py": 8,
-    "tests/workflows/vaults/test_representative_windows.py": 45,
+    "tests/workflows/vaults/test_acquisition.py": 18,
+    "tests/workflows/vaults/test_representative_windows.py": 44,
 }
 
 
@@ -148,9 +143,9 @@ def _json_digest(value: object) -> str:
     return sha256(serialised.encode("utf-8")).hexdigest()
 
 
-def test_all_420_retained_pre_migration_logical_cases_are_preserved() -> None:
+def test_all_369_retained_pre_migration_logical_cases_are_preserved() -> None:
     baseline = _baseline_nodeids(_collect_nodeids())
-    assert len(baseline) == 420
+    assert len(baseline) == 369
     assert len(set(baseline)) == len(baseline)
     assert _digest_lines(baseline) == EXPECTED_CASE_DIGEST
 
@@ -164,13 +159,13 @@ def test_pre_migration_case_counts_are_preserved_by_module() -> None:
 
 def test_parametrisation_and_marker_decorators_are_preserved() -> None:
     records = _decorator_records()
-    assert len(records) == 405
+    assert len(records) == 354
     assert _json_digest(records) == EXPECTED_DECORATOR_DIGEST
 
 
 def test_monkeypatch_targets_and_arguments_are_preserved() -> None:
     records = _monkeypatch_records()
-    assert len(records) == 50
+    assert len(records) == 34
     assert _json_digest(records) == EXPECTED_MONKEYPATCH_DIGEST
 
 
@@ -209,13 +204,15 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
     counts = Counter(nodeid.split("::", 1)[0] for nodeid in additions)
     assert counts == {
         "tests/integration/test_ignore_rules.py": 6,
+        "tests/integration/test_submission_bundle.py": 15,
         "tests/integration/test_output_hierarchy.py": 12,
         "tests/integration/test_test_collection_integrity.py": 6,
         "tests/integration/test_test_hierarchy.py": 7,
         "tests/integration/test_compatibility_removal.py": 9,
         "tests/integration/test_diagnostic_independence.py": 1,
         "tests/inputs/test_multicollateral.py": 9,
-        "tests/workflows/test_canonical_commands.py": 22,
+        "tests/inputs/test_runtime_sources.py": 18,
+        "tests/workflows/test_canonical_commands.py": 18,
         "tests/workflows/test_semantic_output_paths.py": 5,
         "tests/calibration/test_tracked_calibration_evidence.py": 10,
         "tests/calibration/test_confidence_evidence.py": 10,
@@ -252,4 +249,4 @@ def test_restructuring_cases_are_the_only_collection_additions() -> None:
         "tests/validation/test_oracle_delay.py": 3,
         "tests/workflows/test_oracle_delay.py": 3,
     }
-    assert len(nodeids) == 420 + len(additions)
+    assert len(nodeids) == 369 + len(additions)

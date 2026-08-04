@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from collections import Counter
 import hashlib
 import json
 from pathlib import Path
@@ -11,7 +10,10 @@ import sys
 
 
 from tests.support import REPOSITORY_ROOT
-BASELINE = REPOSITORY_ROOT / "docs/repository_restructuring_baseline_manifest.json"
+BASELINE = (
+    REPOSITORY_ROOT
+    / "data/provenance/maintenance/submission_portability/sql_integrity_baseline.json"
+)
 POST_RESTRUCTURING_SQL = (
     REPOSITORY_ROOT / "sql/market/templates/hourly_market_prices.sql"
 )
@@ -21,47 +23,39 @@ def _baseline() -> dict[str, object]:
     return json.loads(BASELINE.read_text(encoding="utf-8"))
 
 
+def _digest(records: list[tuple[object, ...]]) -> str:
+    payload = json.dumps(sorted(records), separators=(",", ":")) + "\n"
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def test_sql_classification_and_content_match_stage_one_baseline() -> None:
-    sql = _baseline()["sql"]
-    assert isinstance(sql, dict)
+    sql = _baseline()
     assert sql["total_count"] == 117
     assert sql["hand_authored_or_template_count"] == 20
     assert sql["generated_count"] == 97
 
-    files = sql["files"]
-    assert isinstance(files, list)
-    assert len(files) == 117
-    expected = Counter(record["sha256"] for record in files)
-    current = Counter(
+    current = [
         _sha256(path)
         for path in (REPOSITORY_ROOT / "sql").rglob("*.sql")
         if path != POST_RESTRUCTURING_SQL
-    )
-    assert current == expected
+    ]
+    assert len(current) == 117
+    assert _digest([(value,) for value in current]) == sql["ordered_sha256_digest"]
 
 
 def test_sql_sizes_match_stage_one_tracked_inventory() -> None:
     payload = _baseline()
-    tracked = [
-        record
-        for record in payload["tracked_files"]
-        if record["path"].startswith("sql/")
-    ]
-    assert len(tracked) == 117
-    expected = Counter(
-        (record["sha256"], record["size_bytes"])
-        for record in tracked
-    )
-    current = Counter(
+    current = [
         (_sha256(path), path.stat().st_size)
         for path in (REPOSITORY_ROOT / "sql").rglob("*.sql")
         if path != POST_RESTRUCTURING_SQL
-    )
-    assert current == expected
+    ]
+    assert len(current) == 117
+    assert _digest(current) == payload["ordered_sha256_and_size_digest"]
 
 
 def test_sql_imports_are_lazy_and_have_no_network_or_output_side_effects(

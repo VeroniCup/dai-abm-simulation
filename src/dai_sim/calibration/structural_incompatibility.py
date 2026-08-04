@@ -8,18 +8,17 @@ production behaviour.
 
 from __future__ import annotations
 
-from collections import Counter, defaultdict
+from collections import Counter
 from dataclasses import asdict, dataclass, replace
 from datetime import datetime, timezone
 import hashlib
 import json
 import math
 import multiprocessing as mp
-import os
 from pathlib import Path
 import shutil
 import time
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Mapping, Sequence
 
 import numpy as np
 import pandas as pd
@@ -43,7 +42,6 @@ from .event_simulation import (
 )
 from .market import CONFIDENCE_EVIDENCE
 from .partial_identification import (
-    MC_INTERVAL_CRITICAL_VALUE,
     NATURAL_SUPPORTS,
     NUMERICAL_BOUND_LIMIT,
     construct_mc_interval,
@@ -51,8 +49,6 @@ from .partial_identification import (
 from .simulated_moments import (
     DEFAULT_REGISTRY_IDS,
     STAGE2_ACTIVE_MOMENTS,
-    StructuralParameters,
-    derive_seed,
     sobol_candidates,
 )
 from .simulated_moments_diagnostics import (
@@ -86,6 +82,9 @@ DEFAULT_ROOT = (
     REPOSITORY_ROOT
     / "outputs/diagnostics/calibration/confidence/structural_incompatibility"
     / PARTIAL_IDENTIFICATION_ID
+)
+FROZEN_VARIANT_REGISTRY = (
+    CONFIDENCE_EVIDENCE / "structural_variant_registry.json"
 )
 PARTIAL_ROOT = (
     REPOSITORY_ROOT
@@ -799,6 +798,27 @@ def _vault_state_audit(
 
 def build_variant_registry() -> dict[str, Any]:
     """Build the fixed one-factor registry after source ownership checks."""
+    if not any(VAULT_SNAPSHOT_ROOT.glob("*/reconstructed_vault_snapshots.csv")):
+        if not FROZEN_VARIANT_REGISTRY.is_file():
+            raise ValueError(
+                "Reviewed historical vault snapshots and the frozen variant "
+                "registry are unavailable."
+            )
+        registry = json.loads(
+            FROZEN_VARIANT_REGISTRY.read_text(encoding="utf-8")
+        )
+        portable_owner = FROZEN_VARIANT_REGISTRY.relative_to(
+            REPOSITORY_ROOT
+        ).as_posix()
+        for variant in registry["variants"]:
+            historical_owner = variant["evidence_owner"]
+            if (
+                variant["source_status"] == "available"
+                and not (REPOSITORY_ROOT / historical_owner).exists()
+            ):
+                variant["historical_evidence_owner"] = historical_owner
+                variant["evidence_owner"] = portable_owner
+        return registry
     status = _source_status()
     variants = [
         StructuralVariant(
@@ -1445,7 +1465,6 @@ def _write_candidate_checkpoints_from_shards(
     variants: Sequence[Mapping[str, Any]],
     shard_count: int,
 ) -> int:
-    owner = _load_cache_owner()
     baseline = _baseline_ladder()
     constraints = _constraints()
     frames = []

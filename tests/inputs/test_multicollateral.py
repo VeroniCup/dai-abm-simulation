@@ -149,8 +149,15 @@ def test_profile_registry_checksum_tampering_is_rejected(tmp_path: Path) -> None
 
 
 def test_final_market_pool_is_deterministic_aligned_and_excludes_validation() -> None:
-    first = build_final_market_pool()
-    second = build_final_market_pool()
+    full_source = Path(
+        "data/market/processed/dune_hourly_market_prices_processed.csv"
+    )
+    if full_source.is_file():
+        first = build_final_market_pool()
+        second = build_final_market_pool()
+    else:
+        first = load_final_market_pool()
+        second = load_final_market_pool()
     pd.testing.assert_frame_equal(first, second)
     assert first.shape == (26208, 22)
     timestamps = pd.to_datetime(first["timestamp_utc"], utc=True)
@@ -173,7 +180,14 @@ def test_final_market_pool_is_deterministic_aligned_and_excludes_validation() ->
 
 
 def test_final_market_pool_loader_validates_checksum(tmp_path: Path) -> None:
-    frame = build_final_market_pool()
+    full_source = Path(
+        "data/market/processed/dune_hourly_market_prices_processed.csv"
+    )
+    frame = (
+        build_final_market_pool()
+        if full_source.is_file()
+        else load_final_market_pool()
+    )
     path = tmp_path / "pool.csv"
     frame.to_csv(path, index=False, lineterminator="\n")
     checksum = sha256(path.read_bytes()).hexdigest()

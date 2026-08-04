@@ -5,6 +5,12 @@
   "calibration_evidence_manifest": "data/provenance/calibration/manifest.json",
   "experiment_evidence_manifest": "data/provenance/experiments/manifest.json",
   "validation_evidence_manifest": "data/provenance/validation/manifest.json",
+  "reporting_evidence_manifest": "data/provenance/reporting/manifest.json",
+  "runtime_portability_manifest": "data/provenance/maintenance/runtime_portability/runtime_source_manifest.json",
+  "submission_historical_document_checksums": "data/provenance/maintenance/submission_portability/historical_document_checksums.json",
+  "submission_maintenance_executable_history": "data/provenance/maintenance/submission_portability/maintenance_executable_history.json",
+  "submission_portability_contract_registry": "data/provenance/maintenance/submission_portability/historical_reconstruction_contracts.json",
+  "submission_sql_integrity_baseline": "data/provenance/maintenance/submission_portability/sql_integrity_baseline.json",
   "categories": [
     {
       "category": "Phase 1A market prices",

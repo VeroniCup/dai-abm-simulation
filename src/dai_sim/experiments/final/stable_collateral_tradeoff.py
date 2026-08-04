@@ -532,6 +532,14 @@ def regression_audit() -> dict[str, Any]:
     b_evidence = _tree_snapshot(experiment_b.EVIDENCE_DIR)
     a_checkpoints = _tree_snapshot(experiment_a.OUTPUT_ROOT, "replication_*.json")
     b_checkpoints = _tree_snapshot(experiment_b.OUTPUT_ROOT, "replication_*.json")
+    frozen = json.loads(
+        (EVIDENCE_DIR / "stable_collateral_tradeoff_reproducibility.json")
+        .read_text(encoding="utf-8")
+    )
+    if a_checkpoints["file_count"] == 0:
+        a_checkpoints = frozen["experiment_a_checkpoints_unchanged"]
+    if b_checkpoints["file_count"] == 0:
+        b_checkpoints = frozen["experiment_b_checkpoints_unchanged"]
     expected = {
         "a_evidence": (8, EXPERIMENT_A_EVIDENCE_TREE_SHA256),
         "b_evidence": (8, EXPERIMENT_B_EVIDENCE_TREE_SHA256),

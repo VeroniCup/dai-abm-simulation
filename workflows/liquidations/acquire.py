@@ -10,13 +10,17 @@ from __future__ import annotations
 
 import csv
 from dataclasses import dataclass
-from datetime import datetime, timezone
 from decimal import Decimal
 import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import runpy
+import tempfile
+from typing import Any, Callable, Iterable
+
+import pandas as pd
 
 _WORKFLOW_BOOTSTRAP = next(
     parent / "_bootstrap.py"
@@ -24,21 +28,27 @@ _WORKFLOW_BOOTSTRAP = next(
     if (parent / "_bootstrap.py").is_file()
 )
 REPOSITORY_ROOT = runpy.run_path(str(_WORKFLOW_BOOTSTRAP))["bootstrap_runtime"](__file__)
-import re
-import tempfile
-from typing import Any, Callable, Iterable
 
-import pandas as pd
-
-from workflows.maintenance.archive.liquidation_diagnostic import (
-    RAD, RAY, WAD, LiquidationDiagnosticError, provenance_path, sha256_file,
-    utc_now_iso, write_json_atomic,
-)
-from workflows.maintenance.archive.liquidation_diagnostic_attempt3 import (
-    ACTION_COLUMNS, TRANSACTION_COLUMNS, _fsync_directory, _parse_utc, _truth,
-    _unwrap, auction_key, classify_successful_take_transactions,
-    classify_terminals, partial_take_checks, reconcile_bark_kick, reconcile_event_calls,
+from workflows.liquidations._support import (  # noqa: E402
+    ACTION_COLUMNS,
+    RAD,
+    RAY,
+    TRANSACTION_COLUMNS,
+    WAD,
+    _fsync_directory,
+    _parse_utc,
+    _unwrap,
+    auction_key,
+    classify_successful_take_transactions,
+    classify_terminals,
+    partial_take_checks,
+    provenance_path,
+    reconcile_bark_kick,
+    reconcile_event_calls,
+    sha256_file,
+    utc_now_iso,
     validate_transaction_rows,
+    write_json_atomic,
 )
 
 
@@ -395,16 +405,21 @@ def persist_payload(chunk: ChunkSpec, kind: str, ingress: Path) -> dict[str, Any
     _write_text_atomic(paths["payload"], json.dumps(response, indent=2, sort_keys=True) + "\n")
     if kind == "action":
         report = validate_action_chunk(rows, columns, chunk)
-        order_key: Callable[[dict[str, Any]], Any] = lambda row: (
-            _parse_utc(row["block_time"]), int(row.get("transaction_index") or 0),
-            int(row.get("event_index") or -1), str(row.get("call_trace_address") or ""),
-            row["record_type"],
-        )
+        def order_key(row: dict[str, Any]) -> Any:
+            return (
+                _parse_utc(row["block_time"]),
+                int(row.get("transaction_index") or 0),
+                int(row.get("event_index") or -1),
+                str(row.get("call_trace_address") or ""),
+                row["record_type"],
+            )
     else:
         action_rows, _ = read_csv(chunk_paths(chunk, "action")["raw"])
         expected_hashes = {row["tx_hash"].lower() for row in action_rows}
         report = validate_transaction_rows(rows, columns, expected_hashes=expected_hashes)
-        order_key = lambda row: row["tx_hash"].lower()
+
+        def order_key(row: dict[str, Any]) -> Any:
+            return row["tx_hash"].lower()
     if not report["validation_passed"]:
         update_query_state(chunk, kind, "failed", failure=report["failures"], result_retrieved=True)
         raise ProductionAcquisitionError("; ".join(report["failures"]))
@@ -1465,7 +1480,6 @@ def build_hourly_panel(
     if len(hourly_inputs) != 27_024:
         raise ProductionAcquisitionError("Phase 1A/1B hourly inputs are incomplete.")
     price_by_hour = hourly_inputs.set_index("timestamp_utc").to_dict("index")
-    auction_by_key = {(row["clipper_contract"], row["auction_id"]): row for row in auctions}
     tx_by_hash = {row["tx_hash"].lower(): row for row in transactions}
     semantic = _semantic_by_tx(actions)
     aggregates: dict[tuple[pd.Timestamp, str], dict[str, Any]] = {}

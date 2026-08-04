@@ -22,6 +22,8 @@ import numpy as np
 import pandas as pd
 import yaml
 
+from dai_sim.inputs.runtime_sources import resolve_runtime_source
+
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 FAMILY_ORDER = ("ETH", "WBTC", "STABLE")
@@ -142,16 +144,13 @@ def _ordered_mapping(
 
 
 def _validate_frozen_file(path_value: Any, checksum_value: Any, context: str) -> Path:
-    path = _repository_path(path_value, f"{context} path")
     if not isinstance(checksum_value, str) or len(checksum_value) != 64:
         raise ValueError(f"{context} SHA-256 must be explicit.")
-    observed = _sha256_file(path)
-    if observed != checksum_value:
-        raise ValueError(
-            f"{context} checksum mismatch: expected {checksum_value}, "
-            f"observed {observed}."
-        )
-    return path
+    try:
+        resolution = resolve_runtime_source(path_value, checksum_value)
+    except (FileNotFoundError, ValueError) as exc:
+        raise ValueError(f"{context} checksum mismatch: {exc}") from exc
+    return resolution.runtime_path
 
 
 @dataclass(frozen=True)
